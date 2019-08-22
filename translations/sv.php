@@ -1,7 +1,7 @@
 <?php
 
 global $_MODULE;
-$_MODULE = array();
+$_MODULE = [];
 $_MODULE['<{pakkelabels_shipping}prestashop>pakkelabels_shipping_4dda4c47623f65c66527da0d6e75c242'] = 'Hitta närmaste leveransplats';
 $_MODULE['<{pakkelabels_shipping}prestashop>pakkelabels_shipping_ae1a50ade0fee03ed99755e82dd33f13'] = 'Ange ett postnummer för att välja utlämningsställen';
 $_MODULE['<{pakkelabels_shipping}prestashop>pakkelabels_shipping_e0ed8e71dbd22a1e91cb570b52443fd5'] = 'Vänligen ange postnummer...';

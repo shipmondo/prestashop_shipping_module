@@ -1,7 +1,7 @@
 <?php
 
 global $_MODULE;
-$_MODULE = array();
+$_MODULE = [];
 $_MODULE['<{pakkelabels_shipping}prestashop>pakkelabels_shipping_5106a89772d7cb75bea1f9a2572413c6'] = 'Pakkelabels.dk Fragtmodul';
 $_MODULE['<{pakkelabels_shipping}prestashop>pakkelabels_shipping_bff89b3c2336557e08d05f68835aa9e7'] = 'GLS, PostNord, DAO and Bring Shipping for PrestaShop';
 $_MODULE['<{pakkelabels_shipping}prestashop>pakkelabels_shipping_876f23178c29dc2552c0b48bf23cd9bd'] = 'Er du sikker på du vil fjerne dette modul?';
