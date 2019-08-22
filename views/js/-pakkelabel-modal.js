@@ -10,8 +10,8 @@
  */
 if (typeof jQuery === 'undefined') {
     throw new Error('Bootstrap\'s JavaScript requires jQuery')
-}
-+function ($) {
+} +
+function($) {
     'use strict';
     var version = $.fn.jquery.split(' ')[0].split('.')
     if ((version[0] < 2 && version[1] < 9) || (version[0] == 1 && version[1] == 9 && version[2] < 1) || (version[0] > 2)) {
@@ -28,13 +28,14 @@ if (typeof jQuery === 'undefined') {
  * ======================================================================== */
 
 
-+function ($) {
++
+function($) {
     'use strict';
 
     // BUTTON PUBLIC CLASS DEFINITION
     // ==============================
 
-    var Button = function (element, options) {
+    var Button = function(element, options) {
         this.$element = $(element)
         this.options = $.extend({}, Button.DEFAULTS, options)
         this.isLoading = false
@@ -46,7 +47,7 @@ if (typeof jQuery === 'undefined') {
         loadingText: 'loading...'
     }
 
-    Button.prototype.setState = function (state) {
+    Button.prototype.setState = function(state) {
         var d = 'disabled'
         var $el = this.$element
         var val = $el.is('input') ? 'val' : 'html'
@@ -58,7 +59,7 @@ if (typeof jQuery === 'undefined') {
             $el.data('resetText', $el[val]())
 
         // push to event loop to allow forms to submit
-        setTimeout($.proxy(function () {
+        setTimeout($.proxy(function() {
             $el[val](data[state] == null ? this.options[state] : data[state])
 
             if (state == 'loadingText') {
@@ -71,7 +72,7 @@ if (typeof jQuery === 'undefined') {
         }, this), 0)
     }
 
-    Button.prototype.toggle = function () {
+    Button.prototype.toggle = function() {
         var changed = true
         var $parent = this.$element.closest('[data-toggle="buttons"]')
 
@@ -101,7 +102,7 @@ if (typeof jQuery === 'undefined') {
     // ========================
 
     function Plugin(option) {
-        return this.each(function () {
+        return this.each(function() {
             var $this = $(this)
             var data = $this.data('bs.button')
             var options = typeof option == 'object' && option
@@ -125,7 +126,7 @@ if (typeof jQuery === 'undefined') {
     // BUTTON NO CONFLICT
     // ==================
 
-    $.fn.button.noConflict = function () {
+    $.fn.button.noConflict = function() {
         $.fn.button = old
         return this
     }
@@ -135,17 +136,17 @@ if (typeof jQuery === 'undefined') {
     // ===============
 
     $(document)
-            .on('click.bs.button.data-api', '[data-toggle^="button"]', function (e) {
-                var $btn = $(e.target)
-                if (!$btn.hasClass('btn'))
-                    $btn = $btn.closest('.btn')
-                Plugin.call($btn, 'toggle')
-                if (!($(e.target).is('input[type="radio"]') || $(e.target).is('input[type="checkbox"]')))
-                    e.preventDefault()
-            })
-            .on('focus.bs.button.data-api blur.bs.button.data-api', '[data-toggle^="button"]', function (e) {
-                $(e.target).closest('.btn').toggleClass('focus', /^focus(in)?$/.test(e.type))
-            })
+        .on('click.bs.button.data-api', '[data-toggle^="button"]', function(e) {
+            var $btn = $(e.target)
+            if (!$btn.hasClass('btn'))
+                $btn = $btn.closest('.btn')
+            Plugin.call($btn, 'toggle')
+            if (!($(e.target).is('input[type="radio"]') || $(e.target).is('input[type="checkbox"]')))
+                e.preventDefault()
+        })
+        .on('focus.bs.button.data-api blur.bs.button.data-api', '[data-toggle^="button"]', function(e) {
+            $(e.target).closest('.btn').toggleClass('focus', /^focus(in)?$/.test(e.type))
+        })
 
 }(jQuery);
 
@@ -158,13 +159,14 @@ if (typeof jQuery === 'undefined') {
  * ======================================================================== */
 
 
-+function ($) {
++
+function($) {
     'use strict';
 
     // modal CLASS DEFINITION
     // ======================
 
-    var modal = function (element, options) {
+    var modal = function(element, options) {
         this.options = options
         this.$body = $(document.body)
         this.$element = $(element)
@@ -177,10 +179,10 @@ if (typeof jQuery === 'undefined') {
 
         if (this.options.remote) {
             this.$element
-                    .find('.modal-content')
-                    .load(this.options.remote, $.proxy(function () {
-                        this.$element.trigger('loaded.bs.modal')
-                    }, this))
+                .find('.modal-content')
+                .load(this.options.remote, $.proxy(function() {
+                    this.$element.trigger('loaded.bs.modal')
+                }, this))
         }
     }
 
@@ -195,13 +197,15 @@ if (typeof jQuery === 'undefined') {
         show: true
     }
 
-    modal.prototype.toggle = function (_relatedTarget) {
+    modal.prototype.toggle = function(_relatedTarget) {
         return this.isShown ? this.hide() : this.show(_relatedTarget)
     }
 
-    modal.prototype.show = function (_relatedTarget) {
+    modal.prototype.show = function(_relatedTarget) {
         var that = this
-        var e = $.Event('show.bs.modal', {relatedTarget: _relatedTarget})
+        var e = $.Event('show.bs.modal', {
+            relatedTarget: _relatedTarget
+        })
 
         this.$element.trigger(e)
 
@@ -219,14 +223,14 @@ if (typeof jQuery === 'undefined') {
 
         this.$element.on('click.dismiss.bs.modal', '[data-dismiss="modal"]', $.proxy(this.hide, this))
 
-        this.$dialog.on('mousedown.dismiss.bs.modal', function () {
-            that.$element.one('mouseup.dismiss.bs.modal', function (e) {
+        this.$dialog.on('mousedown.dismiss.bs.modal', function() {
+            that.$element.one('mouseup.dismiss.bs.modal', function(e) {
                 if ($(e.target).is(that.$element))
                     that.ignoreBackdropClick = true
             })
         })
 
-        this.backdrop(function () {
+        this.backdrop(function() {
             var transition = $.support.transition && that.$element.hasClass('fade-pakkelabel')
 
             if (!that.$element.parent().length) {
@@ -234,8 +238,8 @@ if (typeof jQuery === 'undefined') {
             }
 
             that.$element
-                    .show()
-                    .scrollTop(0)
+                .show()
+                .scrollTop(0)
 
             that.adjustDialog()
 
@@ -247,18 +251,20 @@ if (typeof jQuery === 'undefined') {
 
             that.enforceFocus()
 
-            var e = $.Event('shown.bs.modal', {relatedTarget: _relatedTarget})
+            var e = $.Event('shown.bs.modal', {
+                relatedTarget: _relatedTarget
+            })
             transition ?
-                    that.$dialog // wait for modal to slide in
-                    .one('bsTransitionEnd', function () {
-                        that.$element.trigger('focus').trigger(e)
-                    })
-                    .emulateTransitionEnd(modal.TRANSITION_DURATION) :
+                that.$dialog // wait for modal to slide in
+                .one('bsTransitionEnd', function() {
                     that.$element.trigger('focus').trigger(e)
+                })
+                .emulateTransitionEnd(modal.TRANSITION_DURATION) :
+                that.$element.trigger('focus').trigger(e)
         })
     }
 
-    modal.prototype.hide = function (e) {
+    modal.prototype.hide = function(e) {
         if (e)
             e.preventDefault()
 
@@ -277,32 +283,32 @@ if (typeof jQuery === 'undefined') {
         $(document).off('focusin.bs.modal')
 
         this.$element
-                .removeClass('in')
-                .off('click.dismiss.bs.modal')
-                .off('mouseup.dismiss.bs.modal')
+            .removeClass('in')
+            .off('click.dismiss.bs.modal')
+            .off('mouseup.dismiss.bs.modal')
 
         this.$dialog.off('mousedown.dismiss.bs.modal')
 
         $.support.transition && this.$element.hasClass('fade-pakkelabel') ?
-                this.$element
-                .one('bsTransitionEnd', $.proxy(this.hidemodal, this))
-                .emulateTransitionEnd(modal.TRANSITION_DURATION) :
-                this.hidemodal()
+            this.$element
+            .one('bsTransitionEnd', $.proxy(this.hidemodal, this))
+            .emulateTransitionEnd(modal.TRANSITION_DURATION) :
+            this.hidemodal()
     }
 
-    modal.prototype.enforceFocus = function () {
+    modal.prototype.enforceFocus = function() {
         $(document)
-                .off('focusin.bs.modal') // guard against infinite focus loop
-                .on('focusin.bs.modal', $.proxy(function (e) {
-                    if (this.$element[0] !== e.target && !this.$element.has(e.target).length) {
-                        this.$element.trigger('focus')
-                    }
-                }, this))
+            .off('focusin.bs.modal') // guard against infinite focus loop
+            .on('focusin.bs.modal', $.proxy(function(e) {
+                if (this.$element[0] !== e.target && !this.$element.has(e.target).length) {
+                    this.$element.trigger('focus')
+                }
+            }, this))
     }
 
-    modal.prototype.escape = function () {
+    modal.prototype.escape = function() {
         if (this.isShown && this.options.keyboard) {
-            this.$element.on('keydown.dismiss.bs.modal', $.proxy(function (e) {
+            this.$element.on('keydown.dismiss.bs.modal', $.proxy(function(e) {
                 e.which == 27 && this.hide()
             }, this))
         } else if (!this.isShown) {
@@ -310,7 +316,7 @@ if (typeof jQuery === 'undefined') {
         }
     }
 
-    modal.prototype.resize = function () {
+    modal.prototype.resize = function() {
         if (this.isShown) {
             $(window).on('resize.bs.modal', $.proxy(this.handleUpdate, this))
         } else {
@@ -318,10 +324,10 @@ if (typeof jQuery === 'undefined') {
         }
     }
 
-    modal.prototype.hidemodal = function () {
+    modal.prototype.hidemodal = function() {
         var that = this
         this.$element.hide()
-        this.backdrop(function () {
+        this.backdrop(function() {
             that.$body.removeClass('modal-open')
             that.resetAdjustments()
             that.resetScrollbar()
@@ -329,12 +335,12 @@ if (typeof jQuery === 'undefined') {
         })
     }
 
-    modal.prototype.removeBackdrop = function () {
+    modal.prototype.removeBackdrop = function() {
         this.$backdrop && this.$backdrop.remove()
         this.$backdrop = null
     }
 
-    modal.prototype.backdrop = function (callback) {
+    modal.prototype.backdrop = function(callback) {
         var that = this
         var animate = this.$element.hasClass('fade-pakkelabel') ? 'fade-pakkelabel' : ''
 
@@ -342,19 +348,19 @@ if (typeof jQuery === 'undefined') {
             var doAnimate = $.support.transition && animate
 
             this.$backdrop = $(document.createElement('div'))
-                    .addClass('pakkelabels_modal-backdrop ' + animate)
-                    .appendTo(this.$body)
+                .addClass('pakkelabels_modal-backdrop ' + animate)
+                .appendTo(this.$body)
 
-            this.$element.on('click.dismiss.bs.modal', $.proxy(function (e) {
+            this.$element.on('click.dismiss.bs.modal', $.proxy(function(e) {
                 if (this.ignoreBackdropClick) {
                     this.ignoreBackdropClick = false
                     return
                 }
                 if (e.target !== e.currentTarget)
                     return
-                this.options.backdrop == 'static'
-                        ? this.$element[0].focus()
-                        : this.hide()
+                this.options.backdrop == 'static' ?
+                    this.$element[0].focus() :
+                    this.hide()
             }, this))
 
             if (doAnimate)
@@ -366,23 +372,23 @@ if (typeof jQuery === 'undefined') {
                 return
 
             doAnimate ?
-                    this.$backdrop
-                    .one('bsTransitionEnd', callback)
-                    .emulateTransitionEnd(modal.BACKDROP_TRANSITION_DURATION) :
-                    callback()
+                this.$backdrop
+                .one('bsTransitionEnd', callback)
+                .emulateTransitionEnd(modal.BACKDROP_TRANSITION_DURATION) :
+                callback()
 
         } else if (!this.isShown && this.$backdrop) {
             this.$backdrop.removeClass('in')
 
-            var callbackRemove = function () {
+            var callbackRemove = function() {
                 that.removeBackdrop()
                 callback && callback()
             }
             $.support.transition && this.$element.hasClass('fade-pakkelabel') ?
-                    this.$backdrop
-                    .one('bsTransitionEnd', callbackRemove)
-                    .emulateTransitionEnd(modal.BACKDROP_TRANSITION_DURATION) :
-                    callbackRemove()
+                this.$backdrop
+                .one('bsTransitionEnd', callbackRemove)
+                .emulateTransitionEnd(modal.BACKDROP_TRANSITION_DURATION) :
+                callbackRemove()
 
         } else if (callback) {
             callback()
@@ -391,11 +397,11 @@ if (typeof jQuery === 'undefined') {
 
     // these following methods are used to handle overflowing modals
 
-    modal.prototype.handleUpdate = function () {
+    modal.prototype.handleUpdate = function() {
         this.adjustDialog()
     }
 
-    modal.prototype.adjustDialog = function () {
+    modal.prototype.adjustDialog = function() {
         var modalIsOverflowing = this.$element[0].scrollHeight > document.documentElement.clientHeight
 
         this.$element.css({
@@ -404,14 +410,14 @@ if (typeof jQuery === 'undefined') {
         })
     }
 
-    modal.prototype.resetAdjustments = function () {
+    modal.prototype.resetAdjustments = function() {
         this.$element.css({
             paddingLeft: '',
             paddingRight: ''
         })
     }
 
-    modal.prototype.checkScrollbar = function () {
+    modal.prototype.checkScrollbar = function() {
         var fullWindowWidth = window.innerWidth
         if (!fullWindowWidth) { // workaround for missing window.innerWidth in IE8
             var documentElementRect = document.documentElement.getBoundingClientRect()
@@ -421,18 +427,18 @@ if (typeof jQuery === 'undefined') {
         this.scrollbarWidth = this.measureScrollbar()
     }
 
-    modal.prototype.setScrollbar = function () {
+    modal.prototype.setScrollbar = function() {
         var bodyPad = parseInt((this.$body.css('padding-right') || 0), 10)
         this.originalBodyPad = document.body.style.paddingRight || ''
         if (this.bodyIsOverflowing)
             this.$body.css('padding-right', bodyPad + this.scrollbarWidth)
     }
 
-    modal.prototype.resetScrollbar = function () {
+    modal.prototype.resetScrollbar = function() {
         this.$body.css('padding-right', this.originalBodyPad)
     }
 
-    modal.prototype.measureScrollbar = function () { // thx walsh
+    modal.prototype.measureScrollbar = function() { // thx walsh
         var scrollDiv = document.createElement('div')
         scrollDiv.className = 'modal-scrollbar-measure'
         this.$body.append(scrollDiv)
@@ -446,7 +452,7 @@ if (typeof jQuery === 'undefined') {
     // =======================
 
     function Plugin(option, _relatedTarget) {
-        return this.each(function () {
+        return this.each(function() {
             var $this = $(this)
             var data = $this.data('bs.modal')
             var options = $.extend({}, modal.DEFAULTS, $this.data(), typeof option == 'object' && option)
@@ -469,7 +475,7 @@ if (typeof jQuery === 'undefined') {
     // modal NO CONFLICT
     // =================
 
-    $.fn.modal.noConflict = function () {
+    $.fn.modal.noConflict = function() {
         $.fn.modal = old
         return this
     }
@@ -478,19 +484,21 @@ if (typeof jQuery === 'undefined') {
     // modal DATA-API
     // ==============
 
-    $(document).on('click.bs.modal.data-api', '[data-toggle="modal"]', function (e) {
+    $(document).on('click.bs.modal.data-api', '[data-toggle="modal"]', function(e) {
         var $this = $(this)
         var href = $this.attr('href')
         var $target = $($this.attr('data-target') || (href && href.replace(/.*(?=#[^\s]+$)/, ''))) // strip for ie7
-        var option = $target.data('bs.modal') ? 'toggle' : $.extend({remote: !/#/.test(href) && href}, $target.data(), $this.data())
+        var option = $target.data('bs.modal') ? 'toggle' : $.extend({
+            remote: !/#/.test(href) && href
+        }, $target.data(), $this.data())
 
         if ($this.is('a'))
             e.preventDefault()
 
-        $target.one('show.bs.modal', function (showEvent) {
+        $target.one('show.bs.modal', function(showEvent) {
             if (showEvent.isDefaultPrevented())
                 return // only register focus restorer if modal will actually get shown
-            $target.one('hidden.bs.modal', function () {
+            $target.one('hidden.bs.modal', function() {
                 $this.is(':visible') && $this.trigger('focus')
             })
         })
@@ -508,7 +516,8 @@ if (typeof jQuery === 'undefined') {
  * ======================================================================== */
 
 
-+function ($) {
++
+function($) {
     'use strict';
 
     // CSS TRANSITION SUPPORT (Shoutout: http://www.modernizr.com/)
@@ -526,7 +535,9 @@ if (typeof jQuery === 'undefined') {
 
         for (var name in transEndEventNames) {
             if (el.style[name] !== undefined) {
-                return {end: transEndEventNames[name]}
+                return {
+                    end: transEndEventNames[name]
+                }
             }
         }
 
@@ -534,13 +545,13 @@ if (typeof jQuery === 'undefined') {
     }
 
     // http://blog.alexmaccaw.com/css-transitions
-    $.fn.emulateTransitionEnd = function (duration) {
+    $.fn.emulateTransitionEnd = function(duration) {
         var called = false
         var $el = this
-        $(this).one('bsTransitionEnd', function () {
+        $(this).one('bsTransitionEnd', function() {
             called = true
         })
-        var callback = function () {
+        var callback = function() {
             if (!called)
                 $($el).trigger($.support.transition.end)
         }
@@ -548,7 +559,7 @@ if (typeof jQuery === 'undefined') {
         return this
     }
 
-    $(function () {
+    $(function() {
         $.support.transition = transitionEnd()
 
         if (!$.support.transition)
@@ -557,7 +568,7 @@ if (typeof jQuery === 'undefined') {
         $.event.special.bsTransitionEnd = {
             bindType: $.support.transition.end,
             delegateType: $.support.transition.end,
-            handle: function (e) {
+            handle: function(e) {
                 if ($(e.target).is(this))
                     return e.handleObj.handler.apply(this, arguments)
             }
