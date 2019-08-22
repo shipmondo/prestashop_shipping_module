@@ -496,7 +496,7 @@ class Pakkelabels_Shipping extends CarrierModule
             $page = $context->page_name;
         }
 
-        $cid = $context->customer->id;
+        $cid = $params['cookie']->id_customer;
 
         //Added BY ROOHI
         $customer = new Customer($cid);
