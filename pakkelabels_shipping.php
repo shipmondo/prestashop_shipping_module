@@ -155,9 +155,7 @@ class Pakkelabels_Shipping extends CarrierModule
             $iPakkelabels_ID_Bring = (string) (Tools::getValue('PAKKELABELS_SHIPPING_ID_BRING'));
             $pakkelabels_option = (string) (Tools::getValue('PAKKELABELS_FRONT_OPTION'));
 
-            $sError_output = $this->l('The Pakkelabels.dk shipping module, requires 
-            all the settings below to be entered correctly and saved
-            before the module will operate correctly.') . '</br>';
+            $sError_output = $this->l('The Pakkelabels.dk shipping module, requires all the settings below to be entered correctly and saved before the module will operate correctly.') . '</br>';
             $sError_output .= $this->l('Invalid Configuration value(s), please insert the following:');
             $aError = [];
             $bError = false;
