@@ -60,12 +60,20 @@ class Pakkelabels_Shipping extends CarrierModule
         $carrier_id = $params['order']->id_carrier;
 
         $order = new Order((int) ($params['order']->id));
-        $sid_PDK = Configuration::get('PAKKELABELS_SHIPPING_ID_POSTNORD');
+
         /* $pakkelabel_info = $context->cookie->pakkelabels; */
-        $iPakkelabels_ID_GLS = Carrier::getCarrierByReference(Configuration::get('PAKKELABELS_SHIPPING_ID_GLS'));
-        $iPakkelabels_ID_DAO = Carrier::getCarrierByReference(Configuration::get('PAKKELABELS_SHIPPING_ID_DAO'));
-        $iPakkelabels_ID_PostNord = Carrier::getCarrierByReference($sid_PDK);
-        $iPakkelabels_ID_Bring = Carrier::getCarrierByReference(Configuration::get('PAKKELABELS_SHIPPING_ID_BRING'));
+        $iPakkelabels_ID_GLS = Carrier::getCarrierByReference(
+            Configuration::get('PAKKELABELS_SHIPPING_ID_GLS')
+        );
+        $iPakkelabels_ID_DAO = Carrier::getCarrierByReference(
+            Configuration::get('PAKKELABELS_SHIPPING_ID_DAO')
+        );
+        $iPakkelabels_ID_PostNord = Carrier::getCarrierByReference(
+            Configuration::get('PAKKELABELS_SHIPPING_ID_POSTNORD')
+        );
+        $iPakkelabels_ID_Bring = Carrier::getCarrierByReference(
+            Configuration::get('PAKKELABELS_SHIPPING_ID_BRING')
+        );
 
         $add_address = false;
         if ($iPakkelabels_ID_GLS->id == $carrier_id) {
@@ -389,9 +397,9 @@ class Pakkelabels_Shipping extends CarrierModule
 
         // Load current value
         if (!$this->v17) {
-            $s_bees = Configuration::get('PAKKELABELS_SHIPPING_DESC_BEES');
+
             $helper->fields_value['PAKKELABELS_SHIPPING_DESC'] = Configuration::get('PAKKELABELS_SHIPPING_DESC');
-            $helper->fields_value['PAKKELABELS_SHIPPING_DESC_BEES'] = $s_bees;
+            $helper->fields_value['PAKKELABELS_SHIPPING_DESC_BEES'] = Configuration::get('PAKKELABELS_SHIPPING_DESC_BEES');
         }
         $s_PDK = Configuration::get('PAKKELABELS_SHIPPING_ID_POSTNORD');
         $s_f_key = Configuration::get('PAKKELABELS_SHIPPING_FRONTEND_KEY');
