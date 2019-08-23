@@ -397,7 +397,6 @@ class Pakkelabels_Shipping extends CarrierModule
 
         // Load current value
         if (!$this->v17) {
-
             $helper->fields_value['PAKKELABELS_SHIPPING_DESC'] = Configuration::get('PAKKELABELS_SHIPPING_DESC');
             $helper->fields_value['PAKKELABELS_SHIPPING_DESC_BEES'] = Configuration::get('PAKKELABELS_SHIPPING_DESC_BEES');
         }
