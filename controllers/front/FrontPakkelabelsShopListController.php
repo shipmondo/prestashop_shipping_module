@@ -157,7 +157,7 @@ class PakkelabelsShopListController extends Module
                                     </div>
                                 </li>
                             <?php } ?>
-                        <li class="pakkelabels_lilogo"> <span>Powered by Pakkelabels.dk</span></li>
+                        <li class="pakkelabels_lilogo"> <span>Powered by Shipmondo</span></li>
                     </ul>
                 <script>
                     jQuery('.pakkelabels-shop-list').each(function()

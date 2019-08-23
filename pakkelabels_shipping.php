@@ -39,7 +39,7 @@ class Pakkelabels_Shipping extends CarrierModule
         $this->version = '1.3.0';
         $this->v16 = _PS_VERSION_ < '1.7';
         $this->v17 = _PS_VERSION_ >= '1.7';
-        $this->author = 'Pakkelabels.dk';
+        $this->author = 'Shipmondo';
         $this->need_instance = 0;
         $this->ps_versions_compliancy = [
             'min' => '1.6',
@@ -47,7 +47,7 @@ class Pakkelabels_Shipping extends CarrierModule
         ];
         $this->bootstrap = true;
         parent::__construct();
-        $this->displayName = $this->l('Pakkelabels.dk Shipping');
+        $this->displayName = $this->l('Shipmondo');
         $this->description = $this->l('GLS, PostNord, DAO and Bring Shipping for PrestaShop');
         if ($this->v17) {
             $this->registerHook('displayHeader');
@@ -164,13 +164,13 @@ class Pakkelabels_Shipping extends CarrierModule
             $iPakkelabels_ID_Bring = (string) (Tools::getValue('PAKKELABELS_SHIPPING_ID_BRING'));
             $pakkelabels_option = (string) (Tools::getValue('PAKKELABELS_FRONT_OPTION'));
 
-            $sError_output = $this->l('The Pakkelabels.dk shipping module, requires all the settings below to be entered correctly and saved before the module will operate correctly.') . '</br>';
+            $sError_output = $this->l('The Shipmondo shipping module, requires all the settings below to be entered correctly and saved before the module will operate correctly.') . '</br>';
             $sError_output .= $this->l('Invalid Configuration value(s), please insert the following:');
             $aError = [];
             $bError = false;
             Configuration::updateValue('PAKKELABELS_FRONT_OPTION', $pakkelabels_option);
             if (empty($sPakkelabels_Frontend_key) || !Validate::isGenericName($sPakkelabels_Frontend_key)) {
-                $aError[] = '<a target="_blank" href="https://app.pakkelabels.dk/main/app/#/setting/api">'
+                $aError[] = '<a target="_blank" href="https://app.shipmondo.com/main/app/#/setting/api">'
                 . $this->l('Frontend Key') . '</a>';
                 Configuration::updateValue('PAKKELABELS_SHIPPING_FRONTEND_KEY', '');
                 $bError = true;
@@ -255,13 +255,13 @@ class Pakkelabels_Shipping extends CarrierModule
         // Init Fields form array
         $fields_form[0]['form'] = [
             'legend' => [
-                'title' => $this->l('Pakkelabels.dk Settings'),
+                'title' => $this->l('Settings'),
             ],
             'input' => [
                 [
                     'name' => 'PAKKELABELS_SHIPPING_DESC',
                     'type' => $type,
-                    $desc => $this->l('Follow the setup guide for Prestashop') . ':
+                    $desc => $this->l('Follow the setup guide for PrestaShop') . ':
                     <a href="https://www.pakkelabels.dk/integration/prestashop-fragtmodul/" target="_blank">
                     https://www.pakkelabels.dk/integration/prestashop-fragtmodul/</a>',
                 ],
@@ -278,7 +278,7 @@ class Pakkelabels_Shipping extends CarrierModule
                     'label' => $this->l('Frontend Key'),
                     'desc' => $this->l('Insert Frontend Key here - Get the key from') . ': 
                     <a target="_blank" href="https://app.pakkelabels.dk/main/app/#/setting/api">
-                    Pakkelabels.dk</a>',
+                    Shipmondo</a>',
                     'required' => true,
                     'col' => 4,
                 ],
