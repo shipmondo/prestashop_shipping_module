@@ -7,7 +7,8 @@
 
 require_once __DIR__ . '../../../config/config.inc.php';
 require_once __DIR__ . '../../../init.php';
-require_once 'controllers/pakkelabelsshoplistcontroller.php';
+require_once 'controllers/front/FrontPakkelabelsShopListController.php';
+
 $response = [];
 switch (Tools::getValue('method')) {
     case 'getCart':
