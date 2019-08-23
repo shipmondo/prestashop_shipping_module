@@ -564,7 +564,7 @@ class Pakkelabels_Shipping extends CarrierModule
                 if ($this->v17) {
                     if (_PS_VERSION_ == '1.7.0.0') {
                         $context->addCSS($this->_path . 'views/css/pakkelabels-17default.css', 'all');
-                    } elseif (_PS_VERSION_ == '1.7.6.0') {
+                    } elseif (_PS_VERSION_ >= '1.7.6.0') {
                         $context->addCSS($this->_path . 'views/css/pakkelabels-176default.css', 'all');
                     } elseif (Module::isInstalled('onepagecheckoutps')) {
                         $context->addCSS($this->_path . 'views/css/pakkelabels-17presteam.css', 'all');
