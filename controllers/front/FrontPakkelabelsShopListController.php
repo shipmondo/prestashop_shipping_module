@@ -5,7 +5,7 @@
  *  @license   All rights reserved
  */
 
-class PakkelabelsShoplistController extends Module
+class FrontPakkelabelsShopListController extends Module
 {
     /** Roohi*/
     public function getshoplist($zipcode, $agent, $frontend_key, $address, $country = 'DK')
