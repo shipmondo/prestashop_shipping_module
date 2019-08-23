@@ -19,17 +19,17 @@ class Pakkelabels_Shipping extends CarrierModule
         'footer',
     ];
     protected $carriers = [
-        'pakkelabels_GLS' => $this->('GLS PakkeShop'),
-        'pakkelabels_GLS_private' => $this->('GLS - Omdeling til privat'),
-        'pakkelabels_GLS_business' => $this->('GLS - Omdeling til erhverv'),
-        'pakkelabels_PostNord' => $this->('PostNord Valgfrit udleveringssted'),
-        'pakkelabels_PostNord_business' => $this->('PostNord - Omdeling til erhverv'),
-        'pakkelabels_PostNord_private' => $this->('PostNord - Omdeling til privat'),
-        'pakkelabels_DAO' => $this->('DAO Pakkeshop'),
-        'pakkelabels_dao_direct' => $this->('DAO Direkte'),
-        'pakkelabels_bring' => $this->('Bring - Valgfrit udleveringssted'),
-        'pakkelabels_bring_private' => $this->('Bring - Aftenlevering til privat'),
-        'pakkelabels_bring_business' => $this->('Bring - Omdeling til erhverv'),
+        'pakkelabels_GLS' => 'GLS PakkeShop',
+        'pakkelabels_GLS_private' => 'GLS - Omdeling til privat',
+        'pakkelabels_GLS_business' => 'GLS - Omdeling til erhverv',
+        'pakkelabels_PostNord' => 'PostNord Valgfrit udleveringssted',
+        'pakkelabels_PostNord_business' => 'PostNord - Omdeling til erhverv',
+        'pakkelabels_PostNord_private' => 'PostNord - Omdeling til privat',
+        'pakkelabels_DAO' => 'DAO Pakkeshop',
+        'pakkelabels_dao_direct' => 'DAO Direkte',
+        'pakkelabels_bring' => 'Bring - Valgfrit udleveringssted',
+        'pakkelabels_bring_private' => 'Bring - Aftenlevering til privat',
+        'pakkelabels_bring_business' => 'Bring - Omdeling til erhverv',
     ];
 
     public function __construct()
