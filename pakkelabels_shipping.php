@@ -49,7 +49,6 @@ class Pakkelabels_Shipping extends CarrierModule
         parent::__construct();
         $this->displayName = $this->l('Pakkelabels.dk Shipping');
         $this->description = $this->l('GLS, PostNord, DAO and Bring Shipping for PrestaShop');
-        $this->confirmUninstall = $this->l('Are you sure you want to uninstall?');
         if ($this->v17) {
             $this->registerHook('displayHeader');
         }
