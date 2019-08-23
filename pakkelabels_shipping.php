@@ -36,7 +36,7 @@ class Pakkelabels_Shipping extends CarrierModule
     {
         $this->name = 'pakkelabels_shipping';
         $this->tab = 'shipping_logistics';
-        $this->version = '1.3.0';
+        $this->version = '1.3.1';
         $this->v16 = _PS_VERSION_ < '1.7';
         $this->v17 = _PS_VERSION_ >= '1.7';
         $this->author = 'Shipmondo';
