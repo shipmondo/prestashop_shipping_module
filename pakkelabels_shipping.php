@@ -19,17 +19,17 @@ class Pakkelabels_Shipping extends CarrierModule
         'footer',
     ];
     protected $carriers = [
-        'pakkelabels_GLS' => 'GLS PakkeShop',
-        'pakkelabels_GLS_private' => 'GLS - Omdeling til privat',
-        'pakkelabels_GLS_business' => 'GLS - Omdeling til erhverv',
-        'pakkelabels_PostNord' => 'PostNord Valgfrit udleveringssted',
-        'pakkelabels_PostNord_business' => 'PostNord - Omdeling til erhverv',
-        'pakkelabels_PostNord_private' => 'PostNord - Omdeling til privat',
-        'pakkelabels_DAO' => 'DAO Pakkeshop',
-        'pakkelabels_dao_direct' => 'DAO Direkte',
-        'pakkelabels_bring' => 'Bring - Valgfrit udleveringssted',
-        'pakkelabels_bring_private' => 'Bring - Aftenlevering til privat',
-        'pakkelabels_bring_business' => 'Bring - Omdeling til erhverv',
+        'pakkelabels_GLS' => $this->('GLS PakkeShop'),
+        'pakkelabels_GLS_private' => $this->('GLS - Omdeling til privat'),
+        'pakkelabels_GLS_business' => $this->('GLS - Omdeling til erhverv'),
+        'pakkelabels_PostNord' => $this->('PostNord Valgfrit udleveringssted'),
+        'pakkelabels_PostNord_business' => $this->('PostNord - Omdeling til erhverv'),
+        'pakkelabels_PostNord_private' => $this->('PostNord - Omdeling til privat'),
+        'pakkelabels_DAO' => $this->('DAO Pakkeshop'),
+        'pakkelabels_dao_direct' => $this->('DAO Direkte'),
+        'pakkelabels_bring' => $this->('Bring - Valgfrit udleveringssted'),
+        'pakkelabels_bring_private' => $this->('Bring - Aftenlevering til privat'),
+        'pakkelabels_bring_business' => $this->('Bring - Omdeling til erhverv'),
     ];
 
     public function __construct()
@@ -41,7 +41,10 @@ class Pakkelabels_Shipping extends CarrierModule
         $this->v17 = _PS_VERSION_ >= '1.7';
         $this->author = 'Pakkelabels.dk';
         $this->need_instance = 0;
-        $this->ps_versions_compliancy = ['min' => '1.6', 'max' => _PS_VERSION_];
+        $this->ps_versions_compliancy = [
+            'min' => '1.6',
+            'max' => _PS_VERSION_,
+        ];
         $this->bootstrap = true;
         parent::__construct();
         $this->displayName = $this->l('Pakkelabels.dk Shipping');
@@ -87,7 +90,6 @@ class Pakkelabels_Shipping extends CarrierModule
             $add_address = true;
         }
         if ($add_address) {
-            //$p_data = json_decode($pakkelabel_info); // Deprecated
             /* Find shop information in db */
             if (isset($params['cart'])) {
                 $sql = 'SELECT `shop_data` FROM `' . _DB_PREFIX_ . 'pakkelabel_carts` WHERE '
@@ -271,6 +273,7 @@ class Pakkelabels_Shipping extends CarrierModule
                     <a target="_blank" href="https://app.pakkelabels.dk/main/app/#/setting/api">
                     Pakkelabels.dk</a>',
                     'required' => true,
+                    'col' => 4,
                 ],
                 [
                     'name' => 'PAKKELABELS_GOOGLE_API_KEY',
@@ -280,6 +283,7 @@ class Pakkelabels_Shipping extends CarrierModule
                     <a target="_blank" href="https://developers.google.com/maps/documentation/javascript/get-api-key">
                     Google</a>',
                     'required' => true,
+                    'col' => 4,
                 ],
                 [
                     'name' => 'PAKKELABELS_SHIPPING_ID_GLS',
