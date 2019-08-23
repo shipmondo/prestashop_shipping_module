@@ -170,6 +170,7 @@ ul.pakkelabels-shoplist-ul li.pakkelabels-shop-list:nth-last-of-type(2) {
 .pakkelabels_shipping_field-wrap,
 #selected_shop_wrapper, .pakkelabels_stores {
   text-indent: 0px;
+  cursor: pointer;
 }
 
 .pakkelabels-single-shop .no_cords_found ~ .no_cords_found {
