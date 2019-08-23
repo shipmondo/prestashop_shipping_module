@@ -1,7 +1,7 @@
 <?php
 /**
- *  @author    Pakkelabels
- *  @copyright 2017 Pakkelabel
+ *  @author    Shipmondo
+ *  @copyright 2019 Shipmondo
  *  @license   All rights reserved
  */
 
