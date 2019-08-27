@@ -47,29 +47,32 @@ class PakkelabelsShopListController extends Module
 
                 //makes the shop list
                 if (Configuration::get('PAKKELABELS_FRONT_OPTION') == 'Popup') {
-                    ob_start(); ?><div class="pakkelabels-shoplist">
-                    <ul class="pakkelabels-shoplist-ul">
-    <?php foreach ($tempShopList as $shop) { ?>
-    <li data-shopid="<?php echo $shop->number; ?>" class="pakkelabels-shop-list">
-        <div class="pakkelabels-single-shop">
-          <div class="pakkelabels-radio-button"></div>
-<div class="pakkelabels-company-name"><?php echo trim($shop->company_name); ?></div>
-          <div class="pakkelabels-Address"><?php echo trim($shop->address); ?></div>
-          <div class="pakkelabels-ZipAndCity">
-            <?php echo '<span class="pakkelabels-zipcode">' . trim($shop->zipcode) . '</span>,'; ?>
-            <?php echo '<span class="pakkelabels-city">' . ucwords(mb_strtolower(trim($shop->city), 'UTF-8')) . '</span>'; ?>
-          </div>
-          <div class="pakkelabels-Packetshop">
-                <?php echo 'ID: ' . Tools::strtoupper($agent) . '-' . trim($shop->number); ?>
-          </div>
-        </div>
-    </li>
-    <?php } ?>
-        </ul>
-                </div>
+                    ob_start(); ?>
+                    <div class="pakkelabels-shoplist">
+                        <ul class="pakkelabels-shoplist-ul">
+                        <?php
+                        foreach ($tempShopList as $shop) { ?>
+                            <li data-shopid="<?php echo $shop->number; ?>" class="pakkelabels-shop-list">
+                                <div class="pakkelabels-single-shop">
+                                <div class="pakkelabels-radio-button"></div>
+                                <div class="pakkelabels-company-name"><?php echo trim($shop->company_name); ?></div>
+                                <div class="pakkelabels-Address"><?php echo trim($shop->address); ?></div>
+                                <div class="pakkelabels-ZipAndCity">
+                                    <?php echo '<span class="pakkelabels-zipcode">' . trim($shop->zipcode) . '</span>,'; ?>
+                                    <?php echo '<span class="pakkelabels-city">' . ucwords(mb_strtolower(trim($shop->city), 'UTF-8')) . '</span>'; ?>
+                                </div>
+                                <div class="pakkelabels-Packetshop">
+                                        <?php echo 'ID: ' . Tools::strtoupper($agent) . '-' . trim($shop->number); ?>
+                                </div>
+                                </div>
+                            </li>
+                        <?php
+                        } ?>
+                        </ul>
+                    </div>
                 <script>
-                    jQuery('.pakkelabels-shop-list').each(function()
-                    {
+                    jQuery('.pakkelabels-shop-list').each(function() {
+
                         jQuery(this).on('click', function()
                         {
                             jQuery('#shop_radio_'+jQuery(this).attr('data-shopid')).trigger('click')
@@ -82,81 +85,83 @@ class PakkelabelsShopListController extends Module
                             jQuery(this).children().children(':radio').prop('checked', true);
                         })
                     })
+
+                    $('.pakkelabels-shop-list').first().trigger('click');
                 </script>
             <?php
                 } elseif (Configuration::get('PAKKELABELS_FRONT_OPTION') == 'radio') {
                     ob_start(); ?>
-                    <div class="pakkelabels-shoplist">
-<?php foreach ($tempShopList as $shop) { ?>
-<div data-shopid="<?php echo $shop->number; ?>" class="pakkelabels-shop-list">
-  <div class="pakkelabels-single-shop">
-    <div class="pakkelabels-radio-button"></div>
-    <div class="selected_content">
-<div class="pakkelabels-company-name"><?php echo trim($shop->company_name); ?></div>
-    <div class="pakkelabels-Address">
-    <?php echo trim($shop->address) . ','; ?>
-    <?php echo  '<span class="pakkelabels-zipcode">' . trim($shop->zipcode) . '</span>'; ?>
-        <?php echo '<span class="pakkelabels-city">' . ucwords(mb_strtolower(trim($shop->city), 'UTF-8')) . '</span>'; ?>
-    </div>
-    <div class="pakkelabels-Packetshop" style="display:none;">
-        <?php echo 'ID: ' . Tools::strtoupper($agent) . '-' . trim($shop->number); ?>                     </div>
-      </div>
-    </div>
-  </div>
-</div>
-<?php
-} ?>
-    </div>
-    <script>
-      jQuery('.pakkelabels-shop-list').each(function()
-      {
-        jQuery(this).on('click', function()
-        {
-           jQuery('#hidden_choosen_shop').attr('shopid', jQuery(this).attr('data-shopid'));
-           //adds the shop information to the #selected_shop div
-           jQuery('#selected_shop_header').html(selected_shop_header);
-           jQuery('#selected_shop_context').html(jQuery(this).children().children('.selected_content').html());
-           //remove all the class selected, from previous li's
-           if(typeof checkdroppointselected !=='undefined')
-               checkdroppointselected(this); 
-               jQuery('.pakkelabels-shop-list').removeClass('selected');
-            //adds the selected class to the newly selected li
-               jQuery(this).addClass('selected');
-               setTimeout(function()
-               {
-                if(typeof saveCartdetails !=='undefined')
-                  saveCartdetails();
-               }, 1000) 
-        })
-      })
-    </script>
+                <div class="pakkelabels-shoplist">
+                    <?php
+                    foreach ($tempShopList as $shop) { ?>
+                        <div data-shopid="<?php echo $shop->number; ?>" class="pakkelabels-shop-list">
+                        <div class="pakkelabels-single-shop">
+                            <div class="pakkelabels-radio-button"></div>
+                            <div class="selected_content">
+                            <div class="pakkelabels-company-name"><?php echo trim($shop->company_name); ?></div>
+                            <div class="pakkelabels-Address">
+                            <?php echo trim($shop->address) . ','; ?>
+                            <?php echo  '<span class="pakkelabels-zipcode">' . trim($shop->zipcode) . '</span>'; ?>
+                                <?php echo '<span class="pakkelabels-city">' . ucwords(mb_strtolower(trim($shop->city), 'UTF-8')) . '</span>'; ?>
+                            </div>
+                            <div class="pakkelabels-Packetshop" style="display:none;">
+                                <?php echo 'ID: ' . Tools::strtoupper($agent) . '-' . trim($shop->number); ?>                     </div>
+                            </div>
+                            </div>
+                        </div>
+                        </div>
+                        <?php
+                    } ?>
+                </div>
+                <script>
+                    jQuery('.pakkelabels-shop-list').each(function() {
+                        jQuery(this).on('click', function() {
+                            jQuery('#hidden_choosen_shop').attr('shopid', jQuery(this).attr('data-shopid'));
+                            //adds the shop information to the #selected_shop div
+                            jQuery('#selected_shop_header').html(selected_shop_header);
+                            jQuery('#selected_shop_context').html(jQuery(this).children().children('.selected_content').html());
+                            //remove all the class selected, from previous li's
+                            if(typeof checkdroppointselected !=='undefined')
+                                checkdroppointselected(this); 
+                            jQuery('.pakkelabels-shop-list').removeClass('selected');
+                            //adds the selected class to the newly selected li
+                            jQuery(this).addClass('selected');
+                            setTimeout(function()
+                            {
+                                if(typeof saveCartdetails !=='undefined')
+                                saveCartdetails();
+                            }, 1000) 
+                        })
+                    })
+                    $('.pakkelabels-shop-list').first().trigger('click');
+                </script>
             <?php
                 } /* Roohi end code */ else {
                     ob_start(); ?>
                     <ul class="pakkelabels-shoplist-dropdownul dropdown-menu">
                         <?php foreach ($tempShopList as $shop) { ?>
-                                <li data-shopid="<?php echo $shop->number; ?>" class="pakkelabels-shop-list">
-                                    <div class="pakkelabels-single-shop">
-                                        <div class="row">
-                                            <div class="col-xs-2">
-<div class="pakkelabels-dropimage">
-<img src="<?php echo _MODULE_DIR_; ?>pakkelabels_shipping/views/img/<?php echo $agent; ?>.png" style="width:100%">
-</div>
-                                            </div>
-      <div class="col-xs-10">
-        <div class="pakkelabels-company-name"><?php echo trim($shop->company_name); ?></div>
-        <div class="pakkelabels-Address"><?php echo trim($shop->address); ?></div>
-        <div class="pakkelabels-ZipAndCity">
-        <?php echo  '<span class="pakkelabels-zipcode">' . trim($shop->zipcode) . '</span>,'; ?>
-        <?php echo '<span class="pakkelabels-city">' . ucwords(mb_strtolower(trim($shop->city), 'UTF-8')) . '</span>'; ?>
-        </div>
-        <div class="pakkelabels-Packetshop">
-        <?php echo 'ID: ' . Tools::strtoupper($agent) . '-' . trim($shop->number); ?>                     </div>
-      </div>
+                            <li data-shopid="<?php echo $shop->number; ?>" class="pakkelabels-shop-list">
+                                <div class="pakkelabels-single-shop">
+                                    <div class="row">
+                                        <div class="col-xs-2">
+                                        <div class="pakkelabels-dropimage">
+                                        <img src="<?php echo _MODULE_DIR_; ?>pakkelabels_shipping/views/img/<?php echo $agent; ?>.png" style="width:100%">
                                         </div>
+                                                                                    </div>
+                                            <div class="col-xs-10">
+                                                <div class="pakkelabels-company-name"><?php echo trim($shop->company_name); ?></div>
+                                                <div class="pakkelabels-Address"><?php echo trim($shop->address); ?></div>
+                                                <div class="pakkelabels-ZipAndCity">
+                                                <?php echo  '<span class="pakkelabels-zipcode">' . trim($shop->zipcode) . '</span>,'; ?>
+                                                <?php echo '<span class="pakkelabels-city">' . ucwords(mb_strtolower(trim($shop->city), 'UTF-8')) . '</span>'; ?>
+                                                </div>
+                                                <div class="pakkelabels-Packetshop">
+                                                <?php echo 'ID: ' . Tools::strtoupper($agent) . '-' . trim($shop->number); ?>                     </div>
+                                            </div>
                                     </div>
-                                </li>
-                            <?php } ?>
+                                </div>
+                            </li>
+                        <?php } ?>
                         <li class="pakkelabels_lilogo"> <span>Powered by Shipmondo</span></li>
                     </ul>
                 <script>
@@ -167,10 +172,10 @@ class PakkelabelsShopListController extends Module
                             jQuery('#hidden_choosen_shop').attr('shopid', jQuery(this).attr('data-shopid'));
                             //adds the shop information to the #selected_shop div
                             jQuery('#selected_shop_header').html(selected_shop_header);
-jQuery('#selected_shop_context').html(jQuery(this).children().children().children('.col-xs-10').html());
+                            jQuery('#selected_shop_context').html(jQuery(this).children().children().children('.col-xs-10').html());
                             //remove all the class selected, from previous li's
-                                if(typeof checkdroppointselected !=='undefined')
-                                    checkdroppointselected(this); 
+                            if(typeof checkdroppointselected !=='undefined')
+                                checkdroppointselected(this); 
                             jQuery('.pakkelabels-shop-list').removeClass('selected');
                             //adds the selected class to the newly selected li
                             jQuery(this).addClass('selected');
