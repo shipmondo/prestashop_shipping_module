@@ -21,7 +21,7 @@ switch (Tools::getValue('method')) {
 
         $sShippinAgent = Tools::getValue('sShippinAgent');
         $iZipcode = Tools::getValue('iZipcode');
-        $iAddress = Tools::getValue('iAddress'); /** Roohi*/
+        $iAddress = Tools::getValue('iAddress');
         $sCountry = 'DK';
         $iNumber_shops = 10;
         $sFrontend_key = Configuration::get('PAKKELABELS_SHIPPING_FRONTEND_KEY');
@@ -38,7 +38,7 @@ switch (Tools::getValue('method')) {
         }
 
         $sShopList = $oShoplist_controlr->getshoplist($iZipcode, $sShippinAgent, $sFrontend_key, $iAddress, $sCountry);
-        /* Roohi*/
+
         die(Tools::jsonEncode($sShopList));
 
     case 'ajaxUpdatePrimaryAddress':
@@ -62,11 +62,7 @@ switch (Tools::getValue('method')) {
         $cart = Context::getContext()->cart;
         $response['cart'] = $cart;
 
-        // Get country id from ISO code // Default DKK
-        /* $sql = 'SELECT `id_country` FROM `' . _DB_PREFIX_ . 'country` WHERE '
-        . '`iso_code` = "DK"';
-        $country_result = Db::getInstance()->getRow($sql); */
-
+        // Get country id from ISO code
         $pakkelabels = [
             'company' => $sCompanyName,
             'address' => $sAdress,
@@ -74,6 +70,7 @@ switch (Tools::getValue('method')) {
             'postcode' => $iZipcode,
             'city' => $sCity,
         ];
+
         // Save in db
         $sql = 'SELECT `id_pkl_cart` FROM `' . _DB_PREFIX_ . 'pakkelabel_carts` WHERE '
         . '`id_cart` = ' . (int) $cart->id;
