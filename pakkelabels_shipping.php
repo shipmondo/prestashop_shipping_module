@@ -512,9 +512,9 @@ class Pakkelabels_Shipping extends CarrierModule
                 'iPakkelabels_ID_POSTNORD' => $pdk->id,
                 'iPakkelabels_ID_BRING' => $bring->id,
                 'iPakkelabels_ID_WINDOW' => Configuration::get('PAKKELABELS_FRONT_OPTION'),
-                'selected_shop_header' => $this->l('Currently choosen pickup point:'),
-                'error_message_zipcode' => $this->l('The zipcode must be 4 digit long, and numeric'),
-                'error_no_cords_found' => $this->l('* Couldnt mark this pickup point on the map'),
+                'selected_shop_header' => $this->l('Currently choose pickup point:'),
+                'error_message_zipcode' => $this->l('The zip code must be 4 digit long, and numeric'),
+                'error_no_cords_found' => $this->l('* Could not mark this pickup point on the map'),
                 'dataRoot' => Tools::getProtocol(Tools::usingSecureMode()) . $_SERVER['HTTP_HOST'] . $this->getPathUri(),
                 'error_no_shop_selected' => $this->l('You must choose a pickup point before, you can proceed'),
                 'error_login_before' => $this->l('Before proceed, you must either login or use guest checkout'),
@@ -531,7 +531,7 @@ class Pakkelabels_Shipping extends CarrierModule
                     );
             $context->addCSS($this->_path . 'views/css/shipmondo-modal.css', 'all');
             $context->addCSS($this->_path . 'views/css/shipmondo.css', 'all');
-            $context->addJS($this->_path . 'views/js/shipmondo-order.js', 'all');
+            $context->addJS($this->_path . 'views/js/shipmondo.js', 'all');
             $context->addJS($this->_path . 'views/js/shipmondo-modal.js', 'all');
         }
     }
