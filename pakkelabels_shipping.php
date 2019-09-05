@@ -36,22 +36,20 @@ class Pakkelabels_Shipping extends CarrierModule
     {
         $this->name = 'pakkelabels_shipping';
         $this->tab = 'shipping_logistics';
-        $this->version = '1.3.1';
-        $this->v16 = _PS_VERSION_ < '1.7';
-        $this->v17 = _PS_VERSION_ >= '1.7';
+        $this->version = '2.0.0';
         $this->author = 'Shipmondo';
         $this->need_instance = 0;
         $this->ps_versions_compliancy = [
-            'min' => '1.6',
+            'min' => '1.7.6.0',
             'max' => _PS_VERSION_,
         ];
         $this->bootstrap = true;
         parent::__construct();
         $this->displayName = $this->l('Shipmondo');
         $this->description = $this->l('GLS, PostNord, DAO and Bring Shipping for PrestaShop');
-        if ($this->v17) {
-            $this->registerHook('displayHeader');
-        }
+
+        // Why are those registerHook() in __construct()?
+        $this->registerHook('displayHeader');
         $this->registerHook('newOrder');
     }
 
@@ -61,7 +59,6 @@ class Pakkelabels_Shipping extends CarrierModule
 
         $order = new Order((int) ($params['order']->id));
 
-        /* $pakkelabel_info = $context->cookie->pakkelabels; */
         $iPakkelabels_ID_GLS = Carrier::getCarrierByReference(
             Configuration::get('PAKKELABELS_SHIPPING_ID_GLS')
         );
@@ -245,13 +242,8 @@ class Pakkelabels_Shipping extends CarrierModule
             ];
         }
         $fields_form = [];
-        if (!$this->v17) {
-            $type = 'free';
-            $desc = 'desc';
-        } else {
-            $type = 'html';
-            $desc = 'html_content';
-        }
+        $type = 'html';
+        $desc = 'html_content';
         // Init Fields form array
         $fields_form[0]['form'] = [
             'legend' => [
@@ -351,7 +343,7 @@ class Pakkelabels_Shipping extends CarrierModule
                             'label' => $this->l('Dropdown'),
                         ],
                         [
-                            'id' => 'active_radio', /* Roohi */
+                            'id' => 'active_radio',
                             'value' => 'radio',
                             'label' => $this->l('Radio Button'),
                         ],
@@ -396,10 +388,6 @@ class Pakkelabels_Shipping extends CarrierModule
         ];
 
         // Load current value
-        if (!$this->v17) {
-            $helper->fields_value['PAKKELABELS_SHIPPING_DESC'] = Configuration::get('PAKKELABELS_SHIPPING_DESC');
-            $helper->fields_value['PAKKELABELS_SHIPPING_DESC_BEES'] = Configuration::get('PAKKELABELS_SHIPPING_DESC_BEES');
-        }
         $s_PDK = Configuration::get('PAKKELABELS_SHIPPING_ID_POSTNORD');
         $s_f_key = Configuration::get('PAKKELABELS_SHIPPING_FRONTEND_KEY');
         $helper->fields_value['PAKKELABELS_SHIPPING_FRONTEND_KEY'] = $s_f_key;
@@ -420,9 +408,7 @@ class Pakkelabels_Shipping extends CarrierModule
     public function uninstall()
     {
         if (parent::uninstall()) {
-            if ($this->v17) {
-                $this->hooks[] = 'displayHeader';
-            }
+            $this->hooks[] = 'displayHeader';
             foreach ($this->hooks as $hook) {
                 if (!$this->unregisterHook($hook)) {
                     return false;
@@ -450,9 +436,7 @@ class Pakkelabels_Shipping extends CarrierModule
     public function install()
     {
         if (parent::install()) {
-            if ($this->v17) {
-                $this->hooks[] = 'displayHeader';
-            }
+            $this->hooks[] = 'displayHeader';
             foreach ($this->hooks as $hook) {
                 if (!$this->registerHook($hook)) {
                     return false;
@@ -506,12 +490,11 @@ class Pakkelabels_Shipping extends CarrierModule
 
         $cid = $params['cookie']->id_customer;
 
-        //Added BY ROOHI
         $customer = new Customer($cid);
         $customer_address = $customer->getAddresses(1);
         $postcode = $customer_address[0]['postcode'];
-        $m_name = 'module-supercheckout-supercheckout';
-        if (($page == 'order-opc' && !$this->v17) || $page == 'order' || $page == $m_name) {
+
+        if ($page == 'order') {
             Media::addJsDef([
                 'sPage' => $page,
                 'sPakkelabels_find_shop_btn_text' => $this->l('Find nearest pickup point'),
@@ -529,23 +512,15 @@ class Pakkelabels_Shipping extends CarrierModule
                 'iPakkelabels_ID_POSTNORD' => $pdk->id,
                 'iPakkelabels_ID_BRING' => $bring->id,
                 'iPakkelabels_ID_WINDOW' => Configuration::get('PAKKELABELS_FRONT_OPTION'),
-                'selected_shop_header' => $this->l('Currently choosen pickup point:'),
-                'error_message_zipcode' => $this->l('The zipcode must be 4 digit long, and numeric'),
-                'error_no_cords_found' => $this->l('* Couldnt mark this pickup point on the map'),
+                'selected_shop_header' => $this->l('Currently choose pickup point:'),
+                'error_message_zipcode' => $this->l('The zip code must be 4 digit long, and numeric'),
+                'error_no_cords_found' => $this->l('* Could not mark this pickup point on the map'),
                 'dataRoot' => Tools::getProtocol(Tools::usingSecureMode()) . $_SERVER['HTTP_HOST'] . $this->getPathUri(),
                 'error_no_shop_selected' => $this->l('You must choose a pickup point before, you can proceed'),
                 'error_login_before' => $this->l('Before proceed, you must either login or use guest checkout'),
             ]);
-            if (_PS_VERSION_ == '1.7.0.0') {
-                $cart_presenter = new PrestaShop\PrestaShop\Adapter\Cart\CartPresenter();
-                Media::addJsDef([
-                    'cart' => $cart_presenter->present($context->cart),
-                ]);
-            }
-            //loads google map API
-            if ($this->v17) {
-                if (_PS_VERSION_ != '1.7.0.0') {
-                    $context->registerJavascript(
+            //loads Google map API
+            $context->registerJavascript(
                         'google-maps',
                         'https://maps.googleapis.com/maps/api/js?key=' . Configuration::get('PAKKELABELS_GOOGLE_API_KEY'),
                         [
@@ -554,100 +529,10 @@ class Pakkelabels_Shipping extends CarrierModule
                             'priority' => 20,
                         ]
                     );
-                } else {
-                    $gapi_key = Configuration::get('PAKKELABELS_GOOGLE_API_KEY');
-                    $context->addJS('https://maps.googleapis.com/maps/api/js?key=' . $gapi_key, 'all');
-                }
-                // $context->addCSS($this->_path . 'views/css/pakkelabels-17.css', 'all');
-            } else {
-                $gapi_key = Configuration::get('PAKKELABELS_GOOGLE_API_KEY');
-                $context->addJS('https://maps.googleapis.com/maps/api/js?key=' . $gapi_key, 'all');
-                // $context->addCSS($this->_path . 'views/css/pakkelabels-16.css', 'all');
-            }
-            $context->addCSS($this->_path . 'views/css/pakkelabel-modal.css', 'all');
-            $context->addJS($this->_path . 'views/js/pakkelabel-modal.js', 'all');
-            if ($page == 'order') {
-                if ($this->v17) {
-                    if (_PS_VERSION_ == '1.7.0.0') {
-                        $context->addCSS($this->_path . 'views/css/pakkelabels-17default.css', 'all');
-                    } elseif (_PS_VERSION_ >= '1.7.6.0') {
-                        $context->addCSS($this->_path . 'views/css/pakkelabels-176default.css', 'all');
-                    } elseif (Module::isInstalled('onepagecheckoutps')) {
-                        $context->addCSS($this->_path . 'views/css/pakkelabels-17presteam.css', 'all');
-                    } elseif (Module::isInstalled('thecheckout')) {
-                        $context->addCSS($this->_path . 'views/css/pakkelabels-17zerlag.css', 'all');
-                    } else {
-                        $context->addCSS($this->_path . 'views/css/pakkelabels-17.css', 'all');
-                    }
-                } else {
-                    $context->addCSS($this->_path . 'views/css/pakkelabels-16.css', 'all');
-                }
-            }
-
-            if ($page == 'order-opc') {
-                if (!$this->v17) {
-                    if (Module::isInstalled('onepagecheckout') && Module::isEnabled('onepagecheckout')) {
-                        $context->addCSS($this->_path . 'views/css/pakkelabels-16zerlag.css', 'all');
-                    } elseif (Module::isInstalled('onepagecheckoutps') && Module::isEnabled('onepagecheckoutps')) {
-                        $context->addCSS($this->_path . 'views/css/pakkelabels-16presteam.css', 'all');
-                    } else {
-                        $context->addCSS($this->_path . 'views/css/pakkelabels-16.css', 'all');
-                    }
-                }
-            }
-
-            if ($page == 'module-supercheckout-supercheckout') {
-                if ($this->v17) {
-                    $context->addCSS($this->_path . 'views/css/pakkelabels-16knowband.css', 'all');
-                } else {
-                    $context->addCSS($this->_path . 'views/css/pakkelabels-17knowband.css', 'all');
-                }
-            }
-
-            if (!$this->v17) {
-                // Specific for order 5 step page
-                if ($page == 'order') {
-                    $cart = Context::getContext()->cart;
-                    if ($cart->id_address_delivery) {
-                        $myAddress = new Address($cart->id_address_delivery);
-                        Media::addJsDef([
-                            'sDefaultZipcode' => $myAddress->postcode,
-                        ]);
-                    }
-                }
-                if ($page == 'order-opc') {
-                    if (Module::isInstalled('onepagecheckout') && Module::isEnabled('onepagecheckout')) {
-                        $context->addJS($this->_path . '/views/js/pakkelabels-order-onepagecheckout.js', 'all');
-                    } elseif (Module::isInstalled('onepagecheckoutps') && Module::isEnabled('onepagecheckoutps')) {
-                        $context->addJS($this->_path . '/views/js/pakkelabels-order-opcps.js', 'all');
-                    } else {
-                        $context->addJS($this->_path . '/views/js/pakkelabels-order-opc.js', 'all');
-                    }
-                }
-            }
-            if ($page == 'order') {
-                if ($this->v17) {
-                    if (_PS_VERSION_ == '1.7.0.0') {
-                        $context->addJS($this->_path . 'views/js/pakkelabels-order-170.js', 'all');
-                    } elseif (Module::isInstalled('onepagecheckoutps')) {
-                        $context->addJS($this->_path . 'views/js/pakkelabels-order-onepagecheckoutps-17.js', 'all');
-                    } elseif (Module::isInstalled('thecheckout')) {
-                        $context->addJS($this->_path . 'views/js/pakkelabels-order-17-zerlag.js', 'all');
-                    } else {
-                        $context->addJS($this->_path . 'views/js/pakkelabels-order-17.js', 'all');
-                    }
-                } else {
-                    $context->addJS($this->_path . 'views/js/pakkelabels-order-16.js', 'all');
-                }
-            }
-
-            if ($page == 'module-supercheckout-supercheckout') {
-                if ($this->v17) {
-                    $context->addJS($this->_path . '/views/js/pakkelabels-supercheckout-17.js', 'all');
-                } else {
-                    $context->addJS($this->_path . '/views/js/pakkelabels-supercheckout-16.js', 'all');
-                }
-            }
+            $context->addCSS($this->_path . 'views/css/shipmondo-modal.css', 'all');
+            $context->addCSS($this->_path . 'views/css/shipmondo.css', 'all');
+            $context->addJS($this->_path . 'views/js/shipmondo.js', 'all');
+            $context->addJS($this->_path . 'views/js/shipmondo-modal.js', 'all');
         }
     }
 
@@ -714,23 +599,13 @@ class Pakkelabels_Shipping extends CarrierModule
                             'price' => '0',
                         ], true, false);
 
-                        if ($this->v17) {
-                            Db::getInstance()->insert('delivery', [
-                                'id_carrier' => $id_carrier,
-                                'id_range_price' => null,
-                                'id_range_weight' => $rangewt_id,
-                                'id_zone' => $id_zone,
-                                'price' => '0',
-                            ], true, false);
-                        } else {
-                            Db::getInstance()->autoExecuteWithNullValues('delivery', [
-                                'id_carrier' => $id_carrier,
-                                'id_range_price' => null,
-                                'id_range_weight' => $rangewt_id,
-                                'id_zone' => $id_zone,
-                                'price' => '0',
-                            ], 'INSERT');
-                        }
+                        Db::getInstance()->insert('delivery', [
+                            'id_carrier' => $id_carrier,
+                            'id_range_price' => null,
+                            'id_range_weight' => $rangewt_id,
+                            'id_zone' => $id_zone,
+                            'price' => '0',
+                        ], true, false);
                     }
                 }
 

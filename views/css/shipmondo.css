@@ -57,19 +57,12 @@
   font-style: italic;
   text-indent: 0px !important;
 }
-/*
-.no_cords_found
-{
-	font-size: 12px;
-	font-style: italic;
-	margin-top:5px;
-
-}*/
 
 #pakkelabels_find_shop_btn {
   margin-top: 5px;
   width: 100%;
   padding: 5px;
+  white-space: normal;
 }
 
 #Pakkelabels_zipcode_field {
@@ -90,7 +83,7 @@
 }
 
 .pakkelabels_shipping_field {
-  max-width: 275px;
+  max-width: 100%;
   display: inline-block;
 }
 
@@ -184,8 +177,8 @@ ul.pakkelabels-shoplist-ul li.pakkelabels-shop-list:nth-last-of-type(2) {
 
 .pakkelabels-single-shop {
   position: relative;
-  font-size: 12px;
-  line-height: 1.5em;
+  font-size: 16px;
+  line-height: 18px;
 }
 
 .pakkelabels-single-shop .pakkelabels-radio-button {
@@ -239,17 +232,7 @@ ul.pakkelabels-shoplist-ul li.pakkelabels-shop-list:nth-last-of-type(2) {
 .pakkelabels_shipping_field {
   width: 100%;
 }
-
 /*dropdown design*/
-
-.pakkelabels-shoplist.dropdown .btn-primary ,.pts .pakkelabels-shoplist.dropdown .btn-primary {
-  color: #fff;
-  background-color: #666666;
-  border: none;
-  width: 100%;
-  text-align: left;
-  font-weight: bold;
-}
 
 #selected_shop_wrapper {
   padding: 5px 0;
@@ -272,7 +255,7 @@ ul.pakkelabels-shoplist-ul li.pakkelabels-shop-list:nth-last-of-type(2) {
 
 .pakkelabels-shoplist-dropdownul.dropdown-menu {
   border: 1px solid #dadada;
-  width: 100%;
+  width: 50.5%;
   margin-top: -2px;
   padding-top: 0px;
 }
@@ -289,22 +272,13 @@ ul.pakkelabels-shoplist-ul li.pakkelabels-shop-list:nth-last-of-type(2) {
 
 .pakkelabels-shoplist-dropdownul li:last-child {
   border-bottom: none;
-  padding: 3px 0;
+  padding-top: 4px;
 }
 
 .pakkelabels-shoplist-dropdownul .pakkelabels-single-shop {
   font-size: 13px;
   line-height: unset;
   padding: 6px 0;
-}
-
-#carrierTable #pakkelabels-zipcode-wrapper {
-  font-weight: initial;
-}
-
-.pakkelabels-single-shop .row {
-  margin-left: -15px !important;
-  margin-right: -15px !important;
 }
 
 .pakkelabels-shoplist-dropdownul .pakkelabels-Address {
@@ -335,22 +309,11 @@ ul.pakkelabels-shoplist-ul li.pakkelabels-shop-list:nth-last-of-type(2) {
 
 .pakkelabels-shoplist-dropdownul .pakkelabels-Address, .pakkelabels-shoplist-dropdownul .pakkelabels-ZipAndCity span, .pakkelabels-shoplist-dropdownul .pakkelabels-Packetshop {
   font-size: 11px;
+  line-height: 13px;
 }
 
 .pakkelabels_lilogo img {
   width: 108px !important;
-}
-
-.pakkelabels-shoplist-dropdownul .col-xs-10 > div {
-  line-height: 14px;
-}
-
-.supercheckout-blocks .pakkelabels-choose-shop td {
-  width: 285px !important;
-}
-
-#carrierTable .pakkelabels-dropimage img {
-  padding: 0px;
 }
 
 .pakkelabels_lilogo {
@@ -358,37 +321,9 @@ ul.pakkelabels-shoplist-ul li.pakkelabels-shop-list:nth-last-of-type(2) {
   font-size: 11px;
 }
 
-#supercheckout-fieldset div.supercheckout-container {
-  overflow: unset;
-}
-/*opc-standard checkout */
-#opc-main-block .pakkelabels_shipping_field {
-  max-width: 255px;
-}
-
 #opc-main-block  #pakkelabels_find_shop_btn.button.button-small {
   width: 100%;
 }
-
-#onepagecheckoutps_step_two_container .button.button-small span {
-  border: none;
-}
-
-#onepagecheckoutps_step_two_container .button.button-small span.caret {
-  border-right: 4px solid transparent !important;
-  border-bottom: 0 dotted !important;
-  border-left: 4px solid transparent !important;
-  padding: 0px;
-  border: inset;
-  border-top-color: #fff !important;
-  border-top: 4px solid #fff !important;
-}
-/*super checkout */
-#supercheckout-fieldset #buttonWithProgres {
-  width: 270px !important;
-}
-
-/**************RESPONSIVE ******************/
 
 @media (max-width: 540px) {
   ul.pakkelabels-shoplist-ul {
@@ -429,20 +364,47 @@ ul.pakkelabels-shoplist-ul li.pakkelabels-shop-list:nth-last-of-type(2) {
 @media (max-height: 540px) {
 }
 
-/*Roohi*/
 #pakkelabels_find_shop_btn {
   color: #fff;
-  background-color: #43b155;
+  background-color: #2fb5d2;
   border-color: transparent;
-  border: 1px solid #63c473;
+  box-shadow: 2px 2px 4px 0 rgba(0,0,0,.2);
+  text-transform: uppercase;
   font-weight: 600;
-  width: 100%;
   padding: .5rem 1.25rem;
+  width: auto;
+  position: relative;
 }
 
 #pakkelabels_find_shop_btn:focus,#pakkelabels_find_shop_btn:hover {
-  background-color: #2e7a3a;
-  border: solid 1px #358c43;
+  background-color: #2592a9;
+}
+
+.pakkelabels-shoplist .selected_content {
+  font-size: 12px;
+}
+
+#pakkelabels_find_shop_btn.dropdown-toggle::after {
+  content: none;
+}
+
+.pakkelabels-shoplist.dropdown .caret {
+  position: absolute;
+  right: 8px;
+  top: 17px;
+}
+
+.caret {
+  display: inline-block;
+  width: 0;
+  height: 0;
+  margin-left: 2px;
+  vertical-align: middle;
+  border-top: 4px solid #fff;
+  border-right: 4px solid transparent;
+  border-left: 4px solid transparent;
+  border-bottom: 0 dotted;
+  content: "";
 }
 
 .pakkelabels-shoplist-dropdownul.dropdown-menu {
@@ -451,20 +413,44 @@ ul.pakkelabels-shoplist-ul li.pakkelabels-shop-list:nth-last-of-type(2) {
   overflow-x: hidden;
 }
 
-#header {
-  z-index: auto;
+.loading_radio {
+  width: 26px;
+}
+
+.pakkelabels-shoplist .selected_content,div#onepagecheckoutps .pakkelabels-shoplist span {
+  font-size: 12px;
 }
 
 #selected_shop_wrapper.add_border {
   border: 1px solid rgb(238, 238, 238);
 }
 
-.loading_radio {
-  width: 26px;
-}
-
 #selected_shop_wrapper {
   border: 0;
 }
 
-/**************END RESPONSIVE ******************/
+@media only screen and (max-width:767px) {
+  #pakkelabels-zipcode-wrapper {
+    padding: 0 25px;
+  }
+
+  .pakkelabels-shop-list.radio {
+    margin-bottom: 5px;
+  }
+
+  .row.delivery-option .col-sm-5.col-xs-12,.row.delivery-option .col-sm-4.col-xs-12,.row.delivery-option .col-sm-3.col-xs-12 {
+    width: 100%;
+  }
+
+  .row.delivery-option .col-sm-5.col-xs-12 .row {
+    margin: 0;
+  }
+
+  .row.delivery-option .col-sm-4.col-xs-12 .row {
+    margin: 0;
+  }
+
+  .row.delivery-option .col-sm-3.col-xs-12 .row {
+    margin: 0;
+  }
+}

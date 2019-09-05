@@ -20,9 +20,9 @@ class PakkelabelsShopListController extends Module
             /* 'number' => $number */
         ];
 
-        $sError_msg_wrong_zipcode = $this->l('Enter Zipcode and Address to see Pickup Points');
-        $sError_msg_no_pickuppoint = 'Kunne ikke finde nogen afhentningsteder for det valgte postnummer';
-        /* oversættes senere */
+        $sError_msg_wrong_zipcode = $this->l('Enter zip code and Address to see Pickup Points');
+        $sError_msg_no_pickuppoint = $this->l('Could not find any pickup locations for the selected zip code');
+
         $response = [];
         if ((!empty($zipcode) || !empty($address)) && !empty($frontend_key)) {
             //Calls the Curl method, from the main class
@@ -30,9 +30,15 @@ class PakkelabelsShopListController extends Module
 
             if (!empty($tempShopList->message)) {
                 if ($tempShopList->message == 'Invalid frontend_key') {
-                    return ['status' => false, 'error' => 'Tilføj venligst en gyldig fragtmodul nøgle']; //$this->l('Please add a valid deliverymodule key in Admin!'));
+                    return [
+                        'status' => false,
+                        'error' => $this->l('Please add a valid delivery module key in admin!'),
+                    ];
                 } else {
-                    return ['status' => false, 'error' => $tempShopList->message];
+                    return [
+                        'status' => false,
+                        'error' => $tempShopList->message,
+                    ];
                 }
             }
 
@@ -136,7 +142,7 @@ class PakkelabelsShopListController extends Module
                     $('.pakkelabels-shop-list').first().trigger('click');
                 </script>
             <?php
-                } /* Roohi end code */ else {
+                } else {
                     ob_start(); ?>
                     <ul class="pakkelabels-shoplist-dropdownul dropdown-menu">
                         <?php foreach ($tempShopList as $shop) { ?>
