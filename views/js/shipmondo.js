@@ -311,7 +311,6 @@ jQuery(window).on('load', function() {
                 chosenShippingAgent = 'bring';
                 break;
         }
-        console.log(chosenShippingAgent)
 
         defaultZipcode = jQuery('#Pakkelabels_zipcode_field').val();
         defaultAddress = jQuery('#Pakkelabels_address_field').val();
@@ -405,7 +404,6 @@ jQuery(window).on('load', function() {
                 var id_delivery = jQuery('input[name="id_address_delivery"]:checked').val();
             }
             var address_data = prestashop.customer.addresses[id_delivery];
-            console.log(address_data);
             jQuery('#Pakkelabels_zipcode_field').val(address_data.postcode);
             jQuery('#Pakkelabels_address_field').val(address_data.address1);
         }
