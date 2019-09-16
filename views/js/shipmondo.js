@@ -415,6 +415,7 @@ jQuery(window).on('load', function() {
         }
     });
 
+    //load service points if you go back to edit
     $('#checkout-delivery-step span.step-edit').on('click', function(){
         $('.delivery-option input:checked').trigger('click')
     })

@@ -8,8 +8,7 @@
 class PakkelabelsShopListController extends Module
 {
     /** Roohi*/
-    public function getshoplist($zipcode, $agent, $frontend_key, $address, $country = 'DK')
-    {
+    public function getshoplist($zipcode, $agent, $frontend_key, $address, $country = 'DK', $servicePointId = null) {
         $method = 'GET';
         $url = 'https://service-points.pakkelabels.dk/pickup-points.json';
         $data = ['frontend_key' => $frontend_key,
@@ -135,10 +134,13 @@ class PakkelabelsShopListController extends Module
                             jQuery(this).addClass('selected');
                             setTimeout(function()
                             {
-                                if(typeof saveCartdetails !=='undefined')
-                                saveCartdetails();
+                                if(typeof saveCartdetails !== 'undefined')
+                                    saveCartdetails();
                             }, 1000) 
                         })
+
+                        if( $(this).data('shopid') == '<?= $servicePointId ?>')
+                            $(this).trigger('click')
                     })
 
                     if($('.pakkelabels-shop-list.selected').length == 0)
