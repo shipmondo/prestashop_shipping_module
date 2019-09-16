@@ -106,8 +106,10 @@ class PakkelabelsShopListController extends Module
                             <div class="selected_content">
                             <div class="pakkelabels-company-name"><?php echo trim($shop->company_name); ?></div>
                             <div class="pakkelabels-Address">
-                            <?php echo trim($shop->address) . ','; ?>
-                            <?php echo  '<span class="pakkelabels-zipcode">' . trim($shop->zipcode) . '</span>'; ?>
+                                <?php echo trim($shop->address); ?>
+                            </div>
+                            <div class="pakkelabels-ZipAndCity">
+                                <?php echo  '<span class="pakkelabels-zipcode">' . trim($shop->zipcode) . '</span>'; ?>
                                 <?php echo '<span class="pakkelabels-city">' . ucwords(mb_strtolower(trim($shop->city), 'UTF-8')) . '</span>'; ?>
                             </div>
                             <div class="pakkelabels-Packetshop" style="display:none;">
