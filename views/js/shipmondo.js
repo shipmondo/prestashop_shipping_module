@@ -371,7 +371,7 @@ jQuery(window).on('load', function() {
                 shippingAgent = 'pdk'
                 break;
             case iPakkelabels_ID_BRING + ',':
-                shippingAgent = 'pdk'
+                shippingAgent = 'bring'
                 break;
             default:
                 return;
@@ -415,8 +415,12 @@ jQuery(window).on('load', function() {
         }
     });
 
-    //if a pakkelabels.dk shipping method choosen on pageload, add the zipcode div
-    if ($.inArray(jQuery('.delivery-option input:checked').val(), [iPakkelabels_ID_GLS + ",", iPakkelabels_ID_POSTNORD + ",", iPakkelabels_ID_DAO + ",", iPakkelabels_ID_BRING + ","])) {
+    $('#checkout-delivery-step span.step-edit').on('click', function(){
+        $('.delivery-option input:checked').trigger('click')
+    })
+
+    //if a shipping method chosen on pageload, trigger click event of that method
+    if ($('.js-current-step').attr('id') == 'checkout-delivery-step' && $.inArray(jQuery('.delivery-option input:checked').val(), [iPakkelabels_ID_GLS + ",", iPakkelabels_ID_POSTNORD + ",", iPakkelabels_ID_DAO + ",", iPakkelabels_ID_BRING + ","]) >= 0) {
         $('.delivery-option input:checked').trigger('click')
     }
 
@@ -425,7 +429,6 @@ jQuery(window).on('load', function() {
             jQuery('#choose-stop-btn').trigger("click");
             jQuery('#choose-stop-btn').blur();
         }
-
     });
 
     //shows map

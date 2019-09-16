@@ -93,6 +93,8 @@ switch (Tools::getValue('method')) {
 
         $return = Db::getInstance()->execute($sql);
 
+        $resposnse['return'] = $return;
+        
         if ($cart->update()) {
             $response['status'] = 'success';
             $response['address_id'] = $cart->id_address_delivery;

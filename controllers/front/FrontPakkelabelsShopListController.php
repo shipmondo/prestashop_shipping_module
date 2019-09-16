@@ -92,7 +92,8 @@ class PakkelabelsShopListController extends Module
                         })
                     })
 
-                    $('.pakkelabels-shop-list').first().trigger('click');
+                    if($('.pakkelabels-shop-list.selected').length == 0)
+                        $('.pakkelabels-shop-list').first().trigger('click');
                 </script>
             <?php
                 } elseif (Configuration::get('PAKKELABELS_FRONT_OPTION') == 'radio') {
@@ -139,7 +140,9 @@ class PakkelabelsShopListController extends Module
                             }, 1000) 
                         })
                     })
-                    $('.pakkelabels-shop-list').first().trigger('click');
+
+                    if($('.pakkelabels-shop-list.selected').length == 0)
+                        $('.pakkelabels-shop-list').first().trigger('click');
                 </script>
             <?php
                 } else {
