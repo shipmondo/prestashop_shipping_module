@@ -92,8 +92,6 @@ switch (Tools::getValue('method')) {
         }
 
         $return = Db::getInstance()->execute($sql);
-
-        $resposnse['return'] = $return;
         
         if ($cart->update()) {
             $response['status'] = 'success';
