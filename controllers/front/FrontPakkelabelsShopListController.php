@@ -8,8 +8,7 @@
 class PakkelabelsShopListController extends Module
 {
     /** Roohi*/
-    public function getshoplist($zipcode, $agent, $frontend_key, $address, $country = 'DK')
-    {
+    public function getshoplist($zipcode, $agent, $frontend_key, $address, $country = 'DK', $servicePointId = null) {
         $method = 'GET';
         $url = 'https://service-points.pakkelabels.dk/pickup-points.json';
         $data = ['frontend_key' => $frontend_key,
@@ -107,8 +106,10 @@ class PakkelabelsShopListController extends Module
                             <div class="selected_content">
                             <div class="pakkelabels-company-name"><?php echo trim($shop->company_name); ?></div>
                             <div class="pakkelabels-Address">
-                            <?php echo trim($shop->address) . ','; ?>
-                            <?php echo  '<span class="pakkelabels-zipcode">' . trim($shop->zipcode) . '</span>'; ?>
+                                <?php echo trim($shop->address); ?>
+                            </div>
+                            <div class="pakkelabels-ZipAndCity">
+                                <?php echo  '<span class="pakkelabels-zipcode">' . trim($shop->zipcode) . '</span>'; ?>
                                 <?php echo '<span class="pakkelabels-city">' . ucwords(mb_strtolower(trim($shop->city), 'UTF-8')) . '</span>'; ?>
                             </div>
                             <div class="pakkelabels-Packetshop" style="display:none;">
@@ -135,10 +136,13 @@ class PakkelabelsShopListController extends Module
                             jQuery(this).addClass('selected');
                             setTimeout(function()
                             {
-                                if(typeof saveCartdetails !=='undefined')
-                                saveCartdetails();
+                                if(typeof saveCartdetails !== 'undefined')
+                                    saveCartdetails();
                             }, 1000) 
                         })
+
+                        if( $(this).data('shopid') == '<?= $servicePointId ?>')
+                            $(this).trigger('click')
                     })
 
                     if($('.pakkelabels-shop-list.selected').length == 0)

@@ -19,6 +19,16 @@ switch (Tools::getValue('method')) {
         $oShoplist_controlr = new PakkelabelsShoplistController();
         $cart = Context::getContext()->cart;
 
+        $sql = 'SELECT `shop_data` FROM `' . _DB_PREFIX_ . 'pakkelabel_carts` WHERE '
+        . '`id_cart` = ' . (int) $cart->id;
+        $result = Db::getInstance()->getRow($sql);
+
+        $servicePointId = null;
+        if($result) {
+            $servicePointId = Tools::jsonDecode(str_rot13($result['shop_data']))->address2;
+            $servicePointId = preg_replace('/\D/', '', $servicePointId);
+        }
+
         $sShippinAgent = Tools::getValue('sShippinAgent');
         $iZipcode = Tools::getValue('iZipcode');
         $iAddress = Tools::getValue('iAddress');
@@ -37,7 +47,7 @@ switch (Tools::getValue('method')) {
             $sCountry = $country_result['iso_code'];
         }
 
-        $sShopList = $oShoplist_controlr->getshoplist($iZipcode, $sShippinAgent, $sFrontend_key, $iAddress, $sCountry);
+        $sShopList = $oShoplist_controlr->getshoplist($iZipcode, $sShippinAgent, $sFrontend_key, $iAddress, $sCountry, $servicePointId);
 
         die(Tools::jsonEncode($sShopList));
 
@@ -79,25 +89,23 @@ switch (Tools::getValue('method')) {
         if (!$result) {
             $sql = 'INSERT INTO `' . _DB_PREFIX_ . 'pakkelabel_carts` SET '
             . '`id_cart` = ' . (int) $cart->id . ', '
-            . '`shop_data` = "' . str_rot13(Tools::jsonEncode($pakkelabels)) . '", '
+            . '`shop_data` = \'' . str_rot13(Tools::jsonEncode($pakkelabels)) . '\', '
             . '`id_carrier` = ' . (int) $cart->id_carrier;
-
-            $response['sql'] = $sql;
         } else {
             $sql = 'UPDATE `' . _DB_PREFIX_ . 'pakkelabel_carts` SET '
             . '`id_cart` = ' . (int) $cart->id . ', '
-            . '`shop_data` = "' . str_rot13(Tools::jsonEncode($pakkelabels)) . '", '
+            . '`shop_data` = \'' . str_rot13(Tools::jsonEncode($pakkelabels)) . '\', '
             . '`id_carrier` = ' . (int) $cart->id_carrier . ' '
             . 'WHERE `id_cart` = ' . (int) $cart->id;
         }
 
         $return = Db::getInstance()->execute($sql);
         
-        if ($cart->update()) {
+        if ($return && $cart->update()) {
             $response['status'] = 'success';
             $response['address_id'] = $cart->id_address_delivery;
         } else {
-            $response['status'] = $iZipcode;
+            $response['status'] = 'error';
         }
 
         die(Tools::jsonEncode($response));
@@ -129,14 +137,14 @@ switch (Tools::getValue('method')) {
         if (!$result) {
             $sql = 'INSERT INTO `' . _DB_PREFIX_ . 'pakkelabel_carts` SET '
             . '`id_cart` = ' . (int) $cart->id . ', '
-            . '`shop_data` = "' . str_rot13(Tools::jsonEncode($pakkelabels)) . '", '
+            . '`shop_data` = \'' . str_rot13(Tools::jsonEncode($pakkelabels)) . '\', '
             . '`id_carrier` = ' . (int) $cart->id_carrier;
 
             $response['sql'] = $sql;
         } else {
             $sql = 'UPDATE `' . _DB_PREFIX_ . 'pakkelabel_carts` SET '
             . '`id_cart` = ' . (int) $cart->id . ', '
-            . '`shop_data` = "' . str_rot13(Tools::jsonEncode($pakkelabels)) . '", '
+            . '`shop_data` = \'' . str_rot13(Tools::jsonEncode($pakkelabels)) . '\', '
             . '`id_carrier` = ' . (int) $cart->id_carrier . ' '
             . 'WHERE `id_cart` = ' . (int) $cart->id;
         }
@@ -147,7 +155,7 @@ switch (Tools::getValue('method')) {
             $response['status'] = 'success';
             $response['address_id'] = $cart->id_address_delivery;
         } else {
-            $response['status'] = $iZipcode;
+            $response['status'] = 'error';
         }
         die(Tools::jsonEncode($response));
 
@@ -181,14 +189,14 @@ switch (Tools::getValue('method')) {
         if (!$result) {
             $sql = 'INSERT INTO `' . _DB_PREFIX_ . 'pakkelabel_carts` SET '
             . '`id_cart` = ' . (int) $cart->id . ', '
-            . '`shop_data` = "' . str_rot13(Tools::jsonEncode($pakkelabels)) . '", '
+            . '`shop_data` = \'' . str_rot13(Tools::jsonEncode($pakkelabels)) . '\', '
             . '`id_carrier` = ' . (int) $cart->id_carrier;
 
             $response['sql'] = $sql;
         } else {
             $sql = 'UPDATE `' . _DB_PREFIX_ . 'pakkelabel_carts` SET '
             . '`id_cart` = ' . (int) $cart->id . ', '
-            . '`shop_data` = "' . str_rot13(Tools::jsonEncode($pakkelabels)) . '", '
+            . '`shop_data` = \'' . str_rot13(Tools::jsonEncode($pakkelabels)) . '\', '
             . '`id_carrier` = ' . (int) $cart->id_carrier . ' '
             . 'WHERE `id_cart` = ' . (int) $cart->id;
         }

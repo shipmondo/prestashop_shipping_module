@@ -130,11 +130,11 @@ function getShopList(shipping_agent, zipcode, address) {
 /** Roohi code ends **/
 function saveCartdetails() {
     if (jQuery('#selected_shop_context').children().size() != 0) {
-        var sCompany_name = jQuery('#selected_shop_context > .pakkelabels-company-name').text();
-        var sPacketshop_id = jQuery('#selected_shop_context > .pakkelabels-Packetshop').text();
-        var sAdress = jQuery('#selected_shop_context > .pakkelabels-Address').text();
-        var sCity = jQuery('#selected_shop_context > .pakkelabels-ZipAndCity > .pakkelabels-city').text();
-        var iZipcode = jQuery('#selected_shop_context > .pakkelabels-ZipAndCity > .pakkelabels-zipcode').text();
+        var sCompany_name = jQuery('#selected_shop_context > .pakkelabels-company-name').text().trim();
+        var sPacketshop_id = jQuery('#selected_shop_context > .pakkelabels-Packetshop').text().trim();
+        var sAdress = jQuery('#selected_shop_context > .pakkelabels-Address').text().trim();
+        var sCity = jQuery('#selected_shop_context > .pakkelabels-ZipAndCity > .pakkelabels-city').text().trim();
+        var iZipcode = jQuery('#selected_shop_context > .pakkelabels-ZipAndCity > .pakkelabels-zipcode').text().trim();
 
         jQuery.ajax({
             url: prestashop.urls.base_url + '/modules/pakkelabels_shipping/ajax.php',
@@ -415,6 +415,7 @@ jQuery(window).on('load', function() {
         }
     });
 
+    //load service points if you go back to edit
     $('#checkout-delivery-step span.step-edit').on('click', function(){
         $('.delivery-option input:checked').trigger('click')
     })
