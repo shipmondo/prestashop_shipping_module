@@ -59,16 +59,16 @@ class PakkelabelsShopListController extends Module
                         foreach ($tempShopList as $shop) { ?>
                             <li data-shopid="<?php echo $shop->number; ?>" class="pakkelabels-shop-list">
                                 <div class="pakkelabels-single-shop">
-                                <div class="pakkelabels-radio-button"></div>
-                                <div class="pakkelabels-company-name"><?php echo trim($shop->company_name); ?></div>
-                                <div class="pakkelabels-Address"><?php echo trim($shop->address); ?></div>
-                                <div class="pakkelabels-ZipAndCity">
-                                    <?php echo '<span class="pakkelabels-zipcode">' . trim($shop->zipcode) . '</span>,'; ?>
-                                    <?php echo '<span class="pakkelabels-city">' . ucwords(mb_strtolower(trim($shop->city), 'UTF-8')) . '</span>'; ?>
-                                </div>
-                                <div class="pakkelabels-Packetshop">
-                                        <?php echo 'ID: ' . Tools::strtoupper($agent) . '-' . trim($shop->number); ?>
-                                </div>
+                                    <div class="pakkelabels-radio-button"></div>
+                                    <div class="pakkelabels-company-name"><?php echo trim($shop->company_name); ?></div>
+                                    <div class="pakkelabels-Address"><?php echo trim($shop->address); ?></div>
+                                    <div class="pakkelabels-ZipAndCity">
+                                        <?php echo '<span class="pakkelabels-zipcode">' . trim($shop->zipcode) . '</span>,'; ?>
+                                        <?php echo '<span class="pakkelabels-city">' . ucwords(mb_strtolower(trim($shop->city), 'UTF-8')) . '</span>'; ?>
+                                    </div>
+                                    <div class="pakkelabels-Packetshop" style="display:none;">
+                                            <?php echo 'ID: ' . Tools::strtoupper($agent) . '-' . trim($shop->number); ?>
+                                    </div>
                                 </div>
                             </li>
                         <?php
@@ -90,9 +90,6 @@ class PakkelabelsShopListController extends Module
                             jQuery(this).children().children(':radio').prop('checked', true);
                         })
                     })
-
-                    if($('.pakkelabels-shop-list.selected').length == 0)
-                        $('.pakkelabels-shop-list').first().trigger('click');
                 </script>
             <?php
                 } elseif (Configuration::get('PAKKELABELS_FRONT_OPTION') == 'radio') {
@@ -104,17 +101,17 @@ class PakkelabelsShopListController extends Module
                         <div class="pakkelabels-single-shop">
                             <div class="pakkelabels-radio-button"></div>
                             <div class="selected_content">
-                            <div class="pakkelabels-company-name"><?php echo trim($shop->company_name); ?></div>
-                            <div class="pakkelabels-Address">
-                                <?php echo trim($shop->address); ?>
-                            </div>
-                            <div class="pakkelabels-ZipAndCity">
-                                <?php echo  '<span class="pakkelabels-zipcode">' . trim($shop->zipcode) . '</span>'; ?>
-                                <?php echo '<span class="pakkelabels-city">' . ucwords(mb_strtolower(trim($shop->city), 'UTF-8')) . '</span>'; ?>
-                            </div>
-                            <div class="pakkelabels-Packetshop" style="display:none;">
-                                <?php echo 'ID: ' . Tools::strtoupper($agent) . '-' . trim($shop->number); ?>                     </div>
-                            </div>
+                                <div class="pakkelabels-company-name"><?php echo trim($shop->company_name); ?></div>
+                                <div class="pakkelabels-Address">
+                                    <?php echo trim($shop->address); ?>
+                                </div>
+                                <div class="pakkelabels-ZipAndCity">
+                                    <?php echo  '<span class="pakkelabels-zipcode">' . trim($shop->zipcode) . '</span>'; ?>
+                                    <?php echo '<span class="pakkelabels-city">' . ucwords(mb_strtolower(trim($shop->city), 'UTF-8')) . '</span>'; ?>
+                                </div>
+                                <div class="pakkelabels-Packetshop" style="display:none;">
+                                    <?php echo 'ID: ' . Tools::strtoupper($agent) . '-' . trim($shop->number); ?>                     </div>
+                                </div>
                             </div>
                         </div>
                         </div>
@@ -161,14 +158,14 @@ class PakkelabelsShopListController extends Module
                                         <img src="<?php echo _MODULE_DIR_; ?>pakkelabels_shipping/views/img/<?php echo $agent; ?>.png" style="width:100%">
                                         </div>
                                                                                     </div>
-                                            <div class="col-xs-10">
+                                            <div class="col-xs-10 shipmondo-shop-info">
                                                 <div class="pakkelabels-company-name"><?php echo trim($shop->company_name); ?></div>
                                                 <div class="pakkelabels-Address"><?php echo trim($shop->address); ?></div>
                                                 <div class="pakkelabels-ZipAndCity">
                                                 <?php echo  '<span class="pakkelabels-zipcode">' . trim($shop->zipcode) . '</span>,'; ?>
                                                 <?php echo '<span class="pakkelabels-city">' . ucwords(mb_strtolower(trim($shop->city), 'UTF-8')) . '</span>'; ?>
                                                 </div>
-                                                <div class="pakkelabels-Packetshop">
+                                                <div class="pakkelabels-Packetshop" style="display: none;">
                                                 <?php echo 'ID: ' . Tools::strtoupper($agent) . '-' . trim($shop->number); ?>                     </div>
                                             </div>
                                     </div>
@@ -178,16 +175,14 @@ class PakkelabelsShopListController extends Module
                         <li class="pakkelabels_lilogo"> <span>Powered by Shipmondo</span></li>
                     </ul>
                 <script>
-                    jQuery('.pakkelabels-shop-list').each(function()
-                    {
-                        jQuery(this).on('click', function()
-                        {
+                    jQuery('.pakkelabels-shop-list').each(function() {
+                        jQuery(this).on('click', function() {
                             jQuery('#hidden_choosen_shop').attr('shopid', jQuery(this).attr('data-shopid'));
                             //adds the shop information to the #selected_shop div
                             jQuery('#selected_shop_header').html(selected_shop_header);
-                            jQuery('#selected_shop_context').html(jQuery(this).children().children().children('.col-xs-10').html());
+                            jQuery('#selected_shop_context').html(jQuery(this).find('.shipmondo-shop-info').html());
                             //remove all the class selected, from previous li's
-                            if(typeof checkdroppointselected !=='undefined')
+                            if(typeof checkdroppointselected !== 'undefined')
                                 checkdroppointselected(this); 
                             jQuery('.pakkelabels-shop-list').removeClass('selected');
                             //adds the selected class to the newly selected li
@@ -197,7 +192,7 @@ class PakkelabelsShopListController extends Module
                                 if(typeof saveCartdetails !=='undefined')
                                     saveCartdetails();
                             }, 1000) 
-                        })
+                        });
                     })
                 </script>
             <?php

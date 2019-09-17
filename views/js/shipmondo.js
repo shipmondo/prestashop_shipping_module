@@ -275,6 +275,39 @@ function li_addlistener_open_marker(eventElement) {
     });
 }
 
+function loadSelectedServicePoint() {
+    jQuery.ajax({
+        url: prestashop.urls.base_url + '/modules/pakkelabels_shipping/ajax.php',
+        type: 'GET',
+        data: {
+            method: 'getTempCartAddress'
+        },
+        success: function(response) {
+            response = JSON.parse(response);
+            if(response['status'] == 'success') {
+                var servicePoint = response['service_point']
+                var servicePointHtml = 
+                '<div class="pakkelabels-company-name">' + servicePoint['company'] + '</div>' +
+                '<div class="pakkelabels-Address">' + servicePoint['address'] + '</div>' +
+                '<div class="pakkelabels-ZipAndCity">' +
+                    '<span class="pakkelabels-zipcode">' + servicePoint['postcode'] + '</span>,' +
+                    '<span class="pakkelabels-city">' + servicePoint['city'] + '</span>' +
+                '</div>' +
+                '<div class="pakkelabels-Packetshop" style="display: none;">' + servicePoint['address2'] + '</div>'
+
+                var shopId = servicePoint['address2'].replace(/\D/g, '')
+                $('#hidden_choosen_shop').attr('shopid', shopId);
+
+                $('#selected_shop_header').html(selected_shop_header);
+                $('#selected_shop_context').html(servicePointHtml);
+
+                if(typeof checkdroppointselected !== 'undefined')
+                    checkdroppointselected(this);
+            }
+        }
+    });
+}
+
 jQuery(window).on('load', function() {
 
     //html to be injected into the prestashop
@@ -412,6 +445,7 @@ jQuery(window).on('load', function() {
             getShopList(shippingAgent, jQuery('#Pakkelabels_zipcode_field').val(), jQuery('#Pakkelabels_address_field').val());
         } else {
             jQuery('.choose-pickuppoint').show();
+            loadSelectedServicePoint()
         }
     });
 
