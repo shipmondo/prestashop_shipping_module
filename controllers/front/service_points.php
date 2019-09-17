@@ -41,7 +41,7 @@ class ShipmondoShippingServicePointsModuleFrontController extends ModuleFrontCon
                 if ($country_result['iso_code'])
                     $country_code = $country_result['iso_code'];
 
-                $response = $oShoplist_controlr->getshoplist($zip_code, $shipping_agent, $frontend_key, $address, $country, $service_point_id);
+                $response = $oShoplist_controlr->getshoplist($zip_code, $shipping_agent, $frontend_key, $address, $country_code, $service_point_id);
                 break;
 
             case 'save_address':
