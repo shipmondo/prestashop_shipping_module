@@ -82,7 +82,7 @@ class ShipmondoShippingServicePointsModuleFrontController extends ModuleFrontCon
                             'shop_data' => pSQL(Tools::jsonEncode($service_point_address)),
                             'id_carrier' => (int) $cart->id_carrier
                         ],
-                        'WHERE `id_cart` = ' . (int) $cart->id,
+                        'id_cart = ' . (int) $cart->id,
                         1
                     ); 
                 }
