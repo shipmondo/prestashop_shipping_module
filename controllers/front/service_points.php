@@ -17,7 +17,7 @@ class ShipmondoShippingServicePointsModuleFrontController extends ModuleFrontCon
 
                 $service_point_id = null;
                 if($result) {
-                    $service_point_id = Tools::jsonDecode(str_rot13($result['shop_data']))->address2;
+                    $service_point_id = Tools::jsonDecode($result['shop_data'])->address2;
                     $service_point_id = preg_replace('/\D/', '', $service_point_id);
                 }
 
