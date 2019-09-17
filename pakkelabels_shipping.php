@@ -101,7 +101,7 @@ class Pakkelabels_Shipping extends CarrierModule
                 $result = Db::getInstance()->getRow($sql);
 
                 if ($result['shop_data']) {
-                    $p_data = Tools::jsonDecode(str_rot13($result['shop_data']));
+                    $p_data = Tools::jsonDecode($result['shop_data']);
 
                     $id_address_max = (int) Db::getInstance()->getValue('SELECT MAX(`id_address`) FROM 
                     `' . _DB_PREFIX_ . 'address`');
