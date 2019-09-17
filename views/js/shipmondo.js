@@ -511,19 +511,6 @@ jQuery(window).on('load', function() {
         }
     });
 
-    jQuery('#cgv').on('click', function() {
-        jQuery.ajax({
-            url: prestashop.urls.base_url + '/modules/pakkelabels_shipping/ajax.php',
-            type: 'POST',
-            data: 'method=getCart',
-            dataType: 'json',
-            success: function(response) {
-
-            }
-
-        });
-    });
-
     //Sets the choosen shipping address when modal closes
     jQuery('#pakkelabel-modal').on('hidden.bs.modal', function(e) {
         saveCartdetails();
