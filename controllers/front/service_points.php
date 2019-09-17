@@ -39,7 +39,7 @@ class ShipmondoShippingServicePointsModuleFrontController extends ModuleFrontCon
                 $country_result = Db::getInstance()->getRow($sql);
 
                 if ($country_result['iso_code'])
-                    $country = $country_result['iso_code'];
+                    $country_code = $country_result['iso_code'];
 
                 $response = $oShoplist_controlr->getshoplist($zip_code, $shipping_agent, $frontend_key, $address, $country, $service_point_id);
                 break;
