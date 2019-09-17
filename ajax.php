@@ -210,7 +210,31 @@ switch (Tools::getValue('method')) {
             $response['status'] = 'error';
         }
         die(Tools::jsonEncode($response));
+    case 'getTempCartAddress':
+        $cart = Context::getContext()->cart;
+        $sql = 'SELECT `shop_data` FROM `' . _DB_PREFIX_ . 'pakkelabel_carts` WHERE '
+        . '`id_cart` = ' . (int) $cart->id;
+        $result = Db::getInstance()->getRow($sql);
+
+        if($result) {
+            $response['status'] = 'success';
+
+            $json = Tools::jsonDecode(str_rot13($result['shop_data']));
+            $json->company =  fixEncodedChars($json->company);
+            $json->address = fixEncodedChars($json->address);
+            $json->city = fixEncodedChars($json->city);
+
+            $response['service_point'] = $json;
+        } else
+            $response['status'] = 'error';
+
+        die(Tools::jsonEncode($response));
     default:
         break;
 }
+
+function fixEncodedChars($string) {
+    return html_entity_decode(preg_replace('/u([\da-fA-F]{4})/', '&#x\1;', $string));
+}
+
 exit;
