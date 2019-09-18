@@ -124,7 +124,7 @@ switch (Tools::getValue('method')) {
             'company' => $sCompanyName,
             'address' => $sAdress,
             'address2' => $sPacketshop_id,
-            'postcode' => $iZipcode,
+            'zip_code' => $iZipcode,
             'city' => $sCity,
             //'id_country' => $country_result['id_country'],
         ];

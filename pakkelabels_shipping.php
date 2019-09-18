@@ -101,7 +101,7 @@ class Pakkelabels_Shipping extends CarrierModule
                 $result = Db::getInstance()->getRow($sql);
 
                 if ($result['shop_data']) {
-                    $p_data = Tools::jsonDecode(str_rot13($result['shop_data']));
+                    $p_data = Tools::jsonDecode($result['shop_data']);
 
                     $id_address_max = (int) Db::getInstance()->getValue('SELECT MAX(`id_address`) FROM 
                     `' . _DB_PREFIX_ . 'address`');
@@ -518,6 +518,7 @@ class Pakkelabels_Shipping extends CarrierModule
                 'dataRoot' => Tools::getProtocol(Tools::usingSecureMode()) . $_SERVER['HTTP_HOST'] . $this->getPathUri(),
                 'error_no_shop_selected' => $this->l('You must choose a pickup point before, you can proceed'),
                 'error_login_before' => $this->l('Before proceed, you must either login or use guest checkout'),
+                'service_points_endpoint' => Context::getContext()->link->getModuleLink('pakkelabels_shipping', 'servicepoints')
             ]);
             //loads Google map API
             $context->registerJavascript(
