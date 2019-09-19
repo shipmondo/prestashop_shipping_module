@@ -395,11 +395,6 @@ class Shipmondo extends CarrierModule
         $helper->fields_value['SHIPMONDO_POSTNORD_CARRIER_ID'] = Configuration::get('SHIPMONDO_POSTNORD_CARRIER_ID');
         $helper->fields_value['SHIPMONDO_DAO_CARRIER_ID'] = Configuration::get('SHIPMONDO_DAO_CARRIER_ID');
         $helper->fields_value['SHIPMONDO_BRING_CARRIER_ID'] = Configuration::get('SHIPMONDO_BRING_CARRIER_ID');
-        if (Configuration::get('SHIPMONDO_FRONTEND_TYPE') != '') {
-            $helper->fields_value['SHIPMONDO_FRONTEND_TYPE'] = Configuration::get('SHIPMONDO_FRONTEND_TYPE');
-        } else {
-            $helper->fields_value['SHIPMONDO_FRONTEND_TYPE'] = 'popup';
-        }
 
         return $helper->generateForm($fields_form);
     }
@@ -417,6 +412,7 @@ class Shipmondo extends CarrierModule
             if (!$this->createDatabaseTables())
                 return false;
 
+            $this->setDefaultFrontendType();
             return true;
         }
 
@@ -635,6 +631,13 @@ class Shipmondo extends CarrierModule
         $db_instance = DB::getInstance();
 
         return $db_instance->Execute($sql_carts);
+    }
+
+    // if frontend type not set, set as popup
+    protected function setDefaultFrontendType() {
+        $frontend_type = Configuration::get('SHIPMONDO_FRONTEND_TYPE');
+        if(empty($frontend_type))
+            Configuration::updateValue('SHIPMONDO_FRONTEND_TYPE', 'popup');
     }
 
     protected function deleteDatabaseTables() {
