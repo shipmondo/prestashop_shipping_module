@@ -595,7 +595,7 @@ class Shipmondo extends CarrierModule
                 // The 2 first parts of the key is name of logo
                 $logo_name = join('_', array_slice(explode('_', $key), 0, 2));
 
-                copy(__DIR__ . '/views/img/' . $logo_name . '.jpg', _PS_SHIP_IMG_DIR_ . '/' . (int) $carrier->id . '.jpg'); //assign carrier logo
+                copy(_PS_MODULE_DIR_ . 'shipmondo/views/img/' . $logo_name . '.jpg', _PS_SHIP_IMG_DIR_ . '/' . (int) $carrier->id . '.jpg'); //assign carrier logo
 
                 Configuration::updateValue(self::PREFIX . $key, $carrier->id);
                 Configuration::updateValue(self::PREFIX . $key . '_reference', $carrier->id);
