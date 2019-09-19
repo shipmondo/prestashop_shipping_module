@@ -1,7 +1,7 @@
-<?php
+<?php declare(strict_types=1);
 
 class ShipmondoServicepointsModuleFrontController extends ModuleFrontController {
-    public function initContent() {
+    public function initContent(): void {
         parent::initContent();
         
         $response = [];

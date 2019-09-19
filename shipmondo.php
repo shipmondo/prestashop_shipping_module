@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  *  @author    Shipmondo
  *  @copyright 2019 Shipmondo
@@ -51,7 +51,7 @@ class Shipmondo extends CarrierModule
         $this->description = $this->l('GLS, PostNord, DAO and Bring Shipping for PrestaShop');
     }
 
-    public function hookNewOrder($params) {
+    public function hookNewOrder($params): void {
         $carrier_id = $params['order']->id_carrier;
 
         $order = new Order((int) ($params['order']->id));
@@ -449,13 +449,13 @@ class Shipmondo extends CarrierModule
         return $this->getOrderShippingCost($params, 0);
     }
 
-    public function hookActionCarrierUpdate($params) {
+    public function hookActionCarrierUpdate($params): void {
         if ($params['carrier']->id_reference == Configuration::get(self::PREFIX . 'swipbox_reference')) {
             Configuration::updateValue(self::PREFIX . 'swipbox', $params['carrier']->id);
         }
     }
 
-    public function hookDisplayHeader($params) {
+    public function hookDisplayHeader($params): void {
         $context = $this->context->controller;
         // Get shipping method id from id reference
         $gls = Carrier::getCarrierByReference(Configuration::get('SHIPMONDO_GLS_CARRIER_ID'));
@@ -634,7 +634,7 @@ class Shipmondo extends CarrierModule
     }
 
     // if frontend type not set, set as popup
-    protected function setDefaultFrontendType() {
+    protected function setDefaultFrontendType(): void {
         $frontend_type = Configuration::get('SHIPMONDO_FRONTEND_TYPE');
         if(empty($frontend_type))
             Configuration::updateValue('SHIPMONDO_FRONTEND_TYPE', 'popup');
