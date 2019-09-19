@@ -341,19 +341,72 @@ function getSelectedShippingAgent() {
 
 jQuery(window).on('load', function () {
     //html to be injected into the prestashop
-    var sModalHTML = '<div class="pakkelabel-modal fade-pakkelabel" id="pakkelabel-modal" tabindex="-1" role="dialog" aria-labelledby="packetshop window"> <div class="pakkelabel-modal-dialog" role="document"> <div class="pakkelabel-modal-content"> <div class="pakkelabel-modal-header"> <h4 class="pakkelabel-modal-title" id="pakkelabel-modal-header-h4">' + modalHeaderTitle + '</h4> <button id="pakkelabel-modal-header-button" type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button> <div class="pakkelabel-open-close-button-wrap"> <div class="pakkelabel-open-close-button pakkelabel-open-map">' + showMapText + '</div> <div class="pakkelabel-open-close-button pakkelabel-hide-map">' + hideMapText + '</div> </div></div> <div class="pakkelabel-modal-body"> <div id="pakkelabel-map-wrapper"></div> <div id="pakkelabel-list-wrapper"></div> </div> <div class="pakkelabel-modal-footer"> <button id="choose-stop-btn" type="button" class="button btn btn-default button-medium" data-dismiss="modal">' + chooseServicePointText + '</button> <div class="powered-by-pakkelabels">Powered by</div> </div> </div> </div> </div>';
-    /** Roohi**/
-    var sZipcodeHTML = '';
-    if (frontendType == 'Popup') {
-        sZipcodeHTML = '<div class="pakkelabels_shipping_field-wrap" id="pakkelabels-zipcode-wrapper"> <div class="pakkelabels_shipping_field"> <div class="pakkelabels-clearfix" id="pakkelabels_shipping_button"> <div class="pakkelabels_stores"> <div><div class="error_msg"></div> <input type="hidden" id="Pakkelabels_zipcode_field" class="input" name="pakkelabels_zipcode" placeholder="' + zipCodeFieldText + '"><input type="hidden" id="Pakkelabels_address_field" class="input" name="pakkelabels_address" placeholder="' + addressFieldText + '"></div> <div> <button class="button button-medium btn btn-primary dropdown-toggle" id="pakkelabels_find_shop_btn" type="button" data-toggle="dropdown">' + findServicePointText + '</button> </div> </div> </div> <div id="hidden_choosen_shop" type="hidden"></div><div class="pakkelabels-clearfix" id="selected_shop_wrapper"> <div id="pakkelabels-hidden-shop"> </div> <div class="pakkelabels-clearfix" id="selected_shop_header"></div> <div class="pakkelabels-clearfix" id="selected_shop_context"> </div> </div> </div> </div>';
+    var modalHtml = '<div class="pakkelabel-modal fade-pakkelabel" id="pakkelabel-modal" tabindex="-1" role="dialog" aria-labelledby="packetshop window"> <div class="pakkelabel-modal-dialog" role="document"> <div class="pakkelabel-modal-content"> <div class="pakkelabel-modal-header"> <h4 class="pakkelabel-modal-title" id="pakkelabel-modal-header-h4">' + modalHeaderTitle + '</h4> <button id="pakkelabel-modal-header-button" type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button> <div class="pakkelabel-open-close-button-wrap"> <div class="pakkelabel-open-close-button pakkelabel-open-map">' + showMapText + '</div> <div class="pakkelabel-open-close-button pakkelabel-hide-map">' + hideMapText + '</div> </div></div> <div class="pakkelabel-modal-body"> <div id="pakkelabel-map-wrapper"></div> <div id="pakkelabel-list-wrapper"></div> </div> <div class="pakkelabel-modal-footer"> <button id="choose-stop-btn" type="button" class="button btn btn-default button-medium" data-dismiss="modal">' + chooseServicePointText + '</button> <div class="powered-by-pakkelabels">Powered by</div> </div> </div> </div> </div>';
+
+
+    //TODO they are so similar that they shuold be combined
+    var selectedPickupPointHtml = '';
+    if (frontendType == 'popup') {
+        selectedPickupPointHtml = '<div>' +
+            '<div class="error_msg"></div>' +
+            '<input type="hidden" id="Pakkelabels_zipcode_field" class="input" name="pakkelabels_zipcode" placeholder="' + zipCodeFieldText + '">' +
+            '<input type="hidden" id="Pakkelabels_address_field" class="input" name="pakkelabels_address" placeholder="' + addressFieldText + '"></div>' +
+            '<div>' +
+            '<button class="button button-medium btn btn-primary dropdown-toggle" id="pakkelabels_find_shop_btn" type="button" data-toggle="dropdown">' +
+            findServicePointText +
+            '</button>' +
+            '</div>';
+
     } else if (frontendType == 'radio') {
-        sZipcodeHTML = '<div class="pakkelabels_shipping_field-wrap" id="pakkelabels-zipcode-wrapper"> <div class="pakkelabels_shipping_field"> <div class="pakkelabels-clearfix" id="pakkelabels_shipping_button"> <div class="pakkelabels_stores"> <div> <span><img src="' + prestashop.urls.base_url + '/modules/shipmondo/views/img/loading.gif" class="loading_radio" style="display:none;"></span><div class="error_msg"></div><input type="hidden" id="Pakkelabels_zipcode_field" class="input" name="pakkelabels_zipcode" placeholder="' + zipCodeFieldText + '"><input type="hidden" id="Pakkelabels_address_field" class="input" name="pakkelabels_address" placeholder="' + addressFieldText + '"></div> <div class="pakkelabels-shoplist"> </div> </div> </div> <div id="hidden_choosen_shop" type="hidden"></div><div class="pakkelabels-clearfix" id="selected_shop_wrapper" style="display:none;"> <div id="pakkelabels-hidden-shop"> </div> <div class="pakkelabels-clearfix" id="selected_shop_header"></div> <div class="pakkelabels-clearfix" id="selected_shop_context"> </div> </div> </div> </div>';
+        selectedPickupPointHtml = '<div>' +
+            '<span><img src="' + prestashop.urls.base_url + '/modules/shipmondo/views/img/loading.gif" class="loading_radio" style="display:none;"></span>' +
+            '<div class="error_msg"></div>' +
+            '<input type="hidden" id="Pakkelabels_zipcode_field" class="input" name="pakkelabels_zipcode" placeholder="' + zipCodeFieldText + '">' +
+            '<input type="hidden" id="Pakkelabels_address_field" class="input" name="pakkelabels_address" placeholder="' + addressFieldText + '">' +
+            '</div>' +
+            '<div class="pakkelabels-shoplist"></div>';
     } else {
-        sZipcodeHTML = '<div class="pakkelabels_shipping_field-wrap" id="pakkelabels-zipcode-wrapper"> <div class="pakkelabels_shipping_field"> <div class="pakkelabels-clearfix" id="pakkelabels_shipping_button"> <div class="pakkelabels_stores"> <div> <div class="error_msg"></div><input type="hidden" id="Pakkelabels_zipcode_field" class="input" name="pakkelabels_zipcode" placeholder="' + zipCodeFieldText + '"><input type="hidden" id="Pakkelabels_address_field" class="input" name="pakkelabels_address" placeholder="' + addressFieldText + '"> </div> <div class="pakkelabels-shoplist dropdown"> <button class="button button-medium btn btn-primary dropdown-toggle" id="pakkelabels_find_shop_btn" type="button" data-toggle="dropdown">' + findServicePointText + '<span class="caret"></span></button> </div> </div> </div> <div id="hidden_choosen_shop" type="hidden"></div><div class="pakkelabels-clearfix" id="selected_shop_wrapper"> <div id="pakkelabels-hidden-shop"> </div> <div class="pakkelabels-clearfix" id="selected_shop_header"></div> <div class="pakkelabels-clearfix" id="selected_shop_context"> </div> </div> </div> </div>';
+        selectedPickupPointHtml = '<div>' +
+            '<div class="error_msg"></div>' +
+            '<input type="hidden" id="Pakkelabels_zipcode_field" class="input" name="pakkelabels_zipcode" placeholder="' + zipCodeFieldText + '">' +
+            '<input type="hidden" id="Pakkelabels_address_field" class="input" name="pakkelabels_address" placeholder="' + addressFieldText + '"></div>' +
+            '<div class="pakkelabels-shoplist dropdown">' +
+            '<button class="button button-medium btn btn-primary dropdown-toggle" id="pakkelabels_find_shop_btn" type="button" data-toggle="dropdown">' +
+            findServicePointText + '<span class="caret"></span></button>' +
+            '</div>';
+
     }
 
+
+    var selectedPickupPointWrapHtml = '<div class="pakkelabels_shipping_field-wrap" id="pakkelabels-zipcode-wrapper">' +
+        '<div class="pakkelabels_shipping_field">' +
+        '<div class="pakkelabels-clearfix" id="pakkelabels_shipping_button">' +
+        '<div class="pakkelabels_stores">' +
+        selectedPickupPointHtml +
+        '</div>' +
+        '</div>' +
+        '<div id="hidden_choosen_shop"></div>' +
+        '<div class="pakkelabels-clearfix" id="selected_shop_wrapper">' +
+        '<div id="pakkelabels-hidden-shop"></div>' +
+        '<div class="pakkelabels-clearfix" id="selected_shop_header"></div>' +
+        '<div class="pakkelabels-clearfix" id="selected_shop_context"></div>' +
+        '</div>' +
+        '</div>' +
+        '</div>';
+
+
+    /** Roohi**/
+// var sZipcodeHTML = '';
+//     if (frontendType == 'popup') {
+//         sZipcodeHTML = '<div class="pakkelabels_shipping_field-wrap" id="pakkelabels-zipcode-wrapper"> <div class="pakkelabels_shipping_field"> <div class="pakkelabels-clearfix" id="pakkelabels_shipping_button"> <div class="pakkelabels_stores"> <div><div class="error_msg"></div> <input type="hidden" id="Pakkelabels_zipcode_field" class="input" name="pakkelabels_zipcode" placeholder="' + zipCodeFieldText + '"><input type="hidden" id="Pakkelabels_address_field" class="input" name="pakkelabels_address" placeholder="' + addressFieldText + '"></div> <div> <button class="button button-medium btn btn-primary dropdown-toggle" id="pakkelabels_find_shop_btn" type="button" data-toggle="dropdown">' + findServicePointText + '</button> </div> </div> </div> <div id="hidden_choosen_shop" type="hidden"></div><div class="pakkelabels-clearfix" id="selected_shop_wrapper"> <div id="pakkelabels-hidden-shop"> </div> <div class="pakkelabels-clearfix" id="selected_shop_header"></div> <div class="pakkelabels-clearfix" id="selected_shop_context"> </div> </div> </div> </div>';
+//     } else if (frontendType == 'radio') {
+//         sZipcodeHTML = '<div class="pakkelabels_shipping_field-wrap" id="pakkelabels-zipcode-wrapper"> <div class="pakkelabels_shipping_field"> <div class="pakkelabels-clearfix" id="pakkelabels_shipping_button"> <div class="pakkelabels_stores"> <div> <span><img src="' + prestashop.urls.base_url + '/modules/shipmondo/views/img/loading.gif" class="loading_radio" style="display:none;"></span><div class="error_msg"></div><input type="hidden" id="Pakkelabels_zipcode_field" class="input" name="pakkelabels_zipcode" placeholder="' + zipCodeFieldText + '"><input type="hidden" id="Pakkelabels_address_field" class="input" name="pakkelabels_address" placeholder="' + addressFieldText + '"></div> <div class="pakkelabels-shoplist"> </div> </div> </div> <div id="hidden_choosen_shop" type="hidden"></div><div class="pakkelabels-clearfix" id="selected_shop_wrapper" style="display:none;"> <div id="pakkelabels-hidden-shop"> </div> <div class="pakkelabels-clearfix" id="selected_shop_header"></div> <div class="pakkelabels-clearfix" id="selected_shop_context"> </div> </div> </div> </div>';
+//     } else {
+//         sZipcodeHTML = '<div class="pakkelabels_shipping_field-wrap" id="pakkelabels-zipcode-wrapper"> <div class="pakkelabels_shipping_field"> <div class="pakkelabels-clearfix" id="pakkelabels_shipping_button"> <div class="pakkelabels_stores"> <div> <div class="error_msg"></div><input type="hidden" id="Pakkelabels_zipcode_field" class="input" name="pakkelabels_zipcode" placeholder="' + zipCodeFieldText + '"><input type="hidden" id="Pakkelabels_address_field" class="input" name="pakkelabels_address" placeholder="' + addressFieldText + '"> </div> <div class="pakkelabels-shoplist dropdown"> <button class="button button-medium btn btn-primary dropdown-toggle" id="pakkelabels_find_shop_btn" type="button" data-toggle="dropdown">' + findServicePointText + '<span class="caret"></span></button> </div> </div> </div> <div id="hidden_choosen_shop" type="hidden"></div><div class="pakkelabels-clearfix" id="selected_shop_wrapper"> <div id="pakkelabels-hidden-shop"> </div> <div class="pakkelabels-clearfix" id="selected_shop_header"></div> <div class="pakkelabels-clearfix" id="selected_shop_context"> </div> </div> </div> </div>';
+//     }
+
     //appends the modal to the body of the prestashop checkout page
-    jQuery('body').append(sModalHTML);
+    jQuery('body').append(modalHtml);
 
     //Event fired when the find nearest shop is pressed
     $(document).on('click', '#pakkelabels_find_shop_btn', function () {
@@ -362,6 +415,8 @@ jQuery(window).on('load', function () {
         var defaultAddress = jQuery('#Pakkelabels_address_field').val();
 
         getShopList(chosenShippingAgent, defaultZipcode, defaultAddress);
+
+        //TODO implement autoclose and ok from WC
     });
 
     jQuery(document).on('keypress', '#Pakkelabels_zipcode_field', function (event) {
@@ -435,7 +490,8 @@ jQuery(window).on('load', function () {
             extra_content = jQuery(dev_option).next('.carrier-extra-content');
         }
 
-        jQuery(extra_content).html(sZipcodeHTML);
+        jQuery(extra_content).html(selectedPickupPointWrapHtml);
+        // jQuery(extra_content).html(sZipcodeHTML);
         jQuery('#js-delivery .continue').hide();
 
         // Add zipcode from customer address
@@ -475,8 +531,7 @@ jQuery(window).on('load', function () {
 
     jQuery(document).on('keypress', function (event) {
         if (jQuery('.pakkelabels-shop-list').hasClass('selected') && event.keyCode == 13 && jQuery('#pakkelabel-modal:visible').length != 0) {
-            jQuery('#choose-stop-btn').trigger("click");
-            jQuery('#choose-stop-btn').blur();
+            jQuery('#choose-stop-btn').trigger("click").blur();
         }
     });
 
@@ -496,13 +551,14 @@ jQuery(window).on('load', function () {
         jQuery('#pakkelabel-map-wrapper').hide();
     });
 
-    jQuery('#pakkelabel-modal').on('show.bs.modal', function (e) {
+    var modal = jQuery('#pakkelabel-modal');
+    modal.on('show.bs.modal', function (e) {
         jQuery('body').toggleClass('pakkelabels-modal-shown');
-        jQuery('.pakkelabel-modal-body').scrollTop(0);
+        jQuery('.pakkelabel-modal-body').scrollTop(0); //TODO is this not child of above?
     });
 
 
-    jQuery('#pakkelabel-modal').on('hidden.bs.modal', function (e) {
+    modal.on('hidden.bs.modal', function (e) {
         jQuery('body').toggleClass('pakkelabels-modal-shown');
     });
 
@@ -526,7 +582,7 @@ jQuery(window).on('load', function () {
     });
 
     //Sets the choosen shipping address when modal closes
-    jQuery('#pakkelabel-modal').on('hidden.bs.modal', function (e) {
+    modal.on('hidden.bs.modal', function (e) {
         saveCartdetails();
     });
 
@@ -539,6 +595,7 @@ jQuery(window).on('load', function () {
         }
     });
 });
+
 jQuery(document).on('click', '.choose-pickuppoint', function () {
     jQuery("#pakkelabels_find_shop_btn").trigger("click");
     $("body,html").animate({
