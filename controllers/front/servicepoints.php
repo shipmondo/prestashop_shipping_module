@@ -180,6 +180,9 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController 
 
         $response['map'] = $this->context->smarty->fetch($template_base_path . 'map.tpl');
 
+        if(empty($selected_service_point_id))
+            $selected_service_point_id = 0;
+
         $this->context->smarty->assign([
             'service_points' => $service_points,
             'selected_service_point_id' => $selected_service_point_id,
