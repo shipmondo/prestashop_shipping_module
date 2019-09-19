@@ -183,7 +183,7 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController 
             'shipping_agent' => $shipping_agent,
             'shipping_agent_logo' => _MODULE_DIR_ . 'shipmondo/views/img/' . $shipping_agent . '.png'
         ]);
-        $response['service_points_html'] = $this->module->fetch('module:shipmondo/views/templates/front/' . strtolower($frontend_type) . '/service_points.tpl');
+        $response['service_points_html'] = $this->module->fetch('module:shipmondo/views/templates/front/' . Tools::strtolower($frontend_type) . '/service_points.tpl');
 
         return $response;
     }
