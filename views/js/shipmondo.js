@@ -33,17 +33,17 @@ function getShopList(shipping_agent, zipcode, address) {
             $(".error_msg").html(gotError);
             return false;
         }
-        jQuery('#Pakkelabels_zipcode_field').removeAttr("disabled");
-        jQuery('#pakkelabels_find_shop_btn').removeAttr("disabled");
+        jQuery('#shipmondo_zipcode_field').removeAttr("disabled");
+        jQuery('#shipmondo_find_shop_btn').removeAttr("disabled");
         if (frontendType == 'Popup') {
-            jQuery('#pakkelabel-modal').modal({
+            jQuery('#shipmondo-modal').modal({
                 show: true,
                 backdrop: true,
             });
         }
         return true;
     } else {
-        jQuery('.pakkelabels-shoplist-dropdownul').remove();
+        jQuery('.shipmondo-shoplist-dropdownul').remove();
         //usedZipCode = zipcode;
         //usedAgent = shipping_agent;
         gotError = '';
@@ -51,9 +51,9 @@ function getShopList(shipping_agent, zipcode, address) {
 
     markerIcon = shipping_agent + '.png';
     laoding = '<img src="' + prestashop.urls.base_url + '/modules/shipmondo/views/img/loading.gif" class="loading_drop">';
-    jQuery('#pakkelabels_find_shop_btn span').removeClass('caret');
-    jQuery('#pakkelabels_find_shop_btn').removeClass('dropdown-toggle');
-    jQuery('#pakkelabels_find_shop_btn span').html(laoding);
+    jQuery('#shipmondo_find_shop_btn span').removeClass('caret');
+    jQuery('#shipmondo_find_shop_btn').removeClass('dropdown-toggle');
+    jQuery('#shipmondo_find_shop_btn span').html(laoding);
     jQuery.ajax({
         url: servicePointsEndpoint,
         type: 'POST',
@@ -64,33 +64,33 @@ function getShopList(shipping_agent, zipcode, address) {
             'address': address
         },
         success: function(response) {
-            jQuery('#pakkelabels_find_shop_btn span').addClass('caret');
-            jQuery('#pakkelabels_find_shop_btn').addClass('dropdown-toggle');
-            jQuery('#pakkelabels_find_shop_btn span').html('');
-            jQuery('#Pakkelabels_zipcode_field').prop("disabled", false);
-            jQuery('#pakkelabels_find_shop_btn').prop("disabled", false);
+            jQuery('#shipmondo_find_shop_btn span').addClass('caret');
+            jQuery('#shipmondo_find_shop_btn').addClass('dropdown-toggle');
+            jQuery('#shipmondo_find_shop_btn span').html('');
+            jQuery('#shipmondo_zipcode_field').prop("disabled", false);
+            jQuery('#shipmondo_find_shop_btn').prop("disabled", false);
             if (response) {
                 var returned = JSON.parse(response);
                 if (returned.status == 'success') {
                     if (returned.frontend_type == 'dropdown') {
                         setTimeout(function() {
-                            jQuery('.pakkelabels-shoplist').append(returned.service_points_html);
-                            jQuery('.pakkelabels-shoplist').addClass('open');
+                            jQuery('.shipmondo-shoplist').append(returned.service_points_html);
+                            jQuery('.shipmondo-shoplist').addClass('open');
                         }, 1000)
                     } else if (returned.frontend_type == 'radio') {
                         setTimeout(function() {
                             jQuery(".loading_radio").hide();
-                            jQuery('.pakkelabels-shoplist').html(returned.service_points_html);
-                            jQuery('.pakkelabels-shoplist').addClass('open');
+                            jQuery('.shipmondo-shoplist').html(returned.service_points_html);
+                            jQuery('.shipmondo-shoplist').addClass('open');
                         }, 1000)
                     } else {
-                        jQuery('#pakkelabel-modal').modal({
+                        jQuery('#shipmondo-modal').modal({
                             show: true,
                             backdrop: true,
                         });
-                        jQuery('#pakkelabel-map-wrapper').html(returned.map);
-                        jQuery('#pakkelabel-list-wrapper').html(returned.service_points_html);
-                        jQuery('#pakkelabels-hidden-shop').html(returned.hidden_pakkelabels);
+                        jQuery('#shipmondo-map-wrapper').html(returned.map);
+                        jQuery('#shipmondo-list-wrapper').html(returned.service_points_html);
+                        jQuery('#shipmondo-hidden-shop').html(returned.hidden_shipmondo);
                         markerFile = returned.service_points;
                         undefined_cords_markerFile = new Array();
 
@@ -120,8 +120,8 @@ function getShopList(shipping_agent, zipcode, address) {
                     $(".error_msg").html(returned.error);
                 }
             } else {
-                jQuery('#Pakkelabels_zipcode_field').prop("disabled", false);
-                jQuery('#pakkelabels_find_shop_btn').prop("disabled", false);
+                jQuery('#shipmondo_zipcode_field').prop("disabled", false);
+                jQuery('#shipmondo_find_shop_btn').prop("disabled", false);
                 $(".error_msg").html(returned.error);
             }
         }
@@ -132,11 +132,11 @@ function saveCartdetails() {
     if (jQuery('#selected_shop_context').children().size() != 0) {
         var chosenShippingAgent = getSelectedShippingAgent()
 
-        var sCompany_name = jQuery('#selected_shop_context > .pakkelabels-company-name').text().trim();
-        var sPacketshop_id = jQuery('#selected_shop_context > .pakkelabels-Packetshop').text().trim();
-        var sAdress = jQuery('#selected_shop_context > .pakkelabels-Address').text().trim();
-        var sCity = jQuery('#selected_shop_context > .pakkelabels-ZipAndCity > .pakkelabels-city').text().trim();
-        var iZipcode = jQuery('#selected_shop_context > .pakkelabels-ZipAndCity > .pakkelabels-zipcode').text().trim();
+        var sCompany_name = jQuery('#selected_shop_context > .shipmondo-company-name').text().trim();
+        var sPacketshop_id = jQuery('#selected_shop_context > .shipmondo-Packetshop').text().trim();
+        var sAdress = jQuery('#selected_shop_context > .shipmondo-Address').text().trim();
+        var sCity = jQuery('#selected_shop_context > .shipmondo-ZipAndCity > .shipmondo-city').text().trim();
+        var iZipcode = jQuery('#selected_shop_context > .shipmondo-ZipAndCity > .shipmondo-zipcode').text().trim();
 
         jQuery.ajax({
             url: servicePointsEndpoint,
@@ -166,7 +166,7 @@ function saveCartdetails() {
     }
 }
 
-//Calls googles gmap api, and gets the cords for the streetnames from the shopilst generated by pakkelabels
+//Calls googles gmap api, and gets the cords for the streetnames from the shopilst generated by shipmondo
 function load_markers_without_cords_from_streetname(aMarkerFile) {
     var geocoder = new google.maps.Geocoder();
     jQuery(aMarkerFile).each(function(key) {
@@ -234,7 +234,7 @@ function loadMarker(markerData) {
         return function() {
             infowindow.setContent("<strong>" + markerData['company_name'] + "</strong><br/>" + markerData['address'] + "<br/> " + markerData['city'] + " <br/> " + markerData['zipcode']);
             infowindow.open(map, marker);
-            var shop_list = jQuery('.pakkelabels-shoplist > ul >li');
+            var shop_list = jQuery('.shipmondo-shoplist > ul >li');
             shop_list.removeClass('selected').filter('[data-shopid=' + markerData['number'] + ']').trigger('click').addClass('selected');
             jQuery('#shop_radio_' + markerData['number']).trigger('click');
 
@@ -293,13 +293,13 @@ function loadSelectedServicePoint() {
             if(response['status'] == 'success') {
                 var servicePoint = response['service_point']
                 var servicePointHtml = 
-                '<div class="pakkelabels-company-name">' + servicePoint['company'] + '</div>' +
-                '<div class="pakkelabels-Address">' + servicePoint['address'] + '</div>' +
-                '<div class="pakkelabels-ZipAndCity">' +
-                    '<span class="pakkelabels-zipcode">' + servicePoint['zip_code'] + '</span>,' +
-                    '<span class="pakkelabels-city">' + servicePoint['city'] + '</span>' +
+                '<div class="shipmondo-company-name">' + servicePoint['company'] + '</div>' +
+                '<div class="shipmondo-Address">' + servicePoint['address'] + '</div>' +
+                '<div class="shipmondo-ZipAndCity">' +
+                    '<span class="shipmondo-zipcode">' + servicePoint['zip_code'] + '</span>,' +
+                    '<span class="shipmondo-city">' + servicePoint['city'] + '</span>' +
                 '</div>' +
-                '<div class="pakkelabels-Packetshop" style="display: none;">' + servicePoint['address2'] + '</div>'
+                '<div class="shipmondo-Packetshop" style="display: none;">' + servicePoint['address2'] + '</div>'
 
                 var shopId = servicePoint['address2'].replace(/\D/g, '')
                 $('#hidden_choosen_shop').attr('shopid', shopId);
@@ -339,52 +339,52 @@ function getSelectedShippingAgent() {
 jQuery(window).on('load', function() {
 
     //html to be injected into the prestashop
-    var sModalHTML = '<div class="pakkelabel-modal fade-pakkelabel" id="pakkelabel-modal" tabindex="-1" role="dialog" aria-labelledby="packetshop window"> <div class="pakkelabel-modal-dialog" role="document"> <div class="pakkelabel-modal-content"> <div class="pakkelabel-modal-header"> <h4 class="pakkelabel-modal-title" id="pakkelabel-modal-header-h4">' + modalHeaderTitle + '</h4> <button id="pakkelabel-modal-header-button"type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button> <div class="pakkelabel-open-close-button-wrap"> <div class="pakkelabel-open-close-button pakkelabel-open-map">' + showMapText + '</div> <div class="pakkelabel-open-close-button pakkelabel-hide-map">' + hideMapText + '</div> </div></div> <div class="pakkelabel-modal-body"> <div id="pakkelabel-map-wrapper"></div> <div id="pakkelabel-list-wrapper"></div> </div> <div class="pakkelabel-modal-footer"> <button id="choose-stop-btn" type="button" class="button btn btn-default button-medium" data-dismiss="modal">' + chooseServicePointText + '</button> <div class="powered-by-pakkelabels">Powered by</div> </div> </div> </div> </div>';
+    var sModalHTML = '<div class="shipmondo-modal fade-shipmondo" id="shipmondo-modal" tabindex="-1" role="dialog" aria-labelledby="packetshop window"> <div class="shipmondo-modal-dialog" role="document"> <div class="shipmondo-modal-content"> <div class="shipmondo-modal-header"> <h4 class="shipmondo-modal-title" id="shipmondo-modal-header-h4">' + modalHeaderTitle + '</h4> <button id="shipmondo-modal-header-button"type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button> <div class="shipmondo-open-close-button-wrap"> <div class="shipmondo-open-close-button shipmondo-open-map">' + showMapText + '</div> <div class="shipmondo-open-close-button shipmondo-hide-map">' + hideMapText + '</div> </div></div> <div class="shipmondo-modal-body"> <div id="shipmondo-map-wrapper"></div> <div id="shipmondo-list-wrapper"></div> </div> <div class="shipmondo-modal-footer"> <button id="choose-stop-btn" type="button" class="button btn btn-default button-medium" data-dismiss="modal">' + chooseServicePointText + '</button> <div class="powered-by-shipmondo">Powered by</div> </div> </div> </div> </div>';
     /** Roohi**/
     if (frontendType == 'Popup') {
-        var sZipcodeHTML = '<div class="pakkelabels_shipping_field-wrap" id="pakkelabels-zipcode-wrapper"> <div class="pakkelabels_shipping_field"> <div class="pakkelabels-clearfix" id="pakkelabels_shipping_button"> <div class="pakkelabels_stores"> <div><div class="error_msg"></div> <input type="hidden" id="Pakkelabels_zipcode_field" class="input" name="pakkelabels_zipcode" placeholder="' + zipCodeFieldText + '"><input type="hidden" id="Pakkelabels_address_field" class="input" name="pakkelabels_address" placeholder="' + addressFieldText + '"></div> <div> <button class="button button-medium btn btn-primary dropdown-toggle" id="pakkelabels_find_shop_btn" type="button" data-toggle="dropdown">' + findServicePointText + '</button> </div> </div> </div> <div id="hidden_choosen_shop" type="hidden"></div><div class="pakkelabels-clearfix" id="selected_shop_wrapper"> <div id="pakkelabels-hidden-shop"> </div> <div class="pakkelabels-clearfix" id="selected_shop_header"></div> <div class="pakkelabels-clearfix" id="selected_shop_context"> </div> </div> </div> </div>';
+        var sZipcodeHTML = '<div class="shipmondo_shipping_field-wrap" id="shipmondo-zipcode-wrapper"> <div class="shipmondo_shipping_field"> <div class="shipmondo-clearfix" id="shipmondo_shipping_button"> <div class="shipmondo_stores"> <div><div class="error_msg"></div> <input type="hidden" id="shipmondo_zipcode_field" class="input" name="shipmondo_zipcode" placeholder="' + zipCodeFieldText + '"><input type="hidden" id="shipmondo_address_field" class="input" name="shipmondo_address" placeholder="' + addressFieldText + '"></div> <div> <button class="button button-medium btn btn-primary dropdown-toggle" id="shipmondo_find_shop_btn" type="button" data-toggle="dropdown">' + findServicePointText + '</button> </div> </div> </div> <div id="hidden_choosen_shop" type="hidden"></div><div class="shipmondo-clearfix" id="selected_shop_wrapper"> <div id="shipmondo-hidden-shop"> </div> <div class="shipmondo-clearfix" id="selected_shop_header"></div> <div class="shipmondo-clearfix" id="selected_shop_context"> </div> </div> </div> </div>';
     } else if (frontendType == 'radio') {
-        var sZipcodeHTML = '<div class="pakkelabels_shipping_field-wrap" id="pakkelabels-zipcode-wrapper"> <div class="pakkelabels_shipping_field"> <div class="pakkelabels-clearfix" id="pakkelabels_shipping_button"> <div class="pakkelabels_stores"> <div> <span><img src="' + prestashop.urls.base_url + '/modules/shipmondo/views/img/loadiing.gif" class="loading_radio" style="display:none;"></span><div class="error_msg"></div><input type="hidden" id="Pakkelabels_zipcode_field" class="input" name="pakkelabels_zipcode" placeholder="' + zipCodeFieldText + '"><input type="hidden" id="Pakkelabels_address_field" class="input" name="pakkelabels_address" placeholder="' + addressFieldText + '"></div> <div class="pakkelabels-shoplist"> </div> </div> </div> <div id="hidden_choosen_shop" type="hidden"></div><div class="pakkelabels-clearfix" id="selected_shop_wrapper" style="display:none;"> <div id="pakkelabels-hidden-shop"> </div> <div class="pakkelabels-clearfix" id="selected_shop_header"></div> <div class="pakkelabels-clearfix" id="selected_shop_context"> </div> </div> </div> </div>';
+        var sZipcodeHTML = '<div class="shipmondo_shipping_field-wrap" id="shipmondo-zipcode-wrapper"> <div class="shipmondo_shipping_field"> <div class="shipmondo-clearfix" id="shipmondo_shipping_button"> <div class="shipmondo_stores"> <div> <span><img src="' + prestashop.urls.base_url + '/modules/shipmondo/views/img/loadiing.gif" class="loading_radio" style="display:none;"></span><div class="error_msg"></div><input type="hidden" id="shipmondo_zipcode_field" class="input" name="shipmondo_zipcode" placeholder="' + zipCodeFieldText + '"><input type="hidden" id="shipmondo_address_field" class="input" name="shipmondo_address" placeholder="' + addressFieldText + '"></div> <div class="shipmondo-shoplist"> </div> </div> </div> <div id="hidden_choosen_shop" type="hidden"></div><div class="shipmondo-clearfix" id="selected_shop_wrapper" style="display:none;"> <div id="shipmondo-hidden-shop"> </div> <div class="shipmondo-clearfix" id="selected_shop_header"></div> <div class="shipmondo-clearfix" id="selected_shop_context"> </div> </div> </div> </div>';
     } else {
-        var sZipcodeHTML = '<div class="pakkelabels_shipping_field-wrap" id="pakkelabels-zipcode-wrapper"> <div class="pakkelabels_shipping_field"> <div class="pakkelabels-clearfix" id="pakkelabels_shipping_button"> <div class="pakkelabels_stores"> <div> <div class="error_msg"></div><input type="hidden" id="Pakkelabels_zipcode_field" class="input" name="pakkelabels_zipcode" placeholder="' + zipCodeFieldText + '"><input type="hidden" id="Pakkelabels_address_field" class="input" name="pakkelabels_address" placeholder="' + addressFieldText + '"> </div> <div class="pakkelabels-shoplist dropdown"> <button class="button button-medium btn btn-primary dropdown-toggle" id="pakkelabels_find_shop_btn" type="button" data-toggle="dropdown">' + findServicePointText + '<span class="caret"></span></button> </div> </div> </div> <div id="hidden_choosen_shop" type="hidden"></div><div class="pakkelabels-clearfix" id="selected_shop_wrapper"> <div id="pakkelabels-hidden-shop"> </div> <div class="pakkelabels-clearfix" id="selected_shop_header"></div> <div class="pakkelabels-clearfix" id="selected_shop_context"> </div> </div> </div> </div>';
+        var sZipcodeHTML = '<div class="shipmondo_shipping_field-wrap" id="shipmondo-zipcode-wrapper"> <div class="shipmondo_shipping_field"> <div class="shipmondo-clearfix" id="shipmondo_shipping_button"> <div class="shipmondo_stores"> <div> <div class="error_msg"></div><input type="hidden" id="shipmondo_zipcode_field" class="input" name="shipmondo_zipcode" placeholder="' + zipCodeFieldText + '"><input type="hidden" id="shipmondo_address_field" class="input" name="shipmondo_address" placeholder="' + addressFieldText + '"> </div> <div class="shipmondo-shoplist dropdown"> <button class="button button-medium btn btn-primary dropdown-toggle" id="shipmondo_find_shop_btn" type="button" data-toggle="dropdown">' + findServicePointText + '<span class="caret"></span></button> </div> </div> </div> <div id="hidden_choosen_shop" type="hidden"></div><div class="shipmondo-clearfix" id="selected_shop_wrapper"> <div id="shipmondo-hidden-shop"> </div> <div class="shipmondo-clearfix" id="selected_shop_header"></div> <div class="shipmondo-clearfix" id="selected_shop_context"> </div> </div> </div> </div>';
     }
 
     //appends the modal to the body of the prestashop checkout page
     jQuery('body').append(sModalHTML);
 
     //Event fired when the find nearest shop is pressed
-    $(document).on('click', '#pakkelabels_find_shop_btn', function() {
+    $(document).on('click', '#shipmondo_find_shop_btn', function() {
         var chosenShippingAgent = getSelectedShippingAgent()
 
-        defaultZipcode = jQuery('#Pakkelabels_zipcode_field').val();
-        defaultAddress = jQuery('#Pakkelabels_address_field').val();
+        defaultZipcode = jQuery('#shipmondo_zipcode_field').val();
+        defaultAddress = jQuery('#shipmondo_address_field').val();
 
-        getShopList(chosenShippingAgent, $('#Pakkelabels_zipcode_field').val(), $('#Pakkelabels_address_field').val());
+        getShopList(chosenShippingAgent, $('#shipmondo_zipcode_field').val(), $('#shipmondo_address_field').val());
     })
 
-    jQuery(document).on('keypress', '#Pakkelabels_zipcode_field', function(event) {
+    jQuery(document).on('keypress', '#shipmondo_zipcode_field', function(event) {
         if (event.keyCode == 13) {
             event.preventDefault();
-            if (!jQuery('#pakkelabels_find_shop_btn').is(":disabled")) {
-                var iPakkelabels_choosen_delivery_option = jQuery('.delivery-option input:checked').val();
-                iPakkelabels_choosen_delivery_option = iPakkelabels_choosen_delivery_option.replace(/\D/g, '');
-                if (iPakkelabels_choosen_delivery_option == glsCarrierId) {
+            if (!jQuery('#shipmondo_find_shop_btn').is(":disabled")) {
+                var ishipmondo_choosen_delivery_option = jQuery('.delivery-option input:checked').val();
+                ishipmondo_choosen_delivery_option = ishipmondo_choosen_delivery_option.replace(/\D/g, '');
+                if (ishipmondo_choosen_delivery_option == glsCarrierId) {
                     sChoosenShippingAgent = 'gls';
-                } else if (iPakkelabels_choosen_delivery_option == daoCarrierId) {
+                } else if (ishipmondo_choosen_delivery_option == daoCarrierId) {
                     sChoosenShippingAgent = 'dao';
-                } else if (iPakkelabels_choosen_delivery_option == postnordCarrierId) {
+                } else if (ishipmondo_choosen_delivery_option == postnordCarrierId) {
                     sChoosenShippingAgent = 'pdk';
-                } else if (iPakkelabels_choosen_delivery_option == bringCarrierId) {
+                } else if (ishipmondo_choosen_delivery_option == bringCarrierId) {
                     sChoosenShippingAgent = 'bring';
                 }
 
-                defaultZipcode = jQuery('#Pakkelabels_zipcode_field').val();
-                defaultAddress = jQuery('#Pakkelabels_address_field').val();
+                defaultZipcode = jQuery('#shipmondo_zipcode_field').val();
+                defaultAddress = jQuery('#shipmondo_address_field').val();
 
 
-                getShopList(sChoosenShippingAgent, jQuery('#Pakkelabels_zipcode_field').val(), jQuery('#Pakkelabels_address_field').val());
+                getShopList(sChoosenShippingAgent, jQuery('#shipmondo_zipcode_field').val(), jQuery('#shipmondo_address_field').val());
 
-                jQuery('#Pakkelabels_zipcode_field').blur();
+                jQuery('#shipmondo_zipcode_field').blur();
             }
         }
     })
@@ -393,7 +393,7 @@ jQuery(window).on('load', function() {
     jQuery('#js-delivery').append('<button type="button" class="btn btn-primary pull-xs-right choose-pickuppoint" style="display:none;">' + modalHeaderTitle + '</button>');
 
     jQuery(document).on('click', '.delivery-option input[type="radio"]:not([value="' + glsCarrierId + ',"]):not([value="' + daoCarrierId + ',"]):not([value="' + bringCarrierId + ',"]):not([value="' + postnordCarrierId + ',"])', function() {
-        jQuery('#pakkelabels-zipcode-wrapper').remove();
+        jQuery('#shipmondo-zipcode-wrapper').remove();
         jQuery('button[name="processCarrier"]').prop("disabled", false);
         jQuery('#js-delivery .continue').show();
         jQuery('.choose-pickuppoint').hide();
@@ -422,7 +422,7 @@ jQuery(window).on('load', function() {
         }
 
         // Remove zipcode wrapper
-        jQuery('#pakkelabels-zipcode-wrapper').remove();
+        jQuery('#shipmondo-zipcode-wrapper').remove();
 
         // Find nearest delivery option
         var dev_option = jQuery('.delivery-option input:checked').closest('.delivery-option');
@@ -437,10 +437,10 @@ jQuery(window).on('load', function() {
 
         // Add zipcode from customer address
         if (defaultZipcode) {
-            jQuery('#Pakkelabels_zipcode_field').val(defaultZipcode);
+            jQuery('#shipmondo_zipcode_field').val(defaultZipcode);
         }
         if (defaultAddress) {
-            jQuery('#Pakkelabels_address_field').val(defaultAddress);
+            jQuery('#shipmondo_address_field').val(defaultAddress);
         }
         if (defaultAddress == '' && defaultZipcode == '') {
             var id_delivery = prestashop.cart.id_address_delivery;
@@ -448,12 +448,12 @@ jQuery(window).on('load', function() {
                 var id_delivery = jQuery('input[name="id_address_delivery"]:checked').val();
             }
             var address_data = prestashop.customer.addresses[id_delivery];
-            jQuery('#Pakkelabels_zipcode_field').val(address_data.postcode);
-            jQuery('#Pakkelabels_address_field').val(address_data.address1);
+            jQuery('#shipmondo_zipcode_field').val(address_data.postcode);
+            jQuery('#shipmondo_address_field').val(address_data.address1);
         }
         if (frontendType == 'radio') {
             jQuery(".loading_radio").show();
-            getShopList(shippingAgent, jQuery('#Pakkelabels_zipcode_field').val(), jQuery('#Pakkelabels_address_field').val());
+            getShopList(shippingAgent, jQuery('#shipmondo_zipcode_field').val(), jQuery('#shipmondo_address_field').val());
         } else {
             jQuery('.choose-pickuppoint').show();
             loadSelectedServicePoint()
@@ -471,36 +471,36 @@ jQuery(window).on('load', function() {
     }
 
     jQuery(document).on('keypress', function(event) {
-        if (jQuery('.pakkelabels-shop-list').hasClass('selected') && event.keyCode == 13 && jQuery('#pakkelabel-modal:visible').length != 0) {
+        if (jQuery('.shipmondo-shop-list').hasClass('selected') && event.keyCode == 13 && jQuery('#shipmondo-modal:visible').length != 0) {
             jQuery('#choose-stop-btn').trigger("click");
             jQuery('#choose-stop-btn').blur();
         }
     });
 
     //shows map
-    jQuery('.pakkelabel-open-map').on('click', function() {
-        jQuery('.pakkelabel-hide-map').show();
-        jQuery('.pakkelabel-open-map').hide();
-        jQuery('#pakkelabel-map-wrapper').show();
+    jQuery('.shipmondo-open-map').on('click', function() {
+        jQuery('.shipmondo-hide-map').show();
+        jQuery('.shipmondo-open-map').hide();
+        jQuery('#shipmondo-map-wrapper').show();
         google.maps.event.trigger(map, 'resize');
         map.fitBounds(bounds);
     })
 
     //hide map
-    jQuery('.pakkelabel-hide-map').on('click', function() {
-        jQuery('.pakkelabel-hide-map').hide();
-        jQuery('.pakkelabel-open-map').show();
-        jQuery('#pakkelabel-map-wrapper').hide();
+    jQuery('.shipmondo-hide-map').on('click', function() {
+        jQuery('.shipmondo-hide-map').hide();
+        jQuery('.shipmondo-open-map').show();
+        jQuery('#shipmondo-map-wrapper').hide();
     })
 
-    jQuery('#pakkelabel-modal').on('show.bs.modal', function(e) {
-        jQuery('body').toggleClass('pakkelabels-modal-shown');
-        jQuery('.pakkelabel-modal-body').scrollTop(0);
+    jQuery('#shipmondo-modal').on('show.bs.modal', function(e) {
+        jQuery('body').toggleClass('shipmondo-modal-shown');
+        jQuery('.shipmondo-modal-body').scrollTop(0);
     });
 
 
-    jQuery('#pakkelabel-modal').on('hidden.bs.modal', function(e) {
-        jQuery('body').toggleClass('pakkelabels-modal-shown');
+    jQuery('#shipmondo-modal').on('hidden.bs.modal', function(e) {
+        jQuery('body').toggleClass('shipmondo-modal-shown');
     });
 
     //Makes sure a shop is selected when the stuff is picked
@@ -523,24 +523,24 @@ jQuery(window).on('load', function() {
     });
 
     //Sets the choosen shipping address when modal closes
-    jQuery('#pakkelabel-modal').on('hidden.bs.modal', function(e) {
+    jQuery('#shipmondo-modal').on('hidden.bs.modal', function(e) {
         saveCartdetails();
     })
 
 
     //adds 3 events to the zipcode text field, that will disable the "find shop button", until a zipcode thats 4 in lentgh % numeric is choosen!
-    jQuery(document).on('keyup focusout input change', '#Pakkelabels_zipcode_field', function(e) {
-        if (jQuery('#Pakkelabels_zipcode_field').val().length > 0) {
-            jQuery('#pakkelabels_find_shop_btn').prop("disabled", false);
+    jQuery(document).on('keyup focusout input change', '#shipmondo_zipcode_field', function(e) {
+        if (jQuery('#shipmondo_zipcode_field').val().length > 0) {
+            jQuery('#shipmondo_find_shop_btn').prop("disabled", false);
         } else {
-            jQuery('#pakkelabels_find_shop_btn').prop("disabled", true);
+            jQuery('#shipmondo_find_shop_btn').prop("disabled", true);
         }
     });
 });
 jQuery(document).on('click', '.choose-pickuppoint', function() {
-    jQuery("#pakkelabels_find_shop_btn").trigger("click");
+    jQuery("#shipmondo_find_shop_btn").trigger("click");
     $("body,html").animate({
-            scrollTop: $(".pakkelabels_stores").offset().top
+            scrollTop: $(".shipmondo_stores").offset().top
         },
         800 //speed
     );

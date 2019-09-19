@@ -15,209 +15,209 @@
  */
 /*! normalize.css v3.0.3 | MIT License | github.com/necolas/normalize.css */
 
-#pakkelabel-modal audio,
-#pakkelabel-modal canvas,
-#pakkelabel-modal progress,
-#pakkelabel-modal video {
+#shipmondo-modal audio,
+#shipmondo-modal canvas,
+#shipmondo-modal progress,
+#shipmondo-modal video {
   display: inline-block;
   vertical-align: baseline;
 }
 
-#pakkelabel-modal audio:not([controls]) {
+#shipmondo-modal audio:not([controls]) {
   display: none;
   height: 0;
 }
 
-#pakkelabel-modal [hidden],
-#pakkelabel-modal template {
+#shipmondo-modal [hidden],
+#shipmondo-modal template {
   display: none;
 }
 
-#pakkelabel-modal a {
+#shipmondo-modal a {
   background-color: transparent;
 }
 
-#pakkelabel-modal a:active,
-#pakkelabel-modal a:hover {
+#shipmondo-modal a:active,
+#shipmondo-modal a:hover {
   outline: 0;
 }
 
-#pakkelabel-modal abbr[title] {
+#shipmondo-modal abbr[title] {
   border-bottom: 1px dotted;
 }
 
-#pakkelabel-modal b,
-#pakkelabel-modal strong {
+#shipmondo-modal b,
+#shipmondo-modal strong {
   font-weight: bold;
 }
 
-#pakkelabel-modal dfn {
+#shipmondo-modal dfn {
   font-style: italic;
 }
 
-#pakkelabel-modal h1 {
+#shipmondo-modal h1 {
   font-size: 2em;
   margin: 0.67em 0;
 }
 
-#pakkelabel-modal mark {
+#shipmondo-modal mark {
   background: #ff0;
   color: #000;
 }
 
-#pakkelabel-modal small {
+#shipmondo-modal small {
   font-size: 80%;
 }
 
-#pakkelabel-modal sub,
-#pakkelabel-modal sup {
+#shipmondo-modal sub,
+#shipmondo-modal sup {
   font-size: 75%;
   line-height: 0;
   position: relative;
   vertical-align: baseline;
 }
 
-#pakkelabel-modal sup {
+#shipmondo-modal sup {
   top: -0.5em;
 }
 
-#pakkelabel-modal sub {
+#shipmondo-modal sub {
   bottom: -0.25em;
 }
 
-#pakkelabel-modal img {
+#shipmondo-modal img {
   border: 0;
 }
 
-#pakkelabel-modal svg:not(:root) {
+#shipmondo-modal svg:not(:root) {
   overflow: hidden;
 }
 
-#pakkelabel-modal figure {
+#shipmondo-modal figure {
   margin: 1em 40px;
 }
 
-#pakkelabel-modal hr {
+#shipmondo-modal hr {
   box-sizing: content-box;
   height: 0;
 }
 
-#pakkelabel-modal pre {
+#shipmondo-modal pre {
   overflow: auto;
 }
 
-#pakkelabel-modal code,
-#pakkelabel-modal kbd,
-#pakkelabel-modal pre,
-#pakkelabel-modal samp {
+#shipmondo-modal code,
+#shipmondo-modal kbd,
+#shipmondo-modal pre,
+#shipmondo-modal samp {
   font-family: monospace, monospace;
   font-size: 1em;
 }
 
-#pakkelabel-modal input,
-#pakkelabel-modal optgroup,
-#pakkelabel-modal select,
-#pakkelabel-modal textarea {
+#shipmondo-modal input,
+#shipmondo-modal optgroup,
+#shipmondo-modal select,
+#shipmondo-modal textarea {
   color: inherit;
   font: inherit;
 }
 
-#pakkelabel-modal button {
+#shipmondo-modal button {
   overflow: visible;
 }
 
-#pakkelabel-modal button,
-#pakkelabel-modal select {
+#shipmondo-modal button,
+#shipmondo-modal select {
   text-transform: none;
 }
 
-#pakkelabel-modal button,
-#pakkelabel-modal html input[type="button"],
-#pakkelabel-modal input[type="reset"],
-#pakkelabel-modal input[type="submit"] {
+#shipmondo-modal button,
+#shipmondo-modal html input[type="button"],
+#shipmondo-modal input[type="reset"],
+#shipmondo-modal input[type="submit"] {
   -webkit-appearance: button;
   cursor: pointer;
 }
 
-#pakkelabel-modal button[disabled],
-#pakkelabel-modal html input[disabled] {
+#shipmondo-modal button[disabled],
+#shipmondo-modal html input[disabled] {
   cursor: default;
 }
 
-#pakkelabel-modal button::-moz-focus-inner,
-#pakkelabel-modal input::-moz-focus-inner {
+#shipmondo-modal button::-moz-focus-inner,
+#shipmondo-modal input::-moz-focus-inner {
   border: 0;
   padding: 0;
 }
 
-#pakkelabel-modal input {
+#shipmondo-modal input {
   line-height: normal;
 }
 
-#pakkelabel-modal input[type="checkbox"],
-#pakkelabel-modal input[type="radio"] {
+#shipmondo-modal input[type="checkbox"],
+#shipmondo-modal input[type="radio"] {
   box-sizing: border-box;
   padding: 0;
 }
 
-#pakkelabel-modal input[type="number"]::-webkit-inner-spin-button,
-#pakkelabel-modal input[type="number"]::-webkit-outer-spin-button {
+#shipmondo-modal input[type="number"]::-webkit-inner-spin-button,
+#shipmondo-modal input[type="number"]::-webkit-outer-spin-button {
   height: auto;
 }
 
-#pakkelabel-modal input[type="search"] {
+#shipmondo-modal input[type="search"] {
   -webkit-appearance: textfield;
   box-sizing: content-box;
 }
 
-#pakkelabel-modal input[type="search"]::-webkit-search-cancel-button,
-#pakkelabel-modal input[type="search"]::-webkit-search-decoration {
+#shipmondo-modal input[type="search"]::-webkit-search-cancel-button,
+#shipmondo-modal input[type="search"]::-webkit-search-decoration {
   -webkit-appearance: none;
 }
 
-#pakkelabel-modal fieldset {
+#shipmondo-modal fieldset {
   border: 1px solid #c0c0c0;
   margin: 0 2px;
   padding: 0.35em 0.625em 0.75em;
 }
 
-#pakkelabel-modal legend {
+#shipmondo-modal legend {
   border: 0;
   padding: 0;
 }
 
-#pakkelabel-modal textarea {
+#shipmondo-modal textarea {
   overflow: auto;
 }
 
-#pakkelabel-modal optgroup {
+#shipmondo-modal optgroup {
   font-weight: bold;
 }
 
-#pakkelabel-modal table {
+#shipmondo-modal table {
   border-collapse: collapse;
   border-spacing: 0;
 }
 
-#pakkelabel-modal td,
-#pakkelabel-modal th {
+#shipmondo-modal td,
+#shipmondo-modal th {
   padding: 0;
 }
 
-#pakkelabel-modal * {
+#shipmondo-modal * {
   box-sizing: border-box;
 }
 
-#pakkelabel-modal *:before,
-#pakkelabel-modal *:after {
+#shipmondo-modal *:before,
+#shipmondo-modal *:after {
   box-sizing: border-box;
 }
 
-#pakkelabel-modal [role="button"] {
+#shipmondo-modal [role="button"] {
   cursor: pointer;
 }
 
-#pakkelabel-modal .btn {
+#shipmondo-modal .btn {
   display: inline-block;
   margin-bottom: 0;
   font-weight: normal;
@@ -239,158 +239,158 @@
   user-select: none;
 }
 
-#pakkelabel-modal .btn:focus,
-#pakkelabel-modal .btn:active:focus,
-#pakkelabel-modal .btn.active:focus,
-#pakkelabel-modal .btn.focus,
-#pakkelabel-modal .btn:active.focus,
-#pakkelabel-modal .btn.active.focus {
+#shipmondo-modal .btn:focus,
+#shipmondo-modal .btn:active:focus,
+#shipmondo-modal .btn.active:focus,
+#shipmondo-modal .btn.focus,
+#shipmondo-modal .btn:active.focus,
+#shipmondo-modal .btn.active.focus {
   outline: thin dotted;
   outline: 5px auto -webkit-focus-ring-color;
   outline-offset: -2px;
 }
 
-#pakkelabel-modal .btn:hover,
-#pakkelabel-modal .btn:focus,
-#pakkelabel-modal .btn.focus {
+#shipmondo-modal .btn:hover,
+#shipmondo-modal .btn:focus,
+#shipmondo-modal .btn.focus {
   color: #333333;
   text-decoration: none;
 }
 
-#pakkelabel-modal .btn:active,
-#pakkelabel-modal .btn.active {
+#shipmondo-modal .btn:active,
+#shipmondo-modal .btn.active {
   outline: 0;
   background-image: none;
   box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
 }
 
-#pakkelabel-modal .btn.disabled,
-#pakkelabel-modal .btn[disabled],
-#pakkelabel-modal fieldset[disabled] .btn {
+#shipmondo-modal .btn.disabled,
+#shipmondo-modal .btn[disabled],
+#shipmondo-modal fieldset[disabled] .btn {
   cursor: not-allowed;
   opacity: 0.65;
   filter: alpha(opacity=65);
   box-shadow: none;
 }
 
-#pakkelabel-modal a.btn.disabled,
-#pakkelabel-modal fieldset[disabled] a.btn {
+#shipmondo-modal a.btn.disabled,
+#shipmondo-modal fieldset[disabled] a.btn {
   pointer-events: none;
 }
 
-#pakkelabel-modal .btn-default {
+#shipmondo-modal .btn-default {
   color: #333333;
   background-color: #ffffff;
   border-color: #cccccc;
 }
 
-#pakkelabel-modal .btn-default:focus,
-#pakkelabel-modal .btn-default.focus {
+#shipmondo-modal .btn-default:focus,
+#shipmondo-modal .btn-default.focus {
   color: #333333;
   background-color: #e6e6e6;
   border-color: #8c8c8c;
 }
 
-#pakkelabel-modal #pakkelabel-modal .btn-default:hover {
+#shipmondo-modal #shipmondo-modal .btn-default:hover {
   color: #333333;
   background-color: #e6e6e6;
   border-color: #adadad;
 }
 
-#pakkelabel-modal .btn-default:active,
-#pakkelabel-modal .btn-default.active,
-#pakkelabel-modal .open > .dropdown-toggle.btn-default {
+#shipmondo-modal .btn-default:active,
+#shipmondo-modal .btn-default.active,
+#shipmondo-modal .open > .dropdown-toggle.btn-default {
   color: #333333;
   background-color: #e6e6e6;
   border-color: #adadad;
 }
 
-#pakkelabel-modal .btn-default:active:hover,
-#pakkelabel-modal .btn-default.active:hover,
-#pakkelabel-modal .open > .dropdown-toggle.btn-default:hover,
-#pakkelabel-modal .btn-default:active:focus,
-#pakkelabel-modal .btn-default.active:focus,
-#pakkelabel-modal .open > .dropdown-toggle.btn-default:focus,
-#pakkelabel-modal .btn-default:active.focus,
-#pakkelabel-modal .btn-default.active.focus,
-#pakkelabel-modal .open > .dropdown-toggle.btn-default.focus {
+#shipmondo-modal .btn-default:active:hover,
+#shipmondo-modal .btn-default.active:hover,
+#shipmondo-modal .open > .dropdown-toggle.btn-default:hover,
+#shipmondo-modal .btn-default:active:focus,
+#shipmondo-modal .btn-default.active:focus,
+#shipmondo-modal .open > .dropdown-toggle.btn-default:focus,
+#shipmondo-modal .btn-default:active.focus,
+#shipmondo-modal .btn-default.active.focus,
+#shipmondo-modal .open > .dropdown-toggle.btn-default.focus {
   color: #333333;
   background-color: #d4d4d4;
   border-color: #8c8c8c;
 }
 
-#pakkelabel-modal .btn-default:active,
-#pakkelabel-modal .btn-default.active,
-#pakkelabel-modal .open > .dropdown-toggle.btn-default {
+#shipmondo-modal .btn-default:active,
+#shipmondo-modal .btn-default.active,
+#shipmondo-modal .open > .dropdown-toggle.btn-default {
   background-image: none;
 }
 
-#pakkelabel-modal .btn-default.disabled:hover,
-#pakkelabel-modal .btn-default[disabled]:hover,
-#pakkelabel-modal fieldset[disabled] .btn-default:hover,
-#pakkelabel-modal .btn-default.disabled:focus,
-#pakkelabel-modal .btn-default[disabled]:focus,
-#pakkelabel-modal fieldset[disabled] .btn-default:focus,
-#pakkelabel-modal .btn-default.disabled.focus,
-#pakkelabel-modal .btn-default[disabled].focus,
-#pakkelabel-modal fieldset[disabled] .btn-default.focus {
+#shipmondo-modal .btn-default.disabled:hover,
+#shipmondo-modal .btn-default[disabled]:hover,
+#shipmondo-modal fieldset[disabled] .btn-default:hover,
+#shipmondo-modal .btn-default.disabled:focus,
+#shipmondo-modal .btn-default[disabled]:focus,
+#shipmondo-modal fieldset[disabled] .btn-default:focus,
+#shipmondo-modal .btn-default.disabled.focus,
+#shipmondo-modal .btn-default[disabled].focus,
+#shipmondo-modal fieldset[disabled] .btn-default.focus {
   background-color: #ffffff;
   border-color: #cccccc;
 }
 
-#pakkelabel-modal .btn-default .badge {
+#shipmondo-modal .btn-default .badge {
   color: #ffffff;
   background-color: #333333;
 }
 
-#pakkelabel-modal .btn-primary {
+#shipmondo-modal .btn-primary {
   color: #ffffff;
   background-color: #337ab7;
   border-color: #2e6da4;
 }
 
-#pakkelabel-modal .btn-primary:focus,
-#pakkelabel-modal .btn-primary.focus {
+#shipmondo-modal .btn-primary:focus,
+#shipmondo-modal .btn-primary.focus {
   color: #ffffff;
   background-color: #286090;
   border-color: #122b40;
 }
 
-#pakkelabel-modal .btn-primary:hover {
+#shipmondo-modal .btn-primary:hover {
   color: #ffffff;
   background-color: #286090;
   border-color: #204d74;
 }
 
-#pakkelabel-modal .btn-primary:active,
-#pakkelabel-modal .btn-primary.active,
-#pakkelabel-modal .open > .dropdown-toggle.btn-primary {
+#shipmondo-modal .btn-primary:active,
+#shipmondo-modal .btn-primary.active,
+#shipmondo-modal .open > .dropdown-toggle.btn-primary {
   color: #ffffff;
   background-color: #286090;
   border-color: #204d74;
 }
 
-#pakkelabel-modal .btn-primary:active:hover,
-#pakkelabel-modal .btn-primary.active:hover,
-#pakkelabel-modal .open > .dropdown-toggle.btn-primary:hover,
-#pakkelabel-modal .btn-primary:active:focus,
-#pakkelabel-modal .btn-primary.active:focus,
-#pakkelabel-modal .open > .dropdown-toggle.btn-primary:focus,
-#pakkelabel-modal .btn-primary:active.focus,
-#pakkelabel-modal .btn-primary.active.focus,
-#pakkelabel-modal .open > .dropdown-toggle.btn-primary.focus {
+#shipmondo-modal .btn-primary:active:hover,
+#shipmondo-modal .btn-primary.active:hover,
+#shipmondo-modal .open > .dropdown-toggle.btn-primary:hover,
+#shipmondo-modal .btn-primary:active:focus,
+#shipmondo-modal .btn-primary.active:focus,
+#shipmondo-modal .open > .dropdown-toggle.btn-primary:focus,
+#shipmondo-modal .btn-primary:active.focus,
+#shipmondo-modal .btn-primary.active.focus,
+#shipmondo-modal .open > .dropdown-toggle.btn-primary.focus {
   color: #ffffff;
   background-color: #204d74;
   border-color: #122b40;
 }
 
-#pakkelabel-modal .btn-primary:active,
-#pakkelabel-modal .btn-primary.active,
-#pakkelabel-modal .open > .dropdown-toggle.btn-primary {
+#shipmondo-modal .btn-primary:active,
+#shipmondo-modal .btn-primary.active,
+#shipmondo-modal .open > .dropdown-toggle.btn-primary {
   background-image: none;
 }
 
-#pakkelabel-modal .collapsing {
+#shipmondo-modal .collapsing {
   position: relative;
   height: 0;
   overflow: hidden;
@@ -402,7 +402,7 @@
   transition-timing-function: ease;
 }
 
-#pakkelabel-modal .close {
+#shipmondo-modal .close {
   float: right;
   font-size: 21px;
   font-weight: bold;
@@ -414,13 +414,13 @@
   display: inline;
 }
 
-#pakkelabel-modal-header-h4 {
+#shipmondo-modal-header-h4 {
   float: left;
   display: inline;
 }
 
-#pakkelabel-modal .close:hover,
-#pakkelabel-modal .close:focus {
+#shipmondo-modal .close:hover,
+#shipmondo-modal .close:focus {
   color: #000000;
   text-decoration: none;
   cursor: pointer;
@@ -428,7 +428,7 @@
   filter: alpha(opacity=50);
 }
 
-#pakkelabel-modal button.close {
+#shipmondo-modal button.close {
   padding: 0;
   cursor: pointer;
   background: transparent;
@@ -436,11 +436,11 @@
   -webkit-appearance: none;
 }
 
-.pakkelabel-modal-open {
+.shipmondo-modal-open {
   overflow: hidden;
 }
 
-#pakkelabel-modal.pakkelabel-modal {
+#shipmondo-modal.shipmondo-modal {
   display: none;
   overflow: hidden;
   position: fixed;
@@ -459,7 +459,7 @@
   background-color: transparent;
 }
 
-#pakkelabel-modal.pakkelabel-modal.fade-pakkelabel .pakkelabel-modal-dialog {
+#shipmondo-modal.shipmondo-modal.fade-shipmondo .shipmondo-modal-dialog {
   -webkit-transform: translate(0, -25%);
   -ms-transform: translate(0, -25%);
   transform: translate(0, -25%);
@@ -470,18 +470,18 @@
   transition: transform 0.3s ease-out, -webkit-transform 0.3s ease-out;
 }
 
-#pakkelabel-modal.pakkelabel-modal.in .pakkelabel-modal-dialog {
+#shipmondo-modal.shipmondo-modal.in .shipmondo-modal-dialog {
   -webkit-transform: translate(0, 0);
   -ms-transform: translate(0, 0);
   transform: translate(0, 0);
 }
 
-.pakkelabel-modal-open #pakkelabel-modal.pakkelabel-modal {
+.shipmondo-modal-open #shipmondo-modal.shipmondo-modal {
   overflow-x: hidden;
   overflow-y: auto;
 }
 
-#pakkelabel-modal .pakkelabel-modal-dialog {
+#shipmondo-modal .shipmondo-modal-dialog {
   position: relative;
   width: calc(100% - 30px);
   margin: auto;
@@ -489,7 +489,7 @@
   top: 10px;
 }
 
-#pakkelabel-modal .pakkelabel-modal-content {
+#shipmondo-modal .shipmondo-modal-content {
   position: relative;
   background-color: #ffffff;
   border: 1px solid #999999;
@@ -500,8 +500,8 @@
   outline: 0;
 }
 
-.pakkelabels_modal-backdrop,
-body.pakkelabels-modal-shown .pakkelabels_modal-backdrop {
+.shipmondo_modal-backdrop,
+body.shipmondo-modal-shown .shipmondo_modal-backdrop {
   position: fixed;
   top: 0;
   right: 0;
@@ -511,33 +511,33 @@ body.pakkelabels-modal-shown .pakkelabels_modal-backdrop {
   background-color: #000000;
 }
 
-.pakkelabels_modal-backdrop.fade-pakkelabel,
-body.pakkelabels-modal-shown .pakkelabels_modal-backdrop.fade-pakkelabel {
+.shipmondo_modal-backdrop.fade-shipmondo,
+body.shipmondo-modal-shown .shipmondo_modal-backdrop.fade-shipmondo {
   opacity: 0;
   filter: alpha(opacity=0);
 }
 
-.pakkelabels_modal-backdrop.in,
-body.pakkelabels-modal-shown .pakkelabels_modal-backdrop.in {
+.shipmondo_modal-backdrop.in,
+body.shipmondo-modal-shown .shipmondo_modal-backdrop.in {
   opacity: 0.5;
   filter: alpha(opacity=50);
 }
 
-.pakkelabels_modal-backdrop.fade-pakkelabel.in,
-body.pakkelabels-modal-shown .pakkelabels_modal-backdrop.fade-pakkelabel.in {
+.shipmondo_modal-backdrop.fade-shipmondo.in,
+body.shipmondo-modal-shown .shipmondo_modal-backdrop.fade-shipmondo.in {
   opacity: 0.5;
 }
 
-#pakkelabel-modal .pakkelabel-modal-header {
+#shipmondo-modal .shipmondo-modal-header {
   padding: 15px;
   border-bottom: 1px solid #e5e5e5;
 }
 
-#pakkelabel-modal .pakkelabel-modal-header .close {
+#shipmondo-modal .shipmondo-modal-header .close {
   margin-top: -2px;
 }
 
-#pakkelabel-modal .pakkelabel-modal-title {
+#shipmondo-modal .shipmondo-modal-title {
   margin-bottom: 0;
   margin-top: 0;
   font-size: 19px;
@@ -547,31 +547,31 @@ body.pakkelabels-modal-shown .pakkelabels_modal-backdrop.fade-pakkelabel.in {
   font-weight: normal;
 }
 
-#pakkelabel-modal .pakkelabel-modal-body {
+#shipmondo-modal .shipmondo-modal-body {
   position: relative;
   padding: 15px;
 }
 
-#pakkelabel-modal .pakkelabel-modal-footer {
+#shipmondo-modal .shipmondo-modal-footer {
   padding: 15px 15px 2px 15px;
   text-align: right;
   border-top: 1px solid #e5e5e5;
 }
 
-#pakkelabel-modal .pakkelabel-modal-footer .btn + .btn {
+#shipmondo-modal .shipmondo-modal-footer .btn + .btn {
   margin-left: 5px;
   margin-bottom: 0;
 }
 
-#pakkelabel-modal .pakkelabel-modal-footer .btn-group .btn + .btn {
+#shipmondo-modal .shipmondo-modal-footer .btn-group .btn + .btn {
   margin-left: -1px;
 }
 
-#pakkelabel-modal .pakkelabel-modal-footer .btn-block + .btn-block {
+#shipmondo-modal .shipmondo-modal-footer .btn-block + .btn-block {
   margin-left: 0;
 }
 
-#pakkelabel-modal .pakkelabel-modal-scrollbar-measure {
+#shipmondo-modal .shipmondo-modal-scrollbar-measure {
   position: absolute;
   top: -9999px;
   width: 50px;
@@ -579,44 +579,44 @@ body.pakkelabels-modal-shown .pakkelabels_modal-backdrop.fade-pakkelabel.in {
   overflow: scroll;
 }
 
-#pakkelabel-modal .clearfix:before,
-#pakkelabel-modal .clearfix:after,
-#pakkelabel-modal .pakkelabel-modal-header:before,
-#pakkelabel-modal .pakkelabel-modal-header:after,
-#pakkelabel-modal .pakkelabel-modal-footer:before,
-#pakkelabel-modal .pakkelabel-modal-footer:after {
+#shipmondo-modal .clearfix:before,
+#shipmondo-modal .clearfix:after,
+#shipmondo-modal .shipmondo-modal-header:before,
+#shipmondo-modal .shipmondo-modal-header:after,
+#shipmondo-modal .shipmondo-modal-footer:before,
+#shipmondo-modal .shipmondo-modal-footer:after {
   content: " ";
   display: table;
 }
 
-#pakkelabel-modal .clearfix:after,
-#pakkelabel-modal .pakkelabel-modal-header:after,
-#pakkelabel-modal .pakkelabel-modal-footer:after {
+#shipmondo-modal .clearfix:after,
+#shipmondo-modal .shipmondo-modal-header:after,
+#shipmondo-modal .shipmondo-modal-footer:after {
   clear: both;
 }
 
-#pakkelabel-modal .pakkelabel-open-close-button-wrap {
+#shipmondo-modal .shipmondo-open-close-button-wrap {
   float: right;
   margin-top: -2px;
   margin-right: 15px;
   color: #7F7F7F;
 }
 
-#pakkelabel-modal.pakkelabel-modal {
+#shipmondo-modal.shipmondo-modal {
   font-family: Arial,Helvetica,sans-serif!important;
 }
 
-#pakkelabel-modal.pakkelabel-modal p {
+#shipmondo-modal.shipmondo-modal p {
   font-family: "Helvetica Neue",Helvetica,Arial,sans-serif !important;
   color: #000 !important;
   font-size: 14px;
 }
 
 /*Jesper N Animation Modal */
-#pakkelabel-modal .pakkelabel-modal-dialog {
+#shipmondo-modal .shipmondo-modal-dialog {
 }
 
-#pakkelabel-modal .map_wrapper {
+#shipmondo-modal .map_wrapper {
   position: absolute;
   z-index: 0;
   right: 0;
@@ -630,33 +630,33 @@ body.pakkelabels-modal-shown .pakkelabels_modal-backdrop.fade-pakkelabel.in {
   height: 100%;
 }
 
-#pakkelabel-modal .pakkelabel-list-wrap {
+#shipmondo-modal .shipmondo-list-wrap {
   z-index: 2;
 }
 
-#pakkelabel-modal.map_wrapper_open .pakkelabel-list-wrap {
+#shipmondo-modal.map_wrapper_open .shipmondo-list-wrap {
   -webkit-transform: translate(-50%,0);
   -ms-transform: translate(-50%,0);
   transform: translate(-50.1%,0);
 }
 
-#pakkelabel-modal.map_wrapper_open .map_wrapper {
+#shipmondo-modal.map_wrapper_open .map_wrapper {
   -webkit-transform: translate(50%,0);
   -ms-transform: translate(50%,0);
   transform: translate(50.1%,0);
 }
 
-#pakkelabel-modal .pakkelabel-modal-body {
+#shipmondo-modal .shipmondo-modal-body {
   max-height: calc(100vh - 240px);
  /*header 28px and footer 78px*/
   overflow-y: auto;
 }
 
-#pakkelabel-modal .pakkelabel-modal-body.map_content_wrapper {
+#shipmondo-modal .shipmondo-modal-body.map_content_wrapper {
   max-height: none;
 }
 
-#pakkelabel-modal .pakkelabel-modal-content {
+#shipmondo-modal .shipmondo-modal-content {
   -webkit-transition-property: -webkit-transform;
   transition-property: transform;
   -webkit-transition-duration: 0.6s, 0.6s;
@@ -674,29 +674,29 @@ body.pakkelabels-modal-shown .pakkelabels_modal-backdrop.fade-pakkelabel.in {
   flex-direction: column;
 }
 
-#pakkelabel-modal .pakkelabel-modal-content .inner-modal-buddy,
-#pakkelabel-modal .map_wrapper .map_content_wrapper {
+#shipmondo-modal .shipmondo-modal-content .inner-modal-buddy,
+#shipmondo-modal .map_wrapper .map_content_wrapper {
   -webkit-box-flex: 1;
   -webkit-flex: 1 1 0%;
   -ms-flex: 1 1 0%;
   flex: 1 1 0%;
 }
 
-#pakkelabel-modal .map_wrapper .pakkelabel-modal-header,
-#pakkelabel-modal .map_wrapper .pakkelabel-modal-footer {
+#shipmondo-modal .map_wrapper .shipmondo-modal-header,
+#shipmondo-modal .map_wrapper .shipmondo-modal-footer {
   display: none;
 }
 
-#pakkelabel-modal .pakkelabel-modal-content.pakkelabel-list-wrap .button.text-hide-list,
-#pakkelabel-modal .pakkelabel-modal-content.pakkelabel-list-wrap .button.text-hide-map {
+#shipmondo-modal .shipmondo-modal-content.shipmondo-list-wrap .button.text-hide-list,
+#shipmondo-modal .shipmondo-modal-content.shipmondo-list-wrap .button.text-hide-map {
   display: none;
 }
 
-#pakkelabel-modal.map_wrapper_open .pakkelabel-modal-content.pakkelabel-list-wrap .button.text-hide-map {
+#shipmondo-modal.map_wrapper_open .shipmondo-modal-content.shipmondo-list-wrap .button.text-hide-map {
   display: inline-block;
 }
 
-#pakkelabel-modal.map_wrapper_open .pakkelabel-modal-content.pakkelabel-list-wrap .button.text-show-map {
+#shipmondo-modal.map_wrapper_open .shipmondo-modal-content.shipmondo-list-wrap .button.text-show-map {
   display: none;
 }
 
@@ -781,41 +781,41 @@ body.pakkelabels-modal-shown .pakkelabels_modal-backdrop.fade-pakkelabel.in {
 }
 
 @media (min-width: 768px) {
-  #pakkelabel-modal .pakkelabel-modal-dialog {
+  #shipmondo-modal .shipmondo-modal-dialog {
     width: 600px;
     margin: 30px auto;
   }
 
-  #pakkelabel-modal .pakkelabel-modal-content {
+  #shipmondo-modal .shipmondo-modal-content {
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
   }
 
-  #pakkelabel-modal .pakkelabel-modal-sm {
+  #shipmondo-modal .shipmondo-modal-sm {
     width: 300px;
   }
 }
 
 @media (min-width: 992px) {
-  #pakkelabel-modal .pakkelabel-modal-lg {
+  #shipmondo-modal .shipmondo-modal-lg {
     width: 900px;
   }
 }
 
 @media (max-width: 991px) {
-  #pakkelabel-modal .pakkelabel-modal-dialog {
+  #shipmondo-modal .shipmondo-modal-dialog {
   }
 
-  #pakkelabel-modal .map_wrapper .pakkelabel-modal-header,
-  #pakkelabel-modal .map_wrapper .pakkelabel-modal-footer {
+  #shipmondo-modal .map_wrapper .shipmondo-modal-header,
+  #shipmondo-modal .map_wrapper .shipmondo-modal-footer {
     display: block;
   }
 
-  #pakkelabel-modal .pakkelabel-modal-content.map_wrapper .button.text-hide-map {
+  #shipmondo-modal .shipmondo-modal-content.map_wrapper .button.text-hide-map {
     display: none;
   }
 
-  #pakkelabel-modal.map_wrapper_open .pakkelabel-modal-content ,
-  #pakkelabel-modal.map_wrapper_closed .pakkelabel-modal-content {
+  #shipmondo-modal.map_wrapper_open .shipmondo-modal-content ,
+  #shipmondo-modal.map_wrapper_closed .shipmondo-modal-content {
     -webkit-transform: translate(0,0);
     -ms-transform: translate(0,0);
     transform: translate(0,0);
@@ -835,14 +835,14 @@ body.pakkelabels-modal-shown .pakkelabels_modal-backdrop.fade-pakkelabel.in {
     animation-play-state: running;
   }
 
-  #pakkelabel-modal.map_wrapper_open .pakkelabel-list-wrap,
-  #pakkelabel-modal.map_wrapper_closed .map_wrapper {
+  #shipmondo-modal.map_wrapper_open .shipmondo-list-wrap,
+  #shipmondo-modal.map_wrapper_closed .map_wrapper {
     -webkit-animation-name: change_layer_left_side;
     animation-name: change_layer_left_side;
   }
 
-  #pakkelabel-modal.map_wrapper_open .map_wrapper,
-  #pakkelabel-modal.map_wrapper_closed .pakkelabel-list-wrap {
+  #shipmondo-modal.map_wrapper_open .map_wrapper,
+  #shipmondo-modal.map_wrapper_closed .shipmondo-list-wrap {
     -webkit-animation-name: change_layer_right_side;
     animation-name: change_layer_right_side;
   }

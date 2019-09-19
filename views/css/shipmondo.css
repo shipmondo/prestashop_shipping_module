@@ -2,11 +2,11 @@
   font-weight: bold;
 }
 
-#selected_shop_context > .pakkelabels-company-name {
+#selected_shop_context > .shipmondo-company-name {
   font-weight: normal;
 }
 
-.pakkelabels-company-name {
+.shipmondo-company-name {
   font-weight: bold;
 }
 
@@ -15,7 +15,7 @@
   cursor: default;
 }
 
-.blockOverlay.pakkelabels-loader {
+.blockOverlay.shipmondo-loader {
   z-index: 1000 !important;
   border: medium none !important;
   margin: 0px !important;
@@ -30,7 +30,7 @@
   position: absolute !important;
 }
 
-.powered-by-pakkelabels {
+.powered-by-shipmondo {
   color: #707070;
   font-size: 9px;
   text-align: center;
@@ -58,14 +58,14 @@
   text-indent: 0px !important;
 }
 
-#pakkelabels_find_shop_btn {
+#shipmondo_find_shop_btn {
   margin-top: 5px;
   width: 100%;
   padding: 5px;
   white-space: normal;
 }
 
-#Pakkelabels_zipcode_field {
+#shipmondo_zipcode_field {
   margin: 5px 0 0 0;
   width: 100%;
   border: 1px solid #cfcfcf;
@@ -73,33 +73,33 @@
   padding: 5px;
 }
 
-#pakkelabels_find_shop_btn.btn[disabled] {
+#shipmondo_find_shop_btn.btn[disabled] {
   cursor: not-allowed;
 }
 
-.pakkelabels_shipping_field-wrap {
+.shipmondo_shipping_field-wrap {
   width: 100%;
   display: block;
 }
 
-.pakkelabels_shipping_field {
+.shipmondo_shipping_field {
   max-width: 100%;
   display: inline-block;
 }
 
-ul.pakkelabels-shoplist-ul {
+ul.shipmondo-shoplist-ul {
   padding: 0;
   margin: 0;
 }
 
-.pakkelabels-single-shop {
+.shipmondo-single-shop {
   padding-top: 5px;
   padding-right: 5px;
   padding-bottom: 5px;
   padding-left: 35px;
 }
 
-.pakkelabels-hidden {
+.shipmondo-hidden {
   display: none;
 }
 
@@ -107,7 +107,7 @@ ul.pakkelabels-shoplist-ul {
   margin-bottom: 7px;
 }
 
-.pakkelabels-hidden {
+.shipmondo-hidden {
   margin: 0 0 0 0;
 }
 
@@ -115,13 +115,13 @@ ul.pakkelabels-shoplist-ul {
   font-style: italic;
 }
 
-.pakkelabels-clearfix:after {
+.shipmondo-clearfix:after {
   content: "";
   display: table;
   clear: both;
 }
 
-ul.pakkelabels-shoplist-ul {
+ul.shipmondo-shoplist-ul {
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
@@ -133,7 +133,7 @@ ul.pakkelabels-shoplist-ul {
   flex-wrap: wrap;
 }
 
-ul.pakkelabels-shoplist-ul li.pakkelabels-shop-list {
+ul.shipmondo-shoplist-ul li.shipmondo-shop-list {
   list-style: none !important;
   border-bottom: 1px solid #eee;
   padding-bottom: 4px;
@@ -143,45 +143,45 @@ ul.pakkelabels-shoplist-ul li.pakkelabels-shop-list {
   float: left;
 }
 
-ul.pakkelabels-shoplist-ul li.pakkelabels-shop-list:nth-of-type(2n+1) {
+ul.shipmondo-shoplist-ul li.shipmondo-shop-list:nth-of-type(2n+1) {
   clear: left;
   border-right: 1px solid #eee;
 }
 
-ul.pakkelabels-shoplist-ul li.pakkelabels-shop-list:nth-last-of-type(1),
-ul.pakkelabels-shoplist-ul li.pakkelabels-shop-list:nth-last-of-type(2) {
+ul.shipmondo-shoplist-ul li.shipmondo-shop-list:nth-last-of-type(1),
+ul.shipmondo-shoplist-ul li.shipmondo-shop-list:nth-last-of-type(2) {
   border-bottom: none;
 }
 
-#pakkelabel-map-wrapper {
+#shipmondo-map-wrapper {
   padding-bottom: 15px;
   height: 300px;
   width: 100%;
   background-color: white;
 }
 
-.pakkelabels_shipping_field-wrap,
-#selected_shop_wrapper, .pakkelabels_stores {
+.shipmondo_shipping_field-wrap,
+#selected_shop_wrapper, .shipmondo_stores {
   text-indent: 0px;
   cursor: pointer;
 }
 
-.pakkelabels-single-shop .no_cords_found ~ .no_cords_found {
+.shipmondo-single-shop .no_cords_found ~ .no_cords_found {
   display: none;
 }
 
-.pakkelabel-open-close-button-wrap {
+.shipmondo-open-close-button-wrap {
   display: none;
   cursor: pointer;
 }
 
-.pakkelabels-single-shop {
+.shipmondo-single-shop {
   position: relative;
   font-size: 16px;
   line-height: 18px;
 }
 
-.pakkelabels-single-shop .pakkelabels-radio-button {
+.shipmondo-single-shop .shipmondo-radio-button {
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
@@ -204,11 +204,11 @@ ul.pakkelabels-shoplist-ul li.pakkelabels-shop-list:nth-last-of-type(2) {
   transform: translate(0,-50%);
 }
 
-.pakkelabels-single-shop:hover .pakkelabels-radio-button {
+.shipmondo-single-shop:hover .shipmondo-radio-button {
   border-color: #1a1a1a;
 }
 
-.pakkelabels-single-shop .pakkelabels-radio-button:before {
+.shipmondo-single-shop .shipmondo-radio-button:before {
   display: block;
   content: '';
   border-radius: 100%;
@@ -221,15 +221,15 @@ ul.pakkelabels-shoplist-ul li.pakkelabels-shop-list:nth-last-of-type(2) {
   -webkit-transition: background 0.1s linear;
 }
 
-.pakkelabels-shop-list.selected .pakkelabels-radio-button {
+.shipmondo-shop-list.selected .shipmondo-radio-button {
   border-color: #1a1a1a;
 }
 
-.pakkelabels-shop-list.selected .pakkelabels-radio-button:before {
+.shipmondo-shop-list.selected .shipmondo-radio-button:before {
   background: #1a1a1a;
 }
 
-.pakkelabels_shipping_field {
+.shipmondo_shipping_field {
   width: 100%;
 }
 /*dropdown design*/
@@ -238,54 +238,54 @@ ul.pakkelabels-shoplist-ul li.pakkelabels-shop-list:nth-last-of-type(2) {
   padding: 5px 0;
 }
 
-.pakkelabels-shoplist-dropdownul li .col-xs-2 {
+.shipmondo-shoplist-dropdownul li .col-xs-2 {
   padding-right: 0;
 }
 
-.pakkelabels-shoplist-dropdownul li .col-xs-10 {
+.shipmondo-shoplist-dropdownul li .col-xs-10 {
   padding: 2px 0 0 6px;
   padding-right: 15px;
 }
 
-.pakkelabels-shoplist.dropdown .caret {
+.shipmondo-shoplist.dropdown .caret {
   position: absolute;
   right: 8px;
   top: 17px;
 }
 
-.pakkelabels-shoplist-dropdownul.dropdown-menu {
+.shipmondo-shoplist-dropdownul.dropdown-menu {
   border: 1px solid #dadada;
   width: 50.5%;
   margin-top: -2px;
   padding-top: 0px;
 }
 
-.pakkelabels-shoplist-dropdownul li:hover {
+.shipmondo-shoplist-dropdownul li:hover {
   background: #DFDFDF;
   cursor: pointer;
 }
 
-.pakkelabels_lilogo:hover {
+.shipmondo_lilogo:hover {
   background: none !important;
   cursor: unset !important;
 }
 
-.pakkelabels-shoplist-dropdownul li:last-child {
+.shipmondo-shoplist-dropdownul li:last-child {
   border-bottom: none;
   padding-top: 4px;
 }
 
-.pakkelabels-shoplist-dropdownul .pakkelabels-single-shop {
+.shipmondo-shoplist-dropdownul .shipmondo-single-shop {
   font-size: 13px;
   line-height: unset;
   padding: 6px 0;
 }
 
-.pakkelabels-shoplist-dropdownul .pakkelabels-Address {
+.shipmondo-shoplist-dropdownul .shipmondo-Address {
   display: inline-block;
 }
 
-.pakkelabels-shoplist-dropdownul .pakkelabels-Packetshop {
+.shipmondo-shoplist-dropdownul .shipmondo-Packetshop {
   display: none;
 }
 
@@ -296,67 +296,67 @@ ul.pakkelabels-shoplist-ul li.pakkelabels-shop-list:nth-last-of-type(2) {
   top: 5px;
 }
 
-.pakkelabels-dropimage {
+.shipmondo-dropimage {
   width: 29px;
   margin: 8px auto;
   padding-left: 6px;
 }
 
-.pakkelabels-shoplist-dropdownul .pakkelabels-company-name {
+.shipmondo-shoplist-dropdownul .shipmondo-company-name {
   font-weight: bold;
   font-size: 12px;
 }
 
-.pakkelabels-shoplist-dropdownul .pakkelabels-Address, .pakkelabels-shoplist-dropdownul .pakkelabels-ZipAndCity span, .pakkelabels-shoplist-dropdownul .pakkelabels-Packetshop {
+.shipmondo-shoplist-dropdownul .shipmondo-Address, .shipmondo-shoplist-dropdownul .shipmondo-ZipAndCity span, .shipmondo-shoplist-dropdownul .shipmondo-Packetshop {
   font-size: 11px;
   line-height: 13px;
 }
 
-.pakkelabels_lilogo img {
+.shipmondo_lilogo img {
   width: 108px !important;
 }
 
-.pakkelabels_lilogo {
+.shipmondo_lilogo {
   text-align: center;
   font-size: 11px;
 }
 
-#opc-main-block  #pakkelabels_find_shop_btn.button.button-small {
+#opc-main-block  #shipmondo_find_shop_btn.button.button-small {
   width: 100%;
 }
 
 @media (max-width: 540px) {
-  ul.pakkelabels-shoplist-ul {
+  ul.shipmondo-shoplist-ul {
     display: block;
   }
 
-  ul.pakkelabels-shoplist-ul li.pakkelabels-shop-list {
+  ul.shipmondo-shoplist-ul li.shipmondo-shop-list {
     width: 100%;
   }
 
-  ul.pakkelabels-shoplist-ul li.pakkelabels-shop-list:nth-last-of-type(2) {
+  ul.shipmondo-shoplist-ul li.shipmondo-shop-list:nth-last-of-type(2) {
     border-bottom: 1px solid #eee;
   }
 
-  #pakkelabel-modal .pakkelabel-modal-title {
+  #shipmondo-modal .shipmondo-modal-title {
     font-size: 15px !important;
   }
 
-  #Pakkelabels_zipcode_field {
+  #shipmondo_zipcode_field {
     font-size: 16px !important;
   }
 }
 
 @media (max-height: 780px) {
-  #pakkelabel-map-wrapper {
+  #shipmondo-map-wrapper {
     display: none;
   }
 
-  .pakkelabel-open-close-button-wrap {
+  .shipmondo-open-close-button-wrap {
     display: inline-block;
   }
 
-  .pakkelabel-open-close-button-wrap .pakkelabel-open-close-button.pakkelabel-hide-map {
+  .shipmondo-open-close-button-wrap .shipmondo-open-close-button.shipmondo-hide-map {
     display: none;
   }
 }
@@ -364,7 +364,7 @@ ul.pakkelabels-shoplist-ul li.pakkelabels-shop-list:nth-last-of-type(2) {
 @media (max-height: 540px) {
 }
 
-#pakkelabels_find_shop_btn {
+#shipmondo_find_shop_btn {
   color: #fff;
   background-color: #2fb5d2;
   border-color: transparent;
@@ -376,19 +376,19 @@ ul.pakkelabels-shoplist-ul li.pakkelabels-shop-list:nth-last-of-type(2) {
   position: relative;
 }
 
-#pakkelabels_find_shop_btn:focus,#pakkelabels_find_shop_btn:hover {
+#shipmondo_find_shop_btn:focus,#shipmondo_find_shop_btn:hover {
   background-color: #2592a9;
 }
 
-.pakkelabels-shoplist .selected_content {
+.shipmondo-shoplist .selected_content {
   font-size: 12px;
 }
 
-#pakkelabels_find_shop_btn.dropdown-toggle::after {
+#shipmondo_find_shop_btn.dropdown-toggle::after {
   content: none;
 }
 
-.pakkelabels-shoplist.dropdown .caret {
+.shipmondo-shoplist.dropdown .caret {
   position: absolute;
   right: 8px;
   top: 17px;
@@ -407,7 +407,7 @@ ul.pakkelabels-shoplist-ul li.pakkelabels-shop-list:nth-last-of-type(2) {
   content: "";
 }
 
-.pakkelabels-shoplist-dropdownul.dropdown-menu {
+.shipmondo-shoplist-dropdownul.dropdown-menu {
   height: 700px;
   overflow-y: scroll;
   overflow-x: hidden;
@@ -417,7 +417,7 @@ ul.pakkelabels-shoplist-ul li.pakkelabels-shop-list:nth-last-of-type(2) {
   width: 26px;
 }
 
-.pakkelabels-shoplist .selected_content,div#onepagecheckoutps .pakkelabels-shoplist span {
+.shipmondo-shoplist .selected_content,div#onepagecheckoutps .shipmondo-shoplist span {
   font-size: 12px;
 }
 
@@ -430,11 +430,11 @@ ul.pakkelabels-shoplist-ul li.pakkelabels-shop-list:nth-last-of-type(2) {
 }
 
 @media only screen and (max-width:767px) {
-  #pakkelabels-zipcode-wrapper {
+  #shipmondo-zipcode-wrapper {
     padding: 0 25px;
   }
 
-  .pakkelabels-shop-list.radio {
+  .shipmondo-shop-list.radio {
     margin-bottom: 5px;
   }
 

@@ -231,7 +231,7 @@ function($) {
         })
 
         this.backdrop(function() {
-            var transition = $.support.transition && that.$element.hasClass('fade-pakkelabel')
+            var transition = $.support.transition && that.$element.hasClass('fade-shipmondo')
 
             if (!that.$element.parent().length) {
                 that.$element.appendTo(that.$body) // don't move modals dom position
@@ -289,7 +289,7 @@ function($) {
 
         this.$dialog.off('mousedown.dismiss.bs.modal')
 
-        $.support.transition && this.$element.hasClass('fade-pakkelabel') ?
+        $.support.transition && this.$element.hasClass('fade-shipmondo') ?
             this.$element
             .one('bsTransitionEnd', $.proxy(this.hidemodal, this))
             .emulateTransitionEnd(modal.TRANSITION_DURATION) :
@@ -342,13 +342,13 @@ function($) {
 
     modal.prototype.backdrop = function(callback) {
         var that = this
-        var animate = this.$element.hasClass('fade-pakkelabel') ? 'fade-pakkelabel' : ''
+        var animate = this.$element.hasClass('fade-shipmondo') ? 'fade-shipmondo' : ''
 
         if (this.isShown && this.options.backdrop) {
             var doAnimate = $.support.transition && animate
 
             this.$backdrop = $(document.createElement('div'))
-                .addClass('pakkelabels_modal-backdrop ' + animate)
+                .addClass('shipmondo_modal-backdrop ' + animate)
                 .appendTo(this.$body)
 
             this.$element.on('click.dismiss.bs.modal', $.proxy(function(e) {
@@ -384,7 +384,7 @@ function($) {
                 that.removeBackdrop()
                 callback && callback()
             }
-            $.support.transition && this.$element.hasClass('fade-pakkelabel') ?
+            $.support.transition && this.$element.hasClass('fade-shipmondo') ?
                 this.$backdrop
                 .one('bsTransitionEnd', callbackRemove)
                 .emulateTransitionEnd(modal.BACKDROP_TRANSITION_DURATION) :
