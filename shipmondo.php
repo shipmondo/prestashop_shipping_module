@@ -151,7 +151,7 @@ class Shipmondo extends CarrierModule
             $frontend_key = (string) Tools::getValue('SHIPMONDO_FRONTEND_KEY');
             $google_api_key = (string) Tools::getValue('SHIPMONDO_GOOGLE_API_KEY');
             $gls_carrier_id = (string) Tools::getValue('SHIPMONDO_GLS_CARRIER_ID');
-            $dao_carrier_id = (string) Tools::getValue('SHIPMODNO_DAO_CARRIER_ID');
+            $dao_carrier_id = (string) Tools::getValue('SHIPMONDO_DAO_CARRIER_ID');
             $postnord_carrier_id = (string) Tools::getValue('SHIPMONDO_POSTNORD_CARRIER_ID');
             $bring_carrier_id = (string) Tools::getValue('SHIPMONDO_BRING_CARRIER_ID');
             $frontend_type = (string) Tools::getValue('SHIPMONDO_FRONTEND_TYPE');
@@ -234,8 +234,8 @@ class Shipmondo extends CarrierModule
         }
         $fields_form = [];
 
-        $prestashop_guide_url = 'https://kundecenter.pakkelabels.dk/' . $default_lang . '/articles/2027196-prestashop-1-7-opsaetning-af-shipmondo-fragtmodul';
-        $thirty_bees_guide_url = 'https://kundecenter.pakkelabels.dk/' . $default_lang . '/articles/2027426-thirty-bees-opsaetning-af-shipmondo-fragtmodul';
+        $prestashop_guide_url = 'https://kundecenter.pakkelabels.dk/da/articles/2027196-prestashop-1-7-opsaetning-af-shipmondo-fragtmodul';
+        $thirty_bees_guide_url = 'https://kundecenter.pakkelabels.dk/da/articles/2027426-thirty-bees-opsaetning-af-shipmondo-fragtmodul';
 
         // Init Fields form
         $fields_form[0]['form'] = [
@@ -267,7 +267,7 @@ class Shipmondo extends CarrierModule
                     'label' => $this->l('Frontend Key'),
                     'desc' =>
                         $this->l('Insert Frontend Key here - Get the key from') . ': 
-                        <a target="_blank" href="https://app.shipmondo.comk/main/app/#/setting/api">
+                        <a target="_blank" href="https://app.shipmondo.com/main/app/#/setting/api">
                             Shipmondo
                         </a>',
                     'required' => true,
@@ -304,7 +304,7 @@ class Shipmondo extends CarrierModule
                         'id' => 'id_option',
                         'name' => 'name',
                     ],
-                    'label' => $this->l('PostNord choosen pickuppoint'),
+                    'label' => $this->l('PostNord chosen pickup point'),
                     'required' => true,
                 ],
                 [
@@ -326,7 +326,7 @@ class Shipmondo extends CarrierModule
                         'id' => 'id_option',
                         'name' => 'name',
                     ],
-                    'label' => $this->l('Bring choosen pickuppoint'),
+                    'label' => $this->l('Bring chosen pickup point'),
                     'required' => true,
                 ],
                 [
@@ -476,7 +476,6 @@ class Shipmondo extends CarrierModule
 
         $customer = new Customer($cid);
         $customer_address = $customer->getAddresses(1);
-        $postcode = $customer_address[0]['postcode'];
 
         if ($page == 'order') {
             Media::addJsDef([
@@ -484,33 +483,32 @@ class Shipmondo extends CarrierModule
                 'zipCodeFieldText' => $this->l('Zipcode'),
                 'addressFieldText' => $this->l('Address'),
                 'modalHeaderTitle' => $this->l('Choose pickup point'),
-                //TODO GOT TO HERE
-                'sPakkelabel_open_map' => $this->l('Show Map'),
-                'sPakkelabel_hide_map' => $this->l('Hide Map'),
-                'sChoose_stop_btn' => $this->l('Choose'),
-                'gls_carrier_id' => $gls->id,
-                'dao_carrier_id' => $dao->id,
-                'iPakkelabels_ID_POSTNORD' => $pdk->id,
-                'bring_carrier_id' => $bring->id,
-                'iPakkelabels_ID_WINDOW' => Configuration::get('SHIPMONDO_FRONTEND_TYPE'),
-                'selected_shop_header' => $this->l('Currently choose pickup point:'),
-                'error_message_zipcode' => $this->l('The zip code must be 4 digit long, and numeric'),
-                'error_no_cords_found' => $this->l('* Could not mark this pickup point on the map'),
-                'dataRoot' => Tools::getProtocol(Tools::usingSecureMode()) . $_SERVER['HTTP_HOST'] . $this->getPathUri(),
-                'error_no_shop_selected' => $this->l('You must choose a pickup point before, you can proceed'),
-                'error_login_before' => $this->l('Before proceed, you must either login or use guest checkout'),
-                'service_points_endpoint' => Context::getContext()->link->getModuleLink('pakkelabels_shipping', 'servicepoints')
+                'showMapText' => $this->l('Show Map'),
+                'hideMapText' => $this->l('Hide Map'),
+                'chooseServicePointText' => $this->l('Choose'),
+                'glsCarrierId' => $gls->id,
+                'daoCarrierId' => $dao->id,
+                'postnordCarrierId' => $pdk->id,
+                'bringCarrierId' => $bring->id,
+                'frontendType' => Configuration::get('SHIPMONDO_FRONTEND_TYPE'),
+                'selectedServicePointHeader' => $this->l('Currently choose pickup point:'),
+                'noCoordinatesErrorText' => $this->l('* Could not mark this pickup point on the map'),
+                'moduleBaseUrl' => Tools::getProtocol(Tools::usingSecureMode()) . $_SERVER['HTTP_HOST'] . $this->getPathUri(),
+                'noPointSelectedErrorText' => $this->l('You must choose a pickup point before, you can proceed'),
+                'servicePointsEndpoint' => Context::getContext()->link->getModuleLink('shipmondo', 'servicepoints')
             ]);
+
             //loads Google map API
             $context->registerJavascript(
-                        'google-maps',
-                        'https://maps.googleapis.com/maps/api/js?key=' . Configuration::get('SHIPMONDO_GOOGLE_API_KEY'),
-                        [
-                            'server' => 'remote',
-                            'position' => 'bottom',
-                            'priority' => 20,
-                        ]
-                    );
+                'google-maps',
+                'https://maps.googleapis.com/maps/api/js?key=' . Configuration::get('SHIPMONDO_GOOGLE_API_KEY'),
+                [
+                    'server' => 'remote',
+                    'position' => 'bottom',
+                    'priority' => 20,
+                ]
+            );
+
             $context->addCSS($this->_path . 'views/css/shipmondo-modal.css', 'all');
             $context->addCSS($this->_path . 'views/css/shipmondo.css', 'all');
             $context->addJS($this->_path . 'views/js/shipmondo.js', 'all');
@@ -532,6 +530,7 @@ class Shipmondo extends CarrierModule
             $carrier->is_module = true;
             $carrier->external_module_name = $this->name;
             $carrier->need_range = true;
+
             if ($carrier->add()) {
                 $groups = Group::getGroups(true);
                 foreach ($groups as $group) {
@@ -546,28 +545,35 @@ class Shipmondo extends CarrierModule
                         ], false, false);
                     }
                 }
-                $rangePrice = new RangePrice();
-                $rangePrice->id_carrier = $carrier->id;
-                $rangePrice->delimiter1 = '0';
-                $rangePrice->delimiter2 = '1000000';
-                $rangePrice->add();
-                $rangeWeight = new RangeWeight();
-                $rangeWeight->id_carrier = $carrier->id;
-                $rangeWeight->delimiter1 = '0';
-                $rangeWeight->delimiter2 = '1000000';
-                $rangeWeight->add();
+
+                $range_price = new RangePrice();
+                $range_price->id_carrier = $carrier->id;
+                $range_price->delimiter1 = '0';
+                $range_price->delimiter2 = '1000000';
+                $range_price->add();
+
+                $range_weight = new RangeWeight();
+                $range_weight->id_carrier = $carrier->id;
+                $range_weight->delimiter1 = '0';
+                $range_weight->delimiter2 = '1000000';
+                $range_weight->add();
+
                 $zones = Zone::getZones(true);
                 foreach ($zones as $z) {
                     //check if values exist before insert
-                    $sql = 'SELECT COUNT(*) FROM ' . _DB_PREFIX_ . 'delivery WHERE
-                    id_carrier = ' . (int) $carrier->id . ' AND id_zone = ' . (int) $z['id_zone'];
+                    $sql = 
+                        'SELECT COUNT(*) ' . 
+                        'FROM ' . _DB_PREFIX_ . 'delivery ' .
+                        'WHERE id_carrier = ' . (int) $carrier->id . 
+                        ' AND id_zone = ' . (int) $z['id_zone'];
+                        
                     $price_range_exist = Db::getInstance()->getValue($sql, false);
 
                     if (!$price_range_exist) {
                         $id_carrier = (int) $carrier->id;
                         $id_zone = (int) $z['id_zone'];
-                        $range_id = (int) $rangePrice->id;
-                        $rangewt_id = (int) $rangeWeight->id;
+                        $range_id = (int) $range_price->id;
+                        $rangewt_id = (int) $range_weight->id;
                         Db::getInstance()->insert('carrier_zone', [
                             'id_carrier' => $id_carrier,
                             'id_zone' => $id_zone,
@@ -590,20 +596,29 @@ class Shipmondo extends CarrierModule
                     }
                 }
 
-                copy(__DIR__ . '/views/img/' . $key . '.jpg', _PS_SHIP_IMG_DIR_ . '/' . (int) $carrier->id . '.jpg'); //assign carrier logo
+                // The 2 first parts of the key is name of logo
+                $logo_name = join('_', array_slice(explode('_', $key), 0, 2));
+
+                copy(__DIR__ . '/views/img/' . $logo_name . '.jpg', _PS_SHIP_IMG_DIR_ . '/' . (int) $carrier->id . '.jpg'); //assign carrier logo
 
                 Configuration::updateValue(self::PREFIX . $key, $carrier->id);
                 Configuration::updateValue(self::PREFIX . $key . '_reference', $carrier->id);
 
-                if ($key == 'pakkelabels_GLS') {
-                    Configuration::updateValue('SHIPMONDO_GLS_CARRIER_ID', $carrier->id);
-                } elseif ($key == 'pakkelabels_PostNord') {
-                    Configuration::updateValue('SHIPMONDO_POSTNORD_CARRIER_ID', $carrier->id);
-                } elseif ($key == 'pakkelabels_DAO') {
-                    Configuration::updateValue('SHIPMONDO_DAO_CARRIER_ID', $carrier->id);
-                } elseif ($key == 'pakkelabels_bring') {
-                    Configuration::updateValue('SHIPMONDO_BRING_CARRIER_ID', $carrier->id);
-                }
+
+                switch($key) {
+                    case 'shipmondo_gls_service_point':
+                        Configuration::updateValue('SHIPMONDO_GLS_CARRIER_ID', $carrier->id);
+                        break;
+                    case 'shipmondo_postnord_service_point':
+                        Configuration::updateValue('SHIPMONDO_POSTNORD_CARRIER_ID', $carrier->id);
+                        break;
+                    case 'shipmondo_dao_service_point':
+                        Configuration::updateValue('SHIPMONDO_DAO_CARRIER_ID', $carrier->id);
+                        break;
+                    case 'shipmondo_bring_service_point':
+                        Configuration::updateValue('SHIPMONDO_BRING_CARRIER_ID', $carrier->id);
+                        break;
+                }                    
             }
         }
 
@@ -611,10 +626,10 @@ class Shipmondo extends CarrierModule
     }
 
     protected function createDatabaseTables() {
-        $sql_carts = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'pakkelabel_carts` ('
-            . '`id_pkl_cart` int(10) NOT NULL AUTO_INCREMENT PRIMARY KEY, '
+        $sql_carts = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'shipmondo_selected_service_points` ('
+            . '`id_smd_service_point` int(10) NOT NULL AUTO_INCREMENT PRIMARY KEY, '
             . '`id_cart` int(10), '
-            . '`shop_data` text, '
+            . '`service_point` text, '
             . '`id_carrier` int(10) '
         . ')';
         $db_instance = DB::getInstance();
@@ -623,7 +638,7 @@ class Shipmondo extends CarrierModule
     }
 
     protected function deleteDatabaseTables() {
-        $sql_carts = 'DROP TABLE IF EXISTS `' . _DB_PREFIX_ . 'pakkelabel_carts`';
+        $sql_carts = 'DROP TABLE IF EXISTS `' . _DB_PREFIX_ . 'shipmondo_selected_service_points`';
         $db_instance = DB::getInstance();
 
         return $db_instance->Execute($sql_carts);

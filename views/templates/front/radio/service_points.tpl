@@ -23,7 +23,7 @@
         jQuery(this).on('click', function() {
             jQuery('#hidden_choosen_shop').attr('shopid', jQuery(this).attr('data-shopid'));
             //adds the shop information to the #selected_shop div
-            jQuery('#selected_shop_header').html(selected_shop_header);
+            jQuery('#selected_shop_header').html(selectedServicePointHeader);
             jQuery('#selected_shop_context').html(jQuery(this).children().children('.selected_content').html());
             //remove all the class selected, from previous li's
             if(typeof checkdroppointselected !=='undefined')

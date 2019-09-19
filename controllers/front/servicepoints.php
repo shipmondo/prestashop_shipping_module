@@ -1,6 +1,6 @@
 <?php
 
-class Pakkelabels_ShippingServicepointsModuleFrontController extends ModuleFrontController {
+class ShipmondoServicepointsModuleFrontController extends ModuleFrontController {
     public function initContent() {
         parent::initContent();
         
@@ -11,14 +11,14 @@ class Pakkelabels_ShippingServicepointsModuleFrontController extends ModuleFront
 
                 $sql = new DbQuery();
                 $sql
-                    ->select('shop_data')
-                    ->from('pakkelabel_carts')
+                    ->select('service_point')
+                    ->from('shipmondo_selected_service_points')
                     ->where('id_cart = '. (int) $cart->id);
                 $result = Db::getInstance()->getRow($sql);
 
                 $service_point_id = null;
                 if($result) {
-                    $service_point_id = Tools::jsonDecode($result['shop_data'])->address2;
+                    $service_point_id = Tools::jsonDecode($result['service_point'])->address2;
                     $service_point_id = preg_replace('/\D/', '', $service_point_id);
                 }
 
@@ -27,7 +27,7 @@ class Pakkelabels_ShippingServicepointsModuleFrontController extends ModuleFront
                 $address = Tools::getValue('address');
                 $country_code = 'DK';
                 $amount_of_points = 10;
-                $frontend_key = Configuration::get('PAKKELABELS_SHIPPING_FRONTEND_KEY');
+                $frontend_key = Configuration::get('SHIPMONDO_FRONTEND_KEY');
 
                 $delivery_address = new Address($cart->id_address_delivery);
 
@@ -51,7 +51,7 @@ class Pakkelabels_ShippingServicepointsModuleFrontController extends ModuleFront
                     'company' => Tools::getValue('company_name'),
                     'address' => Tools::getValue('address'),
                     'address2' => Tools::getValue('service_point_id'),
-                    'postcode' => Tools::getValue('zip_code'),
+                    'zip_code' => Tools::getValue('zip_code'),
                     'city' => Tools::getValue('city'),
                     'shipping_agent' => Tools::getValue('shipping_agent')
                 ];
@@ -59,25 +59,25 @@ class Pakkelabels_ShippingServicepointsModuleFrontController extends ModuleFront
                 $sql = new DbQuery();
                 $sql
                     ->select('id_pkl_cart')
-                    ->from('pakkelabel_carts')
+                    ->from('shipmondo_selected_service_points')
                     ->where('id_cart = '. (int) $cart->id);
                 $result = Db::getInstance()->getRow($sql);
 
                 if (!$result) {
                     $save_result = Db::getInstance()->insert(
-                        'pakkelabel_carts',
+                        'shipmondo_selected_service_points',
                         [
                             'id_cart' => (int) $cart->id,
-                            'shop_data' => pSQL(Tools::jsonEncode($service_point_address)),
+                            'service_point' => pSQL(Tools::jsonEncode($service_point_address)),
                             'id_carrier' => (int) $cart->id_carrier
                         ]
                     );
                 } else {
                     $save_result = Db::getInstance()->update(
-                        'pakkelabel_carts',
+                        'shipmondo_selected_service_points',
                         [
                             'id_cart' => (int) $cart->id,
-                            'shop_data' => pSQL(Tools::jsonEncode($service_point_address)),
+                            'service_point' => pSQL(Tools::jsonEncode($service_point_address)),
                             'id_carrier' => (int) $cart->id_carrier
                         ],
                         'id_cart = ' . (int) $cart->id,
@@ -97,13 +97,13 @@ class Pakkelabels_ShippingServicepointsModuleFrontController extends ModuleFront
 
                 $sql = new DbQuery();
                 $sql
-                    ->select('shop_data')
-                    ->from('pakkelabel_carts')
+                    ->select('service_point')
+                    ->from('shipmondo_selected_service_points')
                     ->where('id_cart = '. (int) $cart->id);
                 $result = Db::getInstance()->getRow($sql);
 
                 if($result) {
-                    $service_point = Tools::jsonDecode($result['shop_data']);
+                    $service_point = Tools::jsonDecode($result['service_point']);
 
                     if($shipping_agent == $service_point->shipping_agent) {
                         $response['status'] = 'success';
@@ -168,12 +168,15 @@ class Pakkelabels_ShippingServicepointsModuleFrontController extends ModuleFront
             }
         }
 
-        $frontend_option = Configuration::get('PAKKELABELS_FRONT_OPTION');
+        $frontend_type = Configuration::get('SHIPMONDO_FRONTEND_TYPE');
+        if (!$frontend_type)
+            $frontend_type = 'popup';
+
         $response['service_points'] = $service_points;
-        $response['frontend_option'] = $frontend_option;
+        $response['frontend_type'] = $frontend_type;
         $response['status'] = 'success';
 
-        $template_base_path = _PS_MODULE_DIR_ . 'pakkelabels_shipping/views/templates/front/';
+        $template_base_path = _PS_MODULE_DIR_ . 'shipmondo/views/templates/front/';
 
         $response['map'] = $this->context->smarty->fetch($template_base_path . 'map.tpl');
 
@@ -181,9 +184,9 @@ class Pakkelabels_ShippingServicepointsModuleFrontController extends ModuleFront
             'service_points' => $service_points,
             'selected_service_point_id' => $selected_service_point_id,
             'shipping_agent' => $shipping_agent,
-            'shipping_agent_logo' => _MODULE_DIR_ . 'pakkelabels_shipping/views/img/' . $shipping_agent . '.png'
+            'shipping_agent_logo' => _MODULE_DIR_ . 'shipmondo/views/img/' . $shipping_agent . '.png'
         ]);
-        $response['service_points_html'] = $this->context->smarty->fetch($template_base_path . strtolower($frontend_option) . '/service_points.tpl');
+        $response['service_points_html'] = $this->context->smarty->fetch($template_base_path . strtolower($frontend_type) . '/service_points.tpl');
 
         return $response;
     }
