@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <module>
-    <name>Shipmondo</name>
+    <name>shipmondo</name>
     <displayName><![CDATA[Shipmondo]]></displayName>
     <version><![CDATA[2.0.0]]></version>
     <description><![CDATA[GLS, PostNord, DAO and Bring Shipping for PrestaShop]]></description>
