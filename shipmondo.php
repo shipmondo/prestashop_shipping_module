@@ -395,6 +395,7 @@ class Shipmondo extends CarrierModule
         $helper->fields_value['SHIPMONDO_POSTNORD_CARRIER_ID'] = Configuration::get('SHIPMONDO_POSTNORD_CARRIER_ID');
         $helper->fields_value['SHIPMONDO_DAO_CARRIER_ID'] = Configuration::get('SHIPMONDO_DAO_CARRIER_ID');
         $helper->fields_value['SHIPMONDO_BRING_CARRIER_ID'] = Configuration::get('SHIPMONDO_BRING_CARRIER_ID');
+        $helper->fields_value['SHIPMONDO_FRONTEND_TYPE'] = Configuration::get('SHIPMONDO_FRONTEND_TYPE');
 
         return $helper->generateForm($fields_form);
     }
