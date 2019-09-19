@@ -158,7 +158,6 @@ class Shipmondo extends CarrierModule
 
             $validation_error_title = $this->l('The Shipmondo shipping module, requires all the settings below to be entered correctly and saved before the module will operate correctly.') . '</br>';
             $validation_error_title .= $this->l('Invalid Configuration value(s), please insert the following:');
-            $validation_errors = [];
             $valid = true;
             
             Configuration::updateValue('SHIPMONDO_FRONTEND_TYPE', $frontend_type);
@@ -471,7 +470,6 @@ class Shipmondo extends CarrierModule
         $cid = $params['cookie']->id_customer;
 
         $customer = new Customer($cid);
-        $customer_address = $customer->getAddresses(1);
 
         if ($page == 'order') {
             Media::addJsDef([
