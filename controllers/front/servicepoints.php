@@ -5,10 +5,12 @@
  *  @license   All rights reserved
  */
 
-class ShipmondoServicepointsModuleFrontController extends ModuleFrontController {
-    public function initContent() {
+class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
+{
+    public function initContent()
+    {
         parent::initContent();
-        
+
         $response = [];
         switch (Tools::getValue('method')) {
             case 'get_list':
@@ -18,11 +20,11 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController 
                 $sql
                     ->select('service_point')
                     ->from('shipmondo_selected_service_points')
-                    ->where('id_cart = '. (int) $cart->id);
+                    ->where('id_cart = ' . (int) $cart->id);
                 $result = Db::getInstance()->getRow($sql);
 
                 $service_point_id = null;
-                if($result) {
+                if ($result) {
                     $service_point_id = Tools::jsonDecode($result['service_point'])->address2;
                     $service_point_id = preg_replace('/\D/', '', $service_point_id);
                 }
@@ -39,11 +41,12 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController 
                 $sql
                     ->select('iso_code')
                     ->from('country')
-                    ->where('id_country = "'. pSQL($delivery_address->id_country) . '"');
+                    ->where('id_country = "' . pSQL($delivery_address->id_country) . '"');
                 $country_result = Db::getInstance()->getRow($sql);
 
-                if ($country_result['iso_code'])
+                if ($country_result['iso_code']) {
                     $country_code = $country_result['iso_code'];
+                }
 
                 $response = $this->getList($frontend_key, $shipping_agent, $address, $zip_code, $country_code, $service_point_id);
                 break;
@@ -57,14 +60,14 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController 
                     'address2' => Tools::getValue('service_point_id'),
                     'zip_code' => Tools::getValue('zip_code'),
                     'city' => Tools::getValue('city'),
-                    'shipping_agent' => Tools::getValue('shipping_agent')
+                    'shipping_agent' => Tools::getValue('shipping_agent'),
                 ];
 
                 $sql = new DbQuery();
                 $sql
                     ->select('id_pkl_cart')
                     ->from('shipmondo_selected_service_points')
-                    ->where('id_cart = '. (int) $cart->id);
+                    ->where('id_cart = ' . (int) $cart->id);
                 $result = Db::getInstance()->getRow($sql);
 
                 if (!$result) {
@@ -73,7 +76,7 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController 
                         [
                             'id_cart' => (int) $cart->id,
                             'service_point' => pSQL(Tools::jsonEncode($service_point_address)),
-                            'id_carrier' => (int) $cart->id_carrier
+                            'id_carrier' => (int) $cart->id_carrier,
                         ]
                     );
                 } else {
@@ -82,19 +85,20 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController 
                         [
                             'id_cart' => (int) $cart->id,
                             'service_point' => pSQL(Tools::jsonEncode($service_point_address)),
-                            'id_carrier' => (int) $cart->id_carrier
+                            'id_carrier' => (int) $cart->id_carrier,
                         ],
                         'id_cart = ' . (int) $cart->id,
                         1
-                    ); 
+                    );
                 }
-                
-                if ($save_result && $cart->update())
+
+                if ($save_result && $cart->update()) {
                     $response['status'] = 'success';
-                else
+                } else {
                     $response['status'] = 'error';
+                }
                 break;
-            
+
             case 'get_address':
                 $cart = Context::getContext()->cart;
                 $shipping_agent = Tools::getValue('shipping_agent');
@@ -103,13 +107,13 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController 
                 $sql
                     ->select('service_point')
                     ->from('shipmondo_selected_service_points')
-                    ->where('id_cart = '. (int) $cart->id);
+                    ->where('id_cart = ' . (int) $cart->id);
                 $result = Db::getInstance()->getRow($sql);
 
-                if($result) {
+                if ($result) {
                     $service_point = Tools::jsonDecode($result['service_point']);
 
-                    if($shipping_agent === $service_point->shipping_agent) {
+                    if ($shipping_agent === $service_point->shipping_agent) {
                         $response['status'] = 'success';
                         $response['service_point'] = $service_point;
                         break;
@@ -127,7 +131,8 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController 
         die;
     }
 
-    private function getList($frontend_key, $shipping_agent, $address, $zip_code, $country = 'DK', $selected_service_point_id = null) {
+    private function getList($frontend_key, $shipping_agent, $address, $zip_code, $country = 'DK', $selected_service_point_id = null)
+    {
         $method = 'GET';
         $url = 'https://service-points.shipmondo.com/pickup-points.json';
         $data = [
@@ -135,7 +140,7 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController 
             'agent' => $shipping_agent,
             'zipcode' => $zip_code,
             'country' => $country,
-            'address' => $address
+            'address' => $address,
         ];
 
         $response = [];
@@ -143,18 +148,16 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController 
         if (empty($zip_code) || empty($address) || empty($frontend_key)) {
             return [
                 'status' => false,
-                'error' => $this->l('Enter zip code and Address to see Pickup Points')
+                'error' => $this->l('Enter zip code and Address to see Pickup Points'),
             ];
         }
 
-        
         $service_points = Tools::jsonDecode($this->callShipmondoAPI($method, $url, $data));
 
-
-        if(empty($service_points)) {
+        if (empty($service_points)) {
             return [
                 'status' => false,
-                'error' => $this->l('Please add a valid delivery module key in admin!')
+                'error' => $this->l('Please add a valid delivery module key in admin!'),
             ];
         }
 
@@ -162,40 +165,43 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController 
             if ($service_points->message === 'Invalid frontend_key') {
                 return [
                     'status' => false,
-                    'error' => $this->l('Please add a valid delivery module key in admin!')
+                    'error' => $this->l('Please add a valid delivery module key in admin!'),
                 ];
             } else {
                 return [
                     'status' => false,
-                    'error' => $service_points->message
+                    'error' => $service_points->message,
                 ];
             }
         }
 
         $frontend_type = Configuration::get('SHIPMONDO_FRONTEND_TYPE');
-        if (!$frontend_type)
+        if (!$frontend_type) {
             $frontend_type = 'popup';
+        }
 
         $response['service_points'] = $service_points;
         $response['frontend_type'] = $frontend_type;
         $response['status'] = 'success';
         $response['map'] = $this->module->fetch('module:shipmondo/views/templates/front/map.tpl');
 
-        if(empty($selected_service_point_id))
+        if (empty($selected_service_point_id)) {
             $selected_service_point_id = 0;
+        }
 
         $this->context->smarty->assign([
             'service_points' => $service_points,
             'selected_service_point_id' => $selected_service_point_id,
             'shipping_agent' => $shipping_agent,
-            'shipping_agent_logo' => _MODULE_DIR_ . 'shipmondo/views/img/' . $shipping_agent . '.png'
+            'shipping_agent_logo' => _MODULE_DIR_ . 'shipmondo/views/img/' . $shipping_agent . '.png',
         ]);
         $response['service_points_html'] = $this->module->fetch('module:shipmondo/views/templates/front/' . Tools::strtolower($frontend_type) . '/service_points.tpl');
 
         return $response;
     }
 
-    private function callShipmondoAPI($method, $url, $data = false) {
+    private function callShipmondoAPI($method, $url, $data = false)
+    {
         $curl = curl_init();
         switch ($method) {
             case 'POST':
