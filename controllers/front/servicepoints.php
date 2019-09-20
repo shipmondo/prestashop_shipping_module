@@ -136,7 +136,7 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController 
 
         $response = [];
 
-        if ((empty($zip_code) || empty($address)) || empty($frontend_key)) {
+        if (empty($zip_code) || empty($address) || empty($frontend_key)) {
             return [
                 'status' => false,
                 'error' => $this->l('Enter zip code and Address to see Pickup Points')
