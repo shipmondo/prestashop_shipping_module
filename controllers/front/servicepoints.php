@@ -1,4 +1,9 @@
 <?php
+/**
+ *  @author    Shipmondo
+ *  @copyright 2019 Shipmondo
+ *  @license   All rights reserved
+ */
 
 class ShipmondoServicepointsModuleFrontController extends ModuleFrontController {
     public function initContent() {
@@ -104,7 +109,7 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController 
                 if($result) {
                     $service_point = Tools::jsonDecode($result['service_point']);
 
-                    if($shipping_agent == $service_point->shipping_agent) {
+                    if($shipping_agent === $service_point->shipping_agent) {
                         $response['status'] = 'success';
                         $response['service_point'] = $service_point;
                         break;
@@ -135,7 +140,7 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController 
 
         $response = [];
 
-        if ((empty($zip_code) || empty($address)) || empty($frontend_key)) {
+        if (empty($zip_code) || empty($address) || empty($frontend_key)) {
             return [
                 'status' => false,
                 'error' => $this->l('Enter zip code and Address to see Pickup Points')
@@ -154,7 +159,7 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController 
         }
 
         if (!empty($service_points->message)) {
-            if ($service_points->message == 'Invalid frontend_key') {
+            if ($service_points->message === 'Invalid frontend_key') {
                 return [
                     'status' => false,
                     'error' => $this->l('Please add a valid delivery module key in admin!')
