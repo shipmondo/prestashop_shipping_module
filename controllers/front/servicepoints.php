@@ -31,7 +31,6 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController 
                 $zip_code = Tools::getValue('zip_code');
                 $address = Tools::getValue('address');
                 $country_code = 'DK';
-                $amount_of_points = 10;
                 $frontend_key = Configuration::get('SHIPMONDO_FRONTEND_KEY');
 
                 $delivery_address = new Address($cart->id_address_delivery);
