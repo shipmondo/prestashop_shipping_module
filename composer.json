@@ -1,12 +1,12 @@
 {
   "name": "Shipmondo",
-  "description": "Shipmondo shipping module for PrestaShop",
-  "homepage": "https://shipmondo.com/",
-  "license": "All rights reserved",
+  "description": "GLS, PostNord, DAO and Bring Shipping for PrestaShop",
+  "homepage": "https://shipmondo.com/dk/",
+  "license": "© 2019 Shipmondo. Alle rettigheder reserveret.",
   "authors": [
     {
       "name": "Shipmondo",
-      "email": "support@shipmondo.com"
+      "email": "kundeservice@shipmondo.com"
     }
   ],
   "require": {
