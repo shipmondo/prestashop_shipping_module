@@ -93,9 +93,10 @@ class Shipmondo extends CarrierModule
         if ($add_address) {
             if (isset($params['cart'])) {
                 $sql = new DbQuery();
-                $sql->select('service_point')
-                $sql->from('shipmondo_selected_service_points')
-                $sql->where('id_cart = '. (int) $params['cart']->id);
+                $sql
+                    ->select('service_point')
+                    ->from('shipmondo_selected_service_points')
+                    ->where('id_cart = '. (int) $params['cart']->id);
                 $result = Db::getInstance()->getRow($sql);
 
                 if ($result['service_point']) {
@@ -628,8 +629,9 @@ class Shipmondo extends CarrierModule
             . '`service_point` text, '
             . '`id_carrier` int(10) '
         . ')';
+        $db_instance = DB::getInstance();
 
-        return DB::getInstance()->Execute($sql_carts);
+        return $db_instance->Execute($sql_carts);
     }
 
     // if frontend type not set, set as popup
@@ -641,8 +643,9 @@ class Shipmondo extends CarrierModule
 
     protected function deleteDatabaseTables() {
         $sql_carts = 'DROP TABLE IF EXISTS `' . _DB_PREFIX_ . 'shipmondo_selected_service_points`';
+        $db_instance = DB::getInstance();
 
-        return DB::getInstance()->Execute($sql_carts);
+        return $db_instance->Execute($sql_carts);
     }
 
     protected function deleteCarriers() {
