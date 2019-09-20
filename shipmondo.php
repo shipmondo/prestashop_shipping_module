@@ -118,7 +118,7 @@ class Shipmondo extends CarrierModule
                     $service_point_address->postcode = $service_point->zip_code;
                     $service_point_address->city = $service_point->city;
                     $service_point_address->alias = $alias . ': ' . trim($service_point->address2);
-                    $service_point_address->deleted = true; // address only used for this order
+                    $service_point_address->deleted = true; // Address only used for this order
                     $service_point_address->active = true;
 
                     $order->id_address_delivery = $new_id;
@@ -159,8 +159,8 @@ class Shipmondo extends CarrierModule
             $bring_carrier_id = (string) Tools::getValue('SHIPMONDO_BRING_CARRIER_ID');
             $frontend_type = (string) Tools::getValue('SHIPMONDO_FRONTEND_TYPE');
 
-            $validation_error_title = $this->l('The Shipmondo shipping module, requires all the settings below to be entered correctly and saved before the module will operate correctly.') . '</br>';
-            $validation_error_title .= $this->l('Invalid Configuration value(s), please insert the following:');
+            $validation_error_title = $this->l('Please fill out all required fields.') . '</br>';
+            $validation_error_title .= $this->l('Invalid configuration, please check:');
             $valid = true;
 
             Configuration::updateValue('SHIPMONDO_FRONTEND_TYPE', $frontend_type);
@@ -178,7 +178,7 @@ class Shipmondo extends CarrierModule
 
             $google_error_html =
                 '<a target="_blank" href="https://developers.google.com/maps/documentation/javascript/get-api-key">' .
-                    $this->l('Google Map API Key') .
+                    $this->l('Google map API key') .
                 '</a>';
 
             $valid &= $this->validateAndUpdateValue(
@@ -190,25 +190,25 @@ class Shipmondo extends CarrierModule
             $valid &= $this->validateAndUpdateValue(
                 $gls_carrier_id,
                 'SHIPMONDO_GLS_CARRIER_ID',
-                $this->l('GLS Carrier ID')
+                $this->l('GLS carrier ID')
             );
 
             $valid &= $this->validateAndUpdateValue(
                 $dao_carrier_id,
                 'SHIPMONDO_DAO_CARRIER_ID',
-                $this->l('DAO Carrier ID')
+                $this->l('DAO carrier ID')
             );
 
             $valid &= $this->validateAndUpdateValue(
                 $postnord_carrier_id,
                 'SHIPMONDO_POSTNORD_CARRIER_ID',
-                $this->l('PostNord Carrier ID')
+                $this->l('PostNord carrier ID')
             );
 
             $valid &= $this->validateAndUpdateValue(
                 $bring_carrier_id,
                 'SHIPMONDO_BRING_CARRIER_ID',
-                $this->l('Bring Carrier ID')
+                $this->l('Bring carrier ID')
             );
 
             if (!$valid) {
@@ -239,7 +239,7 @@ class Shipmondo extends CarrierModule
 
         $prestashop_guide_url = 'https://kundecenter.pakkelabels.dk/da/articles/2027196-prestashop-1-7-opsaetning-af-shipmondo-fragtmodul';
 
-        // Init Fields form
+        // Init fields form
         $fields_form[0]['form'] = [
             'legend' => [
                 'title' => $this->l('Settings'),
@@ -256,8 +256,8 @@ class Shipmondo extends CarrierModule
                 [
                     'name' => 'SHIPMONDO_FRONTEND_KEY',
                     'type' => 'text',
-                    'label' => $this->l('Frontend Key'),
-                    'desc' => $this->l('Insert Frontend Key here - Get the key from') . ': 
+                    'label' => $this->l('Shipping module API key'),
+                    'desc' => $this->l('Insert your shipping module API key here. You can generate a key from') . ': 
                         <a target="_blank" href="https://app.shipmondo.com/main/app/#/setting/api">
                             Shipmondo
                         </a>',
@@ -268,7 +268,7 @@ class Shipmondo extends CarrierModule
                     'name' => 'SHIPMONDO_GOOGLE_API_KEY',
                     'type' => 'text',
                     'label' => $this->l('Google API Map Key'),
-                    'desc' => $this->l('Insert Google API Map Key - Get the key from') . ': 
+                    'desc' => $this->l('Insert your Google API key here. You can generate a key from') . ': 
                         <a target="_blank" href="https://developers.google.com/maps/documentation/javascript/get-api-key">
                             Google
                         </a>',
@@ -283,7 +283,7 @@ class Shipmondo extends CarrierModule
                         'id' => 'id_option',
                         'name' => 'name',
                     ],
-                    'label' => $this->l('GLS Packetshop'),
+                    'label' => $this->l('GLS pickup point'),
                     'required' => true,
                 ],
                 [
@@ -305,7 +305,7 @@ class Shipmondo extends CarrierModule
                         'id' => 'id_option',
                         'name' => 'name',
                     ],
-                    'label' => $this->l('DAO Packetshop'),
+                    'label' => $this->l('DAO pickup point'),
                     'required' => true,
                 ],
                 [
@@ -336,16 +336,15 @@ class Shipmondo extends CarrierModule
                         [
                             'id' => 'active_radio',
                             'value' => 'radio',
-                            'label' => $this->l('Radio Button'),
+                            'label' => $this->l('Radio button'),
                         ],
                     ],
-                    'label' => $this->l('Select display on checkout'),
+                    'label' => $this->l('Display on checkout'),
                     'required' => true,
                 ],
             ],
             'submit' => [
                 'title' => $this->l('Save'),
-                'class' => 'btn btn-default pull-right',
             ],
         ];
 
@@ -475,22 +474,22 @@ class Shipmondo extends CarrierModule
                 'zipCodeFieldText' => $this->l('Zipcode'),
                 'addressFieldText' => $this->l('Address'),
                 'modalHeaderTitle' => $this->l('Choose pickup point'),
-                'showMapText' => $this->l('Show Map'),
-                'hideMapText' => $this->l('Hide Map'),
+                'showMapText' => $this->l('Show map'),
+                'hideMapText' => $this->l('Hide map'),
                 'chooseServicePointText' => $this->l('Choose'),
                 'glsCarrierId' => $gls->id,
                 'daoCarrierId' => $dao->id,
                 'postnordCarrierId' => $pdk->id,
                 'bringCarrierId' => $bring->id,
                 'frontendType' => Configuration::get('SHIPMONDO_FRONTEND_TYPE'),
-                'selectedServicePointHeader' => $this->l('Currently choose pickup point:'),
+                'selectedServicePointHeader' => $this->l('Currently chosen pickup point:'),
                 'noCoordinatesErrorText' => $this->l('* Could not mark this pickup point on the map'),
                 'moduleBaseUrl' => Tools::getProtocol(Tools::usingSecureMode()) . $_SERVER['HTTP_HOST'] . $this->getPathUri(),
-                'noPointSelectedErrorText' => $this->l('You must choose a pickup point before, you can proceed'),
+                'noPointSelectedErrorText' => $this->l('You must choose a pickup point before you can proceed'),
                 'servicePointsEndpoint' => Context::getContext()->link->getModuleLink('shipmondo', 'servicepoints'),
             ]);
 
-            //loads Google map API
+            // Loads Google map API
             $context->registerJavascript(
                 'google-maps',
                 'https://maps.googleapis.com/maps/api/js?key=' . Configuration::get('SHIPMONDO_GOOGLE_API_KEY'),
@@ -511,7 +510,7 @@ class Shipmondo extends CarrierModule
     protected function createCarriers()
     {
         foreach ($this->carriers as $key => $value) {
-            //Create new carrier
+            // Create new carrier
             $carrier = new Carrier();
             $carrier->name = $value;
             $carrier->active = false;
@@ -527,7 +526,7 @@ class Shipmondo extends CarrierModule
             if ($carrier->add()) {
                 $groups = Group::getGroups(true);
                 foreach ($groups as $group) {
-                    //check if values exist before insert
+                    // Check if values exist before insert
                     $sql = 'SELECT COUNT(*) FROM ' . _DB_PREFIX_ . 'carrier_group WHERE
                     id_carrier = ' . (int) $carrier->id . ' AND id_group = ' . (int) $group['id_group'];
                     $group_exist = Db::getInstance()->getValue($sql, false);
@@ -553,7 +552,7 @@ class Shipmondo extends CarrierModule
 
                 $zones = Zone::getZones(true);
                 foreach ($zones as $z) {
-                    //check if values exist before insert
+                    // Check if values exist before insert
                     $sql =
                         'SELECT COUNT(*) ' .
                         'FROM ' . _DB_PREFIX_ . 'delivery ' .
@@ -591,8 +590,9 @@ class Shipmondo extends CarrierModule
 
                 // The 2 first parts of the key is name of logo
                 $logo_name = implode('_', array_slice(explode('_', $key), 0, 2));
-
-                copy(_PS_MODULE_DIR_ . 'shipmondo/views/img/' . $logo_name . '.png', _PS_SHIP_IMG_DIR_ . '/' . (int) $carrier->id . '.png'); //assign carrier logo
+                
+                // Assign carrier logo
+                copy(_PS_MODULE_DIR_ . 'shipmondo/views/img/' . $logo_name . '.png', _PS_SHIP_IMG_DIR_ . '/' . (int) $carrier->id . '.png');
 
                 Configuration::updateValue(self::PREFIX . $key, $carrier->id);
                 Configuration::updateValue(self::PREFIX . $key . '_reference', $carrier->id);
@@ -630,7 +630,7 @@ class Shipmondo extends CarrierModule
         return $db_instance->Execute($sql_carts);
     }
 
-    // if frontend type not set, set as popup
+    // If frontend type is not set, set as popup
     protected function setDefaultFrontendType()
     {
         $frontend_type = Configuration::get('SHIPMONDO_FRONTEND_TYPE');

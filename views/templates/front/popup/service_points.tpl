@@ -24,19 +24,20 @@
         {/foreach}
     </ul>
 </div>
+
 <script>
-    $('.pakkelabels-shop-list').each(function() {
-        console.log('each')
-        $(this).on('click', function() {
-            console.log('click')
-            $('#shop_radio_'+$(this).attr('data-shopid')).trigger('click')
-            li_addlistener_open_marker($(this));
-            //remove all the class selected, from previous li's
-            $('.pakkelabels-shop-list').removeClass('selected');
-            //$ the selected class to the newly selected li
-            $(this).addClass('selected');
-            //sets the checked = true on the newly selected LI
-            $(this).children().children(':radio').prop('checked', true);
-        })
+$('.pakkelabels-shop-list').each(function() {
+    console.log('each')
+    $(this).on('click', function() {
+        console.log('click')
+        $('#shop_radio_' + $(this).attr('data-shopid')).trigger('click')
+        li_addlistener_open_marker($(this));
+        // Remove all the class selected, from previous li's
+        $('.pakkelabels-shop-list').removeClass('selected');
+        // $ the selected class to the newly selected li
+        $(this).addClass('selected');
+        // Sets the checked = true on the newly selected LI
+        $(this).children().children(':radio').prop('checked', true);
     })
+})
 </script>
