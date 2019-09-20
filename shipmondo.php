@@ -349,7 +349,6 @@ class Shipmondo extends CarrierModule
                         ],
                     ],
                     'label' => $this->l('Select display on checkout'),
-                    'required' => true,
                 ],
             ],
             'submit' => [
