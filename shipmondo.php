@@ -73,19 +73,19 @@ class Shipmondo extends CarrierModule
         );
 
         $add_address = false;
-        if ($gls_carrier->id == $carrier_id) {
+        if ($gls_carrier->id === $carrier_id) {
             $alias = 'GLS';
             $add_address = true;
         }
-        if ($dao_carrier->id == $carrier_id) {
+        if ($dao_carrier->id === $carrier_id) {
             $alias = 'DAO';
             $add_address = true;
         }
-        if ($postnord_carrier->id == $carrier_id) {
+        if ($postnord_carrier->id === $carrier_id) {
             $alias = 'PDK';
             $add_address = true;
         }
-        if ($bring_carrier->id == $carrier_id) {
+        if ($bring_carrier->id === $carrier_id) {
             $alias = 'Bring';
             $add_address = true;
         }
@@ -158,7 +158,6 @@ class Shipmondo extends CarrierModule
 
             $validation_error_title = $this->l('The Shipmondo shipping module, requires all the settings below to be entered correctly and saved before the module will operate correctly.') . '</br>';
             $validation_error_title .= $this->l('Invalid Configuration value(s), please insert the following:');
-            $validation_errors = [];
             $valid = true;
             
             Configuration::updateValue('SHIPMONDO_FRONTEND_TYPE', $frontend_type);
@@ -395,6 +394,7 @@ class Shipmondo extends CarrierModule
         $helper->fields_value['SHIPMONDO_POSTNORD_CARRIER_ID'] = Configuration::get('SHIPMONDO_POSTNORD_CARRIER_ID');
         $helper->fields_value['SHIPMONDO_DAO_CARRIER_ID'] = Configuration::get('SHIPMONDO_DAO_CARRIER_ID');
         $helper->fields_value['SHIPMONDO_BRING_CARRIER_ID'] = Configuration::get('SHIPMONDO_BRING_CARRIER_ID');
+        $helper->fields_value['SHIPMONDO_FRONTEND_TYPE'] = Configuration::get('SHIPMONDO_FRONTEND_TYPE');
 
         return $helper->generateForm($fields_form);
     }
@@ -450,7 +450,7 @@ class Shipmondo extends CarrierModule
     }
 
     public function hookActionCarrierUpdate($params) {
-        if ($params['carrier']->id_reference == Configuration::get(self::PREFIX . 'swipbox_reference')) {
+        if ($params['carrier']->id_reference === Configuration::get(self::PREFIX . 'swipbox_reference')) {
             Configuration::updateValue(self::PREFIX . 'swipbox', $params['carrier']->id);
         }
     }
@@ -463,17 +463,8 @@ class Shipmondo extends CarrierModule
         $pdk = Carrier::getCarrierByReference(Configuration::get('SHIPMONDO_POSTNORD_CARRIER_ID'));
         $bring = Carrier::getCarrierByReference(Configuration::get('SHIPMONDO_BRING_CARRIER_ID'));
 
-        $page = $context->php_self;
-
-        if (!$page)
-            $page = $context->page_name;
-
-        $cid = $params['cookie']->id_customer;
-
-        $customer = new Customer($cid);
-        $customer_address = $customer->getAddresses(1);
-
-        if ($page == 'order') {
+        $current_page = Tools::getValue('controller');
+        if ($current_page == 'order') {
             Media::addJsDef([
                 'findServicePointText' => $this->l('Find nearest pickup point'),
                 'zipCodeFieldText' => $this->l('Zipcode'),
@@ -593,7 +584,7 @@ class Shipmondo extends CarrierModule
                 }
 
                 // The 2 first parts of the key is name of logo
-                $logo_name = join('_', array_slice(explode('_', $key), 0, 2));
+                $logo_name = implode('_', array_slice(explode('_', $key), 0, 2));
 
                 copy(__DIR__ . '/views/img/' . $logo_name . '.jpg', _PS_SHIP_IMG_DIR_ . '/' . (int) $carrier->id . '.jpg'); //assign carrier logo
 
