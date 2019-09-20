@@ -18,13 +18,13 @@
 .blockOverlay.pakkelabels-loader {
     z-index: 1000 !important;
     border: medium none !important;
-    margin: 0px !important;
-    padding: 0px !important;
+    margin: 0 !important;
+    padding: 0 !important;
     width: 100% !important;
     height: 100% !important;
-    top: 0px !important;
-    left: 0px !important;
-    background: rgb(255, 255, 255) none repeat scroll 0% 0% !important;
+    top: 0 !important;
+    left: 0 !important;
+    background: rgb(255, 255, 255) none repeat scroll 0 0 !important;
     opacity: 0.6 !important;
     cursor: default !important;
     position: absolute !important;
@@ -55,7 +55,7 @@
 .shipping_pickup_cart {
     font-size: 13px;
     font-style: italic;
-    text-indent: 0px !important;
+    text-indent: 0 !important;
 }
 
 #pakkelabels_find_shop_btn {
@@ -162,8 +162,8 @@ ul.pakkelabels-shoplist-ul li.pakkelabels-shop-list:nth-last-of-type(2) {
 
 .pakkelabels_shipping_field-wrap,
 #selected_shop_wrapper, .pakkelabels_stores {
-    text-indent: 0px;
-    cursor: pointer;
+    text-indent: 0;
+    /*cursor: pointer;*/
 }
 
 .pakkelabels-single-shop .no_cords_found ~ .no_cords_found {
@@ -258,7 +258,7 @@ ul.pakkelabels-shoplist-ul li.pakkelabels-shop-list:nth-last-of-type(2) {
     border: 1px solid #dadada;
     width: 50.5%;
     margin-top: -2px;
-    padding-top: 0px;
+    padding-top: 0;
 }
 
 .pakkelabels-shoplist-dropdownul li:hover {
@@ -431,7 +431,7 @@ ul.pakkelabels-shoplist-ul li.pakkelabels-shop-list:nth-last-of-type(2) {
 }
 
 @media only screen and (max-width: 767px) {
-    #pakkelabels-zipcode-wrapper {
+    .pakkelabels_shipping_field-wrap {
         padding: 0 25px;
     }
 

@@ -16,7 +16,7 @@
                     <span class="pakkelabels-zipcode">{$service_point->zipcode nofilter}</span>
                     <span class="pakkelabels-city">{$service_point->city nofilter}</span>
                 </div>
-                <div class="pakkelabels-Packetshop" style="display:none;">
+                <div class="pakkelabels-Packetshop">
                     ID: {$shipping_agent nofilter}-{$service_point->number nofilter}
                 </div>
             </div>
