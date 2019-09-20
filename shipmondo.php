@@ -20,17 +20,17 @@ class Shipmondo extends CarrierModule
         'footer',
     ];
     protected $carriers = [
-        'shipmondo_gls_service_point' => 'GLS PakkeShop',
-        'shipmondo_gls_private' => 'GLS - Omdeling til privat',
-        'shipmondo_gls_business' => 'GLS - Omdeling til erhverv',
-        'shipmondo_postnord_service_point' => 'PostNord Valgfrit udleveringssted',
-        'shipmondo_postnord_private' => 'PostNord - Omdeling til privat',
-        'shipmondo_postnord_business' => 'PostNord - Omdeling til erhverv',
-        'shipmondo_dao_service_point' => 'DAO Pakkeshop',
-        'shipmondo_dao_direct' => 'DAO Direkte',
-        'shipmondo_bring_service_point' => 'Bring - Valgfrit udleveringssted',
-        'shipmondo_bring_private' => 'Bring - Aftenlevering til privat',
-        'shipmondo_bring_business' => 'Bring - Omdeling til erhverv',
+        'gls_service_point' => 'GLS PakkeShop',
+        'gls_private' => 'GLS - Omdeling til privat',
+        'gls_business' => 'GLS - Omdeling til erhverv',
+        'postnord_service_point' => 'PostNord Valgfrit udleveringssted',
+        'postnord_private' => 'PostNord - Omdeling til privat',
+        'postnord_business' => 'PostNord - Omdeling til erhverv',
+        'dao_service_point' => 'DAO Pakkeshop',
+        'dao_direct' => 'DAO Direkte',
+        'bring_service_point' => 'Bring - Valgfrit udleveringssted',
+        'bring_private' => 'Bring - Aftenlevering til privat',
+        'bring_business' => 'Bring - Omdeling til erhverv',
     ];
 
     private $validation_errors = [];
@@ -408,6 +408,10 @@ class Shipmondo extends CarrierModule
                 }
             }
 
+            if(Module::isInstalled('pakkelabels_shipping')) {
+                $this->migrateFromPakkelabels();
+            }
+
             if (!$this->createCarriers()) {
                 return false;
             }
@@ -520,6 +524,10 @@ class Shipmondo extends CarrierModule
     protected function createCarriers()
     {
         foreach ($this->carriers as $key => $value) {
+            if(Configuration::hasKey(self::PREFIX . $key)) {
+                continue; // skip if migrated
+            }
+
             //Create new carrier
             $carrier = new Carrier();
             $carrier->name = $value;
@@ -575,7 +583,7 @@ class Shipmondo extends CarrierModule
                         $id_carrier = (int) $carrier->id;
                         $id_zone = (int) $z['id_zone'];
                         $range_id = (int) $range_price->id;
-                        $rangewt_id = (int) $range_weight->id;
+                        $range_weight_id = (int) $range_weight->id;
                         Db::getInstance()->insert('carrier_zone', [
                             'id_carrier' => $id_carrier,
                             'id_zone' => $id_zone,
@@ -591,7 +599,7 @@ class Shipmondo extends CarrierModule
                         Db::getInstance()->insert('delivery', [
                             'id_carrier' => $id_carrier,
                             'id_range_price' => null,
-                            'id_range_weight' => $rangewt_id,
+                            'id_range_weight' => $range_weight_id,
                             'id_zone' => $id_zone,
                             'price' => '0',
                         ], true, false);
@@ -604,19 +612,18 @@ class Shipmondo extends CarrierModule
                 copy(_PS_MODULE_DIR_ . 'shipmondo/views/img/' . $logo_name . '.png', _PS_SHIP_IMG_DIR_ . '/' . (int) $carrier->id . '.png'); //assign carrier logo
 
                 Configuration::updateValue(self::PREFIX . $key, $carrier->id);
-                Configuration::updateValue(self::PREFIX . $key . '_reference', $carrier->id);
 
                 switch ($key) {
-                    case 'shipmondo_gls_service_point':
+                    case 'gls_service_point':
                         Configuration::updateValue('SHIPMONDO_GLS_CARRIER_ID', $carrier->id);
                         break;
-                    case 'shipmondo_postnord_service_point':
+                    case 'postnord_service_point':
                         Configuration::updateValue('SHIPMONDO_POSTNORD_CARRIER_ID', $carrier->id);
                         break;
-                    case 'shipmondo_dao_service_point':
+                    case 'dao_service_point':
                         Configuration::updateValue('SHIPMONDO_DAO_CARRIER_ID', $carrier->id);
                         break;
-                    case 'shipmondo_bring_service_point':
+                    case 'bring_service_point':
                         Configuration::updateValue('SHIPMONDO_BRING_CARRIER_ID', $carrier->id);
                         break;
                 }
@@ -660,9 +667,10 @@ class Shipmondo extends CarrierModule
     {
         $keys = array_keys($this->carriers);
         foreach ($keys as $key) {
-            $tmp_carrier_id = Configuration::get(self::PREFIX . $key);
-            $carrier = new Carrier($tmp_carrier_id);
+            $carrier_id = Configuration::get(self::PREFIX . $key);
+            $carrier = new Carrier($carrier_id);
             $carrier->delete();
+            Configuration::deleteByName(self::PREFIX . $key);
         }
 
         return true;
@@ -670,6 +678,7 @@ class Shipmondo extends CarrierModule
 
     protected function deleteSettings()
     {
+        Configuration::deleteByName('SHIPMONDO_FRONTEND_KEY');
         Configuration::deleteByName('SHIPMONDO_GLS_CARRIER_ID');
         Configuration::deleteByName('SHIPMONDO_POSTNORD_CARRIER_ID');
         Configuration::deleteByName('SHIPMONDO_DAO_CARRIER_ID');
@@ -691,5 +700,57 @@ class Shipmondo extends CarrierModule
         Configuration::updateValue($value_key, $value);
 
         return true;
+    }
+
+    private function migrateFromPakkelabels() 
+    {
+        $pkl_carrier_keys = [
+            'gls_service_point' => 'pakkelabels_GLS',
+            'gls_private' => 'pakkelabels_GLS_private',
+            'gls_business' => 'pakkelabels_GLS_business',
+            'postnord_service_point' => 'pakkelabels_PostNord',
+            'postnord_private' => 'pakkelabels_PostNord_private',
+            'postnord_business' => 'pakkelabels_PostNord_business',
+            'dao_service_point' => 'pakkelabels_DAO',
+            'dao_direct' => 'pakkelabels_dao_direct',
+            'bring_service_point' => 'pakkelabels_bring',
+            'bring_private' => 'pakkelabels_bring_private',
+            'bring_business' => 'pakkelabels_bring_business'
+        ];
+
+        foreach(array_keys($this->carriers) as $key) {
+            $pkl_key = 'pakkelabels_shipping_' . $pkl_carrier_keys[$key];
+            $value = Configuration::get($pkl_key);
+            if(isset($value)) {
+                $carrier = Carrier::getCarrierByReference($value);
+                $carrier->external_module_name = $this->name;
+                $carrier->update();
+
+                Configuration::updateValue(self::PREFIX . $key, $value);
+                Configuration::deleteByName($pkl_key);
+            }
+        }
+
+        $pkl_config_keys = [
+            'SHIPMONDO_FRONTEND_KEY' => 'PAKKELABELS_SHIPPING_FRONTEND_KEY',
+            'SHIPMONDO_GOOGLE_API_KEY' => 'PAKKELABELS_GOOGLE_API_KEY',
+            'SHIPMONDO_GLS_CARRIER_ID' => 'PAKKELABELS_SHIPPING_ID_GLS',
+            'SHIPMONDO_POSTNORD_CARRIER_ID' => 'PAKKELABELS_SHIPPING_ID_POSTNORD',
+            'SHIPMONDO_DAO_CARRIER_ID' => 'PAKKELABELS_SHIPPING_ID_DAO',
+            'SHIPMONDO_BRING_CARRIER_ID' => 'PAKKELABELS_SHIPPING_ID_BRING',
+            'SHIPMONDO_FRONTEND_TYPE' => 'PAKKELABELS_FRONT_OPTION',
+        ];
+
+        foreach($pkl_config_keys as $smd_key => $pkl_key) {
+            $value = Configuration::get($pkl_key);
+            if(isset($value)) {
+                if($smd_key == 'SHIPMONDO_FRONTEND_KEY') {
+                    $value = Tools::strtolower($value); // fix frontend type
+                }
+
+                Configuration::updateValue($smd_key, $value);
+                Configuration::deleteByName($pkl_key);
+            }
+        }
     }
 }
