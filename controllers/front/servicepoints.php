@@ -179,10 +179,7 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController 
         $response['service_points'] = $service_points;
         $response['frontend_type'] = $frontend_type;
         $response['status'] = 'success';
-
-        $template_base_path = _PS_MODULE_DIR_ . 'shipmondo/views/templates/front/';
-
-        $response['map'] = $this->context->smarty->fetch($template_base_path . 'map.tpl');
+        $response['map'] = $this->module->fetch('module:shipmondo/views/templates/front/map.tpl');
 
         if(empty($selected_service_point_id))
             $selected_service_point_id = 0;
@@ -193,7 +190,7 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController 
             'shipping_agent' => $shipping_agent,
             'shipping_agent_logo' => _MODULE_DIR_ . 'shipmondo/views/img/' . $shipping_agent . '.png'
         ]);
-        $response['service_points_html'] = $this->context->smarty->fetch($template_base_path . strtolower($frontend_type) . '/service_points.tpl');
+        $response['service_points_html'] = $this->module->fetch('module:shipmondo/views/templates/front/' . Tools::strtolower($frontend_type) . '/service_points.tpl');
 
         return $response;
     }
