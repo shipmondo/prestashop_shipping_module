@@ -27,9 +27,7 @@
 
 <script>
 $('.pakkelabels-shop-list').each(function() {
-    console.log('each')
     $(this).on('click', function() {
-        console.log('click')
         $('#shop_radio_' + $(this).attr('data-shopid')).trigger('click')
         li_addlistener_open_marker($(this));
         // Remove all the class selected, from previous li's
