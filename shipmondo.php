@@ -159,7 +159,7 @@ class Shipmondo extends CarrierModule
             $bring_carrier_id = (string) Tools::getValue('SHIPMONDO_BRING_CARRIER_ID');
             $frontend_type = (string) Tools::getValue('SHIPMONDO_FRONTEND_TYPE');
 
-            $validation_error_title = $this->l('The Shipmondo shipping module, requires all the settings below to be entered correctly and saved before the module will operate correctly.') . '</br>';
+            $validation_error_title = $this->l('The Shipmondo shipping module, requires all the settings below to be entered correctly and saved before the module will operate correctly.') . '<br>';
             $validation_error_title .= $this->l('Invalid Configuration value(s), please insert the following:');
             $valid = true;
 
