@@ -464,17 +464,8 @@ class Shipmondo extends CarrierModule
         $pdk = Carrier::getCarrierByReference(Configuration::get('SHIPMONDO_POSTNORD_CARRIER_ID'));
         $bring = Carrier::getCarrierByReference(Configuration::get('SHIPMONDO_BRING_CARRIER_ID'));
 
-        $page = $context->php_self;
-
-        if (!$page)
-            $page = $context->page_name;
-
-        $cid = $params['cookie']->id_customer;
-
-        $customer = new Customer($cid);
-        $customer_address = $customer->getAddresses(1);
-
-        if ($page == 'order') {
+        $current_page = Tools::getValue('controller');
+        if ($current_page == 'order') {
             Media::addJsDef([
                 'findServicePointText' => $this->l('Find nearest pickup point'),
                 'zipCodeFieldText' => $this->l('Zipcode'),
