@@ -42,12 +42,12 @@ class Shipmondo extends CarrierModule
         $this->version = '1.0.0';
         $this->author = 'Shipmondo';
         $this->need_instance = 0;
+        $this->bootstrap = true;
+        parent::__construct();
         $this->ps_versions_compliancy = [
             'min' => '1.7.6.0',
             'max' => _PS_VERSION_,
         ];
-        $this->bootstrap = true;
-        parent::__construct();
         $this->displayName = $this->l('Shipmondo');
         $this->description = $this->l('GLS, PostNord, DAO and Bring Shipping for PrestaShop');
     }
