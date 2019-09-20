@@ -9,14 +9,13 @@
         {foreach $service_points as $service_point}
         <li data-shopid="{$service_point->number nofilter}" class="pakkelabels-shop-list">
             <div class="pakkelabels-single-shop">
-                <div class="pakkelabels-radio-button"></div>
                 <div class="pakkelabels-company-name">{$service_point->company_name nofilter}</div>
                 <div class="pakkelabels-Address">{$service_point->address nofilter}</div>
                 <div class="pakkelabels-ZipAndCity">
                     <span class="pakkelabels-zipcode">{$service_point->zipcode nofilter}</span>
                     <span class="pakkelabels-city">{$service_point->city nofilter}</span>
                 </div>
-                <div class="pakkelabels-Packetshop" style="display:none;">
+                <div class="pakkelabels-Packetshop">
                     ID: {$shipping_agent nofilter}-{$service_point->number nofilter}
                 </div>
             </div>
