@@ -238,7 +238,6 @@ class Shipmondo extends CarrierModule
         $fields_form = [];
 
         $prestashop_guide_url = 'https://kundecenter.pakkelabels.dk/da/articles/2027196-prestashop-1-7-opsaetning-af-shipmondo-fragtmodul';
-        $thirty_bees_guide_url = 'https://kundecenter.pakkelabels.dk/da/articles/2027426-thirty-bees-opsaetning-af-shipmondo-fragtmodul';
 
         // Init Fields form
         $fields_form[0]['form'] = [
@@ -254,14 +253,6 @@ class Shipmondo extends CarrierModule
                             $this->l('here') .
                         '</a>.',
                 ],
-                /*[
-                    'name' => 'SHIPMONDO_DESC_BEES',
-                    'type' => 'html',
-                    'html_content' => $this->l('Follow the setup guide for thirty bees') .
-                        ' <a href="' . $thirty_bees_guide_url . '" target="_blank">' .
-                        $this->l('here') .
-                        '</a>.',
-                ],*/
                 [
                     'name' => 'SHIPMONDO_FRONTEND_KEY',
                     'type' => 'text',
