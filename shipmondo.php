@@ -249,19 +249,19 @@ class Shipmondo extends CarrierModule
                 [
                     'name' => 'SHIPMONDO_DESC',
                     'type' => 'html',
-                    'html_content' => $this->l('Follow the setup guide for PrestaShop') . ':
-                        <a href="' . $prestashop_guide_url . '" target="_blank">' .
-                            $prestashop_guide_url .
-                        '</a>',
+                    'html_content' => $this->l('Follow the setup guide for PrestaShop') .
+                        ' <a href="' . $prestashop_guide_url . '" target="_blank">' .
+                            $this->l('here') .
+                        '</a>.',
                 ],
-                [
+                /*[
                     'name' => 'SHIPMONDO_DESC_BEES',
                     'type' => 'html',
-                    'html_content' => $this->l('Follow the setup guide for thirty bees') . ':
-                        <a href="' . $thirty_bees_guide_url . '" target="_blank">' .
-                            $thirty_bees_guide_url .
-                        '</a>',
-                ],
+                    'html_content' => $this->l('Follow the setup guide for thirty bees') .
+                        ' <a href="' . $thirty_bees_guide_url . '" target="_blank">' .
+                        $this->l('here') .
+                        '</a>.',
+                ],*/
                 [
                     'name' => 'SHIPMONDO_FRONTEND_KEY',
                     'type' => 'text',
