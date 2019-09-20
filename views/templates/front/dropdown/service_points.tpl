@@ -1,3 +1,9 @@
+{*
+ *  @author    Shipmondo
+ *  @copyright 2019 Shipmondo
+ *  @license   All rights reserved
+*}
+
 <ul class="pakkelabels-shoplist-dropdownul dropdown-menu">
     {foreach $service_points as $service_point}
     <li data-shopid="{$service_point->number}" class="pakkelabels-shop-list">

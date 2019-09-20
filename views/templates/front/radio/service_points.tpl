@@ -1,3 +1,9 @@
+{*
+ *  @author    Shipmondo
+ *  @copyright 2019 Shipmondo
+ *  @license   All rights reserved
+*}
+
 <div class="pakkelabels-shoplist">
     {foreach $service_points as $service_point}
     <div data-shopid="{$service_point->number}" class="pakkelabels-shop-list">

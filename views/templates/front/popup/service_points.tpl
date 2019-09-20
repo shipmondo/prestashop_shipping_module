@@ -1,3 +1,9 @@
+{*
+ *  @author    Shipmondo
+ *  @copyright 2019 Shipmondo
+ *  @license   All rights reserved
+*}
+
 <div class="pakkelabels-shoplist">
     <ul class="pakkelabels-shoplist-ul">
         {foreach $service_points as $service_point}
