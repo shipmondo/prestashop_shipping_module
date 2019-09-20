@@ -607,7 +607,7 @@ class Shipmondo extends CarrierModule
                 }
 
                 // The 2 first parts of the key is name of logo
-                $logo_name = implode('_', array_slice(explode('_', $key), 0, 2));
+                $logo_name = implode('_', array_slice(explode('_', $key), 0, 1));
 
                 copy(_PS_MODULE_DIR_ . 'shipmondo/views/img/' . $logo_name . '.png', _PS_SHIP_IMG_DIR_ . '/' . (int) $carrier->id . '.png'); //assign carrier logo
 
