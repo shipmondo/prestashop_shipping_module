@@ -73,19 +73,19 @@ class Shipmondo extends CarrierModule
         );
 
         $add_address = false;
-        if ($gls_carrier->id == $carrier_id) {
+        if ($gls_carrier->id === $carrier_id) {
             $alias = 'GLS';
             $add_address = true;
         }
-        if ($dao_carrier->id == $carrier_id) {
+        if ($dao_carrier->id === $carrier_id) {
             $alias = 'DAO';
             $add_address = true;
         }
-        if ($postnord_carrier->id == $carrier_id) {
+        if ($postnord_carrier->id === $carrier_id) {
             $alias = 'PDK';
             $add_address = true;
         }
-        if ($bring_carrier->id == $carrier_id) {
+        if ($bring_carrier->id === $carrier_id) {
             $alias = 'Bring';
             $add_address = true;
         }
@@ -451,7 +451,7 @@ class Shipmondo extends CarrierModule
     }
 
     public function hookActionCarrierUpdate($params) {
-        if ($params['carrier']->id_reference == Configuration::get(self::PREFIX . 'swipbox_reference')) {
+        if ($params['carrier']->id_reference === Configuration::get(self::PREFIX . 'swipbox_reference')) {
             Configuration::updateValue(self::PREFIX . 'swipbox', $params['carrier']->id);
         }
     }
