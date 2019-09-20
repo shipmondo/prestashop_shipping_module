@@ -9,7 +9,6 @@
         {foreach $service_points as $service_point}
         <li data-shopid="{$service_point->number nofilter}" class="pakkelabels-shop-list">
             <div class="pakkelabels-single-shop">
-                <div class="pakkelabels-radio-button"></div>
                 <div class="pakkelabels-company-name">{$service_point->company_name nofilter}</div>
                 <div class="pakkelabels-Address">{$service_point->address nofilter}</div>
                 <div class="pakkelabels-ZipAndCity">

@@ -1,6 +1,6 @@
-#selected_shop_header {
-    font-weight: bold;
-}
+/*#selected_shop_header {*/
+    /*font-weight: bold;*/
+/*}*/
 
 #selected_shop_context > .pakkelabels-company-name {
     font-weight: normal;
@@ -286,7 +286,7 @@ ul.pakkelabels-shoplist-ul li.pakkelabels-shop-list:nth-last-of-type(2) {
     display: inline-block;
 }
 
-.pakkelabels-shoplist-dropdownul .pakkelabels-Packetshop {
+.pakkelabels-Packetshop {
     display: none;
 }
 
@@ -366,20 +366,21 @@ ul.pakkelabels-shoplist-ul li.pakkelabels-shop-list:nth-last-of-type(2) {
 }
 
 #pakkelabels_find_shop_btn {
-    color: #fff;
-    background-color: #2fb5d2;
-    border-color: transparent;
-    box-shadow: 2px 2px 4px 0 rgba(0, 0, 0, .2);
-    text-transform: uppercase;
-    font-weight: 600;
-    padding: .5rem 1.25rem;
-    width: auto;
+    /*color: #fff;*/
+    /*background-color: #2fb5d2;*/
+    /*border-color: transparent;*/
+    /*box-shadow: 2px 2px 4px 0 rgba(0, 0, 0, .2);*/
+    /*text-transform: uppercase;*/
+    /*font-weight: 600;*/
+    /*padding: .5rem 1.25rem;*/
+    /*width: auto;*/
+    width: 100%;
     position: relative;
 }
 
-#pakkelabels_find_shop_btn:focus, #pakkelabels_find_shop_btn:hover {
-    background-color: #2592a9;
-}
+/*#pakkelabels_find_shop_btn:focus, #pakkelabels_find_shop_btn:hover {*/
+    /*background-color: #2592a9;*/
+/*}*/
 
 .pakkelabels-shoplist .selected_content {
     font-size: 12px;
@@ -409,26 +410,31 @@ ul.pakkelabels-shoplist-ul li.pakkelabels-shop-list:nth-last-of-type(2) {
 }
 
 .pakkelabels-shoplist-dropdownul.dropdown-menu {
+    width: 100%;
     height: 700px;
     overflow-y: scroll;
     overflow-x: hidden;
+    box-shadow: 2px 2px 4px 0 rgba(0, 0, 0, .2);
 }
 
-.loading_radio {
-    width: 26px;
-}
+/*.loading_radio {*/
+    /*width: 26px;*/
+/*}*/
 
 .pakkelabels-shoplist .selected_content, div#onepagecheckoutps .pakkelabels-shoplist span {
     font-size: 12px;
+}
+
+
+#selected_shop_wrapper {
+    border: 0;
+    padding: 5px 10px;
 }
 
 #selected_shop_wrapper.add_border {
     border: 1px solid rgb(238, 238, 238);
 }
 
-#selected_shop_wrapper {
-    border: 0;
-}
 
 @media only screen and (max-width: 767px) {
     .pakkelabels_shipping_field-wrap {
@@ -454,4 +460,10 @@ ul.pakkelabels-shoplist-ul li.pakkelabels-shop-list:nth-last-of-type(2) {
     .row.delivery-option .col-sm-3.col-xs-12 .row {
         margin: 0;
     }
+}
+
+
+.choose-pickuppoint{
+    /*display: inline-block;*/
+    float: right;
 }

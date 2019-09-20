@@ -13,8 +13,12 @@ var gotError = '';
 //TODO maybe optimize if there is no changes to input
 function getShopList(shipping_agent) {
     console.log('getShopList');
+    //TODO could come from the calle (btn)
     var findShopBtn = jQuery('#pakkelabels_find_shop_btn');
-    // var zipCodeField = jQuery('#Pakkelabels_zipcode_field');
+
+
+    findShopBtn.prop("disabled", true); //TODO TESTING if this is the best way or loading overlay is better
+
 
     var id_delivery = prestashop.cart.id_address_delivery;
     if (!id_delivery) {
@@ -25,6 +29,9 @@ function getShopList(shipping_agent) {
     var zipCode = address_data.postcode;
     var address = address_data.address1;
 
+
+
+    //TODO add propper loading. loading_radio is the old one.
 
     //
     // if (usedZipCode == zipCode && usedAgent == shipping_agent) {
@@ -85,7 +92,7 @@ function getShopList(shipping_agent) {
                         }, 1000)
                     } else if (returned.frontend_type == 'radio') {
                         setTimeout(function () {
-                            jQuery(".loading_radio").hide();
+                            // jQuery(".loading_radio").hide();
                             shopList.addClass('open').html(returned.service_points_html);
                         }, 1000)
                     } else {
@@ -121,14 +128,17 @@ function getShopList(shipping_agent) {
                     }
                 } else {
                     gotError = returned.error;
-                    jQuery(".loading_radio").hide();
+                    // jQuery(".loading_radio").hide();
                     $(".error_msg").html(returned.error);
                 }
             } else {
                 // zipCodeField.prop("disabled", false);
-                jQuery('#pakkelabels_find_shop_btn').prop("disabled", false);
+                // jQuery('#pakkelabels_find_shop_btn').prop("disabled", false);
                 $(".error_msg").html(returned.error);
             }
+            findShopBtn.prop("disabled", false); //TODO TESTING if this is the best way or loading overlay is better
+        }, error: function (jqXHR, textStatus, errorThrown) {
+            findShopBtn.prop("disabled", false); //TODO TESTING if this is the best way or loading overlay is better
         }
     });
 }
@@ -377,8 +387,6 @@ jQuery(window).on('load', function () {
     if (frontendType == 'popup') {
         selectedPickupPointHtml = '<div>' +
             '<div class="error_msg"></div>' +
-            // '<input type="hidden" id="Pakkelabels_zipcode_field" class="input" name="pakkelabels_zipcode" placeholder="' + zipCodeFieldText + '">' +
-            // '<input type="hidden" id="Pakkelabels_address_field" class="input" name="pakkelabels_address" placeholder="' + addressFieldText + '">' +
             '</div>' +
             '<div>' +
             '<button class="button button-medium btn btn-primary dropdown-toggle" id="pakkelabels_find_shop_btn" type="button" data-toggle="dropdown">' +
@@ -387,17 +395,12 @@ jQuery(window).on('load', function () {
             '</div>';
     } else if (frontendType == 'radio') {
         selectedPickupPointHtml = '<div>' +
-            '<span><img src="' + prestashop.urls.base_url + '/modules/shipmondo/views/img/loading.gif" class="loading_radio" style="display:none;"></span>' +
             '<div class="error_msg"></div>' +
-            // '<input type="hidden" id="Pakkelabels_zipcode_field" class="input" name="pakkelabels_zipcode" placeholder="' + zipCodeFieldText + '">' +
-            // '<input type="hidden" id="Pakkelabels_address_field" class="input" name="pakkelabels_address" placeholder="' + addressFieldText + '">' +
             '</div>' +
             '<div class="pakkelabels-shoplist"></div>';
     } else {
         selectedPickupPointHtml = '<div>' +
             '<div class="error_msg"></div>' +
-            // '<input type="hidden" id="Pakkelabels_zipcode_field" class="input" name="pakkelabels_zipcode" placeholder="' + zipCodeFieldText + '">' +
-            // '<input type="hidden" id="Pakkelabels_address_field" class="input" name="pakkelabels_address" placeholder="' + addressFieldText + '">' +
             '</div>' +
             '<div class="pakkelabels-shoplist dropdown">' +
             '<button class="button button-medium btn btn-primary dropdown-toggle" id="pakkelabels_find_shop_btn" type="button" data-toggle="dropdown">' +
@@ -406,7 +409,7 @@ jQuery(window).on('load', function () {
     }
 
 
-    var selectedPickupPointWrapHtml = '<div class="pakkelabels_shipping_field-wrap type-' + frontendType + '">' +
+    var selectedPickupPointWrapHtml = '<div class="pakkelabels_shipping_field-wrap pakkelabels_shipping_field-wrap-type-' + frontendType + '">' +
         '<div class="pakkelabels_shipping_field">' +
         '<div class="pakkelabels-clearfix" id="pakkelabels_shipping_button">' +
         '<div class="pakkelabels_stores">' +
@@ -431,31 +434,10 @@ jQuery(window).on('load', function () {
         console.log('click.pakkelabels_find_shop_btn');
 
         var chosenShippingAgent = getSelectedShippingAgent();
-        // var defaultZipCode = jQuery('#Pakkelabels_zipcode_field').val();
-        // var defaultAddress = jQuery('#Pakkelabels_address_field').val();
-
         getShopList(chosenShippingAgent);
 
         //TODO implement autoclose and ok from WC
     });
-
-
-    // jQuery(document).on('keypress', '#Pakkelabels_zipcode_field', function (event) {
-    //     if (event.keyCode == 13) {
-    //         event.preventDefault();
-    //         if (!jQuery('#pakkelabels_find_shop_btn').is(":disabled")) {
-    //
-    //             // var defaultZipCodeField = jQuery('#Pakkelabels_zipcode_field');
-    //             // var defaultZipCode = defaultZipCodeField.val();
-    //             // var defaultAddress = jQuery('#Pakkelabels_address_field').val();
-    //
-    //             getShopList(getSelectedShippingAgent());
-    //
-    //             defaultZipcodeField.blur();
-    //         }
-    //     }
-    // });
-
     // Add Prevent continue button
     jQuery('#js-delivery').append('<button type="button" class="btn btn-primary pull-xs-right choose-pickuppoint" style="display:none;">' + modalHeaderTitle + '</button>');
 
@@ -469,30 +451,6 @@ jQuery(window).on('load', function () {
 
     jQuery(document).on('click', '.delivery-option input', function () {
         console.log('click.delivery-option');
-
-
-        // //TODO reuse case from above l-310
-        // var shippingAgent = '';
-        // switch ($(this).val()) {
-        //     case daoCarrierId + ',':
-        //         shippingAgent = 'dao';
-        //         break;
-        //     case glsCarrierId + ',':
-        //         shippingAgent = 'gls';
-        //         break;
-        //     case postnordCarrierId + ',':
-        //         shippingAgent = 'pdk';
-        //         break;
-        //     case bringCarrierId + ',':
-        //         shippingAgent = 'bring';
-        //         break;
-        //     default:
-        //         return;
-        // }
-        //
-        //
-        // shippingAgent = getShippingAgentByVal($(this).val());
-
         // Remove zipcode wrapper
         jQuery('.pakkelabels_shipping_field-wrap').remove();
 
@@ -505,27 +463,10 @@ jQuery(window).on('load', function () {
         }
 
         jQuery(extra_content).html(selectedPickupPointWrapHtml);
-        // jQuery(extra_content).html(sZipcodeHTML);
         jQuery('#js-delivery .continue').hide();
 
-        // Add zipcode from customer address
-        // if (defaultZipcode) {
-        //     jQuery('#Pakkelabels_zipcode_field').val(defaultZipcode);
-        // }
-        // if (defaultAddress) {
-        //     jQuery('#Pakkelabels_address_field').val(defaultAddress);
-        // }
-        // if (defaultAddress == '' && defaultZipcode == '') {
-        // var id_delivery = prestashop.cart.id_address_delivery;
-        // if (!id_delivery) {
-        //     id_delivery = jQuery('input[name="id_address_delivery"]:checked').val();
-        // }
-        // var address_data = prestashop.customer.addresses[id_delivery];
-        // jQuery('#Pakkelabels_zipcode_field').val(address_data.postcode);
-        // jQuery('#Pakkelabels_address_field').val(address_data.address1);
-        // }
         if (frontendType == 'radio') {
-            jQuery(".loading_radio").show();
+            // jQuery(".loading_radio").show();
             //TODO could this be moved? Think its used alot as is
             getShopList(getShippingAgentByVal($(this).val()));
         } else {
@@ -600,15 +541,6 @@ jQuery(window).on('load', function () {
     modal.on('hidden.bs.modal', function (e) {
         saveCartdetails();
     });
-
-    //adds 3 events to the zipcode text field, that will disable the "find shop button", until a zipcode thats 4 in lentgh % numeric is choosen!
-    // jQuery(document).on('keyup focusout input change', '#Pakkelabels_zipcode_field', function (e) {
-    //     if (jQuery('#Pakkelabels_zipcode_field').val().length > 0) {
-    //         jQuery('#pakkelabels_find_shop_btn').prop("disabled", false);
-    //     } else {
-    //         jQuery('#pakkelabels_find_shop_btn').prop("disabled", true);
-    //     }
-    // });
 });
 
 jQuery(document).on('click', '.choose-pickuppoint', function () {
