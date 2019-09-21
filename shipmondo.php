@@ -370,7 +370,7 @@ class Shipmondo extends CarrierModule
         $helper->allow_employee_form_lang = Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG', 0);
 
         // Toolbar and button
-        $helper->show_toolbar = 0;
+        $helper->show_toolbar = false;
         $helper->submit_action = 'submit' . $this->name;
 
         // Load current value
