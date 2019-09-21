@@ -248,10 +248,10 @@ class Shipmondo extends CarrierModule
                 [
                     'name' => 'SHIPMONDO_DESC',
                     'type' => 'html',
-                    'html_content' => $this->l('Follow the setup guide for PrestaShop') .
+                    'html_content' => $this->l('Follow the setup guide') . ' :' .
                         ' <a href="' . $prestashop_guide_url . '" target="_blank">' .
-                            $this->l('here') .
-                        '</a>.',
+                            $this->l('PrestaShop guide') .
+                        '</a>',
                 ],
                 [
                     'name' => 'SHIPMONDO_FRONTEND_KEY',
@@ -516,10 +516,10 @@ class Shipmondo extends CarrierModule
         foreach ($this->carriers as $key => $value) {
 
             if(Configuration::hasKey(self::PREFIX . $key)) {
-                continue; // skip if migrated
+                continue; // Skip if migrated
             }
 
-            //Create new carrier
+            // Create new carrier
             $carrier = new Carrier();
             $carrier->name = $value;
             $carrier->active = false;
@@ -737,7 +737,7 @@ class Shipmondo extends CarrierModule
             $value = Configuration::get($pkl_key);
             if(isset($value)) {
                 if($smd_key == 'SHIPMONDO_FRONTEND_KEY') {
-                    $value = Tools::strtolower($value); // fix frontend type
+                    $value = Tools::strtolower($value); // Fix frontend type
                 }
 
                 Configuration::updateValue($smd_key, $value);
