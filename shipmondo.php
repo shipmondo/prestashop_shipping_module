@@ -225,6 +225,7 @@ class Shipmondo extends CarrierModule
     public function displayForm()
     {
         // Get default language
+        $default_lang = $this->context->language->id;
         $all_carriers = Carrier::getCarriers($default_lang, false, false, false, null, ALL_CARRIERS);
         $carriers = [];
 
@@ -365,7 +366,7 @@ class Shipmondo extends CarrierModule
         $helper->currentIndex = AdminController::$currentIndex . '&configure=' . $this->name;
 
         // Language
-        $helper->default_form_language = $this->context->language->id;
+        $helper->default_form_language = $default_lang;
         $helper->allow_employee_form_lang = Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG', 0);
 
         // Toolbar and button
