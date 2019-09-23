@@ -31,24 +31,24 @@
     {/foreach}
     <li class="pakkelabels_lilogo"> <span>Powered by Shipmondo</span></li>
 </ul>
+
 <script>
 jQuery('.pakkelabels-shop-list').each(function() {
     jQuery(this).on('click', function() {
         jQuery('#hidden_choosen_shop').attr('shopid', jQuery(this).attr('data-shopid'));
-        //adds the shop information to the #selected_shop div
+        // Adds the shop information to the #selected_shop div
         jQuery('#selected_shop_header').html(selectedServicePointHeader);
         jQuery('#selected_shop_context').html(jQuery(this).find('.shipmondo-shop-info').html());
-        //remove all the class selected, from previous li's
-        if(typeof checkdroppointselected !== 'undefined')
-            checkdroppointselected(this); 
+        // Remove all the class selected, from previous li's
+        if (typeof checkdroppointselected !== 'undefined')
+            checkdroppointselected(this);
         jQuery('.pakkelabels-shop-list').removeClass('selected');
-        //adds the selected class to the newly selected li
+        // Adds the selected class to the newly selected li
         jQuery(this).addClass('selected');
-        setTimeout(function()
-        {
-            if(typeof saveCartdetails !=='undefined')
+        setTimeout(function() {
+            if (typeof saveCartdetails !== 'undefined')
                 saveCartdetails();
-        }, 1000) 
+        }, 1000)
     });
 })
 </script>

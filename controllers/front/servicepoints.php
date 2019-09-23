@@ -148,7 +148,7 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
         if (empty($zip_code) || empty($address) || empty($frontend_key)) {
             return [
                 'status' => false,
-                'error' => $this->l('Enter zip code and Address to see Pickup Points'),
+                'error' => $this->l('Enter zipcode and address to see pickup points'),
             ];
         }
 
@@ -157,7 +157,7 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
         if (empty($service_points)) {
             return [
                 'status' => false,
-                'error' => $this->l('Please add a valid delivery module key in admin!'),
+                'error' => $this->l('Please add a valid delivery module key in back office.'),
             ];
         }
 
@@ -165,7 +165,7 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
             if ($service_points->message === 'Invalid frontend_key') {
                 return [
                     'status' => false,
-                    'error' => $this->l('Please add a valid delivery module key in admin!'),
+                    'error' => $this->l('Please add a valid delivery module key in back office.'),
                 ];
             } else {
                 return [
@@ -216,7 +216,7 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
                 }
         }
 
-        // Optional Authentication:
+        // Optional Authentication
         curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
         curl_setopt($curl, CURLOPT_USERPWD, 'username:password');
         curl_setopt($curl, CURLOPT_URL, $url);
