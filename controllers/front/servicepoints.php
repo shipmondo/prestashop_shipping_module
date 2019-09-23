@@ -65,7 +65,7 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
 
                 $sql = new DbQuery();
                 $sql
-                    ->select('id_pkl_cart')
+                    ->select('service_point')
                     ->from('shipmondo_selected_service_points')
                     ->where('id_cart = ' . (int) $cart->id);
                 $result = Db::getInstance()->getRow($sql);
