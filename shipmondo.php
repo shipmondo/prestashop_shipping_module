@@ -408,8 +408,10 @@ class Shipmondo extends CarrierModule
                 }
             }
 
-            if(Module::isInstalled('pakkelabels_shipping')) {
+            $old_module_name = 'pakkelabels_shipping';
+            if (Module::isInstalled($old_module_name)) {
                 $this->migrateFromPakkelabels();
+                Module::disableByName($old_module_name);
             }
 
             if (!$this->createCarriers()) {
@@ -524,7 +526,7 @@ class Shipmondo extends CarrierModule
     protected function createCarriers()
     {
         foreach ($this->carriers as $key => $value) {
-            if(Configuration::hasKey(self::PREFIX . $key)) {
+            if (Configuration::hasKey(self::PREFIX . $key)) {
                 continue; // skip if migrated
             }
 
@@ -702,7 +704,7 @@ class Shipmondo extends CarrierModule
         return true;
     }
 
-    private function migrateFromPakkelabels() 
+    private function migrateFromPakkelabels()
     {
         $pkl_carrier_keys = [
             'gls_service_point' => 'pakkelabels_GLS',
@@ -715,13 +717,13 @@ class Shipmondo extends CarrierModule
             'dao_direct' => 'pakkelabels_dao_direct',
             'bring_service_point' => 'pakkelabels_bring',
             'bring_private' => 'pakkelabels_bring_private',
-            'bring_business' => 'pakkelabels_bring_business'
+            'bring_business' => 'pakkelabels_bring_business',
         ];
 
-        foreach(array_keys($this->carriers) as $key) {
+        foreach (array_keys($this->carriers) as $key) {
             $pkl_key = 'pakkelabels_shipping_' . $pkl_carrier_keys[$key];
             $value = Configuration::get($pkl_key);
-            if(isset($value)) {
+            if (isset($value)) {
                 $carrier = Carrier::getCarrierByReference($value);
                 $carrier->external_module_name = $this->name;
                 $carrier->update();
@@ -741,10 +743,10 @@ class Shipmondo extends CarrierModule
             'SHIPMONDO_FRONTEND_TYPE' => 'PAKKELABELS_FRONT_OPTION',
         ];
 
-        foreach($pkl_config_keys as $smd_key => $pkl_key) {
+        foreach ($pkl_config_keys as $smd_key => $pkl_key) {
             $value = Configuration::get($pkl_key);
-            if(isset($value)) {
-                if($smd_key == 'SHIPMONDO_FRONTEND_KEY') {
+            if (isset($value)) {
+                if ($smd_key == 'SHIPMONDO_FRONTEND_KEY') {
                     $value = Tools::strtolower($value); // fix frontend type
                 }
 
