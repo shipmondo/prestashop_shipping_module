@@ -49,6 +49,7 @@ function getShopList(shipping_agent) {
     //     }
     //     return true;
     // } else {
+    //TODO need to work out the issue where it adds a new UL alle the time. Only add one and then populate
     //     jQuery('.pakkelabels-shoplist-dropdownul').remove();
     //     gotError = '';
     // }

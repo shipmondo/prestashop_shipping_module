@@ -11,7 +11,7 @@
             <div class="row">
                 <div class="col-xs-2">
                     <div class="pakkelabels-dropimage">
-                        <img src="{$shipping_agent_logo nofilter}" style="width:100%">
+                        <img src="{$shipping_agent_logo nofilter}">
                     </div>
                 </div>
                 <div class="col-xs-10 shipmondo-shop-info">
