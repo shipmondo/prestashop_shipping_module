@@ -225,7 +225,7 @@ class Shipmondo extends CarrierModule
     public function displayForm()
     {
         // Get default language
-        $default_lang = (int) Configuration::get('PS_LANG_DEFAULT');
+        $default_lang = $this->context->language->id;
         $all_carriers = Carrier::getCarriers($default_lang, false, false, false, null, ALL_CARRIERS);
         $carriers = [];
 
@@ -358,24 +358,11 @@ class Shipmondo extends CarrierModule
 
         // Language
         $helper->default_form_language = $default_lang;
-        $helper->allow_employee_form_lang = $default_lang;
+        $helper->allow_employee_form_lang = Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG', 0);
 
-        // Title and toolbar
-        $helper->title = $this->displayName;
-        $helper->show_toolbar = true;
-        $helper->toolbar_scroll = true;
+        // Toolbar and button
+        $helper->show_toolbar = false;
         $helper->submit_action = 'submit' . $this->name;
-        $helper->toolbar_btn = [
-            'save' => [
-                'desc' => $this->l('Save'),
-                'href' => AdminController::$currentIndex . '&configure=' . $this->name . '&save' . $this->name .
-                '&token=' . Tools::getAdminTokenLite('AdminModules'),
-            ],
-            'back' => [
-                'href' => AdminController::$currentIndex . '&token=' . Tools::getAdminTokenLite('AdminModules'),
-                'desc' => $this->l('Back to list'),
-            ],
-        ];
 
         // Load current value
         $helper->fields_value['SHIPMONDO_FRONTEND_KEY'] = Configuration::get('SHIPMONDO_FRONTEND_KEY');
@@ -398,8 +385,10 @@ class Shipmondo extends CarrierModule
                 }
             }
 
-            if(Module::isInstalled('pakkelabels_shipping')) {
+            $old_module_name = 'pakkelabels_shipping';
+            if (Module::isInstalled($old_module_name)) {
                 $this->migrateFromPakkelabels();
+                Module::disableByName($old_module_name);
             }
 
             if (!$this->createCarriers()) {
@@ -515,8 +504,8 @@ class Shipmondo extends CarrierModule
     {
         foreach ($this->carriers as $key => $value) {
 
-            if(Configuration::hasKey(self::PREFIX . $key)) {
-                continue; // Skip if migrated
+            if (Configuration::hasKey(self::PREFIX . $key)) {
+                continue; // skip if migrated
             }
 
             // Create new carrier
@@ -597,11 +586,10 @@ class Shipmondo extends CarrierModule
                     }
                 }
 
-                // The 2 first parts of the key is name of logo
-                $logo_name = implode('_', array_slice(explode('_', $key), 0, 2));
-                
-                // Assign carrier logo
-                copy(_PS_MODULE_DIR_ . 'shipmondo/views/img/' . $logo_name . '.png', _PS_SHIP_IMG_DIR_ . '/' . (int) $carrier->id . '.png');
+                // The first part of the key is name of logo
+                $logo_name = implode('_', array_slice(explode('_', $key), 0, 1));
+
+                copy(_PS_MODULE_DIR_ . 'shipmondo/views/img/' . $logo_name . '_2.png', _PS_SHIP_IMG_DIR_ . '/' . (int) $carrier->id . '.png'); //assign carrier logo
 
                 Configuration::updateValue(self::PREFIX . $key, $carrier->id);
 
@@ -694,7 +682,7 @@ class Shipmondo extends CarrierModule
         return true;
     }
 
-    private function migrateFromPakkelabels() 
+    private function migrateFromPakkelabels()
     {
         $pkl_carrier_keys = [
             'gls_service_point' => 'pakkelabels_GLS',
@@ -707,13 +695,13 @@ class Shipmondo extends CarrierModule
             'dao_direct' => 'pakkelabels_dao_direct',
             'bring_service_point' => 'pakkelabels_bring',
             'bring_private' => 'pakkelabels_bring_private',
-            'bring_business' => 'pakkelabels_bring_business'
+            'bring_business' => 'pakkelabels_bring_business',
         ];
 
-        foreach(array_keys($this->carriers) as $key) {
+        foreach (array_keys($this->carriers) as $key) {
             $pkl_key = 'pakkelabels_shipping_' . $pkl_carrier_keys[$key];
             $value = Configuration::get($pkl_key);
-            if(isset($value)) {
+            if (isset($value)) {
                 $carrier = Carrier::getCarrierByReference($value);
                 $carrier->external_module_name = $this->name;
                 $carrier->update();
@@ -733,11 +721,12 @@ class Shipmondo extends CarrierModule
             'SHIPMONDO_FRONTEND_TYPE' => 'PAKKELABELS_FRONT_OPTION',
         ];
 
-        foreach($pkl_config_keys as $smd_key => $pkl_key) {
+        foreach ($pkl_config_keys as $smd_key => $pkl_key) {
             $value = Configuration::get($pkl_key);
-            if(isset($value)) {
-                if($smd_key == 'SHIPMONDO_FRONTEND_KEY') {
-                    $value = Tools::strtolower($value); // Fix frontend type
+
+            if (isset($value)) {
+                if ($smd_key == 'SHIPMONDO_FRONTEND_KEY') {
+                    $value = Tools::strtolower($value); // fix frontend type
                 }
 
                 Configuration::updateValue($smd_key, $value);

@@ -262,7 +262,7 @@ function loadMarker(markerData) {
     // Add information to the marker
     google.maps.event.addListener(marker, 'click', (function (marker) {
         return function () {
-            infowindow.setContent("<strong>" + markerData['company_name'] + "</strong><br/>" + markerData['address'] + "<br/> " + markerData['city'] + " <br/> " + markerData['zipcode']);
+            infowindow.setContent("<strong>" + markerData['company_name'] + "</strong><br>" + markerData['address'] + "<br> " + markerData['city'] + " <br> " + markerData['zipcode']);
             infowindow.open(map, marker);
             var shop_list = jQuery('.pakkelabels-shoplist > ul >li');
             shop_list.removeClass('selected').filter('[data-shopid=' + markerData['number'] + ']').trigger('click').addClass('selected');
