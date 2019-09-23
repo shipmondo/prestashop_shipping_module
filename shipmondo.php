@@ -225,7 +225,7 @@ class Shipmondo extends CarrierModule
     public function displayForm()
     {
         // Get default language
-        $default_lang = (int) Configuration::get('PS_LANG_DEFAULT');
+        $default_lang = $this->context->language->id;
         $all_carriers = Carrier::getCarriers($default_lang, false, false, false, null, ALL_CARRIERS);
         $carriers = [];
 
@@ -349,7 +349,6 @@ class Shipmondo extends CarrierModule
                         ],
                     ],
                     'label' => $this->l('Select display on checkout'),
-                    'required' => true,
                 ],
             ],
             'submit' => [
@@ -368,24 +367,11 @@ class Shipmondo extends CarrierModule
 
         // Language
         $helper->default_form_language = $default_lang;
-        $helper->allow_employee_form_lang = $default_lang;
+        $helper->allow_employee_form_lang = Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG', 0);
 
-        // Title and toolbar
-        $helper->title = $this->displayName;
-        $helper->show_toolbar = true;
-        $helper->toolbar_scroll = true;
+        // Toolbar and button
+        $helper->show_toolbar = false;
         $helper->submit_action = 'submit' . $this->name;
-        $helper->toolbar_btn = [
-            'save' => [
-                'desc' => $this->l('Save'),
-                'href' => AdminController::$currentIndex . '&configure=' . $this->name . '&save' . $this->name .
-                '&token=' . Tools::getAdminTokenLite('AdminModules'),
-            ],
-            'back' => [
-                'href' => AdminController::$currentIndex . '&token=' . Tools::getAdminTokenLite('AdminModules'),
-                'desc' => $this->l('Back to list'),
-            ],
-        ];
 
         // Load current value
         $helper->fields_value['SHIPMONDO_FRONTEND_KEY'] = Configuration::get('SHIPMONDO_FRONTEND_KEY');
