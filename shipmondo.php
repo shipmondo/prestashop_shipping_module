@@ -481,9 +481,9 @@ class Shipmondo extends CarrierModule
                 'noPointSelectedErrorText' => $this->l('You must choose a pickup point before you can proceed'),
                 'servicePointsEndpoint' => Context::getContext()->link->getModuleLink('shipmondo', 'servicepoints'),
             ]);
-
-            // Loads Google map API
-            $context->registerJavascript(
+            if (Configuration::get('SHIPMONDO_FRONTEND_TYPE') === 'popup') {
+                // Loads Google map API
+                $context->registerJavascript(
                 'google-maps',
                 'https://maps.googleapis.com/maps/api/js?key=' . Configuration::get('SHIPMONDO_GOOGLE_API_KEY'),
                 [
@@ -493,17 +493,17 @@ class Shipmondo extends CarrierModule
                 ]
             );
 
-            $context->addCSS($this->_path . 'views/css/shipmondo-modal.css', 'all');
+                $context->addCSS($this->_path . 'views/css/shipmondo-modal.css', 'all');
+                $context->addJS($this->_path . 'views/js/shipmondo-modal.js', 'all');
+            }
             $context->addCSS($this->_path . 'views/css/shipmondo.css', 'all');
             $context->addJS($this->_path . 'views/js/shipmondo.js', 'all');
-            $context->addJS($this->_path . 'views/js/shipmondo-modal.js', 'all');
         }
     }
 
     protected function createCarriers()
     {
         foreach ($this->carriers as $key => $value) {
-
             if (Configuration::hasKey(self::PREFIX . $key)) {
                 continue; // skip if migrated
             }
