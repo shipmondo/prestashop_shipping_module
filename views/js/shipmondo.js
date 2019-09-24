@@ -5,9 +5,20 @@ var map; // Variable for map
 var infowindow; // Variable for marker info window
 var ms_marker_list = {};
 var bounds = ''; // Set bounds
-// var usedZipCode = '';
-// var usedAgent = '';
+
+var usedAddress = '';
+var usedZipCode = '';
+var usedAgent = '';
+
+
 var gotError = '';
+
+
+//If this is only needed one place, remove it!
+function getFrontendType() {
+    console.log(frontendType);
+    return frontendType;
+}
 
 
 //TODO maybe optimize if there is no changes to input
@@ -15,9 +26,47 @@ function getShopList(shipping_agent) {
     console.log('getShopList');
     //TODO could come from the calle (btn)
     var findShopBtn = jQuery('#pakkelabels_find_shop_btn');
+    var shopList = jQuery('.pakkelabels-shoplist');
 
 
-    findShopBtn.prop("disabled", true); //TODO TESTING if this is the best way or loading overlay is better
+    var type = frontendType;
+    console.log(type);
+
+
+    //todo move to function
+
+    //
+    // switch (getFrontendType()) {
+    //     case 'popup':
+    //         console.log('popup');
+    //         break;
+    //     case 'radio':
+    //         console.log('radio');
+    //         break;
+    //     case 'dropdown':
+    //         console.log('dropdown');
+    //         // var dropdownList = jQuery('.pakkelabels-shoplist.dropdown');
+    //         // if(dropdownList.hasClass('open')){
+    //         //     dropdownList.removeClass('open');
+    //         //     return;
+    //         // }
+    //         //if we toggle lets close is
+    //         // if(shopList.hasClass('open')){
+    //         //     shopList.removeClass('open');
+    //         //     return false
+    //         // }else{
+    //         //     shopList.addClass('open');
+    //         // }
+    //         break;
+    //     default:
+    //         console.log('default');
+    //         break;
+    // }
+    //
+    // console.log('after switch');
+
+
+    //findShopBtn.prop("disabled", true); //TODO TESTING if this is the best way or loading overlay is better
 
 
     var id_delivery = prestashop.cart.id_address_delivery;
@@ -30,118 +79,181 @@ function getShopList(shipping_agent) {
     var address = address_data.address1;
 
 
+    if (shipping_agent == usedAgent && address === usedAddress && zipCode === usedZipCode) {
+        console.log('No changes');
+        if (type == 'popup') {
+            //TODO move
+            jQuery('#pakkelabel-modal').modal({
+                show: true,
+                backdrop: true
+            });
+        } else {
 
-    //TODO add propper loading. loading_radio is the old one.
+            //TODO is this only dropdown or also radio? not working
+            // if(shopList.hasClass('open')){
+            //     console.log('close');
+            //     shopList.removeClass('open');
+            //     return false
+            // }else{
+            //     console.log('open');
+            //     shopList.addClass('open');
+            // }
 
-    //
-    // if (usedZipCode == zipCode && usedAgent == shipping_agent) {
-    //     if (gotError !== '') {
-    //         $(".error_msg").html(gotError);
-    //         return false;
-    //     }
-    //     // zipCodeField.removeAttr("disabled");
-    //     findShopBtn.removeAttr("disabled");
-    //     if (frontendType == 'Popup') {
-    //         jQuery('#pakkelabel-modal').modal({
-    //             show: true,
-    //             backdrop: true
-    //         });
-    //     }
-    //     return true;
-    // } else {
-    //TODO need to work out the issue where it adds a new UL alle the time. Only add one and then populate
-    //     jQuery('.pakkelabels-shoplist-dropdownul').remove();
-    //     gotError = '';
-    // }
+            //TODO instead of remove/append, update. Need new html structure for it to work. if not possible easy then update selector
+            jQuery('.pakkelabels-shoplist-dropdownul').remove();
+        }
 
-    markerIcon = shipping_agent + '.png';
+        //TODO still loading ajax, it shoulndt
+    } else {
+        console.log('new information');
+        if (type == 'popup') {
+            markerIcon = shipping_agent + '.png';
+        }
 
-    var loadingGif = '<img src="' + prestashop.urls.base_url + '/modules/shipmondo/views/img/loading.gif" class="loading_drop">';
 
-    findShopBtn.find('span').html(loadingGif).removeClass('caret');
-    findShopBtn.removeClass('dropdown-toggle');
+        // TODO move to function (show/hide); Make specific for dropdown as well.
+        shopList.find('.pakkelabels-dropdown-menu.dropdown-menu').addClass('loading');
 
-    jQuery.ajax({
-        url: servicePointsEndpoint,
-        type: 'POST',
-        data: {
-            'method': 'get_list',
-            'shipping_agent': shipping_agent,
-            'zip_code': zipCode,
-            'address': address
-        },
-        success: function (response) {
-            // jQuery('#pakkelabels_find_shop_btn span').addClass('caret');
-            // jQuery('#pakkelabels_find_shop_btn').addClass('dropdown-toggle');
-            // jQuery('#pakkelabels_find_shop_btn span').html('');
-            // jQuery('#Pakkelabels_zipcode_field').prop("disabled", false);
-            // jQuery('#pakkelabels_find_shop_btn').prop("disabled", false);
+        //TODO  2. if dropdown and already open, close.
 
-            findShopBtn.find('span').addClass('caret').html('');
-            findShopBtn.addClass('dropdown-toggle').prop("disabled", false);
-            // zipCodeField.prop("disabled", false);
 
-            if (response) {
-                var returned = JSON.parse(response);
-                if (returned.status == 'success') {
-                    var shopList = jQuery('.pakkelabels-shoplist');
+        //TODO add propper loading. loading_radio is the old one.
 
-                    //TODO investigate if you should move inline js from service_ppoints.tpl to here
-                    if (returned.frontend_type == 'dropdown') {
-                        setTimeout(function () {
-                            shopList.addClass('open').append(returned.service_points_html);
-                        }, 1000)
-                    } else if (returned.frontend_type == 'radio') {
-                        setTimeout(function () {
-                            // jQuery(".loading_radio").hide();
-                            shopList.addClass('open').html(returned.service_points_html);
-                        }, 1000)
-                    } else {
-                        jQuery('#pakkelabel-modal').modal({
-                            show: true,
-                            backdrop: true
-                        });
-                        jQuery('#pakkelabel-map-wrapper').html(returned.map);
-                        jQuery('#pakkelabel-list-wrapper').html(returned.service_points_html);
-                        jQuery('#pakkelabels-hidden-shop').html(returned.hidden_pakkelabels);
-                        markerFile = returned.service_points;
-                        undefined_cords_markerFile = [];
+        //
+        // if (usedZipCode == zipCode && usedAgent == shipping_agent) {
+        //     if (gotError !== '') {
+        //         $(".error_msg").html(gotError);
+        //         return false;
+        //     }
+        //     // zipCodeField.removeAttr("disabled");
+        //     findShopBtn.removeAttr("disabled");
+        //     if (frontendType == 'Popup') {
+        //         jQuery('#pakkelabel-modal').modal({
+        //             show: true,
+        //             backdrop: true
+        //         });
+        //     }
+        //     return true;
+        // } else {
+        //TODO need to work out the issue where it adds a new UL alle the time. Only add one and then populate
+        //     jQuery('.pakkelabels-shoplist-dropdownul').remove();
+        //     gotError = '';
+        // }
 
-                        for (var key in markerFile) {
-                            if (markerFile.hasOwnProperty(key) && (!markerFile[key].hasOwnProperty('latitude') || !markerFile[key].hasOwnProperty('longitude'))) {
-                                undefined_cords_markerFile[key] = markerFile[key];
-                                delete markerFile[key];
+        // markerIcon = shipping_agent + '.png';
+
+        // var loadingGif = '<img src="' + prestashop.urls.base_url + '/modules/shipmondo/views/img/loading.gif" class="loading_drop">';
+        //
+        // findShopBtn.find('span').html(loadingGif).removeClass('caret');
+
+        // findShopBtn.removeClass('dropdown-toggle');
+
+
+        usedAddress = address;
+        usedZipCode = zipCode;
+        usedAgent = shipping_agent;
+
+        console.log('start ajax');
+
+        //TODO starting loading now!
+        jQuery.ajax({
+            url: servicePointsEndpoint,
+            type: 'POST',
+            data: {
+                'method': 'get_list',
+                'shipping_agent': shipping_agent,
+                'zip_code': zipCode,
+                'address': address
+            },
+            success: function (response) {
+                // jQuery('#pakkelabels_find_shop_btn span').addClass('caret');
+                // jQuery('#pakkelabels_find_shop_btn').addClass('dropdown-toggle');
+                // jQuery('#pakkelabels_find_shop_btn span').html('');
+                // jQuery('#Pakkelabels_zipcode_field').prop("disabled", false);
+                // jQuery('#pakkelabels_find_shop_btn').prop("disabled", false);
+
+                //findShopBtn.find('span').addClass('caret').html('');
+                findShopBtn.find('span').html('');
+                //findShopBtn.addClass('dropdown-toggle').prop("disabled", false);
+                //  findShopBtn.prop("disabled", false);
+                // zipCodeField.prop("disabled", false);
+                // zipCodeField.prop("disabled", false);
+
+                if (response) {
+                    var returned = JSON.parse(response);
+                    if (returned.status == 'success') {
+
+                        //TODO investigate if you should move inline js from service_ppoints.tpl to here
+
+                        console.log('returned.frontend_type');
+                        console.log(returned.frontend_type);
+                        if (returned.frontend_type == 'dropdown') {
+                            // setTimeout(function () {
+
+                            //TODO instead of removing and adding, we need to append to a child
+                            // shopList.find('.pakkelabels-dropdown-menu.dropdown-menu').remove();
+                            shopList.find('.pakkelabels-list-wrapper').html(returned.service_points_html);
+                            // shopList.append(returned.service_points_html);
+                            // }, 1000)
+                        } else if (returned.frontend_type == 'radio') {
+                            setTimeout(function () {
+                                // jQuery(".loading_radio").hide();
+
+
+                                shopList.addClass('open').html(returned.service_points_html);
+                            }, 1000)
+                        } else {
+                            jQuery('#pakkelabel-modal').modal({
+                                show: true,
+                                backdrop: true
+                            });
+                            jQuery('#pakkelabel-map-wrapper').html(returned.map);
+                            jQuery('#pakkelabel-list-wrapper').html(returned.service_points_html);
+                            jQuery('#pakkelabels-hidden-shop').html(returned.hidden_pakkelabels);
+                            markerFile = returned.service_points;
+                            undefined_cords_markerFile = [];
+
+                            for (var key in markerFile) {
+                                if (markerFile.hasOwnProperty(key) && (!markerFile[key].hasOwnProperty('latitude') || !markerFile[key].hasOwnProperty('longitude'))) {
+                                    undefined_cords_markerFile[key] = markerFile[key];
+                                    delete markerFile[key];
+                                }
                             }
+
+                            //loads the map and other map related stuff
+                            loadMap(loadmarkers, markerFile);
+
+                            //checks if their is any markers, that have no lng or lat that needs to be loaded
+                            if (Object.keys(undefined_cords_markerFile).length > 0) {
+                                load_markers_without_cords_from_streetname(undefined_cords_markerFile)
+                            }
+
+                            setTimeout(function () {
+                                google.maps.event.trigger(map, 'resize');
+                                map.fitBounds(bounds);
+                            }, 1000);
                         }
-
-                        //loads the map and other map related stuff
-                        loadMap(loadmarkers, markerFile);
-
-                        //checks if their is any markers, that have no lng or lat that needs to be loaded
-                        if (Object.keys(undefined_cords_markerFile).length > 0) {
-                            load_markers_without_cords_from_streetname(undefined_cords_markerFile)
-                        }
-
-                        setTimeout(function () {
-                            google.maps.event.trigger(map, 'resize');
-                            map.fitBounds(bounds);
-                        }, 1000);
+                        shopList.find('.pakkelabels-dropdown-menu.dropdown-menu').removeClass('loading');
+                    } else {
+                        shopList.find('.pakkelabels-dropdown-menu.dropdown-menu').removeClass('loading');
+                        gotError = returned.error;
+                        // jQuery(".loading_radio").hide();
+                        $(".error_msg").html(returned.error);
                     }
                 } else {
-                    gotError = returned.error;
-                    // jQuery(".loading_radio").hide();
+                    shopList.find('.pakkelabels-dropdown-menu.dropdown-menu').removeClass('loading');
+                    // zipCodeField.prop("disabled", false);
+                    // jQuery('#pakkelabels_find_shop_btn').prop("disabled", false);
                     $(".error_msg").html(returned.error);
                 }
-            } else {
-                // zipCodeField.prop("disabled", false);
-                // jQuery('#pakkelabels_find_shop_btn').prop("disabled", false);
-                $(".error_msg").html(returned.error);
+                // findShopBtn.prop("disabled", false); //TODO TESTING if this is the best way or loading overlay is better
+            }, error: function (jqXHR, textStatus, errorThrown) {
+                shopList.find('.pakkelabels-dropdown-menu.dropdown-menu').removeClass('loading');
+                //findShopBtn.prop("disabled", false); //TODO TESTING if this is the best way or loading overlay is better
             }
-            findShopBtn.prop("disabled", false); //TODO TESTING if this is the best way or loading overlay is better
-        }, error: function (jqXHR, textStatus, errorThrown) {
-            findShopBtn.prop("disabled", false); //TODO TESTING if this is the best way or loading overlay is better
-        }
-    });
+
+        });
+    }
 }
 
 function saveCartdetails() {
@@ -356,6 +468,14 @@ function getShippingAgentByVal(val) {
 
     //Strip ',' etc.
     var carrierId = val.replace(/\D/g, '');
+
+    console.log(carrierId);
+    console.log(glsCarrierId);
+    console.log(daoCarrierId);
+    console.log(postnordCarrierId);
+    console.log(bringCarrierId);
+
+
     switch (parseInt(carrierId)) {
         case glsCarrierId:
             return 'gls';
@@ -380,55 +500,70 @@ jQuery(window).on('load', function () {
     console.log('window.on.load');
 
     //html to be injected into the prestashop
-    var modalHtml = '<div class="pakkelabel-modal fade-pakkelabel" id="pakkelabel-modal" tabindex="-1" role="dialog" aria-labelledby="packetshop window"> <div class="pakkelabel-modal-dialog" role="document"> <div class="pakkelabel-modal-content"> <div class="pakkelabel-modal-header"> <h4 class="pakkelabel-modal-title" id="pakkelabel-modal-header-h4">' + modalHeaderTitle + '</h4> <button id="pakkelabel-modal-header-button" type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button> <div class="pakkelabel-open-close-button-wrap"> <div class="pakkelabel-open-close-button pakkelabel-open-map">' + showMapText + '</div> <div class="pakkelabel-open-close-button pakkelabel-hide-map">' + hideMapText + '</div> </div></div> <div class="pakkelabel-modal-body"> <div id="pakkelabel-map-wrapper"></div> <div id="pakkelabel-list-wrapper"></div> </div> <div class="pakkelabel-modal-footer"> <button id="choose-stop-btn" type="button" class="button btn btn-default button-medium" data-dismiss="modal">' + chooseServicePointText + '</button> <div class="powered-by-pakkelabels">Powered by</div> </div> </div> </div> </div>';
-
-
-    //TODO they are so similar that they shuold be combined
-    var selectedPickupPointHtml = '';
+    //TODO only add modal if type is modal
     if (frontendType == 'popup') {
-        selectedPickupPointHtml = '<div>' +
-            '<div class="error_msg"></div>' +
-            '</div>' +
-            '<div>' +
-            '<button class="button button-medium btn btn-primary dropdown-toggle" id="pakkelabels_find_shop_btn" type="button" data-toggle="dropdown">' +
-            findServicePointText +
-            '</button>' +
-            '</div>';
-    } else if (frontendType == 'radio') {
-        selectedPickupPointHtml = '<div>' +
-            '<div class="error_msg"></div>' +
-            '</div>' +
-            '<div class="pakkelabels-shoplist"></div>';
-    } else {
-        selectedPickupPointHtml = '<div>' +
-            '<div class="error_msg"></div>' +
-            '</div>' +
-            '<div class="pakkelabels-shoplist dropdown">' +
-            '<button class="button button-medium btn btn-primary dropdown-toggle" id="pakkelabels_find_shop_btn" type="button" data-toggle="dropdown">' +
-            findServicePointText + '<span class="caret"></span></button>' +
-            '</div>';
+        var modalHtml = '<div class="pakkelabel-modal fade-pakkelabel" id="pakkelabel-modal" tabindex="-1" role="dialog" aria-labelledby="packetshop window"> <div class="pakkelabel-modal-dialog" role="document"> <div class="pakkelabel-modal-content"> <div class="pakkelabel-modal-header"> <h4 class="pakkelabel-modal-title" id="pakkelabel-modal-header-h4">' + modalHeaderTitle + '</h4> <button id="pakkelabel-modal-header-button" type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button> <div class="pakkelabel-open-close-button-wrap"> <div class="pakkelabel-open-close-button pakkelabel-open-map">' + showMapText + '</div> <div class="pakkelabel-open-close-button pakkelabel-hide-map">' + hideMapText + '</div> </div></div> <div class="pakkelabel-modal-body"> <div id="pakkelabel-map-wrapper"></div> <div id="pakkelabel-list-wrapper"></div> </div> <div class="pakkelabel-modal-footer"> <button id="choose-stop-btn" type="button" class="button btn btn-default button-medium" data-dismiss="modal">' + chooseServicePointText + '</button> <div class="powered-by-pakkelabels">Powered by</div> </div> </div> </div> </div>';
+        jQuery('body').append(modalHtml);
     }
 
 
-    var selectedPickupPointWrapHtml = '<div class="pakkelabels_shipping_field-wrap pakkelabels_shipping_field-wrap-type-' + frontendType + '">' +
-        '<div class="pakkelabels_shipping_field">' +
-        '<div class="pakkelabels-clearfix" id="pakkelabels_shipping_button">' +
-        '<div class="pakkelabels_stores">' +
-        selectedPickupPointHtml +
-        '</div>' +
-        '</div>' +
-        '<div id="hidden_choosen_shop"></div>' +
-        '<div class="pakkelabels-clearfix" id="selected_shop_wrapper">' +
-        '<div id="pakkelabels-hidden-shop"></div>' +
-        '<div class="pakkelabels-clearfix" id="selected_shop_header"></div>' +
-        '<div class="pakkelabels-clearfix" id="selected_shop_context"></div>' +
-        '</div>' +
-        '</div>' +
-        '</div>';
+    // //TODO they are so similar that they shuold be combined - They are very close now!
+    // var selectedPickupPointHtml = '';
+    // if (frontendType == 'popup') {
+    //     selectedPickupPointHtml = '<div>' +
+    //         '<div class="error_msg"></div>' +
+    //         '</div>' +
+    //         '<div>' +
+    //         '<button class="button button-medium btn btn-primary dropdown-toggle" id="pakkelabels_find_shop_btn" type="button" data-toggle="dropdown">' +
+    //         findServicePointText +
+    //         '</button>' +
+    //         '</div>';
+    // } else if (frontendType == 'radio') {
+    //     selectedPickupPointHtml = '<div>' +
+    //         '<div class="error_msg"></div>' +
+    //         '</div>' +
+    //         '<div class="pakkelabels-shoplist"></div>';
+    // } else {
+    //     selectedPickupPointHtml = '<div>' +
+    //         '<div class="error_msg"></div>' +
+    //         '</div>' +
+    //         '<div class="pakkelabels-shoplist dropdown">' +
+    //         '<button class="button button-medium btn btn-primary dropdown-toggle" id="pakkelabels_find_shop_btn" type="button" data-toggle="dropdown">' +
+    //         findServicePointText +
+    //         '</button>' +
+    //         '<div class="pakkelabels-dropdown-menu dropdown-menu">' +
+    //         '<div class="pakkelabels-dropdown-content-section">' +
+    //         '<div class="pakkelabels-loader-wrapper">' +
+    //         '<div class="pakkelabels-loader"></div></div>' +
+    //         '<div class="pakkelabels-list-wrapper"></div>' +
+    //         '</div>' +
+    //         '<div class="pakkelabels-dropdown-footer">' +
+    //         'Powered by Shipmondo' +
+    //         '</div>' +
+    //         '</div>' +
+    //         '</div>' +
+    //         '</div>';
+    // }
+    //
+    //
+    // var selectedPickupPointWrapHtml = '<div class="pakkelabels_shipping_field-wrap pakkelabels_shipping_field-wrap-type-' + frontendType + '">' +
+    //     '<div class="pakkelabels_shipping_field">' +
+    //     '<div class="pakkelabels-clearfix" id="pakkelabels_shipping_button">' +
+    //     '<div class="pakkelabels_stores">' +
+    //     selectedPickupPointHtml +
+    //     '</div>' +
+    //     '</div>' +
+    //     '<div id="hidden_choosen_shop"></div>' +
+    //     '<div class="pakkelabels-clearfix" id="selected_shop_wrapper">' +
+    //     '<div id="pakkelabels-hidden-shop"></div>' +
+    //     '<div class="pakkelabels-clearfix" id="selected_shop_header"></div>' +
+    //     '<div class="pakkelabels-clearfix" id="selected_shop_context"></div>' +
+    //     '</div>' +
+    //     '</div>' +
+    //     '</div>';
 
 
     //appends the modal to the body of the prestashop checkout page
-    jQuery('body').append(modalHtml);
 
     //Event fired when the find nearest shop is pressed
     $(document).on('click', '#pakkelabels_find_shop_btn', function () {
@@ -447,32 +582,104 @@ jQuery(window).on('load', function () {
         jQuery('button[name="processCarrier"]').prop("disabled", false);
         jQuery('#js-delivery .continue').show();
         jQuery('.choose-pickuppoint').hide();
-        jQuery('#selected_shop_wrapper').removeClass("add_border");
+        // jQuery('#selected_shop_wrapper').removeClass("add_border");
     });
 
     jQuery(document).on('click', '.delivery-option input', function () {
         console.log('click.delivery-option');
-        // Remove zipcode wrapper
-        jQuery('.pakkelabels_shipping_field-wrap').remove();
 
-        // Find nearest delivery option
-        var dev_option = jQuery('.delivery-option input:checked').closest('.delivery-option');
-        var extra_content = jQuery(dev_option).find('.carrier-extra-content');
+        console.log($(this).val());
+        console.log(getShippingAgentByVal($(this).val()));
 
-        if (jQuery(extra_content).length < 1) {
-            extra_content = jQuery(dev_option).next('.carrier-extra-content');
-        }
+        if (getShippingAgentByVal($(this).val()) != '') {
 
-        jQuery(extra_content).html(selectedPickupPointWrapHtml);
-        jQuery('#js-delivery .continue').hide();
+            // Remove zipcode wrapper
+            jQuery('.pakkelabels_shipping_field-wrap').remove();
 
-        if (frontendType == 'radio') {
-            // jQuery(".loading_radio").show();
-            //TODO could this be moved? Think its used alot as is
-            getShopList(getShippingAgentByVal($(this).val()));
-        } else {
-            jQuery('.choose-pickuppoint').show();
-            loadSelectedServicePoint()
+            // Find nearest delivery option
+            var dev_option = jQuery('.delivery-option input:checked').closest('.delivery-option');
+            var extra_content = jQuery(dev_option).find('.carrier-extra-content');
+
+            if (jQuery(extra_content).length < 1) {
+                extra_content = jQuery(dev_option).next('.carrier-extra-content');
+            }
+
+
+            console.log('extra_content');
+            console.log(extra_content);
+
+
+            //TODO they are so similar that they shuold be combined - They are very close now!
+            var selectedPickupPointHtml = '';
+            if (frontendType == 'popup') {
+                selectedPickupPointHtml = '<div>' +
+                    '<div class="error_msg"></div>' +
+                    '</div>' +
+                    '<div>' +
+                    '<button class="button button-medium btn btn-primary dropdown-toggle" id="pakkelabels_find_shop_btn" type="button" data-toggle="dropdown">' +
+                    findServicePointText +
+                    '</button>' +
+                    '</div>';
+            } else if (frontendType == 'radio') {
+                selectedPickupPointHtml = '<div>' +
+                    '<div class="error_msg"></div>' +
+                    '</div>' +
+                    '<div class="pakkelabels-shoplist"></div>';
+            } else {
+                selectedPickupPointHtml = '<div>' +
+                    '<div class="error_msg"></div>' +
+                    '</div>' +
+                    '<div class="pakkelabels-shoplist dropdown">' +
+                    '<button class="button button-medium btn btn-primary dropdown-toggle" id="pakkelabels_find_shop_btn" type="button" data-toggle="dropdown">' +
+                    findServicePointText +
+                    '</button>' +
+                    '<div class="pakkelabels-dropdown-menu dropdown-menu">' +
+                    '<div class="pakkelabels-dropdown-content-section">' +
+                    '<div class="pakkelabels-loader-wrapper">' +
+                    '<div class="pakkelabels-loader"></div></div>' +
+                    '<div class="pakkelabels-list-wrapper"></div>' +
+                    '</div>' +
+                    '<div class="pakkelabels-dropdown-footer">' +
+                    'Powered by Shipmondo' +
+                    '</div>' +
+                    '</div>' +
+                    '</div>' +
+                    '</div>';
+            }
+
+
+            var selectedPickupPointWrapHtml = '<div class="pakkelabels_shipping_field-wrap pakkelabels_shipping_field-wrap-type-' + frontendType + '">' +
+                '<div class="pakkelabels_shipping_field">' +
+                '<div class="pakkelabels-clearfix" id="pakkelabels_shipping_button">' +
+                '<div class="pakkelabels_stores">' +
+                selectedPickupPointHtml +
+                '</div>' +
+                '</div>' +
+                '<div id="hidden_choosen_shop"></div>' +
+                '<div class="pakkelabels-clearfix" id="selected_shop_wrapper">' +
+                '<div id="pakkelabels-hidden-shop"></div>' +
+                '<div class="pakkelabels-clearfix" id="selected_shop_header"></div>' +
+                '<div class="pakkelabels-clearfix" id="selected_shop_context"></div>' +
+                '</div>' +
+                '</div>' +
+                '</div>';
+
+
+            console.log('add selectedPickupPointWrapHtml');
+            jQuery(extra_content).html(selectedPickupPointWrapHtml);
+            console.log('added');
+
+
+            jQuery('#js-delivery .continue').hide();
+
+            if (frontendType == 'radio') {
+                // jQuery(".loading_radio").show();
+                //TODO could this be moved? Think its used alot as is
+                getShopList(getShippingAgentByVal($(this).val()));
+            } else {
+                jQuery('.choose-pickuppoint').show();
+                loadSelectedServicePoint()
+            }
         }
     });
 
@@ -486,6 +693,8 @@ jQuery(window).on('load', function () {
         $('.delivery-option input:checked').trigger('click');
     }
 
+
+    //TODO enter on radiobutton also issue
     jQuery(document).on('keypress', function (event) {
         if (jQuery('.pakkelabels-shop-list').hasClass('selected') && event.keyCode == 13 && jQuery('#pakkelabel-modal:visible').length != 0) {
             jQuery('#choose-stop-btn').trigger("click").blur();
@@ -545,6 +754,8 @@ jQuery(window).on('load', function () {
 });
 
 jQuery(document).on('click', '.choose-pickuppoint', function () {
+    console.log('click.choose-pickuppoint');
+
     jQuery("#pakkelabels_find_shop_btn").trigger("click");
     $("body,html").animate({
             scrollTop: $(".pakkelabels_stores").offset().top
