@@ -99,13 +99,15 @@ function getShopList(shipping_agent) {
             //     shopList.addClass('open');
             // }
 
-            //TODO instead of remove/append, update. Need new html structure for it to work. if not possible easy then update selector
-            jQuery('.pakkelabels-shoplist-dropdownul').remove();
         }
 
         //TODO still loading ajax, it shoulndt
     } else {
         console.log('new information');
+
+        //TODO instead of remove/append, update. Need new html structure for it to work. if not possible easy then update selector
+        // jQuery('.pakkelabels-shoplist-dropdownul').remove();
+
         if (type == 'popup') {
             markerIcon = shipping_agent + '.png';
         }
@@ -570,6 +572,9 @@ jQuery(window).on('load', function () {
         console.log('click.pakkelabels_find_shop_btn');
 
         var chosenShippingAgent = getSelectedShippingAgent();
+
+        console.log('chosenShippingAgent:');
+        console.log(chosenShippingAgent);
         getShopList(chosenShippingAgent);
 
         //TODO implement autoclose and ok from WC
@@ -753,13 +758,18 @@ jQuery(window).on('load', function () {
     });
 });
 
-jQuery(document).on('click', '.choose-pickuppoint', function () {
+jQuery(document).on('click', '.choose-pickuppoint', function (e) {
     console.log('click.choose-pickuppoint');
+    e.preventDefault();
 
-    jQuery("#pakkelabels_find_shop_btn").trigger("click");
-    $("body,html").animate({
-            scrollTop: $(".pakkelabels_stores").offset().top
-        },
-        800 //speed
-    );
+    //Somehow above is not working correctly so for now use timeout - but this should be solved
+    setTimeout(function () {
+        jQuery("#pakkelabels_find_shop_btn").trigger("click");
+        $("body,html").animate({
+                scrollTop: $(".pakkelabels_stores").offset().top
+            },
+            800 //speed
+        );
+    }, 100);
+
 });
