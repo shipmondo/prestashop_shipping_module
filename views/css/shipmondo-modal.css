@@ -1,565 +1,573 @@
-#pakkelabel-modal audio,
-#pakkelabel-modal canvas,
-#pakkelabel-modal progress,
-#pakkelabel-modal video {
-  display: inline-block;
-  vertical-align: baseline;
-}
+/*#pakkelabel-modal audio,*/
+/*#pakkelabel-modal canvas,*/
+/*#pakkelabel-modal progress,*/
+/*#pakkelabel-modal video {*/
+/*display: inline-block;*/
+/*vertical-align: baseline;*/
+/*}*/
 
-#pakkelabel-modal audio:not([controls]) {
-  display: none;
-  height: 0;
-}
+/*#pakkelabel-modal audio:not([controls]) {*/
+/*display: none;*/
+/*height: 0;*/
+/*}*/
 
-#pakkelabel-modal [hidden],
-#pakkelabel-modal template {
-  display: none;
-}
+/*#pakkelabel-modal [hidden],*/
+/*#pakkelabel-modal template {*/
+/*display: none;*/
+/*}*/
 
-#pakkelabel-modal a {
-  background-color: transparent;
-}
+/*#pakkelabel-modal a {*/
+/*background-color: transparent;*/
+/*}*/
 
-#pakkelabel-modal a:active,
-#pakkelabel-modal a:hover {
-  outline: 0;
-}
+/*#pakkelabel-modal a:active,*/
+/*#pakkelabel-modal a:hover {*/
+/*outline: 0;*/
+/*}*/
 
-#pakkelabel-modal abbr[title] {
-  border-bottom: 1px dotted;
-}
+/*#pakkelabel-modal abbr[title] {*/
+/*border-bottom: 1px dotted;*/
+/*}*/
 
-#pakkelabel-modal b,
-#pakkelabel-modal strong {
-  font-weight: bold;
-}
+/*#pakkelabel-modal b,*/
+/*#pakkelabel-modal strong {*/
+/*font-weight: bold;*/
+/*}*/
 
-#pakkelabel-modal dfn {
-  font-style: italic;
-}
+/*#pakkelabel-modal dfn {*/
+/*font-style: italic;*/
+/*}*/
 
-#pakkelabel-modal h1 {
-  font-size: 2em;
-  margin: 0.67em 0;
-}
+/*#pakkelabel-modal h1 {*/
+/*font-size: 2em;*/
+/*margin: 0.67em 0;*/
+/*}*/
 
-#pakkelabel-modal mark {
-  background: #ff0;
-  color: #000;
-}
+/*#pakkelabel-modal mark {*/
+/*background: #ff0;*/
+/*color: #000;*/
+/*}*/
 
-#pakkelabel-modal small {
-  font-size: 80%;
-}
+/*#pakkelabel-modal small {*/
+/*font-size: 80%;*/
+/*}*/
 
-#pakkelabel-modal sub,
-#pakkelabel-modal sup {
-  font-size: 75%;
-  line-height: 0;
-  position: relative;
-  vertical-align: baseline;
-}
+/*#pakkelabel-modal sub,*/
+/*#pakkelabel-modal sup {*/
+/*font-size: 75%;*/
+/*line-height: 0;*/
+/*position: relative;*/
+/*vertical-align: baseline;*/
+/*}*/
 
-#pakkelabel-modal sup {
-  top: -0.5em;
-}
+/*#pakkelabel-modal sup {*/
+/*top: -0.5em;*/
+/*}*/
 
-#pakkelabel-modal sub {
-  bottom: -0.25em;
-}
+/*#pakkelabel-modal sub {*/
+/*bottom: -0.25em;*/
+/*}*/
 
-#pakkelabel-modal img {
-  border: 0;
-}
+/*#pakkelabel-modal img {*/
+/*border: 0;*/
+/*}*/
 
-#pakkelabel-modal svg:not(:root) {
-  overflow: hidden;
-}
+/*#pakkelabel-modal svg:not(:root) {*/
+/*overflow: hidden;*/
+/*}*/
 
-#pakkelabel-modal figure {
-  margin: 1em 40px;
-}
+/*#pakkelabel-modal figure {*/
+/*margin: 1em 40px;*/
+/*}*/
 
-#pakkelabel-modal hr {
-  box-sizing: content-box;
-  height: 0;
-}
+/*#pakkelabel-modal hr {*/
+/*box-sizing: content-box;*/
+/*height: 0;*/
+/*}*/
 
-#pakkelabel-modal pre {
-  overflow: auto;
-}
+/*#pakkelabel-modal pre {*/
+/*overflow: auto;*/
+/*}*/
 
-#pakkelabel-modal code,
-#pakkelabel-modal kbd,
-#pakkelabel-modal pre,
-#pakkelabel-modal samp {
-  font-family: monospace, monospace;
-  font-size: 1em;
-}
+/*#pakkelabel-modal code,*/
+/*#pakkelabel-modal kbd,*/
+/*#pakkelabel-modal pre,*/
+/*#pakkelabel-modal samp {*/
+/*font-family: monospace, monospace;*/
+/*font-size: 1em;*/
+/*}*/
 
-#pakkelabel-modal input,
-#pakkelabel-modal optgroup,
-#pakkelabel-modal select,
-#pakkelabel-modal textarea {
-  color: inherit;
-  font: inherit;
-}
+/*#pakkelabel-modal input,*/
+/*#pakkelabel-modal optgroup,*/
+/*#pakkelabel-modal select,*/
+/*#pakkelabel-modal textarea {*/
+/*color: inherit;*/
+/*font: inherit;*/
+/*}*/
 
-#pakkelabel-modal button {
-  overflow: visible;
-}
+/*#pakkelabel-modal button {*/
+/*overflow: visible;*/
+/*}*/
 
-#pakkelabel-modal button,
-#pakkelabel-modal select {
-  text-transform: none;
-}
+/*#pakkelabel-modal button,*/
+/*#pakkelabel-modal select {*/
+/*text-transform: none;*/
+/*}*/
 
-#pakkelabel-modal button,
-#pakkelabel-modal html input[type="button"],
-#pakkelabel-modal input[type="reset"],
-#pakkelabel-modal input[type="submit"] {
-  -webkit-appearance: button;
-  cursor: pointer;
-}
+/*#pakkelabel-modal button,*/
+/*#pakkelabel-modal html input[type="button"],*/
+/*#pakkelabel-modal input[type="reset"],*/
+/*#pakkelabel-modal input[type="submit"] {*/
+/*-webkit-appearance: button;*/
+/*cursor: pointer;*/
+/*}*/
 
-#pakkelabel-modal button[disabled],
-#pakkelabel-modal html input[disabled] {
-  cursor: default;
-}
+/*#pakkelabel-modal button[disabled],*/
+/*#pakkelabel-modal html input[disabled] {*/
+/*cursor: default;*/
+/*}*/
 
-#pakkelabel-modal button::-moz-focus-inner,
-#pakkelabel-modal input::-moz-focus-inner {
-  border: 0;
-  padding: 0;
-}
+/*#pakkelabel-modal button::-moz-focus-inner,*/
+/*#pakkelabel-modal input::-moz-focus-inner {*/
+/*border: 0;*/
+/*padding: 0;*/
+/*}*/
 
-#pakkelabel-modal input {
-  line-height: normal;
-}
+/*#pakkelabel-modal input {*/
+/*line-height: normal;*/
+/*}*/
 
-#pakkelabel-modal input[type="checkbox"],
-#pakkelabel-modal input[type="radio"] {
-  box-sizing: border-box;
-  padding: 0;
-}
+/*#pakkelabel-modal input[type="checkbox"],*/
+/*#pakkelabel-modal input[type="radio"] {*/
+/*box-sizing: border-box;*/
+/*padding: 0;*/
+/*}*/
 
-#pakkelabel-modal input[type="number"]::-webkit-inner-spin-button,
-#pakkelabel-modal input[type="number"]::-webkit-outer-spin-button {
-  height: auto;
-}
+/*#pakkelabel-modal input[type="number"]::-webkit-inner-spin-button,*/
+/*#pakkelabel-modal input[type="number"]::-webkit-outer-spin-button {*/
+/*height: auto;*/
+/*}*/
 
-#pakkelabel-modal input[type="search"] {
-  -webkit-appearance: textfield;
-  box-sizing: content-box;
-}
+/*#pakkelabel-modal input[type="search"] {*/
+/*-webkit-appearance: textfield;*/
+/*box-sizing: content-box;*/
+/*}*/
 
-#pakkelabel-modal input[type="search"]::-webkit-search-cancel-button,
-#pakkelabel-modal input[type="search"]::-webkit-search-decoration {
-  -webkit-appearance: none;
-}
+/*#pakkelabel-modal input[type="search"]::-webkit-search-cancel-button,*/
+/*#pakkelabel-modal input[type="search"]::-webkit-search-decoration {*/
+/*-webkit-appearance: none;*/
+/*}*/
 
-#pakkelabel-modal fieldset {
-  border: 1px solid #c0c0c0;
-  margin: 0 2px;
-  padding: 0.35em 0.625em 0.75em;
-}
+/*#pakkelabel-modal fieldset {*/
+/*border: 1px solid #c0c0c0;*/
+/*margin: 0 2px;*/
+/*padding: 0.35em 0.625em 0.75em;*/
+/*}*/
 
-#pakkelabel-modal legend {
-  border: 0;
-  padding: 0;
-}
+/*#pakkelabel-modal legend {*/
+/*border: 0;*/
+/*padding: 0;*/
+/*}*/
 
-#pakkelabel-modal textarea {
-  overflow: auto;
-}
+/*#pakkelabel-modal textarea {*/
+/*overflow: auto;*/
+/*}*/
 
-#pakkelabel-modal optgroup {
-  font-weight: bold;
-}
+/*#pakkelabel-modal optgroup {*/
+/*font-weight: bold;*/
+/*}*/
 
-#pakkelabel-modal table {
-  border-collapse: collapse;
-  border-spacing: 0;
-}
+/*#pakkelabel-modal table {*/
+/*border-collapse: collapse;*/
+/*border-spacing: 0;*/
+/*}*/
 
-#pakkelabel-modal td,
-#pakkelabel-modal th {
-  padding: 0;
-}
+/*#pakkelabel-modal td,*/
+/*#pakkelabel-modal th {*/
+/*padding: 0;*/
+/*}*/
 
 #pakkelabel-modal * {
-  box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 #pakkelabel-modal *:before,
 #pakkelabel-modal *:after {
-  box-sizing: border-box;
+    box-sizing: border-box;
 }
 
-#pakkelabel-modal [role="button"] {
-  cursor: pointer;
-}
+/*#pakkelabel-modal [role="button"] {*/
+/*cursor: pointer;*/
+/*}*/
 
-#pakkelabel-modal .btn {
-  display: inline-block;
-  margin-bottom: 0;
-  font-weight: normal;
-  text-align: center;
-  vertical-align: middle;
-  -ms-touch-action: manipulation;
-  touch-action: manipulation;
-  cursor: pointer;
-  background-image: none;
-  border: 1px solid transparent;
-  white-space: nowrap;
-  padding: 6px 12px;
-  font-size: 14px;
-  line-height: 1.42857143;
-  border-radius: 4px;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-}
+/*#pakkelabel-modal .btn {*/
+/*display: inline-block;*/
+/*margin-bottom: 0;*/
+/*font-weight: normal;*/
+/*text-align: center;*/
+/*vertical-align: middle;*/
+/*-ms-touch-action: manipulation;*/
+/*touch-action: manipulation;*/
+/*cursor: pointer;*/
+/*background-image: none;*/
+/*border: 1px solid transparent;*/
+/*white-space: nowrap;*/
+/*padding: 6px 12px;*/
+/*font-size: 14px;*/
+/*line-height: 1.42857143;*/
+/*border-radius: 4px;*/
+/*-webkit-user-select: none;*/
+/*-moz-user-select: none;*/
+/*-ms-user-select: none;*/
+/*user-select: none;*/
+/*}*/
 
-#pakkelabel-modal .btn:focus,
-#pakkelabel-modal .btn:active:focus,
-#pakkelabel-modal .btn.active:focus,
-#pakkelabel-modal .btn.focus,
-#pakkelabel-modal .btn:active.focus,
-#pakkelabel-modal .btn.active.focus {
-  outline: thin dotted;
-  outline: 5px auto -webkit-focus-ring-color;
-  outline-offset: -2px;
-}
+/*#pakkelabel-modal .btn:focus,*/
+/*#pakkelabel-modal .btn:active:focus,*/
+/*#pakkelabel-modal .btn.active:focus,*/
+/*#pakkelabel-modal .btn.focus,*/
+/*#pakkelabel-modal .btn:active.focus,*/
+/*#pakkelabel-modal .btn.active.focus {*/
+/*outline: thin dotted;*/
+/*outline: 5px auto -webkit-focus-ring-color;*/
+/*outline-offset: -2px;*/
+/*}*/
 
-#pakkelabel-modal .btn:hover,
-#pakkelabel-modal .btn:focus,
-#pakkelabel-modal .btn.focus {
-  color: #333333;
-  text-decoration: none;
-}
+/*#pakkelabel-modal .btn:hover,*/
+/*#pakkelabel-modal .btn:focus,*/
+/*#pakkelabel-modal .btn.focus {*/
+/*color: #333333;*/
+/*text-decoration: none;*/
+/*}*/
 
-#pakkelabel-modal .btn:active,
-#pakkelabel-modal .btn.active {
-  outline: 0;
-  background-image: none;
-  box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
-}
+/*#pakkelabel-modal .btn:active,*/
+/*#pakkelabel-modal .btn.active {*/
+/*outline: 0;*/
+/*background-image: none;*/
+/*box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);*/
+/*}*/
 
-#pakkelabel-modal .btn.disabled,
-#pakkelabel-modal .btn[disabled],
-#pakkelabel-modal fieldset[disabled] .btn {
-  cursor: not-allowed;
-  opacity: 0.65;
-  filter: alpha(opacity=65);
-  box-shadow: none;
-}
+/*#pakkelabel-modal .btn.disabled,*/
+/*#pakkelabel-modal .btn[disabled],*/
+/*#pakkelabel-modal fieldset[disabled] .btn {*/
+/*cursor: not-allowed;*/
+/*opacity: 0.65;*/
+/*filter: alpha(opacity=65);*/
+/*box-shadow: none;*/
+/*}*/
 
-#pakkelabel-modal a.btn.disabled,
-#pakkelabel-modal fieldset[disabled] a.btn {
-  pointer-events: none;
-}
+/*#pakkelabel-modal a.btn.disabled,*/
+/*#pakkelabel-modal fieldset[disabled] a.btn {*/
+/*pointer-events: none;*/
+/*}*/
 
-#pakkelabel-modal .btn-default {
-  color: #333333;
-  background-color: #ffffff;
-  border-color: #cccccc;
-}
+/*#pakkelabel-modal .btn-default {*/
+/*color: #333333;*/
+/*background-color: #ffffff;*/
+/*border-color: #cccccc;*/
+/*}*/
 
-#pakkelabel-modal .btn-default:focus,
-#pakkelabel-modal .btn-default.focus {
-  color: #333333;
-  background-color: #e6e6e6;
-  border-color: #8c8c8c;
-}
+/*#pakkelabel-modal .btn-default:focus,*/
+/*#pakkelabel-modal .btn-default.focus {*/
+/*color: #333333;*/
+/*background-color: #e6e6e6;*/
+/*border-color: #8c8c8c;*/
+/*}*/
 
-#pakkelabel-modal #pakkelabel-modal .btn-default:hover {
-  color: #333333;
-  background-color: #e6e6e6;
-  border-color: #adadad;
-}
+/*#pakkelabel-modal #pakkelabel-modal .btn-default:hover {*/
+/*color: #333333;*/
+/*background-color: #e6e6e6;*/
+/*border-color: #adadad;*/
+/*}*/
 
-#pakkelabel-modal .btn-default:active,
-#pakkelabel-modal .btn-default.active,
-#pakkelabel-modal .open > .dropdown-toggle.btn-default {
-  color: #333333;
-  background-color: #e6e6e6;
-  border-color: #adadad;
-}
+/*#pakkelabel-modal .btn-default:active,*/
+/*#pakkelabel-modal .btn-default.active,*/
+/*#pakkelabel-modal .open > .dropdown-toggle.btn-default {*/
+/*color: #333333;*/
+/*background-color: #e6e6e6;*/
+/*border-color: #adadad;*/
+/*}*/
 
-#pakkelabel-modal .btn-default:active:hover,
-#pakkelabel-modal .btn-default.active:hover,
-#pakkelabel-modal .open > .dropdown-toggle.btn-default:hover,
-#pakkelabel-modal .btn-default:active:focus,
-#pakkelabel-modal .btn-default.active:focus,
-#pakkelabel-modal .open > .dropdown-toggle.btn-default:focus,
-#pakkelabel-modal .btn-default:active.focus,
-#pakkelabel-modal .btn-default.active.focus,
-#pakkelabel-modal .open > .dropdown-toggle.btn-default.focus {
-  color: #333333;
-  background-color: #d4d4d4;
-  border-color: #8c8c8c;
-}
+/*#pakkelabel-modal .btn-default:active:hover,*/
+/*#pakkelabel-modal .btn-default.active:hover,*/
+/*#pakkelabel-modal .open > .dropdown-toggle.btn-default:hover,*/
+/*#pakkelabel-modal .btn-default:active:focus,*/
+/*#pakkelabel-modal .btn-default.active:focus,*/
+/*#pakkelabel-modal .open > .dropdown-toggle.btn-default:focus,*/
+/*#pakkelabel-modal .btn-default:active.focus,*/
+/*#pakkelabel-modal .btn-default.active.focus,*/
+/*#pakkelabel-modal .open > .dropdown-toggle.btn-default.focus {*/
+/*color: #333333;*/
+/*background-color: #d4d4d4;*/
+/*border-color: #8c8c8c;*/
+/*}*/
 
-#pakkelabel-modal .btn-default:active,
-#pakkelabel-modal .btn-default.active,
-#pakkelabel-modal .open > .dropdown-toggle.btn-default {
-  background-image: none;
-}
+/*#pakkelabel-modal .btn-default:active,*/
+/*#pakkelabel-modal .btn-default.active,*/
+/*#pakkelabel-modal .open > .dropdown-toggle.btn-default {*/
+/*background-image: none;*/
+/*}*/
 
-#pakkelabel-modal .btn-default.disabled:hover,
-#pakkelabel-modal .btn-default[disabled]:hover,
-#pakkelabel-modal fieldset[disabled] .btn-default:hover,
-#pakkelabel-modal .btn-default.disabled:focus,
-#pakkelabel-modal .btn-default[disabled]:focus,
-#pakkelabel-modal fieldset[disabled] .btn-default:focus,
-#pakkelabel-modal .btn-default.disabled.focus,
-#pakkelabel-modal .btn-default[disabled].focus,
-#pakkelabel-modal fieldset[disabled] .btn-default.focus {
-  background-color: #ffffff;
-  border-color: #cccccc;
-}
+/*#pakkelabel-modal .btn-default.disabled:hover,*/
+/*#pakkelabel-modal .btn-default[disabled]:hover,*/
+/*#pakkelabel-modal fieldset[disabled] .btn-default:hover,*/
+/*#pakkelabel-modal .btn-default.disabled:focus,*/
+/*#pakkelabel-modal .btn-default[disabled]:focus,*/
+/*#pakkelabel-modal fieldset[disabled] .btn-default:focus,*/
+/*#pakkelabel-modal .btn-default.disabled.focus,*/
+/*#pakkelabel-modal .btn-default[disabled].focus,*/
+/*#pakkelabel-modal fieldset[disabled] .btn-default.focus {*/
+/*background-color: #ffffff;*/
+/*border-color: #cccccc;*/
+/*}*/
 
-#pakkelabel-modal .btn-default .badge {
-  color: #ffffff;
-  background-color: #333333;
-}
+/*#pakkelabel-modal .btn-default .badge {*/
+/*color: #ffffff;*/
+/*background-color: #333333;*/
+/*}*/
 
-#pakkelabel-modal .btn-primary {
-  color: #ffffff;
-  background-color: #337ab7;
-  border-color: #2e6da4;
-}
+/*#pakkelabel-modal .btn-primary {*/
+/*color: #ffffff;*/
+/*background-color: #337ab7;*/
+/*border-color: #2e6da4;*/
+/*}*/
 
-#pakkelabel-modal .btn-primary:focus,
-#pakkelabel-modal .btn-primary.focus {
-  color: #ffffff;
-  background-color: #286090;
-  border-color: #122b40;
-}
+/*#pakkelabel-modal .btn-primary:focus,*/
+/*#pakkelabel-modal .btn-primary.focus {*/
+/*color: #ffffff;*/
+/*background-color: #286090;*/
+/*border-color: #122b40;*/
+/*}*/
 
-#pakkelabel-modal .btn-primary:hover {
-  color: #ffffff;
-  background-color: #286090;
-  border-color: #204d74;
-}
+/*#pakkelabel-modal .btn-primary:hover {*/
+/*color: #ffffff;*/
+/*background-color: #286090;*/
+/*border-color: #204d74;*/
+/*}*/
 
-#pakkelabel-modal .btn-primary:active,
-#pakkelabel-modal .btn-primary.active,
-#pakkelabel-modal .open > .dropdown-toggle.btn-primary {
-  color: #ffffff;
-  background-color: #286090;
-  border-color: #204d74;
-}
+/*#pakkelabel-modal .btn-primary:active,*/
+/*#pakkelabel-modal .btn-primary.active,*/
+/*#pakkelabel-modal .open > .dropdown-toggle.btn-primary {*/
+/*color: #ffffff;*/
+/*background-color: #286090;*/
+/*border-color: #204d74;*/
+/*}*/
 
-#pakkelabel-modal .btn-primary:active:hover,
-#pakkelabel-modal .btn-primary.active:hover,
-#pakkelabel-modal .open > .dropdown-toggle.btn-primary:hover,
-#pakkelabel-modal .btn-primary:active:focus,
-#pakkelabel-modal .btn-primary.active:focus,
-#pakkelabel-modal .open > .dropdown-toggle.btn-primary:focus,
-#pakkelabel-modal .btn-primary:active.focus,
-#pakkelabel-modal .btn-primary.active.focus,
-#pakkelabel-modal .open > .dropdown-toggle.btn-primary.focus {
-  color: #ffffff;
-  background-color: #204d74;
-  border-color: #122b40;
-}
+/*#pakkelabel-modal .btn-primary:active:hover,*/
+/*#pakkelabel-modal .btn-primary.active:hover,*/
+/*#pakkelabel-modal .open > .dropdown-toggle.btn-primary:hover,*/
+/*#pakkelabel-modal .btn-primary:active:focus,*/
+/*#pakkelabel-modal .btn-primary.active:focus,*/
+/*#pakkelabel-modal .open > .dropdown-toggle.btn-primary:focus,*/
+/*#pakkelabel-modal .btn-primary:active.focus,*/
+/*#pakkelabel-modal .btn-primary.active.focus,*/
+/*#pakkelabel-modal .open > .dropdown-toggle.btn-primary.focus {*/
+/*color: #ffffff;*/
+/*background-color: #204d74;*/
+/*border-color: #122b40;*/
+/*}*/
 
-#pakkelabel-modal .btn-primary:active,
-#pakkelabel-modal .btn-primary.active,
-#pakkelabel-modal .open > .dropdown-toggle.btn-primary {
-  background-image: none;
-}
+/*#pakkelabel-modal .btn-primary:active,*/
+/*#pakkelabel-modal .btn-primary.active,*/
+/*#pakkelabel-modal .open > .dropdown-toggle.btn-primary {*/
+/*background-image: none;*/
+/*}*/
 
-#pakkelabel-modal .collapsing {
-  position: relative;
-  height: 0;
-  overflow: hidden;
-  -webkit-transition-property: height, visibility;
-  transition-property: height, visibility;
-  -webkit-transition-duration: 0.35s;
-  transition-duration: 0.35s;
-  -webkit-transition-timing-function: ease;
-  transition-timing-function: ease;
-}
+/*#pakkelabel-modal .collapsing {*/
+/*position: relative;*/
+/*height: 0;*/
+/*overflow: hidden;*/
+/*-webkit-transition-property: height, visibility;*/
+/*transition-property: height, visibility;*/
+/*-webkit-transition-duration: 0.35s;*/
+/*transition-duration: 0.35s;*/
+/*-webkit-transition-timing-function: ease;*/
+/*transition-timing-function: ease;*/
+/*}*/
 
 #pakkelabel-modal .close {
-  float: right;
-  font-size: 21px;
-  font-weight: bold;
-  line-height: 1;
-  color: #000000;
-  text-shadow: 0 1px 0 #ffffff;
-  opacity: 0.2;
-  filter: alpha(opacity=20);
-  display: inline;
+    float: right;
+    font-size: 21px;
+    font-weight: bold;
+    line-height: 1;
+    color: #000000;
+    text-shadow: 0 1px 0 #ffffff;
+    opacity: 0.2;
+    filter: alpha(opacity=20);
+    display: inline;
 }
 
 #pakkelabel-modal-header-h4 {
-  float: left;
-  display: inline;
+    float: left;
+    display: inline;
 }
 
 #pakkelabel-modal .close:hover,
 #pakkelabel-modal .close:focus {
-  color: #000000;
-  text-decoration: none;
-  cursor: pointer;
-  opacity: 0.5;
-  filter: alpha(opacity=50);
+    color: #000000;
+    text-decoration: none;
+    cursor: pointer;
+    opacity: 0.5;
+    filter: alpha(opacity=50);
 }
 
 #pakkelabel-modal button.close {
-  padding: 0;
-  cursor: pointer;
-  background: transparent;
-  border: 0;
-  -webkit-appearance: none;
+    padding: 0;
+    cursor: pointer;
+    background: transparent;
+    border: 0;
+    -webkit-appearance: none;
 }
 
 .pakkelabel-modal-open {
-  overflow: hidden;
+    overflow: hidden;
 }
 
 #pakkelabel-modal.pakkelabel-modal {
-  display: none;
-  overflow: hidden;
-  position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  z-index: 10050;
-  -webkit-overflow-scrolling: touch;
-  outline: 0;
-  width: auto;
-  margin-top: 0;
-  margin-right: 0;
-  margin-bottom: 0;
-  margin-left: 0;
-  background-color: transparent;
+    display: none;
+    overflow: hidden;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 10050;
+    -webkit-overflow-scrolling: touch;
+    outline: 0;
+    width: auto;
+    margin-top: 0;
+    margin-right: 0;
+    margin-bottom: 0;
+    margin-left: 0;
+    background-color: transparent;
 }
 
 #pakkelabel-modal.pakkelabel-modal.fade-pakkelabel .pakkelabel-modal-dialog {
-  -webkit-transform: translate(0, -25%);
-  -ms-transform: translate(0, -25%);
-  transform: translate(0, -25%);
-  -webkit-transition: -webkit-transform 0.3s ease-out;
-  transition: -webkit-transform 0.3s ease-out;
-  transition: transform 0.3s ease-out;
-  -webkit-transition: -webkit-transform 0.3s ease-out, -webkit-transform 0.3s ease-out;
-  transition: transform 0.3s ease-out, -webkit-transform 0.3s ease-out;
+    -webkit-transform: translate(0, -25%);
+    -ms-transform: translate(0, -25%);
+    transform: translate(0, -25%);
+    -webkit-transition: -webkit-transform 0.3s ease-out;
+    transition: -webkit-transform 0.3s ease-out;
+    transition: transform 0.3s ease-out;
+    -webkit-transition: -webkit-transform 0.3s ease-out, -webkit-transform 0.3s ease-out;
+    transition: transform 0.3s ease-out, -webkit-transform 0.3s ease-out;
 }
 
 #pakkelabel-modal.pakkelabel-modal.in .pakkelabel-modal-dialog {
-  -webkit-transform: translate(0, 0);
-  -ms-transform: translate(0, 0);
-  transform: translate(0, 0);
+    -webkit-transform: translate(0, 0);
+    -ms-transform: translate(0, 0);
+    transform: translate(0, 0);
 }
 
 .pakkelabel-modal-open #pakkelabel-modal.pakkelabel-modal {
-  overflow-x: hidden;
-  overflow-y: auto;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
 #pakkelabel-modal .pakkelabel-modal-dialog {
-  position: relative;
-  width: calc(100% - 30px);
-  margin: auto;
-  max-width: 600px;
-  top: 10px;
+    position: relative;
+    width: calc(100% - 30px);
+    margin: auto;
+    max-width: 600px;
+    top: 10px;
 }
 
 #pakkelabel-modal .pakkelabel-modal-content {
-  position: relative;
-  background-color: #ffffff;
-  border: 1px solid #999999;
-  border: 1px solid rgba(0, 0, 0, 0.2);
-  border-radius: 6px;
-  box-shadow: 0 3px 9px rgba(0, 0, 0, 0.5);
-  background-clip: padding-box;
-  outline: 0;
+    position: relative;
+    background-color: #ffffff;
+    /*border: 1px solid #999999;*/
+    /*border: 1px solid rgba(0, 0, 0, 0.2);*/
+    /*border-radius: 6px;*/
+    box-shadow: 0 3px 9px rgba(0, 0, 0, 0.5);
+    background-clip: padding-box;
+    outline: 0;
 }
 
 .pakkelabels_modal-backdrop,
 body.pakkelabels-modal-shown .pakkelabels_modal-backdrop {
-  position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  z-index: 777;
-  background-color: #000000;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 777;
+    background-color: #000000;
 }
 
 .pakkelabels_modal-backdrop.fade-pakkelabel,
 body.pakkelabels-modal-shown .pakkelabels_modal-backdrop.fade-pakkelabel {
-  opacity: 0;
-  filter: alpha(opacity=0);
+    opacity: 0;
+    filter: alpha(opacity=0);
 }
 
 .pakkelabels_modal-backdrop.in,
 body.pakkelabels-modal-shown .pakkelabels_modal-backdrop.in {
-  opacity: 0.5;
-  filter: alpha(opacity=50);
+    opacity: 0.5;
+    filter: alpha(opacity=50);
 }
 
 .pakkelabels_modal-backdrop.fade-pakkelabel.in,
 body.pakkelabels-modal-shown .pakkelabels_modal-backdrop.fade-pakkelabel.in {
-  opacity: 0.5;
+    opacity: 0.5;
 }
 
 #pakkelabel-modal .pakkelabel-modal-header {
-  padding: 15px;
-  border-bottom: 1px solid #e5e5e5;
+    /*padding: 15px;*/
+    /*border-bottom: 1px solid #e5e5e5;*/
+
+    padding: 40px 40px 24px;
+    height: 136px;
+    /*box-sizing: border-box;*/
 }
 
 #pakkelabel-modal .pakkelabel-modal-header .close {
-  margin-top: -2px;
+    margin-top: -2px;
 }
 
 #pakkelabel-modal .pakkelabel-modal-title {
-  margin-bottom: 0;
-  margin-top: 0;
-  font-size: 19px;
-  letter-spacing: inherit;
-  line-height: 1.42857143;
-  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
-  font-weight: normal;
+    /*margin-bottom: 0;*/
+    /*margin-top: 0;*/
+    /*font-size: 19px;*/
+    /*letter-spacing: inherit;*/
+    /*line-height: 1.42857143;*/
+    /*font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;*/
+    /*font-weight: normal;*/
+    font-size: 2em;
+    font-weight: 700;
+    line-height: 1;
+    margin: 0 0 12px;
 }
 
 #pakkelabel-modal .pakkelabel-modal-body {
-  position: relative;
-  padding: 15px;
+    position: relative;
+    /*padding: 15px;*/
 }
 
 #pakkelabel-modal .pakkelabel-modal-footer {
-  padding: 15px 15px 2px 15px;
-  text-align: right;
-  border-top: 1px solid #e5e5e5;
+    padding: 15px 15px 2px 15px;
+    text-align: right;
+    border-top: 1px solid #e5e5e5;
 }
 
 #pakkelabel-modal .pakkelabel-modal-footer .btn + .btn {
-  margin-left: 5px;
-  margin-bottom: 0;
+    margin-left: 5px;
+    margin-bottom: 0;
 }
 
 #pakkelabel-modal .pakkelabel-modal-footer .btn-group .btn + .btn {
-  margin-left: -1px;
+    margin-left: -1px;
 }
 
 #pakkelabel-modal .pakkelabel-modal-footer .btn-block + .btn-block {
-  margin-left: 0;
+    margin-left: 0;
 }
 
 #pakkelabel-modal .pakkelabel-modal-scrollbar-measure {
-  position: absolute;
-  top: -9999px;
-  width: 50px;
-  height: 50px;
-  overflow: scroll;
+    position: absolute;
+    top: -9999px;
+    width: 50px;
+    height: 50px;
+    overflow: scroll;
 }
 
 #pakkelabel-modal .clearfix:before,
@@ -568,31 +576,31 @@ body.pakkelabels-modal-shown .pakkelabels_modal-backdrop.fade-pakkelabel.in {
 #pakkelabel-modal .pakkelabel-modal-header:after,
 #pakkelabel-modal .pakkelabel-modal-footer:before,
 #pakkelabel-modal .pakkelabel-modal-footer:after {
-  content: " ";
-  display: table;
+    content: " ";
+    display: table;
 }
 
 #pakkelabel-modal .clearfix:after,
 #pakkelabel-modal .pakkelabel-modal-header:after,
 #pakkelabel-modal .pakkelabel-modal-footer:after {
-  clear: both;
+    clear: both;
 }
 
 #pakkelabel-modal .pakkelabel-open-close-button-wrap {
-  float: right;
-  margin-top: -2px;
-  margin-right: 15px;
-  color: #7F7F7F;
+    float: right;
+    margin-top: -2px;
+    margin-right: 15px;
+    color: #7F7F7F;
 }
 
-#pakkelabel-modal.pakkelabel-modal {
-  font-family: Arial,Helvetica,sans-serif!important;
-}
+/*#pakkelabel-modal.pakkelabel-modal {*/
+/*font-family: Arial,Helvetica,sans-serif!important;*/
+/*}*/
 
 #pakkelabel-modal.pakkelabel-modal p {
-  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif !important;
-  color: #000 !important;
-  font-size: 14px;
+    /*font-family: "Helvetica Neue",Helvetica,Arial,sans-serif !important;*/
+    color: #000 !important;
+    font-size: 14px;
 }
 
 /*Jesper N Animation Modal */
@@ -600,233 +608,233 @@ body.pakkelabels-modal-shown .pakkelabels_modal-backdrop.fade-pakkelabel.in {
 }
 
 #pakkelabel-modal .map_wrapper {
-  position: absolute;
-  z-index: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  width: 100%;
-  height: 100%;
+    position: absolute;
+    z-index: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
 }
 
 #map-canvas {
-  height: 100%;
+    height: 100%;
 }
 
 #pakkelabel-modal .pakkelabel-list-wrap {
-  z-index: 2;
+    z-index: 2;
 }
 
 #pakkelabel-modal.map_wrapper_open .pakkelabel-list-wrap {
-  -webkit-transform: translate(-50%,0);
-  -ms-transform: translate(-50%,0);
-  transform: translate(-50.1%,0);
+    -webkit-transform: translate(-50%, 0);
+    -ms-transform: translate(-50%, 0);
+    transform: translate(-50.1%, 0);
 }
 
 #pakkelabel-modal.map_wrapper_open .map_wrapper {
-  -webkit-transform: translate(50%,0);
-  -ms-transform: translate(50%,0);
-  transform: translate(50.1%,0);
+    -webkit-transform: translate(50%, 0);
+    -ms-transform: translate(50%, 0);
+    transform: translate(50.1%, 0);
 }
 
 #pakkelabel-modal .pakkelabel-modal-body {
-  max-height: calc(100vh - 240px);
- /*header 28px and footer 78px*/
-  overflow-y: auto;
+    max-height: calc(100vh - 240px);
+    /*header 28px and footer 78px*/
+    overflow-y: auto;
 }
 
 #pakkelabel-modal .pakkelabel-modal-body.map_content_wrapper {
-  max-height: none;
+    max-height: none;
 }
 
 #pakkelabel-modal .pakkelabel-modal-content {
-  -webkit-transition-property: -webkit-transform;
-  transition-property: transform;
-  -webkit-transition-duration: 0.6s, 0.6s;
-  transition-duration: 0.6s, 0.6s;
-  -webkit-transition-timing-function: ease-in;
-  transition-timing-function: ease-in;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
+    -webkit-transition-property: -webkit-transform;
+    transition-property: transform;
+    -webkit-transition-duration: 0.6s, 0.6s;
+    transition-duration: 0.6s, 0.6s;
+    -webkit-transition-timing-function: ease-in;
+    transition-timing-function: ease-in;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
 }
 
 #pakkelabel-modal .pakkelabel-modal-content .inner-modal-buddy,
 #pakkelabel-modal .map_wrapper .map_content_wrapper {
-  -webkit-box-flex: 1;
-  -webkit-flex: 1 1 0%;
-  -ms-flex: 1 1 0%;
-  flex: 1 1 0%;
+    -webkit-box-flex: 1;
+    -webkit-flex: 1 1 0%;
+    -ms-flex: 1 1 0%;
+    flex: 1 1 0%;
 }
 
 #pakkelabel-modal .map_wrapper .pakkelabel-modal-header,
 #pakkelabel-modal .map_wrapper .pakkelabel-modal-footer {
-  display: none;
+    /*display: none;*/
 }
 
 #pakkelabel-modal .pakkelabel-modal-content.pakkelabel-list-wrap .button.text-hide-list,
 #pakkelabel-modal .pakkelabel-modal-content.pakkelabel-list-wrap .button.text-hide-map {
-  display: none;
+    /*display: none;*/
 }
 
 #pakkelabel-modal.map_wrapper_open .pakkelabel-modal-content.pakkelabel-list-wrap .button.text-hide-map {
-  display: inline-block;
+    /*display: inline-block;*/
 }
 
 #pakkelabel-modal.map_wrapper_open .pakkelabel-modal-content.pakkelabel-list-wrap .button.text-show-map {
-  display: none;
+    /*display: none;*/
 }
 
 @-webkit-keyframes change_layer_right_side {
-  0% {
-    -webkit-transform: scale(0.95) translate(0, 0);
-    transform: scale(0.95) translate(0, 0);
-    z-index: 1;
-  }
+    0% {
+        -webkit-transform: scale(0.95) translate(0, 0);
+        transform: scale(0.95) translate(0, 0);
+        z-index: 1;
+    }
 
-  50% {
-    -webkit-transform: scale(1) translate(50%,0);
-    transform: scale(1) translate(50%,0);
-    z-index: 2;
-  }
+    50% {
+        -webkit-transform: scale(1) translate(50%, 0);
+        transform: scale(1) translate(50%, 0);
+        z-index: 2;
+    }
 
-  100% {
-    -webkit-transform: scale(1) translate(0, 0);
-    transform: scale(1) translate(0, 0);
-    z-index: 3;
-  }
+    100% {
+        -webkit-transform: scale(1) translate(0, 0);
+        transform: scale(1) translate(0, 0);
+        z-index: 3;
+    }
 }
 
 @keyframes change_layer_right_side {
-  0% {
-    -webkit-transform: scale(0.95) translate(0, 0);
-    transform: scale(0.95) translate(0, 0);
-    z-index: 1;
-  }
+    0% {
+        -webkit-transform: scale(0.95) translate(0, 0);
+        transform: scale(0.95) translate(0, 0);
+        z-index: 1;
+    }
 
-  50% {
-    -webkit-transform: scale(1) translate(50%,0);
-    transform: scale(1) translate(50%,0);
-    z-index: 2;
-  }
+    50% {
+        -webkit-transform: scale(1) translate(50%, 0);
+        transform: scale(1) translate(50%, 0);
+        z-index: 2;
+    }
 
-  100% {
-    -webkit-transform: scale(1) translate(0, 0);
-    transform: scale(1) translate(0, 0);
-    z-index: 3;
-  }
+    100% {
+        -webkit-transform: scale(1) translate(0, 0);
+        transform: scale(1) translate(0, 0);
+        z-index: 3;
+    }
 }
 
 @-webkit-keyframes change_layer_left_side {
-  0% {
-    -webkit-transform: scale(1) translate(0, 0);
-    transform: scale(1) translate(0, 0);
-    z-index: 3;
-  }
+    0% {
+        -webkit-transform: scale(1) translate(0, 0);
+        transform: scale(1) translate(0, 0);
+        z-index: 3;
+    }
 
-  50% {
-    -webkit-transform: scale(1) translate(-50%,0);
-    transform: scale(1) translate(-50%,0);
-    z-index: 2;
-  }
+    50% {
+        -webkit-transform: scale(1) translate(-50%, 0);
+        transform: scale(1) translate(-50%, 0);
+        z-index: 2;
+    }
 
-  100% {
-    -webkit-transform: scale(0.95) translate(0, 0);
-    transform: scale(0.95) translate(0, 0);
-    z-index: 1;
-  }
+    100% {
+        -webkit-transform: scale(0.95) translate(0, 0);
+        transform: scale(0.95) translate(0, 0);
+        z-index: 1;
+    }
 }
 
 @keyframes change_layer_left_side {
-  0% {
-    -webkit-transform: scale(1) translate(0, 0);
-    transform: scale(1) translate(0, 0);
-    z-index: 3;
-  }
+    0% {
+        -webkit-transform: scale(1) translate(0, 0);
+        transform: scale(1) translate(0, 0);
+        z-index: 3;
+    }
 
-  50% {
-    -webkit-transform: scale(1) translate(-50%,0);
-    transform: scale(1) translate(-50%,0);
-    z-index: 2;
-  }
+    50% {
+        -webkit-transform: scale(1) translate(-50%, 0);
+        transform: scale(1) translate(-50%, 0);
+        z-index: 2;
+    }
 
-  100% {
-    -webkit-transform: scale(0.95) translate(0, 0);
-    transform: scale(0.95) translate(0, 0);
-    z-index: 1;
-  }
+    100% {
+        -webkit-transform: scale(0.95) translate(0, 0);
+        transform: scale(0.95) translate(0, 0);
+        z-index: 1;
+    }
 }
 
 @media (min-width: 768px) {
-  #pakkelabel-modal .pakkelabel-modal-dialog {
-    width: 600px;
-    margin: 30px auto;
-  }
+    #pakkelabel-modal .pakkelabel-modal-dialog {
+        width: 560px;
+        margin: 30px auto;
+    }
 
-  #pakkelabel-modal .pakkelabel-modal-content {
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
-  }
+    #pakkelabel-modal .pakkelabel-modal-content {
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    }
 
-  #pakkelabel-modal .pakkelabel-modal-sm {
-    width: 300px;
-  }
+    #pakkelabel-modal .pakkelabel-modal-sm {
+        width: 300px;
+    }
 }
 
 @media (min-width: 992px) {
-  #pakkelabel-modal .pakkelabel-modal-lg {
-    width: 900px;
-  }
+    #pakkelabel-modal .pakkelabel-modal-lg {
+        width: 900px;
+    }
 }
 
 @media (max-width: 991px) {
-  #pakkelabel-modal .pakkelabel-modal-dialog {
-  }
+    #pakkelabel-modal .pakkelabel-modal-dialog {
+    }
 
-  #pakkelabel-modal .map_wrapper .pakkelabel-modal-header,
-  #pakkelabel-modal .map_wrapper .pakkelabel-modal-footer {
-    display: block;
-  }
+    #pakkelabel-modal .map_wrapper .pakkelabel-modal-header,
+    #pakkelabel-modal .map_wrapper .pakkelabel-modal-footer {
+        display: block;
+    }
 
-  #pakkelabel-modal .pakkelabel-modal-content.map_wrapper .button.text-hide-map {
-    display: none;
-  }
+    #pakkelabel-modal .pakkelabel-modal-content.map_wrapper .button.text-hide-map {
+        display: none;
+    }
 
-  #pakkelabel-modal.map_wrapper_open .pakkelabel-modal-content ,
-  #pakkelabel-modal.map_wrapper_closed .pakkelabel-modal-content {
-    -webkit-transform: translate(0,0);
-    -ms-transform: translate(0,0);
-    transform: translate(0,0);
-    -webkit-animation-duration: 1.5s;
-    animation-duration: 1.5s;
-    -webkit-animation-timing-function: ease;
-    animation-timing-function: ease;
-    -webkit-animation-delay: 0;
-    animation-delay: 0;
-    -webkit-animation-direction: normal;
-    animation-direction: normal;
-    -webkit-animation-iteration-count: 1;
-    animation-iteration-count: 1;
-    -webkit-animation-fill-mode: forwards;
-    animation-fill-mode: forwards;
-    -webkit-animation-play-state: running;
-    animation-play-state: running;
-  }
+    #pakkelabel-modal.map_wrapper_open .pakkelabel-modal-content,
+    #pakkelabel-modal.map_wrapper_closed .pakkelabel-modal-content {
+        -webkit-transform: translate(0, 0);
+        -ms-transform: translate(0, 0);
+        transform: translate(0, 0);
+        -webkit-animation-duration: 1.5s;
+        animation-duration: 1.5s;
+        -webkit-animation-timing-function: ease;
+        animation-timing-function: ease;
+        -webkit-animation-delay: 0;
+        animation-delay: 0;
+        -webkit-animation-direction: normal;
+        animation-direction: normal;
+        -webkit-animation-iteration-count: 1;
+        animation-iteration-count: 1;
+        -webkit-animation-fill-mode: forwards;
+        animation-fill-mode: forwards;
+        -webkit-animation-play-state: running;
+        animation-play-state: running;
+    }
 
-  #pakkelabel-modal.map_wrapper_open .pakkelabel-list-wrap,
-  #pakkelabel-modal.map_wrapper_closed .map_wrapper {
-    -webkit-animation-name: change_layer_left_side;
-    animation-name: change_layer_left_side;
-  }
+    #pakkelabel-modal.map_wrapper_open .pakkelabel-list-wrap,
+    #pakkelabel-modal.map_wrapper_closed .map_wrapper {
+        -webkit-animation-name: change_layer_left_side;
+        animation-name: change_layer_left_side;
+    }
 
-  #pakkelabel-modal.map_wrapper_open .map_wrapper,
-  #pakkelabel-modal.map_wrapper_closed .pakkelabel-list-wrap {
-    -webkit-animation-name: change_layer_right_side;
-    animation-name: change_layer_right_side;
-  }
+    #pakkelabel-modal.map_wrapper_open .map_wrapper,
+    #pakkelabel-modal.map_wrapper_closed .pakkelabel-list-wrap {
+        -webkit-animation-name: change_layer_right_side;
+        animation-name: change_layer_right_side;
+    }
 }

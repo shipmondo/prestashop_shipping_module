@@ -9,6 +9,7 @@
         {foreach $service_points as $service_point}
         <li data-shopid="{$service_point->number nofilter}" class="pakkelabels-shop-list">
             <div class="pakkelabels-single-shop">
+                <div class="pakkelabels-radio-button"></div>
                 <div class="pakkelabels-company-name">{$service_point->company_name nofilter}</div>
                 <div class="pakkelabels-Address">{$service_point->address nofilter}</div>
                 <div class="pakkelabels-ZipAndCity">
@@ -24,10 +25,11 @@
     </ul>
 </div>
 
+<!--TODO move to JS-->
 <script>
 $('.pakkelabels-shop-list').each(function() {
     $(this).on('click', function() {
-        $('#shop_radio_' + $(this).attr('data-shopid')).trigger('click')
+        $('#shop_radio_' + $(this).attr('data-shopid')).trigger('click');
         li_addlistener_open_marker($(this));
         // Remove all the class selected, from previous li's
         $('.pakkelabels-shop-list').removeClass('selected');

@@ -1,6 +1,6 @@
 var markerIcon = ''; // Data marker icon
-var defaultZoom = 5; // Zoom level of the map
-var defaultMaxZoom = 18; // Max zoom level of the map
+//var defaultZoom = 5; // Zoom level of the map
+//var defaultMaxZoom = 18; // Max zoom level of the map
 var map; // Variable for map
 var infowindow; // Variable for marker info window
 var ms_marker_list = {};
@@ -198,12 +198,14 @@ function getShopList(shipping_agent) {
                             // shopList.append(returned.service_points_html);
                             // }, 1000)
                         } else if (returned.frontend_type == 'radio') {
-                            setTimeout(function () {
-                                // jQuery(".loading_radio").hide();
+                            // setTimeout(function () {
+                            // jQuery(".loading_radio").hide();
 
 
-                                shopList.addClass('open').html(returned.service_points_html);
-                            }, 1000)
+                            // shopList.addClass('open').html(returned.service_points_html);
+                            console.log(returned.service_points_html);
+                            shopList.html(returned.service_points_html);
+                            // }, 1000)
                         } else {
                             jQuery('#pakkelabel-modal').modal({
                                 show: true,
@@ -329,15 +331,25 @@ function load_markers_without_cords_from_streetname(aMarkerFile) {
 }
 
 //loads the map and other map related stuff
+//TODO look at woocommerce for better look
 function loadMap(callback, markerfile) {
     console.log('loadMap');
 
-    var defaultLatlng = new google.maps.LatLng(55.9150835, 10.4713954); // Set default map properties
+    //var defaultLatlng = new google.maps.LatLng(55.9150835, 10.4713954); // Set default map properties
     var myOptions = {
-        zoom: defaultZoom,
-        center: defaultLatlng,
-        maxZoom: defaultMaxZoom,
-        mapTypeId: google.maps.MapTypeId.Road
+        // zoom: defaultZoom,
+        // center: defaultLatlng,
+        // maxZoom: defaultMaxZoom,
+        // mapTypeId: google.maps.MapTypeId.Road
+        zoom: 6,
+        center: {lat: 55.9150835, lng: 10.4713954},
+        mapTypeControl: false,
+        streetViewControl: false,
+        fullscreenControl: false
+        // zoom: defaultZoom,
+        // center: defaultLatlng,
+        // maxZoom: defaultMaxZoom,
+        // mapTypeId: google.maps.MapTypeId.Road
     }; // Option for google map object
     // Create new map and place it in the target DIV
     map = new google.maps.Map(document.getElementById("map-canvas"), myOptions);
@@ -504,7 +516,7 @@ jQuery(window).on('load', function () {
     //html to be injected into the prestashop
     //TODO only add modal if type is modal
     if (frontendType == 'popup') {
-        var modalHtml = '<div class="pakkelabel-modal fade-pakkelabel" id="pakkelabel-modal" tabindex="-1" role="dialog" aria-labelledby="packetshop window"> <div class="pakkelabel-modal-dialog" role="document"> <div class="pakkelabel-modal-content"> <div class="pakkelabel-modal-header"> <h4 class="pakkelabel-modal-title" id="pakkelabel-modal-header-h4">' + modalHeaderTitle + '</h4> <button id="pakkelabel-modal-header-button" type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button> <div class="pakkelabel-open-close-button-wrap"> <div class="pakkelabel-open-close-button pakkelabel-open-map">' + showMapText + '</div> <div class="pakkelabel-open-close-button pakkelabel-hide-map">' + hideMapText + '</div> </div></div> <div class="pakkelabel-modal-body"> <div id="pakkelabel-map-wrapper"></div> <div id="pakkelabel-list-wrapper"></div> </div> <div class="pakkelabel-modal-footer"> <button id="choose-stop-btn" type="button" class="button btn btn-default button-medium" data-dismiss="modal">' + chooseServicePointText + '</button> <div class="powered-by-pakkelabels">Powered by</div> </div> </div> </div> </div>';
+        var modalHtml = '<div class="pakkelabel-modal fade-pakkelabel" id="pakkelabel-modal" tabindex="-1" role="dialog" aria-labelledby="packetshop window"> <div class="pakkelabel-modal-dialog" role="document"> <div class="pakkelabel-modal-content"> <div class="pakkelabel-modal-header"> <h4 class="pakkelabel-modal-title" id="pakkelabel-modal-header-h4">' + modalHeaderTitle + '</h4> <button id="pakkelabel-modal-header-button" type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button></div> <div class="pakkelabel-modal-body"> <div id="pakkelabel-map-wrapper"></div> <div id="pakkelabel-list-wrapper"></div> </div> <div class="pakkelabel-modal-footer"> <button id="choose-stop-btn" type="button" class="button btn btn-default button-medium" data-dismiss="modal">' + chooseServicePointText + '</button> <div class="powered-by-pakkelabels">Powered by</div> </div> </div> </div> </div>';
         jQuery('body').append(modalHtml);
     }
 
@@ -621,7 +633,8 @@ jQuery(window).on('load', function () {
                     '<div class="error_msg"></div>' +
                     '</div>' +
                     '<div>' +
-                    '<button class="button button-medium btn btn-primary dropdown-toggle" id="pakkelabels_find_shop_btn" type="button" data-toggle="dropdown">' +
+                    // '<button class="button button-medium btn btn-primary dropdown-toggle" id="pakkelabels_find_shop_btn" type="button" data-toggle="dropdown">' +
+                    '<button class="button button-medium btn btn-primary dropdown-toggle" id="pakkelabels_find_shop_btn" type="button">' +
                     findServicePointText +
                     '</button>' +
                     '</div>';
@@ -707,20 +720,20 @@ jQuery(window).on('load', function () {
     });
 
     //shows map
-    jQuery('.pakkelabel-open-map').on('click', function () {
-        jQuery('.pakkelabel-hide-map').show();
-        jQuery('.pakkelabel-open-map').hide();
-        jQuery('#pakkelabel-map-wrapper').show();
-        google.maps.event.trigger(map, 'resize');
-        map.fitBounds(bounds);
-    });
+    // jQuery('.pakkelabel-open-map').on('click', function () {
+    //     jQuery('.pakkelabel-hide-map').show();
+    //     jQuery('.pakkelabel-open-map').hide();
+    //     jQuery('#pakkelabel-map-wrapper').show();
+    //     google.maps.event.trigger(map, 'resize');
+    //     map.fitBounds(bounds);
+    // });
 
     //hide map
-    jQuery('.pakkelabel-hide-map').on('click', function () {
-        jQuery('.pakkelabel-hide-map').hide();
-        jQuery('.pakkelabel-open-map').show();
-        jQuery('#pakkelabel-map-wrapper').hide();
-    });
+    // jQuery('.pakkelabel-hide-map').on('click', function () {
+    //     jQuery('.pakkelabel-hide-map').hide();
+    //     jQuery('.pakkelabel-open-map').show();
+    //     jQuery('#pakkelabel-map-wrapper').hide();
+    // });
 
     var modal = jQuery('#pakkelabel-modal');
     modal.on('show.bs.modal', function (e) {
