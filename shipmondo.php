@@ -159,7 +159,7 @@ class Shipmondo extends CarrierModule
             $bring_carrier_id = (string) Tools::getValue('SHIPMONDO_BRING_CARRIER_ID');
             $frontend_type = (string) Tools::getValue('SHIPMONDO_FRONTEND_TYPE');
 
-            $validation_error_title = $this->l('Please fill out all required fields.') . '</br>';
+            $validation_error_title = $this->l('Please fill out all required fields.') . '<br>';
             $validation_error_title .= $this->l('Invalid configuration, please check:');
             $valid = true;
 
