@@ -30,13 +30,10 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
                 }
 
                 $shipping_agent = Tools::getValue('shipping_agent');
-                $zip_code = Tools::getValue('zip_code');
-                $address = Tools::getValue('address');
-                $country_code = 'DK';
                 $frontend_key = Configuration::get('SHIPMONDO_FRONTEND_KEY');
 
                 $delivery_address = new Address($cart->id_address_delivery);
-
+                
                 $sql = new DbQuery();
                 $sql
                     ->select('iso_code')
@@ -44,11 +41,12 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
                     ->where('id_country = "' . pSQL($delivery_address->id_country) . '"');
                 $country_result = Db::getInstance()->getRow($sql);
 
+                $country_code = 'DK';
                 if ($country_result['iso_code']) {
                     $country_code = $country_result['iso_code'];
                 }
 
-                $response = $this->getList($frontend_key, $shipping_agent, $address, $zip_code, $country_code, $service_point_id);
+                $response = $this->getList($frontend_key, $shipping_agent, $delivery_address->address1, $delivery_address->postcode, $country_code, $service_point_id);
                 break;
 
             case 'save_address':
