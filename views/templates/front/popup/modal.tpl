@@ -5,9 +5,11 @@
         </div>
         <div class="shipmondo-removable-content"></div>
         <div class="shipmondo-error">
+            {*
             {include file='module:shipmondo/views/templates/front/popup/partials/close_button.tpl'}
+            *}
             <p>{l s='Something went wrong, please try again' mod='shipmondo'}</p>
-            <button class="shipmondo-modal-close-button button alt">{l s='Close' mod='shipmondo'}</button>
+            <button class="shipmondo-modal-close-button button btn btn-primary">{l s='Close' mod='shipmondo'}</button>
         </div>
     </div>
 </div>

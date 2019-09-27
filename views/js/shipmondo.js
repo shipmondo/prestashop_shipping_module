@@ -86,6 +86,8 @@ jQuery(document).ready(function ($) {
         dropdown_button.addClass('open');
 
         var dropdown_error = dropdown.find('.shipmondo-error');
+        dropdown_error.removeClass('visible');
+
         var dropdown_content = dropdown.find('.shipmondo-removable-content');
 
 
@@ -123,7 +125,11 @@ jQuery(document).ready(function ($) {
                     console.log('returned');
                     console.log(returned);
 
-                    if (returned.status == 'success') {
+
+                    if (returned.status === "error") {
+                        dropdown_error.html(returned.error);
+                        dropdown_error.addClass('visible');
+                    } else {
                         console.log('returned.frontend_type');
                         console.log(returned.frontend_type);
 
@@ -137,9 +143,26 @@ jQuery(document).ready(function ($) {
                         console.log('dropdown_content after');
                         console.log(dropdown_content);
                         ajax_success = true;
-                    } else {
-                        dropdown_content.html(returned.error);
                     }
+
+
+                    //     if (returned.status == 'success') {
+                    //     console.log('returned.frontend_type');
+                    //     console.log(returned.frontend_type);
+                    //
+                    //     console.log('dropdown_content');
+                    //     console.log(dropdown_content);
+                    //
+                    //     dropdown_content.html(returned.service_points_html);
+                    //
+                    //     // dropdown_content.find('')
+                    //
+                    //     console.log('dropdown_content after');
+                    //     console.log(dropdown_content);
+                    //     ajax_success = true;
+                    // } else {
+                    //     dropdown_content.html(returned.error);
+                    // }
                     $('.shipmondo-modal-content').addClass('visible');
                     dropdown.removeClass('loading');
                 } else {
@@ -184,7 +207,7 @@ jQuery(document).ready(function ($) {
                 'method': 'get_list',
                 'shipping_agent': current_search.agent,
                 'zip_code': current_search.zipcode,
-                'address': current_search.address,
+                'address': current_search.address
                 //'country': current_search.country //remove? comes from php
             },
             success: function (response) {
@@ -196,8 +219,11 @@ jQuery(document).ready(function ($) {
                     console.log(returned);
 
 
-                    if (returned.success === false) {
-                        modal_content.html(returned.service_points_html);
+                    if (returned.status === "error") {
+                        if (returned.error) {
+                            modal_error.find('p').html(returned.error);
+                            modal_error.addClass('visible');
+                        }
                     } else {
                         modal_content.html(returned.service_points_html);
                         ajax_success = true;

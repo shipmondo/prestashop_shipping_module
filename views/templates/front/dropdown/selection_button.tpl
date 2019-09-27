@@ -18,6 +18,7 @@
                         <div class="shipmondo-error">
                             <!--TODO we need import below-->
                             <!--<?php \ShipmondoForWooCommerce\Plugin\Plugin::getTemplate('pickup-point-selection.modal.partials.close-button'); ?>-->
+                            {include file='module:shipmondo/views/templates/front/popup/partials/close_button.tpl'}
                             <p>Something went wrong, please try again!'</p>
                             <button class="shipmondo-modal-close-button button alt">Close</button>
                         </div>

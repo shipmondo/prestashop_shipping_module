@@ -151,7 +151,7 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
 
         if (empty($zip_code) || empty($address) || empty($frontend_key)) {
             return [
-                'status' => false,
+                'status' => "error",
                 'error' => $this->l('Enter zipcode and address to see pickup points'),
             ];
         }
@@ -160,7 +160,7 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
 
         if (empty($service_points)) {
             return [
-                'status' => false,
+                'status' => "error",
                 'error' => $this->l('Please add a valid delivery module key in back office.'),
             ];
         }
@@ -168,12 +168,12 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
         if (!empty($service_points->message)) {
             if ($service_points->message === 'Invalid frontend_key') {
                 return [
-                    'status' => false,
+                    'status' => "error",
                     'error' => $this->l('Please add a valid delivery module key in back office.'),
                 ];
             } else {
                 return [
-                    'status' => false,
+                    'status' => "error",
                     'error' => $service_points->message,
                 ];
             }

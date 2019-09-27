@@ -12,7 +12,7 @@
                 <input type="hidden" class="input_shop_address" id="shop_address_{$service_point->number nofilter}"
                        name="shop_address_{$service_point->number nofilter}" value="{$service_point->address nofilter}">
                 <input type="hidden" class="input_shop_zip" id="shop_zip_{$service_point->number nofilter}"
-                       name="shop_zip_{$service_point->number nofilter}" value="{$service_point->zipcode nofilter}">
+                       name="shop_zip_{$service_point->number nofilter}" value="{$service_point->zip_code nofilter}">
                 <input type="hidden" class="input_shop_city" id="shop_city_{$service_point->number nofilter}"
                        name="shop_city_{$service_point->number nofilter}" value="{$service_point->city nofilter}">
 
@@ -21,7 +21,7 @@
                     <div class="shipmondo-pickup-point-name">{$service_point->company_name nofilter}</div>
                     <div class="shipmondo-pickup-point-address">{$service_point->address nofilter}</div>
                     <div class="shipmondo-pickup-point-zipcode-city">
-                        <span class="shipmondo-pickup-point-zipcode">{$service_point->zipcode nofilter}</span>, <span class="shipmondo-pickup-point-city">{$service_point->city nofilter}</span>
+                        <span class="shipmondo-pickup-point-zipcode">{$service_point->zip_code nofilter}</span>, <span class="shipmondo-pickup-point-city">{$service_point->city nofilter}</span>
                     </div>
                     <div class="shipmondo-pickup-point-id">ID: {$shipping_agent nofilter}-{$service_point->number nofilter}</div>
                 </div>
