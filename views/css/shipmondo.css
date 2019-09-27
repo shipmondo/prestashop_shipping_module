@@ -326,7 +326,10 @@ body.shipmondo-modal-open {
     text-overflow: ellipsis;
     line-height: 1.2;
     height: 1.2em;
+}
 
+.shipmondo-pickup-point-id {
+    display: none;
 }
 
 .shipmondo-pickup-point-info .shipmondo-radio-button {

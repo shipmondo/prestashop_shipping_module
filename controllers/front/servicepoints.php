@@ -59,7 +59,7 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
                 $cart = Context::getContext()->cart;
 
                 $service_point_address = [
-                    'company' => Tools::getValue('company_name'),
+                    'company_name' => Tools::getValue('company_name'),
                     'address' => Tools::getValue('address'),
                     'address2' => Tools::getValue('service_point_id'),
                     'zip_code' => Tools::getValue('zip_code'),

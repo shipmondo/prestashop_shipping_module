@@ -276,9 +276,9 @@ jQuery(document).ready(function ($) {
         if (current_shop !== shop) {
             current_shop = {
                 'id': $(shop).attr('data-id'),
-                'name': $('.input_shop_name', shop).val(),
+                'company_name': $('.input_shop_name', shop).val(),
                 'address': $('.input_shop_address', shop).val(),
-                'zip': $('.input_shop_zip', shop).val(),
+                'zip_code': $('.input_shop_zip', shop).val(),
                 'city': $('.input_shop_city', shop).val(),
                 'id_string': $('.input_shop_id', shop).val(),
                 'agent': $('.input_shop_agent', shop).val()
@@ -291,16 +291,16 @@ jQuery(document).ready(function ($) {
         }
 
         $('input[name="shipmondo"]', hidden_chosen_shop).val(current_shop.id);
-        $('input[name="shop_name"]', hidden_chosen_shop).val(current_shop.name);
+        $('input[name="shop_name"]', hidden_chosen_shop).val(current_shop.company_name);
         $('input[name="shop_address"]', hidden_chosen_shop).val(current_shop.address);
-        $('input[name="shop_zip"]', hidden_chosen_shop).val(current_shop.zip);
+        $('input[name="shop_zip"]', hidden_chosen_shop).val(current_shop.zip_code);
         $('input[name="shop_city"]', hidden_chosen_shop).val(current_shop.city);
         $('input[name="shop_ID"]', hidden_chosen_shop).val(current_shop.id_string);
         $('input[name="shop_agent"]', hidden_chosen_shop).val(current_shop.agent);
 
-        $('.shipmondo-shop-name', selected_shop_context).html(current_shop.name);
+        $('.shipmondo-shop-name', selected_shop_context).html(current_shop.company_name);
         $('.shipmondo-shop-address', selected_shop_context).html(current_shop.address);
-        $('.shipmondo-shop-zip-and-city', selected_shop_context).html(current_shop.zip + ', ' + current_shop.city);
+        $('.shipmondo-shop-zip-and-city', selected_shop_context).html(current_shop.zip_code + ', ' + current_shop.city);
         $('.shipmondo-shop-id', selected_shop_context).html(current_shop.id_string);
 
         $('#selected_shop_context').addClass('active');
@@ -317,11 +317,11 @@ jQuery(document).ready(function ($) {
             type: 'POST',
             data: {
                 'method': "save_address",
-                'company_name': shop.name,
+                'company_name': shop.company_name,
                 'service_point_id': shop.id,
                 'address': shop.address,
                 'city': shop.city,
-                'zip_code': shop.zip,
+                'zip_code': shop.zip_code,
                 'shipping_agent': current_search.agent
             },
             dataType: 'json',
@@ -338,6 +338,48 @@ jQuery(document).ready(function ($) {
         });
     }
 
+
+    function getSelectionSession(callback) {
+        var shippingAgent = getSelectedShippingAgent();
+
+        jQuery.ajax({
+            url: servicePointsEndpoint,
+            type: 'GET',
+            data: {
+                method: 'get_address',
+                shipping_agent: shippingAgent
+            },
+            success: function (response) {
+                response = JSON.parse(response);
+                if (response['status'] == 'success') {
+                    var servicePoint = response['service_point'];
+                    if (callback) {
+                        callback(servicePoint);
+                    }
+
+                    // var servicePointHtml =
+                    //     '<div class="pakkelabels-company-name">' + servicePoint['company'] + '</div>' +
+                    //     '<div class="pakkelabels-Address">' + servicePoint['address'] + '</div>' +
+                    //     '<div class="pakkelabels-ZipAndCity">' +
+                    //     '<span class="pakkelabels-zipcode">' + servicePoint['zip_code'] + '</span>,' +
+                    //     '<span class="pakkelabels-city">' + servicePoint['city'] + '</span>' +
+                    //     '</div>' +
+                    //     '<div class="pakkelabels-Packetshop">' + servicePoint['address2'] + '</div>';
+                    //
+                    // var shopId = servicePoint['address2'].replace(/\D/g, '');
+                    // $('#hidden_choosen_shop').attr('shopid', shopId);
+                    //
+                    // $('#selected_shop_header').html(selectedServicePointHeader);
+                    // $('#selected_shop_context').html(servicePointHtml);
+                    //
+                    // if (typeof checkdroppointselected !== 'undefined')
+                    //     checkdroppointselected(this);
+                }
+            }
+        });
+    }
+
+
     $(document).on('click', selection_button, function (e) {
         var type = $(this).data('selection-type');
         console.log(type);
@@ -350,10 +392,6 @@ jQuery(document).ready(function ($) {
             e.stopPropagation();
         }
     });
-
-
-
-
 
     //Prestashop copy
     function getSelectedShippingAgent() {
@@ -434,44 +472,28 @@ jQuery(document).ready(function ($) {
             console.log($(extra_content).find(selection_button));
 
 
-
             console.log('shipping_agent');
             console.log(shipping_agent);
             console.log('current_shop');
             console.log(current_shop);
 
+            console.log('shipping_agent');
+            console.log(shipping_agent);
+
+            console.log('shipping_agent');
+            console.log(shipping_agent);
+
 
             //TODO I dont think this is enough - we should also use address etc.
-            if (current_shop && (shipping_agent == current_shop.agent)) {
+            if (current_shop && (shipping_agent == current_shop.agent || shipping_agent == current_shop.shipping_agent)) {
                 console.log('setShop');
                 shopSelected(current_shop);
             } else {
-                // $('#js-delivery .continue').hide();
-                // $('.select-service-point-to-continue').show();
                 showContinueBtn(false);
             }
-        }else{
+        } else {
             showContinueBtn(true);
         }
-    });
-
-    // Add Prevent continue button
-    //TODO add float: right; as pull seems to not work
-    $('#js-delivery').append('<button type="button" class="btn btn-primary select-service-point-to-continue">' + modalHeaderTitle + '</button>');
-    $(document).on('click', '.select-service-point-to-continue', function (e) {
-        console.log('click.select-service-point-to-continue');
-        e.preventDefault();
-
-        //Somehow above is not working correctly so for now use timeout - but this should be solved
-        setTimeout(function () {
-            var find_shop_btn = $(selection_button);
-            find_shop_btn.trigger("click");
-            $("body,html").animate({
-                    scrollTop: find_shop_btn.offset().top
-                },
-                800 //speed
-            );
-        }, 100);
     });
 
 
@@ -521,7 +543,7 @@ jQuery(document).ready(function ($) {
         $(document).on('click', close_button, function () {
             hideModal();
         });
-    } else if(frontendType == 'dropdown'){
+    } else if (frontendType == 'dropdown') {
         $(document).on('click', '#shipmondo_pickup_point_selector_dropdown .shipmondo-shop-list', function (e) {
             shopSelected(this);
             hideDropdown();
@@ -529,7 +551,7 @@ jQuery(document).ready(function ($) {
 
         $(document).on('click', function (e) {
             var dropdown = $('#shipmondo_pickup_point_selector_dropdown');
-            var button = $(selection_button);
+            // var button = $(selection_button);
 
             if ((!dropdown.is(e.target) && dropdown.has(e.target).length === 0) && !dropdown.hasClass('shipmondo-hidden')) {
                 hideDropdown();
@@ -541,17 +563,35 @@ jQuery(document).ready(function ($) {
     //load service points if you go back to edit
     $('#checkout-delivery-step span.step-edit').on('click', function () {
         console.log('checkout-delivery-step span.step-edit.click');
-
-
         $('.delivery-option input:checked').trigger('click');
     });
 
     //if a shipping method chosen on pageload, trigger click event of that method
     if ($('.js-current-step').attr('id') == 'checkout-delivery-step' && jQuery.inArray(jQuery('.delivery-option input:checked').val(), [glsCarrierId + ",", postnordCarrierId + ",", daoCarrierId + ",", bringCarrierId + ","]) >= 0) {
-        // current_shop = getAddress();
-        // console.log(current_shop);
+        getSelectionSession(function (shop) {
+            console.log(shop);
+            current_shop = shop;
+            // shopSelected(shop);
+            $('.delivery-option input:checked').trigger('click');
 
-        //TODO not working. Click does but shop is not set.
-        $('.delivery-option input:checked').trigger('click');
+        });
     }
+
+    // Add Prevent continue button
+    $('#js-delivery').append('<button type="button" class="btn btn-primary select-service-point-to-continue">' + modalHeaderTitle + '</button>');
+    $(document).on('click', '.select-service-point-to-continue', function (e) {
+        console.log('click.select-service-point-to-continue');
+        e.preventDefault();
+
+        //Somehow above is not working correctly so for now use timeout - but this should be solved
+        setTimeout(function () {
+            var find_shop_btn = $(selection_button);
+            find_shop_btn.trigger("click");
+            $("body,html").animate({
+                    scrollTop: find_shop_btn.offset().top
+                },
+                800 //speed
+            );
+        }, 100);
+    });
 });
