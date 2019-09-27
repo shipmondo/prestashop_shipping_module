@@ -470,6 +470,7 @@ class Shipmondo extends CarrierModule
                 'showMapText' => $this->l('Show map'),
                 'hideMapText' => $this->l('Hide map'),
                 'chooseServicePointText' => $this->l('Choose'),
+                'chooseServicePointHeader' => $this->l('Choose pickup point'),
                 'glsCarrierId' => $gls->id,
                 'daoCarrierId' => $dao->id,
                 'postnordCarrierId' => $pdk->id,
@@ -480,6 +481,8 @@ class Shipmondo extends CarrierModule
                 'moduleBaseUrl' => Tools::getProtocol(Tools::usingSecureMode()) . $_SERVER['HTTP_HOST'] . $this->getPathUri(),
                 'noPointSelectedErrorText' => $this->l('You must choose a pickup point before you can proceed'),
                 'servicePointsEndpoint' => Context::getContext()->link->getModuleLink('shipmondo', 'servicepoints'),
+                'selectionButton' => $this->fetch('module:shipmondo/views/templates/front/' . Configuration::get('SHIPMONDO_FRONTEND_TYPE') . '/selection_button.tpl'),
+                'modalHtml' => $this->fetch('module:shipmondo/views/templates/front/popup/modal.tpl')
             ]);
 
             // Loads Google map API
@@ -493,10 +496,8 @@ class Shipmondo extends CarrierModule
                 ]
             );
 
-            $context->addCSS($this->_path . 'views/css/shipmondo-modal.css', 'all');
             $context->addCSS($this->_path . 'views/css/shipmondo.css', 'all');
             $context->addJS($this->_path . 'views/js/shipmondo.js', 'all');
-            $context->addJS($this->_path . 'views/js/shipmondo-modal.js', 'all');
         }
     }
 

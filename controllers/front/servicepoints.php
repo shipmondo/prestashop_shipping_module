@@ -5,6 +5,10 @@
  *  @license   All rights reserved
  */
 
+ ini_set('display_errors', 1);
+ ini_set('display_startup_errors', 1);
+ error_reporting(E_ALL);
+
 class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
 {
     public function initContent()
@@ -194,8 +198,11 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
             'selected_service_point_id' => $selected_service_point_id,
             'shipping_agent' => $shipping_agent,
             'shipping_agent_logo' => _MODULE_DIR_ . 'shipmondo/views/img/' . $shipping_agent . '.png',
+            'service_points_json' => htmlentities(Tools::jsonEncode($service_points), ENT_QUOTES, 'UTF-8'),
+            'service_points_count' => count($service_points),
+
         ]);
-        $response['service_points_html'] = $this->module->fetch('module:shipmondo/views/templates/front/' . Tools::strtolower($frontend_type) . '/service_points.tpl');
+        $response['service_points_html'] = $this->module->fetch('module:shipmondo/views/templates/front/' . Tools::strtolower($frontend_type) . '/content.tpl');
 
         return $response;
     }
