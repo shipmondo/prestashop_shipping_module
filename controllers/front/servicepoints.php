@@ -189,14 +189,15 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
             $selected_service_point_id = 0;
         }
 
+        
+        $count = count($service_points);
         $this->context->smarty->assign([
             'service_points' => $service_points,
             'selected_service_point_id' => $selected_service_point_id,
             'carrier_code' => $carrier_code,
             'carrier_logo' => _MODULE_DIR_ . 'shipmondo/views/img/' . $carrier_code . '.png',
             'service_points_json' => htmlentities(Tools::jsonEncode($service_points), ENT_QUOTES, 'UTF-8'),
-            'service_points_count' => count($service_points),
-
+            'service_points_count' => sprintf($this->_n($this->l('%s pickup point found'), $this->l('%s pickup points found'), $count), $count)
         ]);
         $response['service_points_html'] = $this->module->fetch('module:shipmondo/views/templates/front/' . Tools::strtolower($frontend_type) . '/content.tpl');
 
@@ -229,5 +230,13 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
         curl_close($curl);
 
         return $result;
+    }
+
+    // In place of WordPress function _n https://developer.wordpress.org/reference/functions/_n/
+    private function _n($single, $plural, $amount) {
+        if ($amount == 1) {
+            return $single;
+        }
+        return $plural;
     }
 }

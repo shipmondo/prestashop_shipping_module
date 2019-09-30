@@ -504,7 +504,9 @@ class Shipmondo extends CarrierModule
     protected function createCarriers()
     {
         foreach ($this->carriers as $key => $value) {
-            $carrier = Carrier::getCarrierByReference($value);
+            $carrier = $gls_carrier = Carrier::getCarrierByReference(
+                Configuration::get(self::PREFIX . $key)
+            );
 
             if(!isset($carrier)) {
                 // Create new carrier
@@ -520,6 +522,7 @@ class Shipmondo extends CarrierModule
 
             // Assign/overwrite carrier logo
             copy(_PS_MODULE_DIR_ . 'shipmondo/views/img/' . $logo_name . '_2.png', _PS_SHIP_IMG_DIR_ . '/' . (int) $carrier->id . '.png');
+            unlink(_PS_SHIP_IMG_DIR_ . '/' . (int) $carrier->id . '.jpg');
         }
         return true;
     }
@@ -738,7 +741,7 @@ class Shipmondo extends CarrierModule
             $value = Configuration::get($pkl_key);
 
             if (isset($value)) {
-                if ($smd_key == 'SHIPMONDO_FRONTEND_KEY') {
+                if ($smd_key == 'SHIPMONDO_FRONTEND_TYPE') {
                     $value = Tools::strtolower($value); // fix frontend type
                 }
 
