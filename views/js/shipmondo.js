@@ -247,7 +247,6 @@ jQuery(document).ready(function ($) {
             map: map,
             icon: {
                 url: moduleBaseUrl + '/views/img/' + data.carrier_code + '.png',
-                //url: shipmondo[data.agent + '_icon_url'],
                 size: new google.maps.Size(48, 48),
                 scaledSize: new google.maps.Size(48, 48),
                 anchor: new google.maps.Point(24, 24)
@@ -436,11 +435,9 @@ jQuery(document).ready(function ($) {
         var carrier_code = getCarrierCodeByVal($(this).val());
 
         if (carrier_code != '') {
-
             // Remove zipcode wrapper
             $('.shipmondo-shipping-field-wrap').remove();
 
-            // Find nearest delivery option TODO this?
             var dev_option = $('.delivery-option input:checked').closest('.delivery-option');
             var extra_content = $(dev_option).find('.carrier-extra-content');
 
@@ -470,7 +467,7 @@ jQuery(document).ready(function ($) {
 
     //TODO move to INIT? Init modal?
     if (frontendType == 'popup') {
-        $('body').append(modalHtml);
+        body.append(modalHtml);
         modal = $('.shipmondo-modal');
         modal_content = modal.find('.shipmondo-removable-content');
         modal_error = modal.find('.shipmondo-error');
@@ -492,7 +489,6 @@ jQuery(document).ready(function ($) {
         });
 
         $(modal).on('click', '#shipmondo-select-shop', function (e) {
-
             e.preventDefault();
             var shop = $('.shipmondo-shoplist-ul > li[data-id=' + $(this).data('number') + ']');
             shopSelected(shop);
