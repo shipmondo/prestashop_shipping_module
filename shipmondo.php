@@ -159,7 +159,7 @@ class Shipmondo extends CarrierModule
             $bring_carrier_id = (string) Tools::getValue('SHIPMONDO_BRING_CARRIER_ID');
             $frontend_type = (string) Tools::getValue('SHIPMONDO_FRONTEND_TYPE');
 
-            $validation_error_title = $this->l('Please fill out all required fields.') . '</br>';
+            $validation_error_title = $this->l('Please fill out all required fields.') . '<br>';
             $validation_error_title .= $this->l('Invalid configuration, please check:');
             $valid = true;
 
@@ -484,18 +484,18 @@ class Shipmondo extends CarrierModule
                 'selectionButton' => $this->fetch('module:shipmondo/views/templates/front/' . Configuration::get('SHIPMONDO_FRONTEND_TYPE') . '/selection_button.tpl'),
                 'modalHtml' => $this->fetch('module:shipmondo/views/templates/front/popup/modal.tpl')
             ]);
-
-            // Loads Google map API
-            $context->registerJavascript(
-                'google-maps',
-                'https://maps.googleapis.com/maps/api/js?key=' . Configuration::get('SHIPMONDO_GOOGLE_API_KEY'),
-                [
-                    'server' => 'remote',
-                    'position' => 'bottom',
-                    'priority' => 20,
-                ]
-            );
-
+            if (Configuration::get('SHIPMONDO_FRONTEND_TYPE') === 'popup') {
+                // Loads Google map API
+                $context->registerJavascript(
+                    'google-maps',
+                    'https://maps.googleapis.com/maps/api/js?key=' . Configuration::get('SHIPMONDO_GOOGLE_API_KEY'),
+                    [
+                        'server' => 'remote',
+                        'position' => 'bottom',
+                        'priority' => 20,
+                    ]
+                );
+            }
             $context->addCSS($this->_path . 'views/css/shipmondo.css', 'all');
             $context->addJS($this->_path . 'views/js/shipmondo.js', 'all');
         }
@@ -504,114 +504,126 @@ class Shipmondo extends CarrierModule
     protected function createCarriers()
     {
         foreach ($this->carriers as $key => $value) {
+            $carrier = Carrier::getCarrierByReference($value);
 
-            if (Configuration::hasKey(self::PREFIX . $key)) {
-                continue; // skip if migrated
+            if(!isset($carrier)) {
+                // Create new carrier
+                $carrier = $this->createCarrier($key, $value);
             }
 
-            // Create new carrier
-            $carrier = new Carrier();
-            $carrier->name = $value;
-            $carrier->active = false;
-            $carrier->deleted = 0;
-            $carrier->shipping_handling = false;
-            $carrier->range_behavior = 0;
-            $carrier->delay[Configuration::get('PS_LANG_DEFAULT')] = $this->l('2-4 days');
-            $carrier->shipping_external = true;
-            $carrier->is_module = true;
-            $carrier->external_module_name = $this->name;
-            $carrier->need_range = true;
+            if(!isset($carrier)) {
+                return false;
+            }
 
-            if ($carrier->add()) {
-                $groups = Group::getGroups(true);
-                foreach ($groups as $group) {
-                    // Check if values exist before insert
-                    $sql = 'SELECT COUNT(*) FROM ' . _DB_PREFIX_ . 'carrier_group WHERE
-                    id_carrier = ' . (int) $carrier->id . ' AND id_group = ' . (int) $group['id_group'];
-                    $group_exist = Db::getInstance()->getValue($sql, false);
-                    if (!$group_exist) {
-                        Db::getInstance()->insert('carrier_group', [
-                            'id_carrier' => (int) $carrier->id,
-                            'id_group' => (int) $group['id_group'],
-                        ], false, false);
-                    }
-                }
+            // The first part of the key is name of logo
+            $logo_name = implode('_', array_slice(explode('_', $key), 0, 1));
 
-                $range_price = new RangePrice();
-                $range_price->id_carrier = $carrier->id;
-                $range_price->delimiter1 = '0';
-                $range_price->delimiter2 = '1000000';
-                $range_price->add();
+            // Assign/overwrite carrier logo
+            copy(_PS_MODULE_DIR_ . 'shipmondo/views/img/' . $logo_name . '_2.png', _PS_SHIP_IMG_DIR_ . '/' . (int) $carrier->id . '.png');
+        }
+        return true;
+    }
 
-                $range_weight = new RangeWeight();
-                $range_weight->id_carrier = $carrier->id;
-                $range_weight->delimiter1 = '0';
-                $range_weight->delimiter2 = '1000000';
-                $range_weight->add();
+    private function createCarrier($reference, $name)
+    {
+        $carrier = new Carrier();
+        $carrier->name = $name;
+        $carrier->active = false;
+        $carrier->deleted = 0;
+        $carrier->shipping_handling = false;
+        $carrier->range_behavior = 0;
+        $carrier->delay[Configuration::get('PS_LANG_DEFAULT')] = $this->l('2-4 days');
+        $carrier->shipping_external = true;
+        $carrier->is_module = true;
+        $carrier->external_module_name = $this->name;
+        $carrier->need_range = true;
 
-                $zones = Zone::getZones(true);
-                foreach ($zones as $z) {
-                    // Check if values exist before insert
-                    $sql =
-                        'SELECT COUNT(*) ' .
-                        'FROM ' . _DB_PREFIX_ . 'delivery ' .
-                        'WHERE id_carrier = ' . (int) $carrier->id .
-                        ' AND id_zone = ' . (int) $z['id_zone'];
-
-                    $price_range_exist = Db::getInstance()->getValue($sql, false);
-
-                    if (!$price_range_exist) {
-                        $id_carrier = (int) $carrier->id;
-                        $id_zone = (int) $z['id_zone'];
-                        $range_id = (int) $range_price->id;
-                        $range_weight_id = (int) $range_weight->id;
-                        Db::getInstance()->insert('carrier_zone', [
-                            'id_carrier' => $id_carrier,
-                            'id_zone' => $id_zone,
-                        ], false, false);
-                        Db::getInstance()->insert('delivery', [
-                            'id_carrier' => $id_carrier,
-                            'id_range_price' => $range_id,
-                            'id_range_weight' => null,
-                            'id_zone' => $id_zone,
-                            'price' => '0',
-                        ], true, false);
-
-                        Db::getInstance()->insert('delivery', [
-                            'id_carrier' => $id_carrier,
-                            'id_range_price' => null,
-                            'id_range_weight' => $range_weight_id,
-                            'id_zone' => $id_zone,
-                            'price' => '0',
-                        ], true, false);
-                    }
-                }
-
-                // The first part of the key is name of logo
-                $logo_name = implode('_', array_slice(explode('_', $key), 0, 1));
-
-                copy(_PS_MODULE_DIR_ . 'shipmondo/views/img/' . $logo_name . '_2.png', _PS_SHIP_IMG_DIR_ . '/' . (int) $carrier->id . '.png'); //assign carrier logo
-
-                Configuration::updateValue(self::PREFIX . $key, $carrier->id);
-
-                switch ($key) {
-                    case 'gls_service_point':
-                        Configuration::updateValue('SHIPMONDO_GLS_CARRIER_ID', $carrier->id);
-                        break;
-                    case 'postnord_service_point':
-                        Configuration::updateValue('SHIPMONDO_POSTNORD_CARRIER_ID', $carrier->id);
-                        break;
-                    case 'dao_service_point':
-                        Configuration::updateValue('SHIPMONDO_DAO_CARRIER_ID', $carrier->id);
-                        break;
-                    case 'bring_service_point':
-                        Configuration::updateValue('SHIPMONDO_BRING_CARRIER_ID', $carrier->id);
-                        break;
+        if ($carrier->add()) {
+            $groups = Group::getGroups(true);
+            foreach ($groups as $group) {
+                // Check if values exist before insert
+                $sql = 'SELECT COUNT(*) FROM ' . _DB_PREFIX_ . 'carrier_group WHERE
+                id_carrier = ' . (int) $carrier->id . ' AND id_group = ' . (int) $group['id_group'];
+                $group_exist = Db::getInstance()->getValue($sql, false);
+                if (!$group_exist) {
+                    Db::getInstance()->insert('carrier_group', [
+                        'id_carrier' => (int) $carrier->id,
+                        'id_group' => (int) $group['id_group'],
+                    ], false, false);
                 }
             }
+
+            $range_price = new RangePrice();
+            $range_price->id_carrier = $carrier->id;
+            $range_price->delimiter1 = '0';
+            $range_price->delimiter2 = '1000000';
+            $range_price->add();
+
+            $range_weight = new RangeWeight();
+            $range_weight->id_carrier = $carrier->id;
+            $range_weight->delimiter1 = '0';
+            $range_weight->delimiter2 = '1000000';
+            $range_weight->add();
+
+            $zones = Zone::getZones(true);
+            foreach ($zones as $z) {
+                // Check if values exist before insert
+                $sql =
+                    'SELECT COUNT(*) ' .
+                    'FROM ' . _DB_PREFIX_ . 'delivery ' .
+                    'WHERE id_carrier = ' . (int) $carrier->id .
+                    ' AND id_zone = ' . (int) $z['id_zone'];
+
+                $price_range_exist = Db::getInstance()->getValue($sql, false);
+
+                if (!$price_range_exist) {
+                    $id_carrier = (int) $carrier->id;
+                    $id_zone = (int) $z['id_zone'];
+                    $range_id = (int) $range_price->id;
+                    $range_weight_id = (int) $range_weight->id;
+                    Db::getInstance()->insert('carrier_zone', [
+                        'id_carrier' => $id_carrier,
+                        'id_zone' => $id_zone,
+                    ], false, false);
+                    Db::getInstance()->insert('delivery', [
+                        'id_carrier' => $id_carrier,
+                        'id_range_price' => $range_id,
+                        'id_range_weight' => null,
+                        'id_zone' => $id_zone,
+                        'price' => '0',
+                    ], true, false);
+
+                    Db::getInstance()->insert('delivery', [
+                        'id_carrier' => $id_carrier,
+                        'id_range_price' => null,
+                        'id_range_weight' => $range_weight_id,
+                        'id_zone' => $id_zone,
+                        'price' => '0',
+                    ], true, false);
+                }
+            }
+
+            Configuration::updateValue(self::PREFIX . $reference, $carrier->id);
+
+            switch ($reference) {
+                case 'gls_service_point':
+                    Configuration::updateValue('SHIPMONDO_GLS_CARRIER_ID', $carrier->id);
+                    break;
+                case 'postnord_service_point':
+                    Configuration::updateValue('SHIPMONDO_POSTNORD_CARRIER_ID', $carrier->id);
+                    break;
+                case 'dao_service_point':
+                    Configuration::updateValue('SHIPMONDO_DAO_CARRIER_ID', $carrier->id);
+                    break;
+                case 'bring_service_point':
+                    Configuration::updateValue('SHIPMONDO_BRING_CARRIER_ID', $carrier->id);
+                    break;
+            }
+
+            return $carrier;
         }
 
-        return true;
+        return null;
     }
 
     protected function createDatabaseTables()

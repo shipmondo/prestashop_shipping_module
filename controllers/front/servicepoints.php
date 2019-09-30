@@ -5,10 +5,6 @@
  *  @license   All rights reserved
  */
 
- ini_set('display_errors', 1);
- ini_set('display_startup_errors', 1);
- error_reporting(E_ALL);
-
 class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
 {
     public function initContent()
@@ -48,11 +44,12 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
                     ->where('id_country = "' . pSQL($delivery_address->id_country) . '"');
                 $country_result = Db::getInstance()->getRow($sql);
 
+                $country_code = 'DK';
                 if ($country_result['iso_code']) {
                     $country_code = $country_result['iso_code'];
                 }
 
-                $response = $this->getList($frontend_key, $carrier_code, $address, $zip_code, $country_code, $service_point_id);
+                $response = $this->getList($frontend_key, $carrier_code, $delivery_address->address1, $delivery_address->postcode, $country_code, $service_point_id);
                 break;
 
             case 'save_address':
@@ -187,7 +184,6 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
         $response['service_points'] = $service_points;
         $response['frontend_type'] = $frontend_type;
         $response['status'] = 'success';
-        //$response['map'] = $this->module->fetch('module:shipmondo/views/templates/front/map.tpl');
 
         if (empty($selected_service_point_id)) {
             $selected_service_point_id = 0;
