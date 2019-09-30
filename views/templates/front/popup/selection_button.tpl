@@ -38,7 +38,7 @@
         <input type="hidden" name="shop_address">
         <input type="hidden" name="shop_zip">
         <input type="hidden" name="shop_city">
-        <input type="hidden" name="shop_agent">
+        <input type="hidden" name="shop_carrier_code">
         <input type="hidden" name="shop_ID">
     </div>
     <div class="shipmondo-clearfix" id="selected_shop_context">

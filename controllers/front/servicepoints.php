@@ -33,7 +33,7 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
                     $service_point_id = preg_replace('/\D/', '', $service_point_id);
                 }
 
-                $shipping_agent = Tools::getValue('shipping_agent');
+                $carrier_code = Tools::getValue('carrier_code');
                 $zip_code = Tools::getValue('zip_code');
                 $address = Tools::getValue('address');
                 $country_code = 'DK';
@@ -52,7 +52,7 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
                     $country_code = $country_result['iso_code'];
                 }
 
-                $response = $this->getList($frontend_key, $shipping_agent, $address, $zip_code, $country_code, $service_point_id);
+                $response = $this->getList($frontend_key, $carrier_code, $address, $zip_code, $country_code, $service_point_id);
                 break;
 
             case 'save_address':
@@ -64,7 +64,7 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
                     'address2' => Tools::getValue('service_point_id'),
                     'zip_code' => Tools::getValue('zip_code'),
                     'city' => Tools::getValue('city'),
-                    'shipping_agent' => Tools::getValue('shipping_agent'),
+                    'carrier_code' => Tools::getValue('carrier_code'),
                 ];
 
                 $sql = new DbQuery();
@@ -105,7 +105,7 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
 
             case 'get_address':
                 $cart = Context::getContext()->cart;
-                $shipping_agent = Tools::getValue('shipping_agent');
+                $carrier_code = Tools::getValue('carrier_code');
 
                 $sql = new DbQuery();
                 $sql
@@ -117,7 +117,7 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
                 if ($result) {
                     $service_point = Tools::jsonDecode($result['service_point']);
 
-                    if ($shipping_agent === $service_point->shipping_agent) {
+                    if ($carrier_code === $service_point->carrier_code) {
                         $response['status'] = 'success';
                         $response['service_point'] = $service_point;
                         break;
@@ -135,13 +135,13 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
         die;
     }
 
-    private function getList($frontend_key, $shipping_agent, $address, $zip_code, $country = 'DK', $selected_service_point_id = null)
+    private function getList($frontend_key, $carrier_code, $address, $zip_code, $country = 'DK', $selected_service_point_id = null)
     {
         $method = 'GET';
         $url = 'https://service-points.shipmondo.com/pickup-points.json';
         $data = [
             'frontend_key' => $frontend_key,
-            'agent' => $shipping_agent,
+            'carrier_code' => $carrier_code,
             'zipcode' => $zip_code,
             'country' => $country,
             'address' => $address,
@@ -196,8 +196,8 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
         $this->context->smarty->assign([
             'service_points' => $service_points,
             'selected_service_point_id' => $selected_service_point_id,
-            'shipping_agent' => $shipping_agent,
-            'shipping_agent_logo' => _MODULE_DIR_ . 'shipmondo/views/img/' . $shipping_agent . '.png',
+            'carrier_code' => $carrier_code,
+            'shipping_agent_logo' => _MODULE_DIR_ . 'shipmondo/views/img/' . $carrier_code . '.png',
             'service_points_json' => htmlentities(Tools::jsonEncode($service_points), ENT_QUOTES, 'UTF-8'),
             'service_points_count' => count($service_points),
 

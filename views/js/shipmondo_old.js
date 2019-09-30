@@ -22,7 +22,7 @@ function getFrontendType() {
 
 
 //TODO maybe optimize if there is no changes to input
-function getShopList(shipping_agent) {
+function getShopList(carrier_code) {
     console.log('getShopList');
     //TODO could come from the calle (btn)
     var findShopBtn = jQuery('#pakkelabels_find_shop_btn');
@@ -79,7 +79,7 @@ function getShopList(shipping_agent) {
     var address = address_data.address1;
 
 
-    if (shipping_agent == usedAgent && address === usedAddress && zipCode === usedZipCode) {
+    if (carrier_code == usedAgent && address === usedAddress && zipCode === usedZipCode) {
         console.log('No changes');
         if (type == 'popup') {
             //TODO move
@@ -109,7 +109,7 @@ function getShopList(shipping_agent) {
         // jQuery('.pakkelabels-shoplist-dropdownul').remove();
 
         if (type == 'popup') {
-            markerIcon = shipping_agent + '.png';
+            markerIcon = carrier_code + '.png';
         }
 
 
@@ -265,7 +265,7 @@ function saveCartdetails() {
 
     var selectedShopContext = jQuery('#selected_shop_context');
     if (selectedShopContext.children().size() != 0) {
-        var shippingAgent = getSelectedShippingAgent();
+        var shippingAgent = getSelectedCarrierCode();
 
         var companyName = selectedShopContext.find('.pakkelabels-company-name').text().trim();
         var servicePointID = selectedShopContext.find('.pakkelabels-Packetshop').text().trim();
@@ -442,7 +442,7 @@ function li_addlistener_open_marker(eventElement) {
 function loadSelectedServicePoint() {
     console.log('loadSelectedServicePoint');
 
-    var shippingAgent = getSelectedShippingAgent();
+    var shippingAgent = getSelectedCarrierCode();
 
     jQuery.ajax({
         url: servicePointsEndpoint,
@@ -477,8 +477,8 @@ function loadSelectedServicePoint() {
     });
 }
 
-function getShippingAgentByVal(val) {
-    console.log('getShippingAgentByVal');
+function getCarrierCodeByVal(val) {
+    console.log('getCarrierCodeByVal');
 
     //Strip ',' etc.
     var carrierId = val.replace(/\D/g, '');
@@ -504,10 +504,10 @@ function getShippingAgentByVal(val) {
     }
 }
 
-function getSelectedShippingAgent() {
-    console.log('getSelectedShippingAgent');
+function getSelectedCarrierCode() {
+    console.log('getSelectedCarrierCode');
 
-    return getShippingAgentByVal($('.delivery-option input:checked').val());
+    return getCarrierCodeByVal($('.delivery-option input:checked').val());
 }
 
 jQuery(window).on('load', function () {
@@ -582,7 +582,7 @@ jQuery(window).on('load', function () {
     $(document).on('click', '#pakkelabels_find_shop_btn', function () {
         console.log('click.pakkelabels_find_shop_btn');
 
-        var chosenShippingAgent = getSelectedShippingAgent();
+        var chosenShippingAgent = getSelectedCarrierCode();
 
         console.log('chosenShippingAgent:');
         console.log(chosenShippingAgent);
@@ -605,9 +605,9 @@ jQuery(window).on('load', function () {
         console.log('click.delivery-option');
 
         console.log($(this).val());
-        console.log(getShippingAgentByVal($(this).val()));
+        console.log(getCarrierCodeByVal($(this).val()));
 
-        if (getShippingAgentByVal($(this).val()) != '') {
+        if (getCarrierCodeByVal($(this).val()) != '') {
 
             // Remove zipcode wrapper
             jQuery('.shipmondo-shipping-field-wrap').remove();
@@ -693,7 +693,7 @@ jQuery(window).on('load', function () {
             if (frontendType == 'radio') {
                 // jQuery(".loading_radio").show();
                 //TODO could this be moved? Think its used alot as is
-                getShopList(getShippingAgentByVal($(this).val()));
+                getShopList(getCarrierCodeByVal($(this).val()));
             } else {
                 jQuery('.choose-pickuppoint').show();
                 loadSelectedServicePoint()

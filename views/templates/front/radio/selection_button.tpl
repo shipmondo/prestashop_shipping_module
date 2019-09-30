@@ -10,6 +10,6 @@
         </div>
     </div>
 </div>
-<div class="shipmondo-modal-footer">
-{l s='Powered by Shipmondo' mod='shipmondo'}
-</div>
+<!--<div class="shipmondo-modal-footer">-->
+<!--{l s='Powered by Shipmondo' mod='shipmondo'}-->
+<!--</div>-->

@@ -49,7 +49,7 @@ jQuery(document).ready(function ($) {
         console.log(address_data);
 
         return {
-            agent: getSelectedShippingAgent(),
+            carrier_code: getSelectedCarrierCode(),
             address: address_data.address1,
             zipcode: address_data.postcode,
             country: address_data.country
@@ -65,7 +65,7 @@ jQuery(document).ready(function ($) {
         console.log(_current_search);
 
         //todo add address
-        if (last_search !== null && ajax_success && _current_search.agent === last_search.agent && _current_search.zipcode === last_search.zipcode && _current_search.country === last_search.country) {
+        if (last_search !== null && ajax_success && _current_search.carrier_code === last_search.carrier_code && _current_search.zipcode === last_search.zipcode && _current_search.country === last_search.country) {
             return true;
         }
 
@@ -112,7 +112,7 @@ jQuery(document).ready(function ($) {
             type: 'POST',
             data: {
                 'method': 'get_list',
-                'shipping_agent': current_search.agent,
+                'carrier_code': current_search.carrier_code,
                 'zip_code': current_search.zipcode,
                 'address': current_search.address
             },
@@ -147,7 +147,7 @@ jQuery(document).ready(function ($) {
                     dropdown_error.addClass('visible');
                     dropdown.removeClass('loading');
                 }
-            }, error: function (jqXHR, textStatus, errorThrown) {
+            }, error: function () {
                 dropdown_error.addClass('visible');
                 dropdown.removeClass('loading');
             }
@@ -183,7 +183,7 @@ jQuery(document).ready(function ($) {
             type: 'POST',
             data: {
                 'method': 'get_list',
-                'shipping_agent': current_search.agent,
+                'carrier_code': current_search.carrier_code,
                 'zip_code': current_search.zipcode,
                 'address': current_search.address
             },
@@ -204,10 +204,11 @@ jQuery(document).ready(function ($) {
                         //Set selected
                         console.log('current_shop');
                         console.log(current_shop);
-                        if(current_shop){
-
+                        if (current_shop && current_shop.id) {
+                            //Preselect if all ready selected
+                            console.log('select');
+                            $('.shipmondo-shoplist-ul > li[data-id=' + current_shop.id + ']').addClass('selected');
                         }
-                        // $(shop).addClass('selected');
 
                         ajax_success = true;
                     }
@@ -217,7 +218,7 @@ jQuery(document).ready(function ($) {
                     modal_error.addClass('visible');
                     modal.removeClass('loading');
                 }
-            }, error: function (jqXHR, textStatus, errorThrown) {
+            }, error: function () {
                 modal_error.addClass('visible');
                 modal.removeClass('loading');
             }
@@ -228,9 +229,12 @@ jQuery(document).ready(function ($) {
     function loadRadioButtons() {
         console.log('loadRadioButtons');
 
-        if (isLastSearch(true)) {
-            return;
-        }
+        // if (isLastSearch(true)) {
+        //     return;
+        // }
+        //Populate data but don't stop
+        isLastSearch(true);
+        console.log('new search');
 
         var radio_container = $('.shipmondo-shipping-field-wrap .shipmondo-radio-content');
         var radio_content = $(radio_container).find('.shipmondo-removable-content');
@@ -251,7 +255,7 @@ jQuery(document).ready(function ($) {
             type: 'POST',
             data: {
                 'method': 'get_list',
-                'shipping_agent': current_search.agent,
+                'carrier_code': current_search.carrier_code,
                 'zip_code': current_search.zipcode,
                 'address': current_search.address
             },
@@ -274,6 +278,11 @@ jQuery(document).ready(function ($) {
                         console.log(radio_content);
 
                         radio_content.html(returned.service_points_html);
+                        if (current_shop && current_shop.id) {
+                            //Preselect if all ready selected
+                            console.log('select');
+                            $('.shipmondo-shoplist-ul > li[data-id=' + current_shop.id + ']').addClass('selected');
+                        }
 
                         ajax_success = true;
                     }
@@ -282,7 +291,7 @@ jQuery(document).ready(function ($) {
                     radio_error.addClass('visible');
                     radio_container.removeClass('loading');
                 }
-            }, error: function (jqXHR, textStatus, errorThrown) {
+            }, error: function () {
                 radio_error.addClass('visible');
                 radio_container.removeClass('loading');
             }
@@ -294,7 +303,7 @@ jQuery(document).ready(function ($) {
             position: {lat: parseFloat(data.latitude), lng: parseFloat(data.longitude)},
             map: map,
             icon: {
-                url: moduleBaseUrl + '/views/img/' + data.agent + '.png',
+                url: moduleBaseUrl + '/views/img/' + data.carrier_code + '.png',
                 //url: shipmondo[data.agent + '_icon_url'],
                 size: new google.maps.Size(48, 48),
                 scaledSize: new google.maps.Size(48, 48),
@@ -357,7 +366,7 @@ jQuery(document).ready(function ($) {
                 'zip_code': $('.input_shop_zip', shop).val(),
                 'city': $('.input_shop_city', shop).val(),
                 'id_string': $('.input_shop_id', shop).val(),
-                'agent': $('.input_shop_agent', shop).val()
+                'carrier_code': $('.input_shop_carrier_code', shop).val()
             };
 
             console.log('add selected');
@@ -367,6 +376,10 @@ jQuery(document).ready(function ($) {
 
             setSelectionSession(current_shop);
         }
+        //
+        // if(!current_shop.id && current_shop.address2){
+        //     current_shop.id = current_shop.address2; //ID is saved
+        // }
 
         //Not used for radio buttons
         $('input[name="shipmondo"]', hidden_chosen_shop).val(current_shop.id);
@@ -375,7 +388,7 @@ jQuery(document).ready(function ($) {
         $('input[name="shop_zip"]', hidden_chosen_shop).val(current_shop.zip_code);
         $('input[name="shop_city"]', hidden_chosen_shop).val(current_shop.city);
         $('input[name="shop_ID"]', hidden_chosen_shop).val(current_shop.id_string);
-        $('input[name="shop_agent"]', hidden_chosen_shop).val(current_shop.shipping_agent);
+        $('input[name="shop_carrier_code"]', hidden_chosen_shop).val(current_shop.carrier_code);
 
         $('.shipmondo-shop-name', selected_shop_context).html(current_shop.company_name);
         $('.shipmondo-shop-address', selected_shop_context).html(current_shop.address);
@@ -406,7 +419,7 @@ jQuery(document).ready(function ($) {
                 'address': shop.address,
                 'city': shop.city,
                 'zip_code': shop.zip_code,
-                'shipping_agent': current_search.agent
+                'carrier_code': current_search.carrier_code
             },
             dataType: 'json',
             error: function (response) {
@@ -424,14 +437,14 @@ jQuery(document).ready(function ($) {
 
 
     function getSelectionSession(callback) {
-        var shippingAgent = getSelectedShippingAgent();
+        var carrier_code = getSelectedCarrierCode();
 
         jQuery.ajax({
             url: servicePointsEndpoint,
             type: 'GET',
             data: {
                 method: 'get_address',
-                shipping_agent: shippingAgent
+                carrier_code: carrier_code
             },
             success: function (response) {
                 response = JSON.parse(response);
@@ -465,14 +478,14 @@ jQuery(document).ready(function ($) {
     });
 
     //Prestashop copy
-    function getSelectedShippingAgent() {
-        console.log('getSelectedShippingAgent maybe combine with under');
+    function getSelectedCarrierCode() {
+        console.log('getSelectedCarrierCode maybe combine with under');
 
-        return getShippingAgentByVal($('.delivery-option input:checked').val());
+        return getCarrierCodeByVal($('.delivery-option input:checked').val());
     }
 
-    function getShippingAgentByVal(val) {
-        console.log('getShippingAgentByVal');
+    function getCarrierCodeByVal(val) {
+        console.log('getCarrierCodeByVal');
         //Strip ',' etc.
         var carrierId = val.replace(/\D/g, '');
 
@@ -509,11 +522,11 @@ jQuery(document).ready(function ($) {
         console.log('click.delivery-option');
 
         console.log($(this).val());
-        console.log(getShippingAgentByVal($(this).val()));
+        console.log(getCarrierCodeByVal($(this).val()));
 
-        var shipping_agent = getShippingAgentByVal($(this).val());
+        var carrier_code = getCarrierCodeByVal($(this).val());
 
-        if (shipping_agent != '') {
+        if (carrier_code != '') {
 
             // Remove zipcode wrapper
             $('.shipmondo-shipping-field-wrap').remove();
@@ -541,7 +554,7 @@ jQuery(document).ready(function ($) {
             console.log(selectionButton);
 
             //TODO remove this if we can set it in selection_button.tpl as WC
-            $(extra_content).find('#shipmondo_find_shop_btn').data("shipping-type", shipping_agent);
+            $(extra_content).find('#shipmondo_find_shop_btn').data("shipping-type", carrier_code);
 
             console.log($(extra_content).find(selection_button));
 
@@ -550,20 +563,20 @@ jQuery(document).ready(function ($) {
             }
 
 
-            console.log('shipping_agent');
-            console.log(shipping_agent);
+            console.log('carrier_code');
+            console.log(carrier_code);
             console.log('current_shop');
             console.log(current_shop);
 
-            console.log('shipping_agent');
-            console.log(shipping_agent);
+            console.log('carrier_code');
+            console.log(carrier_code);
 
-            console.log('shipping_agent');
-            console.log(shipping_agent);
+            console.log('carrier_code');
+            console.log(carrier_code);
 
 
             //TODO I dont think this is enough - we should also use address etc.
-            if (current_shop && (shipping_agent == current_shop.agent || shipping_agent == current_shop.shipping_agent)) {
+            if (current_shop && (carrier_code == current_shop.carrier_code)) {
                 console.log('setShop');
                 shopSelected(current_shop);
             } else {
@@ -622,7 +635,7 @@ jQuery(document).ready(function ($) {
             hideModal();
         });
     } else if (frontendType == 'dropdown') {
-        $(document).on('click', '#shipmondo_pickup_point_selector_dropdown .shipmondo-shop-list', function (e) {
+        $(document).on('click', '#shipmondo_pickup_point_selector_dropdown .shipmondo-shop-list', function () {
             shopSelected(this);
             hideDropdown();
         });
@@ -661,7 +674,11 @@ jQuery(document).ready(function ($) {
         getSelectionSession(function (shop) {
             console.log(shop);
             current_shop = shop;
-            // shopSelected(shop);
+            //Format data from saved fields to match what is used
+            if (current_shop && !current_shop.id_string && current_shop.carrier_code && current_shop.address2) {
+                current_shop.id = current_shop.address2; //ID is saved here
+                current_shop.id_string = current_shop.carrier_code + '-' + current_shop.address2; //ID is saved here
+            }
             $('.delivery-option input:checked').trigger('click');
         });
     }

@@ -16,8 +16,6 @@
                         </div>
                         <div class="shipmondo-removable-content"></div>
                         <div class="shipmondo-error">
-                            <!--TODO we need import below-->
-                            <!--<?php \ShipmondoForWooCommerce\Plugin\Plugin::getTemplate('pickup-point-selection.modal.partials.close-button'); ?>-->
                             {include file='module:shipmondo/views/templates/front/popup/partials/close_button.tpl'}
                             <p>Something went wrong, please try again!'</p>
                             <button class="shipmondo-modal-close-button button alt">Close</button>
@@ -36,7 +34,7 @@
         <input type="hidden" name="shop_address">
         <input type="hidden" name="shop_zip">
         <input type="hidden" name="shop_city">
-        <input type="hidden" name="shop_agent">
+        <input type="hidden" name="shop_carrier_code">
         <input type="hidden" name="shop_ID">
     </div>
     <div class="shipmondo-clearfix" id="selected_shop_context">
