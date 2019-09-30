@@ -1,7 +1,7 @@
-/**
- *  @author    Shipmondo
- *  @copyright 2019 Shipmondo
- *  @license   All rights reserved
+/*
+ @author    Shipmondo
+ @copyright 2019 Shipmondo
+ @license   All rights reserved
  */
 
 jQuery(document).ready(function ($) {
@@ -492,6 +492,7 @@ jQuery(document).ready(function ($) {
         });
 
         $(modal).on('click', '#shipmondo-select-shop', function (e) {
+
             e.preventDefault();
             var shop = $('.shipmondo-shoplist-ul > li[data-id=' + $(this).data('number') + ']');
             shopSelected(shop);

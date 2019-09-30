@@ -1,8 +1,8 @@
-/**
+{*
 *  @author    Shipmondo
 *  @copyright 2019 Shipmondo
 *  @license   All rights reserved
-*/
+*}
 
 <div class="shipmondo-modal-content error">
     {include file='module:shipmondo/views/templates/front/popup/partials/close_button.tpl'}
