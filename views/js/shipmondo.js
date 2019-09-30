@@ -114,12 +114,9 @@ jQuery(document).ready(function ($) {
                 'method': 'get_list',
                 'shipping_agent': current_search.agent,
                 'zip_code': current_search.zipcode,
-                'address': current_search.address,
-                //'country': current_search.country comming from php?
+                'address': current_search.address
             },
             success: function (response) {
-                // findShopBtn.find('span').html('');
-
                 if (response) {
                     var returned = JSON.parse(response);
                     console.log('returned');
@@ -203,6 +200,15 @@ jQuery(document).ready(function ($) {
                         }
                     } else {
                         modal_content.html(returned.service_points_html);
+
+                        //Set selected
+                        console.log('current_shop');
+                        console.log(current_shop);
+                        if(current_shop){
+
+                        }
+                        // $(shop).addClass('selected');
+
                         ajax_success = true;
                     }
                     $('.shipmondo-modal-content').addClass('visible');
@@ -341,6 +347,8 @@ jQuery(document).ready(function ($) {
         //TODO clearing. This might not be needed
         console.log('current_shop');
         console.log(current_shop);
+
+        //TODO This is not used for radio as we dont show it. So we want to select the right one as we do on mobile.
         if (current_shop !== shop) {
             current_shop = {
                 'id': $(shop).attr('data-id'),
@@ -352,19 +360,22 @@ jQuery(document).ready(function ($) {
                 'agent': $('.input_shop_agent', shop).val()
             };
 
+            console.log('add selected');
+
             $('.shipmondo-shop-list.selected').removeClass('selected');
             $(shop).addClass('selected');
 
             setSelectionSession(current_shop);
         }
 
+        //Not used for radio buttons
         $('input[name="shipmondo"]', hidden_chosen_shop).val(current_shop.id);
         $('input[name="shop_name"]', hidden_chosen_shop).val(current_shop.company_name);
         $('input[name="shop_address"]', hidden_chosen_shop).val(current_shop.address);
         $('input[name="shop_zip"]', hidden_chosen_shop).val(current_shop.zip_code);
         $('input[name="shop_city"]', hidden_chosen_shop).val(current_shop.city);
         $('input[name="shop_ID"]', hidden_chosen_shop).val(current_shop.id_string);
-        $('input[name="shop_agent"]', hidden_chosen_shop).val(current_shop.agent);
+        $('input[name="shop_agent"]', hidden_chosen_shop).val(current_shop.shipping_agent);
 
         $('.shipmondo-shop-name', selected_shop_context).html(current_shop.company_name);
         $('.shipmondo-shop-address', selected_shop_context).html(current_shop.address);
@@ -372,6 +383,11 @@ jQuery(document).ready(function ($) {
         $('.shipmondo-shop-id', selected_shop_context).html(current_shop.id_string);
 
         $('#selected_shop_context').addClass('active');
+
+
+        //select
+        // $('.shipmondo-shop-list').find("[id=+ current_shop.id+]").addClass('selected');
+
         showContinueBtn(true);
     }
 
@@ -439,10 +455,9 @@ jQuery(document).ready(function ($) {
         console.log(type);
 
         if (type === 'popup') {
-            // if (type === 'modal') {
             getPickupPointsModal();
         } else if (type === 'radio') {
-            //loadRadioButtons();
+
         } else if (type === 'dropdown' && !$(this).parents('.shipmondo_dropdown_button').hasClass('open')) {
             getPickupPointsDropdown();
             e.stopPropagation();
