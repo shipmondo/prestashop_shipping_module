@@ -1,3 +1,9 @@
+/**
+ *  @author    Shipmondo
+ *  @copyright 2019 Shipmondo
+ *  @license   All rights reserved
+ */
+
 jQuery(document).ready(function ($) {
     var body = $('body');
     var selection_button = '#shipmondo_find_shop_btn';
@@ -453,7 +459,6 @@ jQuery(document).ready(function ($) {
 
             //TODO I dont think this is enough - we should also use address etc.
             if (current_shop && (carrier_code == current_shop.carrier_code)) {
-                console.log('setShop');
                 shopSelected(current_shop);
             } else {
                 showContinueBtn(false);

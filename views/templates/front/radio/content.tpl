@@ -1,3 +1,9 @@
+/**
+*  @author    Shipmondo
+*  @copyright 2019 Shipmondo
+*  @license   All rights reserved
+*/
+
 <div class="shipmondo-radio-content">
     <div class="shipmondo-list-wrapper">
         <ul class="shipmondo-shoplist-ul">

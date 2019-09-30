@@ -1,3 +1,9 @@
+/**
+*  @author    Shipmondo
+*  @copyright 2019 Shipmondo
+*  @license   All rights reserved
+*/
+
 <div class="shipmondo-modal-content">
     {include file='module:shipmondo/views/templates/front/popup/partials/close_button.tpl'}
     <div class="shipmondo-modal-header">
@@ -20,33 +26,8 @@
         <div id="shipmondo-list-wrapper">
             <ul class="shipmondo-shoplist-ul">
                 {foreach $service_points as $service_point}
-
                 <li class="shipmondo-shop-list" data-id="{$service_point->number nofilter}">
                     <div class="shipmondo-pickup-point-info">
-                        {*
-                        <!--<input type="hidden" class="input_shop_id" id="<?php echo 'shop_id_' . $pickup_point->number; ?>"-->
-                        <!--name="<?php echo 'shop_id_' . $pickup_point->number; ?>"-->
-                        <!--value="<?php echo 'ID: ' . strtoupper($pickup_point->agent) . '-' . trim($pickup_point->number); ?>">-->
-                        <!--<input type="hidden" class="input_shop_name" id="<?php echo 'shop_name_' . $pickup_point->number; ?>"-->
-                        <!--name="<?php echo 'shop_name_' . $pickup_point->number; ?>" value="<?php echo $pickup_point->company_name; ?>">-->
-                        <!--<input type="hidden" class="input_shop_address" id="<?php echo 'shop_address_' . $pickup_point->number; ?>"-->
-                        <!--name="<?php echo 'shop_address_' . $pickup_point->number; ?>" value="<?php echo $pickup_point->address; ?>">-->
-                        <!--<input type="hidden" class="input_shop_zip" id="<?php echo 'shop_zip_' . $pickup_point->number; ?>"-->
-                        <!--name="<?php echo 'shop_zip_' . $pickup_point->number; ?>" value="<?php echo $pickup_point->zipcode; ?>">-->
-                        <!--<input type="hidden" class="input_shop_city" id="<?php echo 'shop_city_' . $pickup_point->number; ?>"-->
-                        <!--name="<?php echo 'shop_city_' . $pickup_point->number; ?>" value="<?php echo $pickup_point->city; ?>">-->
-
-
-                        <!--<div class="shipmondo-radio-button"></div>-->
-                        <!--<div class="shipmondo-pickup-point-name"><?php echo $pickup_point->company_name; ?></div>-->
-                        <!--<div class="shipmondo-pickup-point-address"><?php echo $pickup_point->address; ?></div>-->
-                        <!--<div class="shipmondo-pickup-point-zipcode-city">-->
-                        <!--<span class="shipmondo-pickup-point-zipcode"><?php echo $pickup_point->zipcode; ?></span>, <span-->
-                        <!--class="shipmondo-pickup-point-city"><?php echo $pickup_point->city; ?></span>-->
-                        <!--</div>-->
-                        <!--<div class="shipmondo-pickup-point-id"><?php echo 'ID: ' . strtoupper($pickup_point->agent) . '-' . trim($pickup_point->number); ?></div>-->
-                        *}
-
                         <input type="hidden" class="input_shop_id" id="shop_id_{$service_point->number nofilter}" name="shop_id_{$service_point->number nofilter}"
                                value="ID: {$service_point->carrier_code nofilter}-{$service_point->number nofilter}">
                         <input type="hidden" class="input_shop_carrier_code" id="shop_carrier_code_{$service_point->carrier_code nofilter}" name="shop_carrier_code_{$service_point->carrier_code nofilter}"
