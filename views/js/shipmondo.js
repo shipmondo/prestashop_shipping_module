@@ -664,10 +664,10 @@ jQuery(document).ready(function ($) {
 
 
     //load service points if you go back to edit
-    // $('#checkout-delivery-step span.step-edit').on('click', function () {
-    //     console.log('checkout-delivery-step span.step-edit.click');
-    //     $('.delivery-option input:checked').trigger('click');
-    // });
+    $('#checkout-delivery-step span.step-edit').on('click', function () {
+        console.log('checkout-delivery-step span.step-edit.click');
+        $('.delivery-option input:checked').trigger('click');
+    });
 
     //if a shipping method chosen on pageload, trigger click event of that method
     if ($('.js-current-step').attr('id') == 'checkout-delivery-step' && jQuery.inArray(jQuery('.delivery-option input:checked').val(), [glsCarrierId + ",", postnordCarrierId + ",", daoCarrierId + ",", bringCarrierId + ","]) >= 0) {
