@@ -117,7 +117,8 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
                 if ($result) {
                     $service_point = Tools::jsonDecode($result['service_point']);
 
-                    if ($carrier_code === $service_point->carrier_code) {
+                    //TODO rename shipping_agent to carrier_code in DB
+                    if ($carrier_code === $service_point->shipping_agent) {
                         $response['status'] = 'success';
                         $response['service_point'] = $service_point;
                         break;
