@@ -45,8 +45,6 @@ jQuery(document).ready(function ($) {
         }
 
         var address_data = prestashop.customer.addresses[id_delivery];
-        console.log('address_data');
-        console.log(address_data);
 
         return {
             carrier_code: getSelectedCarrierCode(),
@@ -57,15 +55,10 @@ jQuery(document).ready(function ($) {
     }
 
     function isLastSearch(search) {
-        console.log('isLastSearch');
         var last_search = current_search;
-
         var _current_search = getAddress();
 
-        console.log(_current_search);
-
-        //todo add address
-        if (last_search !== null && ajax_success && _current_search.carrier_code === last_search.carrier_code && _current_search.zipcode === last_search.zipcode && _current_search.country === last_search.country) {
+        if (last_search !== null && ajax_success && _current_search.carrier_code === last_search.carrier_code && _current_search.zipcode === last_search.zipcode && _current_search.address === last_search.address && _current_search.country === last_search.country) {
             return true;
         }
 
@@ -77,8 +70,6 @@ jQuery(document).ready(function ($) {
     }
 
     function getPickupPointsDropdown() {
-        console.log('getPickupPointsDropdown');
-
         var dropdown = $('#shipmondo_pickup_point_selector_dropdown');
         dropdown.removeClass('shipmondo-hidden');
 
@@ -90,11 +81,6 @@ jQuery(document).ready(function ($) {
 
         var dropdown_content = dropdown.find('.shipmondo-removable-content');
 
-
-        console.log('dropdown');
-        console.log(dropdown);
-
-        //TODO under:
         if (isLastSearch(true)) {
             return;
         }
@@ -104,7 +90,6 @@ jQuery(document).ready(function ($) {
         dropdown_content.empty();
 
         ajax_success = false;
-
 
         //TODO maybe reuse from modal
         jQuery.ajax({
@@ -119,26 +104,13 @@ jQuery(document).ready(function ($) {
             success: function (response) {
                 if (response) {
                     var returned = JSON.parse(response);
-                    console.log('returned');
-                    console.log(returned);
-
 
                     if (returned.status === "error") {
                         dropdown_error.html(returned.error);
                         dropdown_error.addClass('visible');
                     } else {
-                        console.log('returned.frontend_type');
-                        console.log(returned.frontend_type);
-
-                        console.log('dropdown_content');
-                        console.log(dropdown_content);
-
                         dropdown_content.html(returned.service_points_html);
 
-                        // dropdown_content.find('')
-
-                        console.log('dropdown_content after');
-                        console.log(dropdown_content);
                         ajax_success = true;
                     }
                     $('.shipmondo-modal-content').addClass('visible');
@@ -155,11 +127,6 @@ jQuery(document).ready(function ($) {
     }
 
     function getPickupPointsModal() {
-        console.log('getPickupPointsModal');
-
-        console.log('modal');
-        console.log(modal);
-
         modal.removeClass('shipmondo-hidden');
         setTimeout(function () {
             body.addClass('shipmondo-modal-open');
@@ -176,8 +143,6 @@ jQuery(document).ready(function ($) {
 
         ajax_success = false;
 
-
-        //TODO maybe reuse from modal
         $.ajax({
             url: servicePointsEndpoint,
             type: 'POST',
@@ -190,9 +155,6 @@ jQuery(document).ready(function ($) {
             success: function (response) {
                 if (response) {
                     var returned = JSON.parse(response);
-                    console.log('returned');
-                    console.log(returned);
-
                     if (returned.status === "error") {
                         if (returned.error) {
                             modal_error.find('p').html(returned.error);
@@ -200,16 +162,10 @@ jQuery(document).ready(function ($) {
                         }
                     } else {
                         modal_content.html(returned.service_points_html);
-
                         //Set selected
-                        console.log('current_shop');
-                        console.log(current_shop);
                         if (current_shop && current_shop.id) {
-                            //Preselect if all ready selected
-                            console.log('select');
                             $('.shipmondo-shoplist-ul > li[data-id=' + current_shop.id + ']').addClass('selected');
                         }
-
                         ajax_success = true;
                     }
                     $('.shipmondo-modal-content').addClass('visible');
@@ -227,14 +183,8 @@ jQuery(document).ready(function ($) {
 
 
     function loadRadioButtons() {
-        console.log('loadRadioButtons');
-
-        // if (isLastSearch(true)) {
-        //     return;
-        // }
         //Populate data but don't stop
         isLastSearch(true);
-        console.log('new search');
 
         var radio_container = $('.shipmondo-shipping-field-wrap .shipmondo-radio-content');
         var radio_content = $(radio_container).find('.shipmondo-removable-content');
@@ -248,7 +198,6 @@ jQuery(document).ready(function ($) {
 
         radio_content.empty();
 
-
         //TODO maybe reuse from modal
         $.ajax({
             url: servicePointsEndpoint,
@@ -260,27 +209,15 @@ jQuery(document).ready(function ($) {
                 'address': current_search.address
             },
             success: function (response) {
-                console.log('response');
-                console.log(response);
                 if (response) {
                     var returned = JSON.parse(response);
-                    console.log('returned');
-                    console.log(returned);
-
                     if (returned.status === "error") {
                         radio_error.html(returned.error);
                         radio_error.addClass('visible');
                     } else {
-                        console.log('returned.frontend_type');
-                        console.log(returned.frontend_type);
-
-                        console.log('radio_content');
-                        console.log(radio_content);
-
                         radio_content.html(returned.service_points_html);
                         if (current_shop && current_shop.id) {
                             //Preselect if all ready selected
-                            console.log('select');
                             $('.shipmondo-shoplist-ul > li[data-id=' + current_shop.id + ']').addClass('selected');
                         }
 
@@ -346,18 +283,10 @@ jQuery(document).ready(function ($) {
     }
 
     function shopSelected(shop) {
-        console.log('shopSelected');
-        console.log(shop);
-
         if (shop === null) {
             return;
         }
 
-        //TODO clearing. This might not be needed
-        console.log('current_shop');
-        console.log(current_shop);
-
-        //TODO This is not used for radio as we dont show it. So we want to select the right one as we do on mobile.
         if (current_shop !== shop) {
             current_shop = {
                 'id': $(shop).attr('data-id'),
@@ -369,17 +298,11 @@ jQuery(document).ready(function ($) {
                 'carrier_code': $('.input_shop_carrier_code', shop).val()
             };
 
-            console.log('add selected');
-
             $('.shipmondo-shop-list.selected').removeClass('selected');
             $(shop).addClass('selected');
 
             setSelectionSession(current_shop);
         }
-        //
-        // if(!current_shop.id && current_shop.address2){
-        //     current_shop.id = current_shop.address2; //ID is saved
-        // }
 
         //Not used for radio buttons
         $('input[name="shipmondo"]', hidden_chosen_shop).val(current_shop.id);
@@ -398,17 +321,10 @@ jQuery(document).ready(function ($) {
         $('#selected_shop_context').addClass('active');
 
 
-        //select
-        // $('.shipmondo-shop-list').find("[id=+ current_shop.id+]").addClass('selected');
-
         showContinueBtn(true);
     }
 
     function setSelectionSession(shop) {
-        console.log('setSelectionSession');
-        console.log(shop);
-
-
         jQuery.ajax({
             url: servicePointsEndpoint,
             type: 'POST',
@@ -465,7 +381,6 @@ jQuery(document).ready(function ($) {
 
     $(document).on('click', selection_button, function (e) {
         var type = $(this).data('selection-type');
-        console.log(type);
 
         if (type === 'popup') {
             getPickupPointsModal();
@@ -479,17 +394,12 @@ jQuery(document).ready(function ($) {
 
     //Prestashop copy
     function getSelectedCarrierCode() {
-        console.log('getSelectedCarrierCode maybe combine with under');
-
         return getCarrierCodeByVal($('.delivery-option input:checked').val());
     }
 
     function getCarrierCodeByVal(val) {
-        console.log('getCarrierCodeByVal');
         //Strip ',' etc.
         var carrierId = val.replace(/\D/g, '');
-
-        console.log(carrierId);
 
         switch (parseInt(carrierId)) {
             case glsCarrierId:
@@ -506,8 +416,6 @@ jQuery(document).ready(function ($) {
     }
 
     function showContinueBtn(show) {
-        console.log('showContinueBtn');
-        console.log(show);
         if (show) {
             $('#js-delivery .continue').show();
             $('.select-service-point-to-continue').hide();
@@ -519,11 +427,6 @@ jQuery(document).ready(function ($) {
 
     //Add find button
     $(document).on('click', '.delivery-option input', function () {
-        console.log('click.delivery-option');
-
-        console.log($(this).val());
-        console.log(getCarrierCodeByVal($(this).val()));
-
         var carrier_code = getCarrierCodeByVal($(this).val());
 
         if (carrier_code != '') {
@@ -539,41 +442,14 @@ jQuery(document).ready(function ($) {
                 extra_content = $(dev_option).next('.carrier-extra-content');
             }
 
-
-            console.log('extra_content');
-            console.log(extra_content);
-
-            console.log('add selectedPickupPointWrapHtml');
-
             $(extra_content).html(selectionButton);
-
-            console.log('$(extra_content)');
-            console.log($(extra_content));
-
-            console.log('added');
-            console.log(selectionButton);
 
             //TODO remove this if we can set it in selection_button.tpl as WC
             $(extra_content).find('#shipmondo_find_shop_btn').data("shipping-type", carrier_code);
 
-            console.log($(extra_content).find(selection_button));
-
             if (frontendType == 'radio') {
                 loadRadioButtons();
             }
-
-
-            console.log('carrier_code');
-            console.log(carrier_code);
-            console.log('current_shop');
-            console.log(current_shop);
-
-            console.log('carrier_code');
-            console.log(carrier_code);
-
-            console.log('carrier_code');
-            console.log(carrier_code);
-
 
             //TODO I dont think this is enough - we should also use address etc.
             if (current_shop && (carrier_code == current_shop.carrier_code)) {
@@ -587,17 +463,12 @@ jQuery(document).ready(function ($) {
         }
     });
 
-
     //TODO move to INIT? Init modal?
-    console.log('frontendType');
-    console.log(frontendType);
     if (frontendType == 'popup') {
-        console.log(modalHtml);
         $('body').append(modalHtml);
         modal = $('.shipmondo-modal');
         modal_content = modal.find('.shipmondo-removable-content');
         modal_error = modal.find('.shipmondo-error');
-
 
         $(modal).on('click', function (e) {
             if (typeof e.srcElement !== 'undefined' && e.srcElement.id === 'shipmondo-modal') {
@@ -642,7 +513,6 @@ jQuery(document).ready(function ($) {
 
         $(document).on('click', function (e) {
             var dropdown = $('#shipmondo_pickup_point_selector_dropdown');
-            // var button = $(selection_button);
 
             if ((!dropdown.is(e.target) && dropdown.has(e.target).length === 0) && !dropdown.hasClass('shipmondo-hidden')) {
                 hideDropdown();
@@ -650,29 +520,13 @@ jQuery(document).ready(function ($) {
         });
     } else if (frontendType == 'radio') {
         $(document).on('click', '.shipmondo-radio-content .shipmondo-shop-list', function () {
-            console.log('click.shipmondo-shop-list');
             shopSelected(this);
-            // $('.shipmondo-modal-content').removeClass('visible');
-            // $('.shipmondo-modal-checkmark').addClass('visible');
-
-            // setTimeout(function () {
-            //     hideModal();
-            // }, 1800);
         });
-
     }
 
 
-    //load service points if you go back to edit
-    $('#checkout-delivery-step span.step-edit').on('click', function () {
-        console.log('checkout-delivery-step span.step-edit.click');
-        $('.delivery-option input:checked').trigger('click');
-    });
-
-    //if a shipping method chosen on pageload, trigger click event of that method
-    if ($('.js-current-step').attr('id') == 'checkout-delivery-step' && jQuery.inArray(jQuery('.delivery-option input:checked').val(), [glsCarrierId + ",", postnordCarrierId + ",", daoCarrierId + ",", bringCarrierId + ","]) >= 0) {
+    function setCurrentShopBySession() {
         getSelectionSession(function (shop) {
-            console.log(shop);
             current_shop = shop;
             //Format data from saved fields to match what is used
             if (current_shop && !current_shop.id_string && current_shop.carrier_code && current_shop.address2) {
@@ -683,10 +537,19 @@ jQuery(document).ready(function ($) {
         });
     }
 
+    //load service points if you go back to edit
+    $('#checkout-delivery-step span.step-edit').on('click', function () {
+        setCurrentShopBySession();
+    });
+
+    //if a shipping method chosen on pageload, trigger click event of that method
+    if ($('.js-current-step').attr('id') == 'checkout-delivery-step' && jQuery.inArray(jQuery('.delivery-option input:checked').val(), [glsCarrierId + ",", postnordCarrierId + ",", daoCarrierId + ",", bringCarrierId + ","]) >= 0) {
+        setCurrentShopBySession();
+    }
+
     // Add Prevent continue button
     $('#js-delivery').append('<button type="button" class="btn btn-primary select-service-point-to-continue">' + modalHeaderTitle + '</button>');
     $(document).on('click', '.select-service-point-to-continue', function (e) {
-        console.log('click.select-service-point-to-continue');
         e.preventDefault();
 
         //Somehow above is not working correctly so for now use timeout - but this should be solved

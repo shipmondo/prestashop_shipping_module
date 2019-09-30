@@ -197,7 +197,7 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
             'service_points' => $service_points,
             'selected_service_point_id' => $selected_service_point_id,
             'carrier_code' => $carrier_code,
-            'shipping_agent_logo' => _MODULE_DIR_ . 'shipmondo/views/img/' . $carrier_code . '.png',
+            'carrier_logo' => _MODULE_DIR_ . 'shipmondo/views/img/' . $carrier_code . '.png',
             'service_points_json' => htmlentities(Tools::jsonEncode($service_points), ENT_QUOTES, 'UTF-8'),
             'service_points_count' => count($service_points),
 

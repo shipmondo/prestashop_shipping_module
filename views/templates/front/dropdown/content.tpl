@@ -16,7 +16,7 @@
                 <input type="hidden" class="input_shop_city" id="shop_city_{$service_point->number nofilter}"
                        name="shop_city_{$service_point->number nofilter}" value="{$service_point->city nofilter}">
 
-                <img class="agent_icon" src="{$carrier_code_logo nofilter}">
+                <img class="agent_icon" src="{$carrier_logo nofilter}">
                 <div class="shipmondo-pickup-point-info">
                     <div class="shipmondo-pickup-point-name">{$service_point->company_name nofilter}</div>
                     <div class="shipmondo-pickup-point-address">{$service_point->address nofilter}</div>
