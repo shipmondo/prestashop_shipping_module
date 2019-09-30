@@ -144,25 +144,6 @@ jQuery(document).ready(function ($) {
                         console.log(dropdown_content);
                         ajax_success = true;
                     }
-
-
-                    //     if (returned.status == 'success') {
-                    //     console.log('returned.frontend_type');
-                    //     console.log(returned.frontend_type);
-                    //
-                    //     console.log('dropdown_content');
-                    //     console.log(dropdown_content);
-                    //
-                    //     dropdown_content.html(returned.service_points_html);
-                    //
-                    //     // dropdown_content.find('')
-                    //
-                    //     console.log('dropdown_content after');
-                    //     console.log(dropdown_content);
-                    //     ajax_success = true;
-                    // } else {
-                    //     dropdown_content.html(returned.error);
-                    // }
                     $('.shipmondo-modal-content').addClass('visible');
                     dropdown.removeClass('loading');
                 } else {
@@ -208,16 +189,12 @@ jQuery(document).ready(function ($) {
                 'shipping_agent': current_search.agent,
                 'zip_code': current_search.zipcode,
                 'address': current_search.address
-                //'country': current_search.country //remove? comes from php
             },
             success: function (response) {
-                // findShopBtn.find('span').html('');
-
                 if (response) {
                     var returned = JSON.parse(response);
                     console.log('returned');
                     console.log(returned);
-
 
                     if (returned.status === "error") {
                         if (returned.error) {
@@ -237,6 +214,71 @@ jQuery(document).ready(function ($) {
             }, error: function (jqXHR, textStatus, errorThrown) {
                 modal_error.addClass('visible');
                 modal.removeClass('loading');
+            }
+        });
+    }
+
+
+    function loadRadioButtons() {
+        console.log('loadRadioButtons');
+
+        if (isLastSearch(true)) {
+            return;
+        }
+
+        var radio_container = $('.shipmondo-shipping-field-wrap .shipmondo-radio-content');
+        var radio_content = $(radio_container).find('.shipmondo-removable-content');
+        var radio_error = radio_container.find('.shipmondo-error');
+
+        ajax_success = false;
+
+        radio_error.removeClass('visible');
+
+        radio_container.addClass('loading');
+
+        radio_content.empty();
+
+
+        //TODO maybe reuse from modal
+        $.ajax({
+            url: servicePointsEndpoint,
+            type: 'POST',
+            data: {
+                'method': 'get_list',
+                'shipping_agent': current_search.agent,
+                'zip_code': current_search.zipcode,
+                'address': current_search.address
+            },
+            success: function (response) {
+                console.log('response');
+                console.log(response);
+                if (response) {
+                    var returned = JSON.parse(response);
+                    console.log('returned');
+                    console.log(returned);
+
+                    if (returned.status === "error") {
+                        radio_error.html(returned.error);
+                        radio_error.addClass('visible');
+                    } else {
+                        console.log('returned.frontend_type');
+                        console.log(returned.frontend_type);
+
+                        console.log('radio_content');
+                        console.log(radio_content);
+
+                        radio_content.html(returned.service_points_html);
+
+                        ajax_success = true;
+                    }
+                    radio_container.removeClass('loading');
+                } else {
+                    radio_error.addClass('visible');
+                    radio_container.removeClass('loading');
+                }
+            }, error: function (jqXHR, textStatus, errorThrown) {
+                radio_error.addClass('visible');
+                radio_container.removeClass('loading');
             }
         });
     }
@@ -382,24 +424,10 @@ jQuery(document).ready(function ($) {
                     if (callback) {
                         callback(servicePoint);
                     }
-
-                    // var servicePointHtml =
-                    //     '<div class="pakkelabels-company-name">' + servicePoint['company'] + '</div>' +
-                    //     '<div class="pakkelabels-Address">' + servicePoint['address'] + '</div>' +
-                    //     '<div class="pakkelabels-ZipAndCity">' +
-                    //     '<span class="pakkelabels-zipcode">' + servicePoint['zip_code'] + '</span>,' +
-                    //     '<span class="pakkelabels-city">' + servicePoint['city'] + '</span>' +
-                    //     '</div>' +
-                    //     '<div class="pakkelabels-Packetshop">' + servicePoint['address2'] + '</div>';
-                    //
-                    // var shopId = servicePoint['address2'].replace(/\D/g, '');
-                    // $('#hidden_choosen_shop').attr('shopid', shopId);
-                    //
-                    // $('#selected_shop_header').html(selectedServicePointHeader);
-                    // $('#selected_shop_context').html(servicePointHtml);
-                    //
-                    // if (typeof checkdroppointselected !== 'undefined')
-                    //     checkdroppointselected(this);
+                } else {
+                    if (callback) {
+                        callback(null);
+                    }
                 }
             }
         });
@@ -413,6 +441,8 @@ jQuery(document).ready(function ($) {
         if (type === 'popup') {
             // if (type === 'modal') {
             getPickupPointsModal();
+        } else if (type === 'radio') {
+            //loadRadioButtons();
         } else if (type === 'dropdown' && !$(this).parents('.shipmondo_dropdown_button').hasClass('open')) {
             getPickupPointsDropdown();
             e.stopPropagation();
@@ -489,6 +519,9 @@ jQuery(document).ready(function ($) {
 
             $(extra_content).html(selectionButton);
 
+            console.log('$(extra_content)');
+            console.log($(extra_content));
+
             console.log('added');
             console.log(selectionButton);
 
@@ -496,6 +529,10 @@ jQuery(document).ready(function ($) {
             $(extra_content).find('#shipmondo_find_shop_btn').data("shipping-type", shipping_agent);
 
             console.log($(extra_content).find(selection_button));
+
+            if (frontendType == 'radio') {
+                loadRadioButtons();
+            }
 
 
             console.log('shipping_agent');
@@ -583,14 +620,26 @@ jQuery(document).ready(function ($) {
                 hideDropdown();
             }
         });
+    } else if (frontendType == 'radio') {
+        $(document).on('click', '.shipmondo-radio-content .shipmondo-shop-list', function () {
+            console.log('click.shipmondo-shop-list');
+            shopSelected(this);
+            // $('.shipmondo-modal-content').removeClass('visible');
+            // $('.shipmondo-modal-checkmark').addClass('visible');
+
+            // setTimeout(function () {
+            //     hideModal();
+            // }, 1800);
+        });
+
     }
 
 
     //load service points if you go back to edit
-    $('#checkout-delivery-step span.step-edit').on('click', function () {
-        console.log('checkout-delivery-step span.step-edit.click');
-        $('.delivery-option input:checked').trigger('click');
-    });
+    // $('#checkout-delivery-step span.step-edit').on('click', function () {
+    //     console.log('checkout-delivery-step span.step-edit.click');
+    //     $('.delivery-option input:checked').trigger('click');
+    // });
 
     //if a shipping method chosen on pageload, trigger click event of that method
     if ($('.js-current-step').attr('id') == 'checkout-delivery-step' && jQuery.inArray(jQuery('.delivery-option input:checked').val(), [glsCarrierId + ",", postnordCarrierId + ",", daoCarrierId + ",", bringCarrierId + ","]) >= 0) {
@@ -599,7 +648,6 @@ jQuery(document).ready(function ($) {
             current_shop = shop;
             // shopSelected(shop);
             $('.delivery-option input:checked').trigger('click');
-
         });
     }
 

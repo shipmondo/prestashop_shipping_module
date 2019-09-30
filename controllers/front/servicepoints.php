@@ -161,7 +161,7 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
         if (empty($service_points)) {
             return [
                 'status' => "error",
-                'error' => $this->l('Please add a valid delivery module key in back office.'),
+                'error' => $this->l('No pickup points found. Please confirm address.'),
             ];
         }
 
@@ -187,7 +187,7 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
         $response['service_points'] = $service_points;
         $response['frontend_type'] = $frontend_type;
         $response['status'] = 'success';
-        $response['map'] = $this->module->fetch('module:shipmondo/views/templates/front/map.tpl');
+        //$response['map'] = $this->module->fetch('module:shipmondo/views/templates/front/map.tpl');
 
         if (empty($selected_service_point_id)) {
             $selected_service_point_id = 0;

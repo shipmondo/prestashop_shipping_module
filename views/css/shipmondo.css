@@ -284,7 +284,14 @@ body.shipmondo-modal-open {
     right: 0;
 }
 
-.shipmondo-modal-content ul.shipmondo-shoplist-ul {
+.shipmondo-radio-content {
+    position: relative;
+    margin-bottom: 40px;
+    min-height: 68px;
+    box-sizing: border-box;
+}
+
+.shipmondo-modal-content ul.shipmondo-shoplist-ul, .shipmondo-radio-content ul.shipmondo-shoplist-ul {
     display: -webkit-flex;
     display: -ms-flexbox;
     display: flex;
@@ -297,7 +304,11 @@ body.shipmondo-modal-open {
     margin: 32px 23px 0 40px;
 }
 
-.shipmondo-modal-content ul.shipmondo-shoplist-ul li.shipmondo-shop-list {
+.shipmondo-radio-content ul.shipmondo-shoplist-ul {
+    margin: 0 10px;
+}
+
+.shipmondo-modal-content ul.shipmondo-shoplist-ul li.shipmondo-shop-list, .shipmondo-radio-content ul.shipmondo-shoplist-ul li.shipmondo-shop-list {
     list-style: none;
     padding: 0;
     cursor: pointer;
@@ -306,7 +317,7 @@ body.shipmondo-modal-open {
     margin-bottom: 24px;
 }
 
-.shipmondo-modal-content ul.shipmondo-shoplist-ul li.shipmondo-shop-list:nth-of-type(2n+1) {
+.shipmondo-modal-content ul.shipmondo-shoplist-ul li.shipmondo-shop-list:nth-of-type(2n+1), .shipmondo-radio-content ul.shipmondo-shoplist-ul li.shipmondo-shop-list:nth-of-type(2n+1) {
     clear: left;
 }
 
@@ -343,10 +354,13 @@ body.shipmondo-modal-open {
     -ms-flex-pack: center;
     justify-content: center;
     position: absolute;
-    border: 2px solid #9e9e9e;
+    /*border: 2px solid #9e9e9e;*/
+    border: 2px solid #7a7a7a;
     border-radius: 100%;
-    height: 24px;
-    width: 24px;
+    height: 20px;
+    width: 20px;
+    /*height: 24px;*/
+    /*width: 24px;*/
     top: 50%;
     left: 5px;
     z-index: 5;
@@ -356,15 +370,17 @@ body.shipmondo-modal-open {
 }
 
 .shipmondo-pickup-point-info:hover .shipmondo-radio-button {
-    border-color: #1a1a1a;
+    /*border-color: #1a1a1a;*/
 }
 
 .shipmondo-pickup-point-info .shipmondo-radio-button:before {
     display: block;
     content: '';
     border-radius: 100%;
-    height: 16px;
-    width: 16px;
+    height: 12px;
+    width: 12px;
+    /*height: 16px;*/
+    /*width: 16px;*/
     top: 3px;
     left: 3px;
     margin: auto;
@@ -373,11 +389,13 @@ body.shipmondo-modal-open {
 }
 
 .shipmondo-shop-list.selected .shipmondo-radio-button {
-    border-color: #1a1a1a;
+    /*border-color: #1a1a1a;*/
+    /*border-color: #2fb5d2;*/
 }
 
 .shipmondo-shop-list.selected .shipmondo-radio-button:before {
-    background: #1a1a1a;
+    /*background: #1a1a1a;*/
+    background: #2fb5d2;
 }
 
 #selected_shop_context,
@@ -527,7 +545,8 @@ body.shipmondo-modal-open {
 }
 
 .shipmondo-modal.loading .shipmondo-loader-wrapper,
-#shipmondo_pickup_point_selector_dropdown.loading .shipmondo-loader-wrapper {
+#shipmondo_pickup_point_selector_dropdown.loading .shipmondo-loader-wrapper,
+.shipmondo-radio-content.loading .shipmondo-loader-wrapper {
     display: block;
 }
 
@@ -584,18 +603,43 @@ body.shipmondo-modal-open {
         margin: 8px 15px 12px;
     }
 
-    .shipmondo-modal-header {
-        padding: 40px 15px 24px;
-    }
-
+    /*.shipmondo-modal-header {*/
+    /*padding: 40px 15px 24px;*/
+    /*}*/
     .shipmondo-modal-content ul.shipmondo-shoplist-ul {
         margin: 32px 15px 0 15px;
+    }
+
+    .shipmondo-modal-header h4 {
+        font-size: 1.4em;
+    }
+
+    .shipmondo-pickoup-point-counter {
+        font-size: 0.9em;
+    }
+
+    #shipmondo-map {
+        height: 280px;
+    }
+
+    .shipmondo-modal-header {
+        height: auto;
+    }
+
+    .shipmondo-modal-content ul.shipmondo-shoplist-ul li.shipmondo-shop-list, .shipmondo-radio-content ul.shipmondo-shoplist-ul li.shipmondo-shop-list {
+        width: 100%;
+        float: none;
+        margin: 0 auto 24px;
     }
 }
 
 .shipmondo_dropdown_button #shipmondo_find_shop_btn {
     padding-right: 40px;
 }
+
+/*.shipmondo-radio-content {*/
+/*margin: 0 10px;*/
+/*}*/
 
 .select-service-point-to-continue {
     display: none;
