@@ -223,7 +223,14 @@ jQuery(document).ready(function ($) {
                         radio_content.html(returned.service_points_html);
                         if (current_shop && current_shop.id) {
                             //Preselect if all ready selected
-                            $('.shipmondo-shoplist-ul > li[data-id=' + current_shop.id + ']').addClass('selected');
+                            var current_li = $('.shipmondo-shoplist-ul > li[data-id=' + current_shop.id + ']');
+                            if (current_li.size() > 0) {
+                                current_li.addClass('selected');
+                            } else {
+                                shopSelected($('.shipmondo-shoplist-ul > li').first());
+                            }
+                        } else {
+                            shopSelected($('.shipmondo-shoplist-ul > li').first());
                         }
 
                         ajax_success = true;
