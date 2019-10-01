@@ -497,6 +497,12 @@ class Shipmondo extends CarrierModule
                 );
             }
             $context->addCSS($this->_path . 'views/css/shipmondo.css', 'all');
+
+            $current_theme = _PS_DEFAULT_THEME_NAME_;
+            if ('default' !== $current_theme) {
+                $context->addCSS($this->_path . 'views/css/' . $current_theme . '.css', 'all');
+            }
+
             $context->addJS($this->_path . 'views/js/shipmondo.js', 'all');
         }
     }

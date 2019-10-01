@@ -1,0 +1,33 @@
+.shipmondo-modal-content ul.shipmondo-shoplist-ul li.shipmondo-shop-list,
+.shipmondo-radio-content ul.shipmondo-shoplist-ul li.shipmondo-shop-list {
+    padding: initial;
+    margin-bottom: 12px;
+}
+
+.shipmondo-pickup-point-info {
+    padding: 5px 5px 5px 40px;
+}
+
+.shipmondo-pickup-point-info .shipmondo-radio-button {
+    border: 1px solid #adadad;
+    height: 16px;
+    width: 16px;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .09);
+}
+
+.shipmondo-pickup-point-info:hover .shipmondo-radio-button {
+    height: 6px;
+    width: 6px;
+}
+
+.shipmondo-shop-list.selected .shipmondo-radio-button:before {
+    background: #1a73e8;
+}
+
+.shipmondo-radio-content ul.shipmondo-shoplist-ul {
+    margin: 0px 0px 0px 10px;
+}
+
+.shipmondo-shipping-field-wrap {
+    margin: initial;
+}
