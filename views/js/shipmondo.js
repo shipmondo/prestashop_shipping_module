@@ -98,7 +98,7 @@ jQuery(document).ready(function ($) {
 
         //TODO maybe reuse from modal
         jQuery.ajax({
-            url: servicePointsEndpoint,
+            url: service_points_endpoint,
             type: 'POST',
             data: {
                 'method': 'get_list',
@@ -149,7 +149,7 @@ jQuery(document).ready(function ($) {
         ajax_success = false;
 
         $.ajax({
-            url: servicePointsEndpoint,
+            url: service_points_endpoint,
             type: 'POST',
             data: {
                 'method': 'get_list',
@@ -205,7 +205,7 @@ jQuery(document).ready(function ($) {
 
         //TODO maybe reuse from modal
         $.ajax({
-            url: servicePointsEndpoint,
+            url: service_points_endpoint,
             type: 'POST',
             data: {
                 'method': 'get_list',
@@ -252,7 +252,7 @@ jQuery(document).ready(function ($) {
             position: {lat: parseFloat(data.latitude), lng: parseFloat(data.longitude)},
             map: map,
             icon: {
-                url: moduleBaseUrl + '/views/img/' + data.carrier_code + '.png',
+                url: module_base_url + '/views/img/' + data.carrier_code + '.png',
                 size: new google.maps.Size(48, 48),
                 scaledSize: new google.maps.Size(48, 48),
                 anchor: new google.maps.Point(24, 24)
@@ -261,7 +261,7 @@ jQuery(document).ready(function ($) {
 
         google.maps.event.addListener(marker, 'click', (function (marker) {
             return function () {
-                infowindow.setContent('<strong>' + data.company_name + '</strong><br/>' + data.address + "<br/> " + data.city + ' <br/> ' + data.zipcode + '<br/><div id="shipmondo-button-wrapper"><button class="button btn btn-primary" id="shipmondo-select-shop" data-number="' + data.number + '">' + chooseServicePointHeader + '</button></div>');
+                infowindow.setContent('<strong>' + data.company_name + '</strong><br/>' + data.address + "<br/> " + data.city + ' <br/> ' + data.zipcode + '<br/><div id="shipmondo-button-wrapper"><button class="button btn btn-primary" id="shipmondo-select-shop" data-number="' + data.number + '">' + choose_service_point_header + '</button></div>');
                 infowindow.open(map, marker);
             };
         })(marker));
@@ -337,7 +337,7 @@ jQuery(document).ready(function ($) {
 
     function setSelectionSession(shop) {
         jQuery.ajax({
-            url: servicePointsEndpoint,
+            url: service_points_endpoint,
             type: 'POST',
             data: {
                 'method': "save_address",
@@ -356,7 +356,7 @@ jQuery(document).ready(function ($) {
                 if (response.status == "success") {
                     // Success
                 } else if (response.status == "error") {
-                    $(".error_msg").html(noPointSelectedErrorText);
+                    // $(".error_msg").html(noPointSelectedErrorText);
                 }
             }
         });
@@ -367,7 +367,7 @@ jQuery(document).ready(function ($) {
         var carrier_code = getSelectedCarrierCode();
 
         jQuery.ajax({
-            url: servicePointsEndpoint,
+            url: service_points_endpoint,
             type: 'GET',
             data: {
                 method: 'get_address',
@@ -413,13 +413,13 @@ jQuery(document).ready(function ($) {
         var carrierId = val.replace(/\D/g, '');
 
         switch (parseInt(carrierId)) {
-            case glsCarrierId:
+            case gls_carrier_id:
                 return 'gls';
-            case daoCarrierId:
+            case dao_carrier_id:
                 return 'dao';
-            case postnordCarrierId:
+            case postnord_carrier_id:
                 return 'pdk';
-            case bringCarrierId:
+            case bring_carrier_id:
                 return 'bring';
             default:
                 return ''
@@ -456,7 +456,7 @@ jQuery(document).ready(function ($) {
             //TODO remove this if we can set it in selection_button.tpl as WC
             $(extra_content).find('#shipmondo_find_shop_btn').data("shipping-type", carrier_code);
 
-            if (frontendType == 'radio') {
+            if (frontend_type == 'radio') {
                 loadRadioButtons();
             }
 
@@ -472,8 +472,8 @@ jQuery(document).ready(function ($) {
     });
 
     //TODO move to INIT? Init modal?
-    if (frontendType == 'popup') {
-        body.append(modalHtml);
+    if (frontend_type == 'popup') {
+        body.append(modal_html);
         modal = $('.shipmondo-modal');
         modal_content = modal.find('.shipmondo-removable-content');
         modal_error = modal.find('.shipmondo-error');
@@ -513,7 +513,7 @@ jQuery(document).ready(function ($) {
         $(document).on('click', close_button, function () {
             hideModal();
         });
-    } else if (frontendType == 'dropdown') {
+    } else if (frontend_type == 'dropdown') {
         $(document).on('click', '#shipmondo_pickup_point_selector_dropdown .shipmondo-shop-list', function () {
             shopSelected(this);
             hideDropdown();
@@ -526,7 +526,7 @@ jQuery(document).ready(function ($) {
                 hideDropdown();
             }
         });
-    } else if (frontendType == 'radio') {
+    } else if (frontend_type == 'radio') {
         $(document).on('click', '.shipmondo-radio-content .shipmondo-shop-list', function () {
             shopSelected(this);
         });
@@ -551,12 +551,12 @@ jQuery(document).ready(function ($) {
     });
 
     //if a shipping method chosen on pageload, trigger click event of that method
-    if ($('.js-current-step').attr('id') == 'checkout-delivery-step' && jQuery.inArray(jQuery('.delivery-option input:checked').val(), [glsCarrierId + ",", postnordCarrierId + ",", daoCarrierId + ",", bringCarrierId + ","]) >= 0) {
+    if ($('.js-current-step').attr('id') == 'checkout-delivery-step' && jQuery.inArray(jQuery('.delivery-option input:checked').val(), [gls_carrier_id + ",", postnord_carrier_id + ",", dao_carrier_id + ",", bring_carrier_id + ","]) >= 0) {
         setCurrentShopBySession();
     }
 
     // Add Prevent continue button
-    $('#js-delivery').append('<button type="button" class="btn btn-primary select-service-point-to-continue">' + modalHeaderTitle + '</button>');
+    $('#js-delivery').append('<button type="button" class="btn btn-primary select-service-point-to-continue">' + modal_header_title + '</button>');
     $(document).on('click', '.select-service-point-to-continue', function (e) {
         e.preventDefault();
 

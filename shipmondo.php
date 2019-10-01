@@ -463,26 +463,16 @@ class Shipmondo extends CarrierModule
         $current_page = Tools::getValue('controller');
         if ($current_page == 'order') {
             Media::addJsDef([
-                'findServicePointText' => $this->l('Find nearest pickup point'),
-                'zipCodeFieldText' => $this->l('Zipcode'),
-                'addressFieldText' => $this->l('Address'),
-                'modalHeaderTitle' => $this->l('Choose pickup point'),
-                'showMapText' => $this->l('Show map'),
-                'hideMapText' => $this->l('Hide map'),
-                'chooseServicePointText' => $this->l('Choose'),
-                'chooseServicePointHeader' => $this->l('Choose pickup point'),
-                'glsCarrierId' => $gls->id,
-                'daoCarrierId' => $dao->id,
-                'postnordCarrierId' => $pdk->id,
-                'bringCarrierId' => $bring->id,
-                'frontendType' => Configuration::get('SHIPMONDO_FRONTEND_TYPE'),
-                'selectedServicePointHeader' => $this->l('Currently chosen pickup point:'),
-                'noCoordinatesErrorText' => $this->l('* Could not mark this pickup point on the map'),
-                'moduleBaseUrl' => Tools::getProtocol(Tools::usingSecureMode()) . $_SERVER['HTTP_HOST'] . $this->getPathUri(),
-                'noPointSelectedErrorText' => $this->l('You must choose a pickup point before you can proceed'),
-                'servicePointsEndpoint' => Context::getContext()->link->getModuleLink('shipmondo', 'servicepoints'),
+                'modal_header_title' => $this->l('Choose pickup point'),
+                'gls_carrier_id' => $gls->id,
+                'dao_carrier_id' => $dao->id,
+                'postnord_carrier_id' => $pdk->id,
+                'bring_carrier_id' => $bring->id,
+                'frontend_type' => Configuration::get('SHIPMONDO_FRONTEND_TYPE'),
+                'module_base_url' => Tools::getProtocol(Tools::usingSecureMode()) . $_SERVER['HTTP_HOST'] . $this->getPathUri(),
+                'service_points_endpoint' => Context::getContext()->link->getModuleLink('shipmondo', 'servicepoints'),
                 'selectionButton' => $this->fetch('module:shipmondo/views/templates/front/' . Configuration::get('SHIPMONDO_FRONTEND_TYPE') . '/selection_button.tpl'),
-                'modalHtml' => $this->fetch('module:shipmondo/views/templates/front/popup/modal.tpl')
+                'modal_html' => $this->fetch('module:shipmondo/views/templates/front/popup/modal.tpl')
             ]);
             if (Configuration::get('SHIPMONDO_FRONTEND_TYPE') === 'popup') {
                 // Loads Google map API
