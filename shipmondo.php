@@ -504,7 +504,7 @@ class Shipmondo extends CarrierModule
     protected function createCarriers()
     {
         foreach ($this->carriers as $key => $value) {
-            $carrier = $gls_carrier = Carrier::getCarrierByReference(
+            $carrier = Carrier::getCarrierByReference(
                 Configuration::get(self::PREFIX . $key)
             );
 
@@ -521,8 +521,7 @@ class Shipmondo extends CarrierModule
             $logo_name = implode('_', array_slice(explode('_', $key), 0, 1));
 
             // Assign/overwrite carrier logo
-            copy(_PS_MODULE_DIR_ . 'shipmondo/views/img/' . $logo_name . '_2.png', _PS_SHIP_IMG_DIR_ . '/' . (int) $carrier->id . '.png');
-            unlink(_PS_SHIP_IMG_DIR_ . '/' . (int) $carrier->id . '.jpg');
+            copy(_PS_MODULE_DIR_ . 'shipmondo/views/img/carrier_logos/' . $logo_name . '.jpg', _PS_SHIP_IMG_DIR_ . '/' . (int) $carrier->id . '.jpg');
         }
         return true;
     }
