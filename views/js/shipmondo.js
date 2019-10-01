@@ -21,7 +21,6 @@ jQuery(document).ready(function ($) {
     var hidden_chosen_shop = '#hidden_chosen_shop';
     var selected_shop_context = '#selected_shop_context';
 
-
     function hideModal() {
         modal.removeClass('visible').removeClass('loading');
         setTimeout(function () {
