@@ -5,7 +5,7 @@
 *}
 
 <div class="shipmondo-modal-content">
-    {include file='module:shipmondo/views/templates/front/popup/partials/close_button.tpl'}
+    {include file='module:shipmondo/views/templates/front/_partials/close_button.tpl'}
     <div class="shipmondo-modal-header">
         <h4>{l s='Choose pickup point' mod='shipmondo'}</h4>
         <p class="shipmondo-pickoup-point-counter" id="shipmondo-pickup-point-counter">

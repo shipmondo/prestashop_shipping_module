@@ -21,7 +21,7 @@
                         </div>
                         <div class="shipmondo-removable-content"></div>
                         <div class="shipmondo-error">
-                            {include file='module:shipmondo/views/templates/front/popup/partials/close_button.tpl'}
+                            {include file='module:shipmondo/views/templates/front/_partials/close_button.tpl'}
                             <p>Something went wrong, please try again!'</p>
                             <button class="shipmondo-modal-close-button button alt">Close</button>
                         </div>
