@@ -451,7 +451,7 @@ jQuery(document).ready(function ($) {
                 extra_content = $(dev_option).next('.carrier-extra-content');
             }
 
-            $(extra_content).html(selectionButton);
+            $(extra_content).html(selection_button_html);
 
             //TODO remove this if we can set it in selection_button.tpl as WC
             $(extra_content).find('#shipmondo_find_shop_btn').data("shipping-type", carrier_code);

@@ -471,7 +471,7 @@ class Shipmondo extends CarrierModule
                 'frontend_type' => Configuration::get('SHIPMONDO_FRONTEND_TYPE'),
                 'module_base_url' => Tools::getProtocol(Tools::usingSecureMode()) . $_SERVER['HTTP_HOST'] . $this->getPathUri(),
                 'service_points_endpoint' => Context::getContext()->link->getModuleLink('shipmondo', 'servicepoints'),
-                'selectionButton' => $this->fetch('module:shipmondo/views/templates/front/' . Configuration::get('SHIPMONDO_FRONTEND_TYPE') . '/selection_button.tpl'),
+                'selection_button_html' => $this->fetch('module:shipmondo/views/templates/front/' . Configuration::get('SHIPMONDO_FRONTEND_TYPE') . '/selection_button.tpl'),
                 'modal_html' => $this->fetch('module:shipmondo/views/templates/front/popup/modal.tpl')
             ]);
             if (Configuration::get('SHIPMONDO_FRONTEND_TYPE') === 'popup') {
