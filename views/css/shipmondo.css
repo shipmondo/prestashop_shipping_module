@@ -364,8 +364,7 @@ body.shipmondo-modal-open {
     -webkit-transform: translate(0, -50%);
     -ms-transform: translate(0, -50%);
     transform: translate(0, -50%);
-    box-shadow: inset 0 1px 1px
-    rgba(0,0,0,.09);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.09);
 }
 
 .shipmondo-pickup-point-info:hover .shipmondo-radio-button {
