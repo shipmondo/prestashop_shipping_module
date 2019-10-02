@@ -491,7 +491,7 @@ class Shipmondo extends CarrierModule
             // Add theme overrides to views/css/theme_css.
             $theme_name = _THEME_NAME_;
             if ('classic' !== $theme_name) {
-                $theme_path = $this->_path . 'views/css/theme_css' . $theme_name . '.css';
+                $theme_path = $this->_path . 'views/css/theme_css/' . $theme_name . '.css';
                 if (file_exists($theme_path)) {
                     $context->addCSS($theme_path, 'all');
                 }
@@ -505,7 +505,7 @@ class Shipmondo extends CarrierModule
 
             foreach ($modules as $module) {
                 if (Module::isInstalled($module) && Module::isEnabled($module)) {
-                    $context->addCSS($this->_path . 'views/css/module_css' . $module . '.css', 'all');
+                    $context->addCSS($this->_path . 'views/css/module_css/' . $module . '.css', 'all');
                 }
             }
       
