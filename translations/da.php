@@ -1,7 +1,7 @@
 <?php
 
 global $_MODULE;
-$_MODULE = array();
+$_MODULE = [];
 $_MODULE['<{shipmondo}prestashop>shipmondo_2d1af97c75a1358086d634a188a7fca0'] = 'Shipmondo';
 $_MODULE['<{shipmondo}prestashop>shipmondo_bff89b3c2336557e08d05f68835aa9e7'] = 'GLS, PostNord, DAO og Bring Shipping til PrestaShop';
 $_MODULE['<{shipmondo}prestashop>shipmondo_2d13aa4a4d1a2a0dedf1a03323d294b8'] = 'Udfyld venligst alle påkrævede felter.';
