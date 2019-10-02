@@ -497,7 +497,7 @@ class Shipmondo extends CarrierModule
                 }
             }
 
-            // Add module overrides to views/css/theme_css.
+            // Add module overrides to views/css/module_css.
             $modules = [
                 // Add modules into this array
                 //'onepagecheckout',
