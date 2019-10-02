@@ -508,7 +508,7 @@ class Shipmondo extends CarrierModule
                     $context->addCSS($this->_path . 'views/css/module_css/' . $module . '.css', 'all');
                 }
             }
-      
+
             $context->addJS($this->_path . 'views/js/shipmondo.js', 'all');
         }
     }
