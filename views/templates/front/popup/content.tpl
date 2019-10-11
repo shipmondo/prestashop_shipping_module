@@ -41,7 +41,11 @@
                         <input type="hidden" class="input_shop_city" id="shop_city_{$service_point->number nofilter}"
                                name="shop_city_{$service_point->number nofilter}" value="{$service_point->city nofilter}">
 
-                        <div class="shipmondo-radio-button"></div>
+                        <!--<div class="shipmondo-radio-button"></div>-->
+                        <span class="custom-radio">
+                            <input type="radio">
+                            <span></span>
+                        </span>
 
                         <div class="shipmondo-pickup-point-name">{$service_point->company_name nofilter}</div>
                         <div class="shipmondo-pickup-point-address">{$service_point->address nofilter}</div>

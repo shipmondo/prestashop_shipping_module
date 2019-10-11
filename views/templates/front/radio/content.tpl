@@ -12,7 +12,8 @@
                 <div class="shipmondo-pickup-point-info">
                     <input type="hidden" class="input_shop_id" id="shop_id_{$service_point->number nofilter}" name="shop_id_{$service_point->number nofilter}"
                            value="ID: {$service_point->carrier_code nofilter}-{$service_point->number nofilter}">
-                    <input type="hidden" class="input_shop_carrier_code" id="shop_carrier_code_{$service_point->carrier_code nofilter}" name="shop_carrier_code_{$service_point->carrier_code nofilter}"
+                    <input type="hidden" class="input_shop_carrier_code" id="shop_carrier_code_{$service_point->carrier_code nofilter}"
+                           name="shop_carrier_code_{$service_point->carrier_code nofilter}"
                            value="{$service_point->carrier_code nofilter}">
                     <input type="hidden" class="input_shop_name" id="shop_name_{$service_point->number nofilter}"
                            name="shop_name_{$service_point->number nofilter}" value="{$service_point->company_name nofilter}">
@@ -23,7 +24,11 @@
                     <input type="hidden" class="input_shop_city" id="shop_city_{$service_point->number nofilter}"
                            name="shop_city_{$service_point->number nofilter}" value="{$service_point->city nofilter}">
 
-                    <div class="shipmondo-radio-button"></div>
+                    <!--<div class="shipmondo-radio-button"></div>-->
+                    <span class="custom-radio">
+                        <input type="radio">
+                        <span></span>
+                    </span>
 
                     <div class="shipmondo-pickup-point-name">{$service_point->company_name nofilter}</div>
                     <div class="shipmondo-pickup-point-address">{$service_point->address nofilter}</div>
@@ -37,6 +42,6 @@
         </ul>
     </div>
     <div class="shipmondo-modal-footer">
-    {l s='Powered by Shipmondo' mod='shipmondo'}
+        {l s='Powered by Shipmondo' mod='shipmondo'}
     </div>
 </div>
