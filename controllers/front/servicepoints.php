@@ -233,7 +233,8 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
     }
 
     // In place of WordPress function _n https://developer.wordpress.org/reference/functions/_n/
-    private function _n($single, $plural, $amount) {
+    private function _n($single, $plural, $amount)
+    {
         if ($amount == 1) {
             return $single;
         }

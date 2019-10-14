@@ -487,6 +487,29 @@ class Shipmondo extends CarrierModule
                 );
             }
             $context->addCSS($this->_path . 'views/css/shipmondo.css', 'all');
+
+            // Add theme overrides to views/css/theme.
+            $themes = [
+                // Add themes into this array
+                //'warehouse',
+            ];
+            foreach ($themes as $theme) {
+                if (Module::isInstalled($theme) && Module::isEnabled($theme)) {
+                    $context->addCSS($this->_path . 'views/css/theme/' . $theme . '.css', 'all');
+                }
+            }
+
+            // Add module overrides to views/css/module.
+            $modules = [
+                // Add modules into this array
+                //'onepagecheckout',
+            ];
+            foreach ($modules as $module) {
+                if (Module::isInstalled($module) && Module::isEnabled($module)) {
+                    $context->addCSS($this->_path . 'views/css/module/' . $module . '.css', 'all');
+                }
+            }
+
             $context->addJS($this->_path . 'views/js/shipmondo.js', 'all');
         }
     }
@@ -498,12 +521,12 @@ class Shipmondo extends CarrierModule
                 Configuration::get(self::PREFIX . $key)
             );
 
-            if(!isset($carrier)) {
+            if (!isset($carrier)) {
                 // Create new carrier
                 $carrier = $this->createCarrier($key, $value);
             }
 
-            if(!isset($carrier)) {
+            if (!isset($carrier)) {
                 return false;
             }
 
@@ -513,6 +536,61 @@ class Shipmondo extends CarrierModule
             // Assign/overwrite carrier logo
             copy(_PS_MODULE_DIR_ . 'shipmondo/views/img/carrier_logos/' . $logo_name . '.jpg', _PS_SHIP_IMG_DIR_ . '/' . (int) $carrier->id . '.jpg');
         }
+        return true;
+    }
+
+    protected function createDatabaseTables()
+    {
+        $sql_carts = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'shipmondo_selected_service_points` ('
+            . '`id_smd_service_point` int(10) NOT NULL AUTO_INCREMENT PRIMARY KEY, '
+            . '`id_cart` int(10), '
+            . '`service_point` text, '
+            . '`id_carrier` int(10) '
+        . ')';
+        $db_instance = DB::getInstance();
+
+        return $db_instance->Execute($sql_carts);
+    }
+
+    // If frontend type is not set, set as popup
+    protected function setDefaultFrontendType()
+    {
+        $frontend_type = Configuration::get('SHIPMONDO_FRONTEND_TYPE');
+        if (empty($frontend_type)) {
+            Configuration::updateValue('SHIPMONDO_FRONTEND_TYPE', 'popup');
+        }
+    }
+
+    protected function deleteDatabaseTables()
+    {
+        $sql_carts = 'DROP TABLE IF EXISTS `' . _DB_PREFIX_ . 'shipmondo_selected_service_points`';
+        $db_instance = DB::getInstance();
+
+        return $db_instance->Execute($sql_carts);
+    }
+
+    protected function deleteCarriers()
+    {
+        $keys = array_keys($this->carriers);
+        foreach ($keys as $key) {
+            $carrier_id = Configuration::get(self::PREFIX . $key);
+            $carrier = new Carrier($carrier_id);
+            $carrier->delete();
+            Configuration::deleteByName(self::PREFIX . $key);
+        }
+
+        return true;
+    }
+
+    protected function deleteSettings()
+    {
+        Configuration::deleteByName('SHIPMONDO_FRONTEND_KEY');
+        Configuration::deleteByName('SHIPMONDO_GLS_CARRIER_ID');
+        Configuration::deleteByName('SHIPMONDO_POSTNORD_CARRIER_ID');
+        Configuration::deleteByName('SHIPMONDO_DAO_CARRIER_ID');
+        Configuration::deleteByName('SHIPMONDO_BRING_CARRIER_ID');
+        Configuration::deleteByName('SHIPMONDO_FRONTEND_TYPE');
+
         return true;
     }
 
@@ -616,61 +694,6 @@ class Shipmondo extends CarrierModule
         }
 
         return null;
-    }
-
-    protected function createDatabaseTables()
-    {
-        $sql_carts = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'shipmondo_selected_service_points` ('
-            . '`id_smd_service_point` int(10) NOT NULL AUTO_INCREMENT PRIMARY KEY, '
-            . '`id_cart` int(10), '
-            . '`service_point` text, '
-            . '`id_carrier` int(10) '
-        . ')';
-        $db_instance = DB::getInstance();
-
-        return $db_instance->Execute($sql_carts);
-    }
-
-    // If frontend type is not set, set as popup
-    protected function setDefaultFrontendType()
-    {
-        $frontend_type = Configuration::get('SHIPMONDO_FRONTEND_TYPE');
-        if (empty($frontend_type)) {
-            Configuration::updateValue('SHIPMONDO_FRONTEND_TYPE', 'popup');
-        }
-    }
-
-    protected function deleteDatabaseTables()
-    {
-        $sql_carts = 'DROP TABLE IF EXISTS `' . _DB_PREFIX_ . 'shipmondo_selected_service_points`';
-        $db_instance = DB::getInstance();
-
-        return $db_instance->Execute($sql_carts);
-    }
-
-    protected function deleteCarriers()
-    {
-        $keys = array_keys($this->carriers);
-        foreach ($keys as $key) {
-            $carrier_id = Configuration::get(self::PREFIX . $key);
-            $carrier = new Carrier($carrier_id);
-            $carrier->delete();
-            Configuration::deleteByName(self::PREFIX . $key);
-        }
-
-        return true;
-    }
-
-    protected function deleteSettings()
-    {
-        Configuration::deleteByName('SHIPMONDO_FRONTEND_KEY');
-        Configuration::deleteByName('SHIPMONDO_GLS_CARRIER_ID');
-        Configuration::deleteByName('SHIPMONDO_POSTNORD_CARRIER_ID');
-        Configuration::deleteByName('SHIPMONDO_DAO_CARRIER_ID');
-        Configuration::deleteByName('SHIPMONDO_BRING_CARRIER_ID');
-        Configuration::deleteByName('SHIPMONDO_FRONTEND_TYPE');
-
-        return true;
     }
 
     private function validateAndUpdateValue($value, $value_key, $error_message)
