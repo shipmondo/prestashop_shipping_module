@@ -488,24 +488,25 @@ class Shipmondo extends CarrierModule
             }
             $context->addCSS($this->_path . 'views/css/shipmondo.css', 'all');
 
-            // Add theme overrides to views/css/theme_css.
-            $theme_name = _THEME_NAME_;
-            if ('classic' !== $theme_name) {
-                $theme_path = $this->_path . 'views/css/theme_css/' . $theme_name . '.css';
-                if (file_exists($theme_path)) {
-                    $context->addCSS($theme_path, 'all');
+            // Add theme overrides to views/css/theme.
+            $themes = [
+                // Add themes into this array
+                //'warehouse',
+            ];
+            foreach ($themes as $theme) {
+                if (Module::isInstalled($theme) && Module::isEnabled($theme)) {
+                    $context->addCSS($this->_path . 'views/css/theme/' . $theme . '.css', 'all');
                 }
             }
 
-            // Add module overrides to views/css/module_css.
+            // Add module overrides to views/css/module.
             $modules = [
                 // Add modules into this array
                 //'onepagecheckout',
             ];
-
             foreach ($modules as $module) {
                 if (Module::isInstalled($module) && Module::isEnabled($module)) {
-                    $context->addCSS($this->_path . 'views/css/module_css/' . $module . '.css', 'all');
+                    $context->addCSS($this->_path . 'views/css/module/' . $module . '.css', 'all');
                 }
             }
 
