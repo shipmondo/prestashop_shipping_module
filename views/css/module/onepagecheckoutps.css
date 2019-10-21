@@ -4,11 +4,22 @@
  *  @license   All rights reserved
  */
 
-
 .shipmondo-shipping-field-wrap {
     margin: 8px 23px 12px;
 }
 
-#selected_shop_context{
+#selected_shop_context {
     border-color: inherit;
+}
+
+#shipmondo_find_shop_btn {
+    /*btn-lg style:*/
+    font-size: .9375rem;
+    border-radius: .3rem;
+}
+
+@media screen and (max-width: 767px) {
+    #shipping_container .delivery-option.selected {
+        display: block;
+    }
 }

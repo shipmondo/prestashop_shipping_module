@@ -5,6 +5,10 @@
  */
 
 jQuery(document).ready(function ($) {
+
+
+    // window.SMGetLatestAddress = true;
+
     //TODO I stedet for en funktion her som egentlig bare returnere selector. Kan vi så ikke bar have en var?
     window.SMGetDeliveryAddressID = function () {
         console.log('SMGetDeliveryAddressID');

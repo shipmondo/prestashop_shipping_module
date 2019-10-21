@@ -51,6 +51,13 @@ jQuery(document).ready(function ($) {
             id_delivery = jQuery('input[name="id_address_delivery"]:checked').val();
         }
 
+
+
+        // if(SMGetLatestAddress){
+        //
+        // }else{
+        //
+        // }
         var address_data = prestashop.customer.addresses[id_delivery];
 
         if (!address_data) {
