@@ -502,11 +502,12 @@ class Shipmondo extends CarrierModule
             // Add module overrides to views/css/module.
             $modules = [
                 // Add modules into this array
-                //'onepagecheckout',
+                'onepagecheckoutps', //Prestateam
             ];
             foreach ($modules as $module) {
                 if (Module::isInstalled($module) && Module::isEnabled($module)) {
                     $context->addCSS($this->_path . 'views/css/module/' . $module . '.css', 'all');
+                    $context->addJS($this->_path . 'views/js/module/' . $module . '.js', 'all');
                 }
             }
 

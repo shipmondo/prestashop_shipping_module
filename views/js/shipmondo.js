@@ -45,11 +45,18 @@ jQuery(document).ready(function ($) {
 
     function getAddress() {
         var id_delivery = prestashop.cart.id_address_delivery;
-        if (!id_delivery) {
+        if (!id_delivery && window.SMGetDeliveryAddressID && window.SMGetDeliveryAddressID()) {
+            id_delivery = window.SMGetDeliveryAddressID();
+        } else {
             id_delivery = jQuery('input[name="id_address_delivery"]:checked').val();
         }
 
         var address_data = prestashop.customer.addresses[id_delivery];
+
+        if (!address_data) {
+            alert('Shipmondo - Error');
+            return
+        }
 
         return {
             carrier_code: getSelectedCarrierCode(),
