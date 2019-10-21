@@ -469,10 +469,11 @@ class Shipmondo extends CarrierModule
                 'postnord_carrier_id' => $pdk->id,
                 'bring_carrier_id' => $bring->id,
                 'frontend_type' => Configuration::get('SHIPMONDO_FRONTEND_TYPE'),
+                'selection_button_html' => $this->fetch('module:shipmondo/views/templates/front/' . Configuration::get('SHIPMONDO_FRONTEND_TYPE') . '/selection_button.tpl'),
+                'modal_html' => $this->fetch('module:shipmondo/views/templates/front/popup/modal.tpl'),
                 'module_base_url' => Tools::getProtocol(Tools::usingSecureMode()) . $_SERVER['HTTP_HOST'] . $this->getPathUri(),
                 'service_points_endpoint' => Context::getContext()->link->getModuleLink('shipmondo', 'servicepoints'),
-                'selection_button_html' => $this->fetch('module:shipmondo/views/templates/front/' . Configuration::get('SHIPMONDO_FRONTEND_TYPE') . '/selection_button.tpl'),
-                'modal_html' => $this->fetch('module:shipmondo/views/templates/front/popup/modal.tpl')
+                'extentions_endpoint' => Context::getContext()->link->getModuleLink('shipmondo', 'extensions')
             ]);
             if (Configuration::get('SHIPMONDO_FRONTEND_TYPE') === 'popup') {
                 // Loads Google map API
