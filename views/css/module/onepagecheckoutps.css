@@ -3,3 +3,12 @@
  *  @copyright 2019 Shipmondo
  *  @license   All rights reserved
  */
+
+
+.shipmondo-shipping-field-wrap {
+    margin: 8px 23px 12px;
+}
+
+#selected_shop_context{
+    border-color: inherit;
+}
