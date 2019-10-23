@@ -23,3 +23,23 @@
         display: block;
     }
 }
+
+
+.shipmondo-radio-content ul.shipmondo-shoplist-ul {
+    margin: 0 2px;
+}
+
+.shipmondo-radio-content .custom-radio {
+    border: none;
+    height: auto;
+    width: auto;
+}
+
+.shipmondo-radio-content .custom-radio input[type=radio] {
+    opacity: 1;
+}
+
+.shipmondo-radio-content .custom-radio input[type=radio]:checked + span {
+    display: none;
+}
+

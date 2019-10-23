@@ -5,6 +5,7 @@
  */
 
 jQuery(document).ready(function ($) {
+    console.log('overrides loaded');
 
 
     // window.SMGetLatestAddress = true;

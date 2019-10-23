@@ -5,6 +5,9 @@
  */
 
 jQuery(document).ready(function ($) {
+    console.log('load main');
+
+
     var body = $('body');
     var selection_button = '#shipmondo_find_shop_btn';
     var close_button = '.shipmondo-modal-close-button, .shipmondo-modal-close';
