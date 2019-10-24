@@ -112,7 +112,7 @@ class Shipmondo extends CarrierModule
                     $service_point_address = clone $delivery_address;
 
                     $service_point_address->id = $new_id;
-                    $service_point_address->company = $service_point->company;
+                    $service_point_address->company = $service_point->company_name;
                     $service_point_address->address1 = $service_point->address;
                     $service_point_address->address2 = $service_point->address2;
                     $service_point_address->postcode = $service_point->zip_code;

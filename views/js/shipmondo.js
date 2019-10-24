@@ -338,6 +338,8 @@ jQuery(document).ready(function ($) {
             setSelectionSession(current_shop);
         }
 
+        console.log(current_shop);
+
         //Not used for radio buttons
         $('input[name="shipmondo"]', hidden_chosen_shop).val(current_shop.id);
         $('input[name="shop_name"]', hidden_chosen_shop).val(current_shop.company_name);
@@ -359,6 +361,8 @@ jQuery(document).ready(function ($) {
     }
 
     function setSelectionSession(shop) {
+        console.log(shop);
+
         jQuery.ajax({
             url: service_points_endpoint,
             type: 'POST',
