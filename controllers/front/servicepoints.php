@@ -55,13 +55,16 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
             case 'save_address':
                 $cart = Context::getContext()->cart;
 
+                $carrier_code = Tools::getValue('carrier_code');
+                $service_point_id = Tools::getValue('service_point_id');
+
                 $service_point_address = [
                     'company_name' => Tools::getValue('company_name'),
                     'address' => Tools::getValue('address'),
-                    'address2' => Tools::getValue('service_point_id'),
+                    'address2' => "ID: {$carrier_code}-{$service_point_id}",
                     'zip_code' => Tools::getValue('zip_code'),
                     'city' => Tools::getValue('city'),
-                    'carrier_code' => Tools::getValue('carrier_code'),
+                    'carrier_code' => $carrier_code,
                 ];
 
                 $sql = new DbQuery();
