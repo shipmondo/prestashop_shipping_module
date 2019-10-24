@@ -41,7 +41,7 @@
             {/foreach}
         </ul>
     </div>
-    <div class="shipmondo-modal-footer">
+    <div class="shipmondo-radio-footer">
         {l s='Powered by Shipmondo' mod='shipmondo'}
     </div>
 </div>

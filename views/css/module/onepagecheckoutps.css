@@ -24,15 +24,28 @@
     }
 }
 
-
-.shipmondo-radio-content ul.shipmondo-shoplist-ul {
-    margin: 0 2px;
+.shipmondo-pickup-point-info {
+    padding: 5px 5px 5px 48px;
 }
 
 .shipmondo-radio-content .custom-radio {
     border: none;
     height: auto;
     width: auto;
+    background: none;
+}
+
+.shipmondo-radio-content ul.shipmondo-shoplist-ul {
+    margin: 0 2px;
+    max-height: 240px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.shipmondo-radio-content ul.shipmondo-shoplist-ul li.shipmondo-shop-list {
+    width: 100%;
+    float: none;
+    margin: 0;
 }
 
 .shipmondo-radio-content .custom-radio input[type=radio] {
@@ -43,3 +56,12 @@
     display: none;
 }
 
+.shipmondo-pickup-point-info {
+    /*font-size: inherit;*/
+    font-size: 12px;
+}
+
+.shipmondo-radio-footer{
+    font-size: 10px;
+    height: 26px;
+}
