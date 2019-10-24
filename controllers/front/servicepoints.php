@@ -25,14 +25,12 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
 
                 $service_point_id = null;
                 if ($result) {
-                    $service_point_id = Tools::jsonDecode($result['service_point'])->address2;
-                    $service_point_id = preg_replace('/\D/', '', $service_point_id);
+                    $service_point_id = Tools::jsonDecode($result['service_point'])->id;
                 }
 
                 $carrier_code = Tools::getValue('carrier_code');
                 $zip_code = Tools::getValue('zip_code');
                 $address = Tools::getValue('address');
-                $country_code = 'DK';
                 $frontend_key = Configuration::get('SHIPMONDO_FRONTEND_KEY');
 
                 $delivery_address = new Address($cart->id_address_delivery);
@@ -59,12 +57,13 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
                 $service_point_id = Tools::getValue('service_point_id');
 
                 $service_point_address = [
-                    'company_name' => Tools::getValue('company_name'),
-                    'address' => Tools::getValue('address'),
-                    'address2' => "ID: {$carrier_code}-{$service_point_id}",
-                    'zip_code' => Tools::getValue('zip_code'),
-                    'city' => Tools::getValue('city'),
-                    'carrier_code' => $carrier_code,
+                    'id'            => $service_point_id,
+                    'company_name'  => Tools::getValue('company_name'),
+                    'address'       => Tools::getValue('address'),
+                    'address2'      => "ID: {$carrier_code}-{$service_point_id}",
+                    'zip_code'      => Tools::getValue('zip_code'),
+                    'city'          => Tools::getValue('city'),
+                    'carrier_code'  => $carrier_code,
                 ];
 
                 $sql = new DbQuery();
