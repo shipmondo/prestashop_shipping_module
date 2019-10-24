@@ -325,7 +325,6 @@ jQuery(document).ready(function ($) {
                 'address': $('.input_shop_address', shop).val(),
                 'zip_code': $('.input_shop_zip', shop).val(),
                 'city': $('.input_shop_city', shop).val(),
-                'id_string': $('.input_shop_id', shop).val(),
                 'carrier_code': $('.input_shop_carrier_code', shop).val()
             };
 
@@ -346,13 +345,11 @@ jQuery(document).ready(function ($) {
         $('input[name="shop_address"]', hidden_chosen_shop).val(current_shop.address);
         $('input[name="shop_zip"]', hidden_chosen_shop).val(current_shop.zip_code);
         $('input[name="shop_city"]', hidden_chosen_shop).val(current_shop.city);
-        $('input[name="shop_ID"]', hidden_chosen_shop).val(current_shop.id_string);
         $('input[name="shop_carrier_code"]', hidden_chosen_shop).val(current_shop.carrier_code);
 
         $('.shipmondo-shop-name', selected_shop_context).html(current_shop.company_name);
         $('.shipmondo-shop-address', selected_shop_context).html(current_shop.address);
         $('.shipmondo-shop-zip-and-city', selected_shop_context).html(current_shop.zip_code + ', ' + current_shop.city);
-        $('.shipmondo-shop-id', selected_shop_context).html(current_shop.id_string);
 
         $('#selected_shop_context').addClass('active');
 
@@ -563,11 +560,16 @@ jQuery(document).ready(function ($) {
     function setCurrentShopBySession() {
         getSelectionSession(function (shop) {
             current_shop = shop;
+
+
+            // console.log(current_shop);
+
             //Format data from saved fields to match what is used
-            if (current_shop && !current_shop.id_string && current_shop.carrier_code && current_shop.address2) {
-                current_shop.id = current_shop.address2; //ID is saved here
-                current_shop.id_string = current_shop.carrier_code + '-' + current_shop.address2; //ID is saved here
-            }
+            // if (current_shop && !current_shop.id && current_shop.carrier_code && current_shop.address2) {
+            //     current_shop.id = current_shop.address2; //ID is saved here
+            // }
+
+
             $('.delivery-option input:checked').trigger('click');
         });
     }
