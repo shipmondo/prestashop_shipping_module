@@ -10,8 +10,6 @@
             {foreach $service_points as $service_point}
             <li class="shipmondo-shop-list" data-id="{$service_point->number nofilter}">
                 <div class="shipmondo-pickup-point-info">
-                    <input type="hidden" class="input_shop_id" id="shop_id_{$service_point->number nofilter}" name="shop_id_{$service_point->number nofilter}"
-                           value="ID: {$service_point->carrier_code nofilter}-{$service_point->number nofilter}">
                     <input type="hidden" class="input_shop_carrier_code" id="shop_carrier_code_{$service_point->carrier_code nofilter}"
                            name="shop_carrier_code_{$service_point->carrier_code nofilter}"
                            value="{$service_point->carrier_code nofilter}">
@@ -35,7 +33,6 @@
                     <div class="shipmondo-pickup-point-zipcode-city">
                         <span class="shipmondo-pickup-point-zipcode">{$service_point->zipcode nofilter}</span>, <span class="shipmondo-pickup-point-city">{$service_point->city nofilter}</span>
                     </div>
-                    <div class="shipmondo-pickup-point-id">ID: {$carrier_code nofilter}-{$service_point->number nofilter}</div>
                 </div>
             </li>
             {/foreach}
