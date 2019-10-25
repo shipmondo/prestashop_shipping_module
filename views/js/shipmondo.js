@@ -5,9 +5,6 @@
  */
 
 jQuery(document).ready(function ($) {
-    console.log('load main');
-
-
     var body = $('body');
     var selection_button = '#shipmondo_find_shop_btn';
     var close_button = '.shipmondo-modal-close-button, .shipmondo-modal-close';
@@ -51,16 +48,10 @@ jQuery(document).ready(function ($) {
         if (!id_delivery && window.SMGetDeliveryAddressID && window.SMGetDeliveryAddressID()) {
             id_delivery = window.SMGetDeliveryAddressID();
         } else {
-            id_delivery = jQuery('input[name="id_address_delivery"]:checked').val();
+            id_delivery = $('input[name="id_address_delivery"]:checked').val();
         }
 
 
-
-        // if(SMGetLatestAddress){
-        //
-        // }else{
-        //
-        // }
         var address_data = prestashop.customer.addresses[id_delivery];
 
         if (!address_data) {
@@ -114,7 +105,7 @@ jQuery(document).ready(function ($) {
         ajax_success = false;
 
         //TODO maybe reuse from modal
-        jQuery.ajax({
+        $.ajax({
             url: service_points_endpoint,
             type: 'POST',
             data: {
@@ -337,8 +328,6 @@ jQuery(document).ready(function ($) {
             setSelectionSession(current_shop);
         }
 
-        console.log(current_shop);
-
         //Not used for radio buttons
         $('input[name="shipmondo"]', hidden_chosen_shop).val(current_shop.id);
         $('input[name="shop_name"]', hidden_chosen_shop).val(current_shop.company_name);
@@ -351,16 +340,14 @@ jQuery(document).ready(function ($) {
         $('.shipmondo-shop-address', selected_shop_context).html(current_shop.address);
         $('.shipmondo-shop-zip-and-city', selected_shop_context).html(current_shop.zip_code + ', ' + current_shop.city);
 
-        $('#selected_shop_context').addClass('active');
+        $('#selected_shop_context').addClass('active'); //TODO delete - legacy?
 
 
         showContinueBtn(true);
     }
 
     function setSelectionSession(shop) {
-        console.log(shop);
-
-        jQuery.ajax({
+        $.ajax({
             url: service_points_endpoint,
             type: 'POST',
             data: {
@@ -390,7 +377,7 @@ jQuery(document).ready(function ($) {
     function getSelectionSession(callback) {
         var carrier_code = getSelectedCarrierCode();
 
-        jQuery.ajax({
+        $.ajax({
             url: service_points_endpoint,
             type: 'GET',
             data: {
@@ -447,16 +434,6 @@ jQuery(document).ready(function ($) {
                 return 'bring';
             default:
                 return ''
-        }
-    }
-
-    function showContinueBtn(show) {
-        if (show) {
-            $('#js-delivery .continue').show();
-            $('.select-service-point-to-continue').hide();
-        } else {
-            $('#js-delivery .continue').hide();
-            $('.select-service-point-to-continue').show();
         }
     }
 
@@ -560,18 +537,28 @@ jQuery(document).ready(function ($) {
     function setCurrentShopBySession() {
         getSelectionSession(function (shop) {
             current_shop = shop;
-
-
-            // console.log(current_shop);
-
-            //Format data from saved fields to match what is used
-            // if (current_shop && !current_shop.id && current_shop.carrier_code && current_shop.address2) {
-            //     current_shop.id = current_shop.address2; //ID is saved here
-            // }
-
-
             $('.delivery-option input:checked').trigger('click');
         });
+    }
+
+    //TODO only add prevent button where it works. So check if the html exists before adding. If we want to support it in all plugin we need to do below more generic:
+    function showContinueBtn(show) {
+        if (show) {
+            $(('#js-delivery .continue')).show();
+            $('.select-service-point-to-continue').hide();
+        } else {
+            $(('#js-delivery .continue')).hide();
+            $('.select-service-point-to-continue').show();
+        }
+        // window.SMShowContinueBtn = show;
+        //
+        // if (show) {
+        //     $((window.SMContinueBtnSelector ? window.SMContinueBtnSelector : '#js-delivery .continue')).show();
+        //     $('.select-service-point-to-continue').hide();
+        // } else {
+        //     $((window.SMContinueBtnSelector ? window.SMContinueBtnSelector :'#js-delivery .continue')).hide();
+        //     $('.select-service-point-to-continue').show();
+        // }
     }
 
     //load service points if you go back to edit
@@ -580,12 +567,13 @@ jQuery(document).ready(function ($) {
     });
 
     //if a shipping method chosen on pageload, trigger click event of that method
-    if ($('.js-current-step').attr('id') == 'checkout-delivery-step' && jQuery.inArray(jQuery('.delivery-option input:checked').val(), [gls_carrier_id + ",", postnord_carrier_id + ",", dao_carrier_id + ",", bring_carrier_id + ","]) >= 0) {
+    if ($('.js-current-step').attr('id') == 'checkout-delivery-step' && $.inArray($('.delivery-option input:checked').val(), [gls_carrier_id + ",", postnord_carrier_id + ",", dao_carrier_id + ",", bring_carrier_id + ","]) >= 0) {
         setCurrentShopBySession();
     }
 
-    // Add Prevent continue button
+    // Add Prevent continue button -
     $('#js-delivery').append('<button type="button" class="btn btn-primary select-service-point-to-continue">' + modal_header_title + '</button>');
+
     $(document).on('click', '.select-service-point-to-continue', function (e) {
         e.preventDefault();
 
