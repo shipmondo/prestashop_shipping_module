@@ -56,12 +56,12 @@
     display: none;
 }
 
-.shipmondo-radio-content .shipmondo-pickup-point-info {
+.shipmondo-radio-content .shipmondo-pickup-point-info, .shipmondo-dropdown-content .shipmondo-pickup-point-info {
     /*font-size: inherit;*/
     font-size: 12px;
 }
 
-.shipmondo-radio-footer{
+.shipmondo-radio-footer {
     font-size: 10px;
     height: 26px;
 }
