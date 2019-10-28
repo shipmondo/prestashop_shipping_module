@@ -416,7 +416,7 @@ jQuery(document).ready(function ($) {
 
     //Prestashop copy
     function getSelectedCarrierCode() {
-        return getCarrierCodeByVal($((window.SMDeliveryOptionInputSelector) ? window.SMDeliveryOptionInputSelector + ':checked' : '.delivery-option input:checked').val());
+        return getCarrierCodeByVal($(((window.SMDeliveryOptionInputContainerSelector) ? window.SMDeliveryOptionInputContainerSelector : '.delivery-option') + ' input:checked').val());
     }
 
     function getCarrierCodeByVal(val) {
@@ -437,27 +437,9 @@ jQuery(document).ready(function ($) {
         }
     }
 
-
-    //TEST:
-    // jQuery(document).on('click', '#shipping-method input[type="radio"]', function () {
-    //     console.log('hej')
-    // });
-    // END TEST
-
     //Add find button
-    $(document).on('click', (window.SMDeliveryOptionInputSelector) ? window.SMDeliveryOptionInputSelector : '.delivery-option input', function (event) {
+    $(document).on('click', ((window.SMDeliveryOptionInputContainerSelector) ? window.SMDeliveryOptionInputContainerSelector : '.delivery-option') + ' input', function (event) {
         var carrier_code = getCarrierCodeByVal($(this).val());
-
-
-
-        console.log($(this).val());
-        console.log('click');
-        console.log($(this));
-
-            //todo parent?
-        console.log($(this).closest(window.SMDeliveryOptionRowSelector));
-
-        console.log(carrier_code);
 
         // Remove wrapper
         $('.shipmondo-shipping-field-wrap').remove();
@@ -470,12 +452,12 @@ jQuery(document).ready(function ($) {
             //use THIS instead of another query?
             //var dev_option = $('.delivery-option input:checked').closest('.delivery-option'); //row
             //TODO NOT WORKING WITH DEFAULT NOW!
-            var dev_option = $(this).closest(window.SMDeliveryOptionRowSelector); //row
-            console.log(dev_option);
+            var dev_option = $(this).closest((window.SMDeliveryOptionRowSelector) ? window.SMDeliveryOptionRowSelector : '.delivery-option'); //row
+            // console.log(dev_option);
 
             var extra_content = $(dev_option).find('.carrier-extra-content');
 
-            console.log(extra_content);
+            // console.log(extra_content);
 
 
             if ($(extra_content).length < 1) {
