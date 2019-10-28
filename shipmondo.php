@@ -461,7 +461,15 @@ class Shipmondo extends CarrierModule
         $bring = Carrier::getCarrierByReference(Configuration::get('SHIPMONDO_BRING_CARRIER_ID'));
 
         $current_page = Tools::getValue('controller');
-        if ($current_page == 'order') {
+
+
+
+        $order_pages = [
+            'order', //default PS
+            'supercheckout' //Knowband
+        ];
+
+        if (in_array($current_page, $order_pages)) {
             Media::addJsDef([
                 'modal_header_title' => $this->l('Choose pickup point'),
                 'gls_carrier_id' => $gls->id,
@@ -504,6 +512,7 @@ class Shipmondo extends CarrierModule
             $modules = [
                 // Add modules into this array
                 'onepagecheckoutps', //Prestateam
+                'supercheckout' //knowband
             ];
             foreach ($modules as $module) {
                 if (Module::isInstalled($module) && Module::isEnabled($module)) {

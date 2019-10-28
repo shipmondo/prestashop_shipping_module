@@ -416,7 +416,7 @@ jQuery(document).ready(function ($) {
 
     //Prestashop copy
     function getSelectedCarrierCode() {
-        return getCarrierCodeByVal($('.delivery-option input:checked').val());
+        return getCarrierCodeByVal($((window.SMDeliveryOptionInputSelector) ? window.SMDeliveryOptionInputSelector + ':checked' : '.delivery-option input:checked').val());
     }
 
     function getCarrierCodeByVal(val) {
@@ -437,16 +437,46 @@ jQuery(document).ready(function ($) {
         }
     }
 
+
+    //TEST:
+    // jQuery(document).on('click', '#shipping-method input[type="radio"]', function () {
+    //     console.log('hej')
+    // });
+    // END TEST
+
     //Add find button
-    $(document).on('click', '.delivery-option input', function () {
+    $(document).on('click', (window.SMDeliveryOptionInputSelector) ? window.SMDeliveryOptionInputSelector : '.delivery-option input', function (event) {
         var carrier_code = getCarrierCodeByVal($(this).val());
 
-        if (carrier_code != '') {
-            // Remove zipcode wrapper
-            $('.shipmondo-shipping-field-wrap').remove();
 
-            var dev_option = $('.delivery-option input:checked').closest('.delivery-option');
+
+        console.log($(this).val());
+        console.log('click');
+        console.log($(this));
+
+            //todo parent?
+        console.log($(this).closest(window.SMDeliveryOptionRowSelector));
+
+        console.log(carrier_code);
+
+        // Remove wrapper
+        $('.shipmondo-shipping-field-wrap').remove();
+
+        if (carrier_code != '') {
+            // // Remove wrapper
+            // $('.shipmondo-shipping-field-wrap').remove();
+
+
+            //use THIS instead of another query?
+            //var dev_option = $('.delivery-option input:checked').closest('.delivery-option'); //row
+            //TODO NOT WORKING WITH DEFAULT NOW!
+            var dev_option = $(this).closest(window.SMDeliveryOptionRowSelector); //row
+            console.log(dev_option);
+
             var extra_content = $(dev_option).find('.carrier-extra-content');
+
+            console.log(extra_content);
+
 
             if ($(extra_content).length < 1) {
                 extra_content = $(dev_option).next('.carrier-extra-content');

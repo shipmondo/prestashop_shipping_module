@@ -5,7 +5,7 @@
  */
 
 jQuery(document).ready(function ($) {
-    console.log('init overrides');
+    console.log('init onepagecheckout');
 
     //TODO one issue - if you edit the address the JS address object will not get updated.
     window.SMGetDeliveryAddressID = function () {

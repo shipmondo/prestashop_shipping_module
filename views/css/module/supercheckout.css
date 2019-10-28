@@ -1,0 +1,33 @@
+/**
+ *  @author    Shipmondo
+ *  @copyright 2019 Shipmondo
+ *  @license   All rights reserved
+ */
+
+#shipmondo_shipping_button {
+    padding: 0 5px;
+}
+
+#selected_shop_context {
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+#shipmondo_pickup_point_selector_dropdown {
+    min-width: 261px;
+}
+
+.shipmondo-radio-content .shipmondo-pickup-point-info, .shipmondo-dropdown-content .shipmondo-pickup-point-info {
+    font-size: inherit;
+    /*font-size: 12px;*/
+}
+
+.shipmondo-radio-content .shipmondo-pickup-point-info .shipmondo-pickup-point-name, .shipmondo-dropdown-content .shipmondo-pickup-point-info .shipmondo-pickup-point-name {
+    color: #000000;
+}
+
+.shipmondo-shop-header {
+    color: #000000;
+}
+
+
