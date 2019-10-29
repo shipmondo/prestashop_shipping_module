@@ -45,8 +45,9 @@ jQuery(document).ready(function ($) {
 
     function getAddress() {
         var id_delivery = prestashop.cart.id_address_delivery;
-        if (!id_delivery && window.SMGetDeliveryAddressID && window.SMGetDeliveryAddressID()) {
-            id_delivery = window.SMGetDeliveryAddressID();
+        var delivery_address_id_from_plugin = (window.Shipmondo && window.Shipmondo.getDeliveryAddressID) ? window.Shipmondo.getDeliveryAddressID() : null;
+        if (!id_delivery && delivery_address_id_from_plugin) {
+            id_delivery = delivery_address_id_from_plugin;
         } else {
             id_delivery = $('input[name="id_address_delivery"]:checked').val();
         }
@@ -416,7 +417,7 @@ jQuery(document).ready(function ($) {
 
     //Prestashop copy
     function getSelectedCarrierCode() {
-        return getCarrierCodeByVal($(((window.SMDeliveryOptionInputContainerSelector) ? window.SMDeliveryOptionInputContainerSelector : '.delivery-option') + ' input:checked').val());
+        return getCarrierCodeByVal($(((window.Shipmondo && window.Shipmondo.deliveryOptionInputContainerSelector) ? window.Shipmondo.deliveryOptionInputContainerSelector : '.delivery-option') + ' input:checked').val());
     }
 
     function getCarrierCodeByVal(val) {
@@ -438,7 +439,7 @@ jQuery(document).ready(function ($) {
     }
 
     //Add find button
-    $(document).on('click', ((window.SMDeliveryOptionInputContainerSelector) ? window.SMDeliveryOptionInputContainerSelector : '.delivery-option') + ' input', function (event) {
+    $(document).on('click', ((window.Shipmondo && window.Shipmondo.deliveryOptionInputContainerSelector) ? window.Shipmondo.deliveryOptionInputContainerSelector : '.delivery-option') + ' input', function (event) {
         var carrier_code = getCarrierCodeByVal($(this).val());
 
         // Remove wrapper
@@ -452,7 +453,7 @@ jQuery(document).ready(function ($) {
             //use THIS instead of another query?
             //var dev_option = $('.delivery-option input:checked').closest('.delivery-option'); //row
             //TODO NOT WORKING WITH DEFAULT NOW!
-            var dev_option = $(this).closest((window.SMDeliveryOptionRowSelector) ? window.SMDeliveryOptionRowSelector : '.delivery-option'); //row
+            var dev_option = $(this).closest((window.Shipmondo && window.Shipmondo.deliveryOptionRowSelector) ? window.Shipmondo.deliveryOptionRowSelector : '.delivery-option'); //row
             // console.log(dev_option);
 
             var extra_content = $(dev_option).find('.carrier-extra-content');

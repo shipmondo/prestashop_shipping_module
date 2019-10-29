@@ -5,10 +5,10 @@
  */
 
 jQuery(document).ready(function ($) {
-    console.log('init onepagecheckout');
+    // console.log('init onepagecheckout');
 
     //TODO one issue - if you edit the address the JS address object will not get updated.
-    window.SMGetDeliveryAddressID = function () {
+    window.Shipmondo.getDeliveryAddressID = function () {
         var address_id = null;
         if (window.Address && window.Address.id_address_delivery) {
             address_id = window.Address.id_address_delivery;
