@@ -1,0 +1,67 @@
+/**
+ *  @author    Shipmondo
+ *  @copyright 2019 Shipmondo
+ *  @license   All rights reserved
+ */
+
+.shipmondo-shipping-field-wrap {
+    margin: 8px 23px 12px;
+}
+
+#selected_shop_context {
+    border-color: inherit;
+}
+
+#shipmondo_find_shop_btn {
+    /*btn-lg style:*/
+    font-size: .9375rem;
+    border-radius: .3rem;
+}
+
+@media screen and (max-width: 767px) {
+    #shipping_container .delivery-option.selected {
+        display: block;
+    }
+}
+
+.shipmondo-pickup-point-info {
+    padding: 5px 5px 5px 48px;
+}
+
+.shipmondo-radio-content .custom-radio {
+    border: none;
+    height: auto;
+    width: auto;
+    background: none;
+}
+
+.shipmondo-radio-content ul.shipmondo-shoplist-ul {
+    margin: 0 2px;
+    max-height: 240px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.shipmondo-radio-content ul.shipmondo-shoplist-ul li.shipmondo-shop-list {
+    width: 100%;
+    float: none;
+    margin: 0;
+}
+
+.shipmondo-radio-content .custom-radio input[type=radio] {
+    opacity: 1;
+}
+
+.shipmondo-radio-content .custom-radio input[type=radio]:checked + span {
+    display: none;
+}
+
+.shipmondo-radio-content .shipmondo-pickup-point-info, .shipmondo-dropdown-content .shipmondo-pickup-point-info {
+    /*font-size: inherit;*/
+    font-size: 12px;
+}
+
+.shipmondo-radio-footer {
+    font-size: 10px;
+    height: 26px;
+}

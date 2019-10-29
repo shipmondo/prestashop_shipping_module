@@ -264,6 +264,7 @@ body.shipmondo-modal-open {
 }
 
 .shipmondo-modal-footer,
+.shipmondo-radio-footer,
 .shipmondo-dropdown-footer {
     text-align: center;
     color: #999;
@@ -276,8 +277,14 @@ body.shipmondo-modal-open {
     line-height: 20px;
     z-index: 10;
 }
+.shipmondo-radio-footer{
+    background: none;
+    z-index: 0;
+}
+
 
 .shipmondo-modal-footer:before,
+.shipmondo-radio-footer:before,
 .shipmondo-dropdown-footer:before {
     content: '';
     display: block;
@@ -289,6 +296,11 @@ body.shipmondo-modal-open {
     left: 0;
     right: 0;
 }
+
+.shipmondo-radio-footer:before{
+    background: none;
+}
+
 
 .shipmondo-radio-content {
     position: relative;
@@ -363,6 +375,11 @@ body.shipmondo-modal-open {
     -webkit-transform: translate(0, -50%);
     -ms-transform: translate(0, -50%);
     transform: translate(0, -50%);
+}
+
+
+.shipmondo-radio-content .shipmondo-pickup-point-info .custom-radio{
+    z-index: 0;
 }
 
 /*.shipmondo-pickup-point-info .shipmondo-radio-button {*/

@@ -112,7 +112,7 @@ class Shipmondo extends CarrierModule
                     $service_point_address = clone $delivery_address;
 
                     $service_point_address->id = $new_id;
-                    $service_point_address->company = $service_point->company;
+                    $service_point_address->company = $service_point->company_name;
                     $service_point_address->address1 = $service_point->address;
                     $service_point_address->address2 = $service_point->address2;
                     $service_point_address->postcode = $service_point->zip_code;
@@ -461,7 +461,15 @@ class Shipmondo extends CarrierModule
         $bring = Carrier::getCarrierByReference(Configuration::get('SHIPMONDO_BRING_CARRIER_ID'));
 
         $current_page = Tools::getValue('controller');
-        if ($current_page == 'order') {
+
+
+
+        $order_pages = [
+            'order', //default PS
+            'supercheckout' //Knowband
+        ];
+
+        if (in_array($current_page, $order_pages)) {
             Media::addJsDef([
                 'modal_header_title' => $this->l('Choose pickup point'),
                 'gls_carrier_id' => $gls->id,
@@ -469,10 +477,11 @@ class Shipmondo extends CarrierModule
                 'postnord_carrier_id' => $pdk->id,
                 'bring_carrier_id' => $bring->id,
                 'frontend_type' => Configuration::get('SHIPMONDO_FRONTEND_TYPE'),
+                'selection_button_html' => $this->fetch('module:shipmondo/views/templates/front/' . Configuration::get('SHIPMONDO_FRONTEND_TYPE') . '/selection_button.tpl'),
+                'modal_html' => $this->fetch('module:shipmondo/views/templates/front/popup/modal.tpl'),
                 'module_base_url' => Tools::getProtocol(Tools::usingSecureMode()) . $_SERVER['HTTP_HOST'] . $this->getPathUri(),
                 'service_points_endpoint' => Context::getContext()->link->getModuleLink('shipmondo', 'servicepoints'),
-                'selection_button_html' => $this->fetch('module:shipmondo/views/templates/front/' . Configuration::get('SHIPMONDO_FRONTEND_TYPE') . '/selection_button.tpl'),
-                'modal_html' => $this->fetch('module:shipmondo/views/templates/front/popup/modal.tpl')
+                'extentions_endpoint' => Context::getContext()->link->getModuleLink('shipmondo', 'extensions')
             ]);
             if (Configuration::get('SHIPMONDO_FRONTEND_TYPE') === 'popup') {
                 // Loads Google map API
@@ -491,22 +500,23 @@ class Shipmondo extends CarrierModule
             // Add theme overrides to views/css/theme.
             $themes = [
                 // Add themes into this array
-                //'warehouse',
+                'warehouse'
             ];
-            foreach ($themes as $theme) {
-                if (Module::isInstalled($theme) && Module::isEnabled($theme)) {
-                    $context->addCSS($this->_path . 'views/css/theme/' . $theme . '.css', 'all');
-                }
+
+            if (in_array(_THEME_NAME_, $themes)) {
+                $context->addCSS($this->_path . 'views/css/theme/' . _THEME_NAME_ . '.css', 'all');
             }
 
             // Add module overrides to views/css/module.
             $modules = [
                 // Add modules into this array
-                //'onepagecheckout',
+                'onepagecheckoutps', //Prestateam
+                'supercheckout' //knowband
             ];
             foreach ($modules as $module) {
                 if (Module::isInstalled($module) && Module::isEnabled($module)) {
                     $context->addCSS($this->_path . 'views/css/module/' . $module . '.css', 'all');
+                    $context->addJS($this->_path . 'views/js/module/' . $module . '.js', 'all');
                 }
             }
 
