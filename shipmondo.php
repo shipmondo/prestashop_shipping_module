@@ -500,12 +500,11 @@ class Shipmondo extends CarrierModule
             // Add theme overrides to views/css/theme.
             $themes = [
                 // Add themes into this array
-                //'warehouse',
+                'warehouse'
             ];
-            foreach ($themes as $theme) {
-                if (Module::isInstalled($theme) && Module::isEnabled($theme)) {
-                    $context->addCSS($this->_path . 'views/css/theme/' . $theme . '.css', 'all');
-                }
+
+            if (in_array(_THEME_NAME_, $themes)) {
+                $context->addCSS($this->_path . 'views/css/theme/' . _THEME_NAME_ . '.css', 'all');
             }
 
             // Add module overrides to views/css/module.

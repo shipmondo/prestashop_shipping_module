@@ -449,17 +449,8 @@ jQuery(document).ready(function ($) {
             // // Remove wrapper
             // $('.shipmondo-shipping-field-wrap').remove();
 
-
-            //use THIS instead of another query?
-            //var dev_option = $('.delivery-option input:checked').closest('.delivery-option'); //row
-            //TODO NOT WORKING WITH DEFAULT NOW!
             var dev_option = $(this).closest((window.Shipmondo && window.Shipmondo.deliveryOptionRowSelector) ? window.Shipmondo.deliveryOptionRowSelector : '.delivery-option'); //row
-            // console.log(dev_option);
-
             var extra_content = $(dev_option).find('.carrier-extra-content');
-
-            // console.log(extra_content);
-
 
             if ($(extra_content).length < 1) {
                 extra_content = $(dev_option).next('.carrier-extra-content');
