@@ -510,8 +510,8 @@ class Shipmondo extends CarrierModule
             // Add module overrides to views/css/module.
             $modules = [
                 // Add modules into this array
-                'onepagecheckoutps', //Prestateam
-                'supercheckout' //knowband
+                'onepagecheckoutps', //Prestateam - Testet with v4.0.6
+                'supercheckout' //knowband - Testet with v1.0.3
             ];
             foreach ($modules as $module) {
                 if (Module::isInstalled($module) && Module::isEnabled($module)) {
