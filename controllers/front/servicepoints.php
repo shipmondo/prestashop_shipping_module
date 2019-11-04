@@ -141,7 +141,7 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
         $data = [
             'frontend_key'          => $frontend_key,
             'request_url'           => _PS_BASE_URL_,
-            'app_version'           => Module::getInstanceByName('shipmondo')->version, //TODO is there a easier way of obtaining module version?
+            'module_version'        => Module::getInstanceByName('shipmondo')->version, //TODO is there a easier way of obtaining module version?
             'shipping_module_type'  => 'prestashop',
             
             'carrier_code'          => $carrier_code,
