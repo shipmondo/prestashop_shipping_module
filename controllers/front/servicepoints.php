@@ -52,6 +52,8 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
                 }
 
                 $response = $this->getList($frontend_key, $carrier_code, $delivery_address->address1, $delivery_address->postcode, $country_code, $service_point_id);
+                $response['new_address'] = $delivery_address;
+
                 break;
 
             case 'save_address':
