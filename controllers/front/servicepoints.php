@@ -29,8 +29,6 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
                 }
 
                 $carrier_code = Tools::getValue('carrier_code');
-                $zip_code = Tools::getValue('zip_code');
-                $address = Tools::getValue('address');
                 $frontend_key = Configuration::get('SHIPMONDO_FRONTEND_KEY');
 
                 $delivery_address = new Address($cart->id_address_delivery);
