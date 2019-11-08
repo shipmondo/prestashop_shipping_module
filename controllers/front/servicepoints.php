@@ -35,6 +35,7 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
 
                 $delivery_address = new Address($cart->id_address_delivery);
 
+                // Check if reload of service point is needed
                 $address_changed = $this->hasAddressChanged($last_address, $delivery_address);
                 if(!$address_changed && $carrier_code == $last_carrier_code) {
                     $response['address_changed'] = false;
