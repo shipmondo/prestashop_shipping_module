@@ -15,7 +15,6 @@ jQuery(document).ready(function ($) {
     var map = null;
     var bounds = null;
     var current_shop = null;
-    var ajax_success = null;
     var infowindow;
     var hidden_chosen_shop = '#hidden_chosen_shop';
     var selected_shop_context = '#selected_shop_context';
@@ -60,11 +59,7 @@ jQuery(document).ready(function ($) {
             success: function (response) {
                 if (response) {
                     last_carrier_code = current_carrier_code; //keep track of changes
-                    // last_address = JSON.parse(response).new_address; //TODO
-                    //
-                    // console.log(response);
-                    // console.log(last_address);
-                    successCallback(response);
+                    successCallback(JSON.parse(response));
                 } else {
                     errorCallback(response)
                 }
@@ -76,41 +71,32 @@ jQuery(document).ready(function ($) {
 
     function getPickupPointsDropdown() {
         var dropdown = $('#shipmondo_pickup_point_selector_dropdown');
+        var dropdown_button = $('.shipmondo_dropdown_button');
+        var dropdown_content = dropdown.find('.shipmondo-removable-content');
+        var dropdown_error = dropdown.find('.shipmondo-error');
+        var existing_content = dropdown_content.html();
+
         dropdown.removeClass('shipmondo-hidden');
 
-        var dropdown_button = $('.shipmondo_dropdown_button');
         dropdown_button.addClass('open');
 
-        var dropdown_error = dropdown.find('.shipmondo-error');
         dropdown_error.removeClass('visible');
-
-        var dropdown_content = dropdown.find('.shipmondo-removable-content');
 
         dropdown.addClass('loading');
 
-        var existing_content = dropdown_content.html();
-
         dropdown_content.empty();
 
-
-        ajax_success = false; //also move?
-
-
         getServicePointsEndpoint(function (response) {
-            var returned = JSON.parse(response);
-
-            if (returned.status === "error") {
-                dropdown_error.html(returned.error);
+            if (response.status === "error") {
+                dropdown_error.html(response.error);
                 dropdown_error.addClass('visible');
             } else {
-                if (returned.address_changed) {
-                    last_address  = returned.new_address; //TODO move to other
-                    dropdown_content.html(returned.service_points_html);
+                if (response.address_changed) {
+                    last_address = response.new_address; //TODO move to other
+                    dropdown_content.html(response.service_points_html);
                 } else {
                     dropdown_content.html(existing_content);
                 }
-
-                ajax_success = true;
             }
             $('.shipmondo-modal-content').addClass('visible');
             dropdown.removeClass('loading');
@@ -121,6 +107,8 @@ jQuery(document).ready(function ($) {
     }
 
     function getPickupPointsModal() {
+        var existing_content = modal_content.html();
+
         modal.removeClass('shipmondo-hidden');
         setTimeout(function () {
             body.addClass('shipmondo-modal-open');
@@ -131,23 +119,25 @@ jQuery(document).ready(function ($) {
 
         modal_content.empty();
 
-        ajax_success = false;
-
         getServicePointsEndpoint(function (response) {
-            var returned = JSON.parse(response);
-            if (returned.status === "error") {
-                if (returned.error) {
-                    modal_error.find('p').html(returned.error);
+            if (response.status === "error") {
+                if (response.error) {
+                    modal_error.find('p').html(response.error);
                     modal_error.addClass('visible');
                 }
             } else {
-                modal_content.html(returned.service_points_html);
-                //Set selected
-                if (current_shop && current_shop.id) {
-                    var current_li = $('.shipmondo-shoplist-ul > li[data-id=' + current_shop.id + ']');
-                    $('.custom-radio input', current_li).prop('checked', true);
+                if (response.address_changed) {
+                    last_address = response.new_address; //TODO move to other
+
+                    modal_content.html(response.service_points_html);
+                    //Set selected
+                    if (current_shop && current_shop.id) {
+                        var current_li = $('.shipmondo-shoplist-ul > li[data-id=' + current_shop.id + ']');
+                        $('.custom-radio input', current_li).prop('checked', true);
+                    }
+                } else {
+                    modal_content.html(existing_content);
                 }
-                ajax_success = true;
             }
             $('.shipmondo-modal-content').addClass('visible');
             modal.removeClass('loading');
@@ -162,8 +152,7 @@ jQuery(document).ready(function ($) {
         var radio_container = $('.shipmondo-shipping-field-wrap .shipmondo-radio-content');
         var radio_content = $(radio_container).find('.shipmondo-removable-content');
         var radio_error = radio_container.find('.shipmondo-error');
-
-        ajax_success = false;
+        var existing_content = radio_content.html();
 
         radio_error.removeClass('visible');
 
@@ -172,12 +161,16 @@ jQuery(document).ready(function ($) {
         radio_content.empty();
 
         getServicePointsEndpoint(function (response) {
-            var returned = JSON.parse(response);
-            if (returned.status === "error") {
-                radio_error.html(returned.error);
+            if (response.status === "error") {
+                radio_error.html(response.error);
                 radio_error.addClass('visible');
             } else {
-                radio_content.html(returned.service_points_html);
+                if (response.address_changed) {
+                    radio_content.html(response.service_points_html);
+                } else {
+                    radio_content.html(existing_content);
+                }
+
                 if (current_shop && current_shop.id) {
                     //Preselect if all ready selected
                     var current_li = $('.shipmondo-shoplist-ul > li[data-id=' + current_shop.id + ']');
@@ -189,8 +182,6 @@ jQuery(document).ready(function ($) {
                 } else {
                     shopSelected($('.shipmondo-shoplist-ul > li').first());
                 }
-
-                ajax_success = true;
             }
             radio_container.removeClass('loading');
         }, function () {
