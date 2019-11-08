@@ -46,6 +46,8 @@ jQuery(document).ready(function ($) {
 
     function getServicePointsEndpoint(successCallback, errorCallback) {
         var current_carrier_code = getSelectedCarrierCode();
+
+        console.log(last_address);
         $.ajax({
             url: service_points_endpoint,
             type: 'POST',
@@ -58,6 +60,10 @@ jQuery(document).ready(function ($) {
             success: function (response) {
                 if (response) {
                     last_carrier_code = current_carrier_code; //keep track of changes
+                    // last_address = JSON.parse(response).new_address; //TODO
+                    //
+                    // console.log(response);
+                    // console.log(last_address);
                     successCallback(response);
                 } else {
                     errorCallback(response)
@@ -82,7 +88,10 @@ jQuery(document).ready(function ($) {
 
         dropdown.addClass('loading');
 
+        var existing_content = dropdown_content.html();
+
         dropdown_content.empty();
+
 
         ajax_success = false; //also move?
 
@@ -94,7 +103,12 @@ jQuery(document).ready(function ($) {
                 dropdown_error.html(returned.error);
                 dropdown_error.addClass('visible');
             } else {
-                dropdown_content.html(returned.service_points_html);
+                if (returned.address_changed) {
+                    last_address  = returned.new_address; //TODO move to other
+                    dropdown_content.html(returned.service_points_html);
+                } else {
+                    dropdown_content.html(existing_content);
+                }
 
                 ajax_success = true;
             }
