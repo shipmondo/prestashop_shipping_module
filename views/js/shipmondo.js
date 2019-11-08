@@ -14,12 +14,16 @@ jQuery(document).ready(function ($) {
     var pickup_points_json = 'input[name="shipmondo_pickup_points_json"]';
     var map = null;
     var bounds = null;
-    var current_search = null;
+    // var current_search = null;
     var current_shop = null;
     var ajax_success = null;
     var infowindow;
     var hidden_chosen_shop = '#hidden_chosen_shop';
     var selected_shop_context = '#selected_shop_context';
+
+
+    var last_address = null;
+    var last_carrier_code = null;
 
     function hideModal() {
         modal.removeClass('visible').removeClass('loading');
@@ -52,10 +56,7 @@ jQuery(document).ready(function ($) {
             id_delivery = $('input[name="id_address_delivery"]:checked').val();
         }
 
-
         var address_data = prestashop.customer.addresses[id_delivery];
-
-        console.log(prestashop.customer.addresses);
 
         if (!address_data) {
             alert('Shipmondo - Error');
@@ -114,8 +115,10 @@ jQuery(document).ready(function ($) {
             data: {
                 'method': 'get_list',
                 'carrier_code': current_search.carrier_code,
-                'zip_code': current_search.zipcode,
-                'address': current_search.address
+                'last_carrier_code' :last_carrier_code,
+                'last_address': last_address
+                // 'zip_code': current_search.zipcode,
+                // 'address': current_search.address
             },
             success: function (response) {
                 if (response) {
@@ -165,8 +168,10 @@ jQuery(document).ready(function ($) {
             data: {
                 'method': 'get_list',
                 'carrier_code': current_search.carrier_code,
-                'zip_code': current_search.zipcode,
-                'address': current_search.address
+                'last_carrier_code' :last_carrier_code,
+                'last_address': last_address
+                // 'zip_code': current_search.zipcode,
+                // 'address': current_search.address
             },
             success: function (response) {
                 if (response) {
@@ -223,8 +228,12 @@ jQuery(document).ready(function ($) {
             data: {
                 'method': 'get_list',
                 'carrier_code': current_search.carrier_code,
-                'zip_code': current_search.zipcode,
-                'address': current_search.address
+                'last_carrier_code' :last_carrier_code,
+                'last_address': last_address
+                // 'carrier_code': current_search.carrier_code,
+
+                // 'zip_code': current_search.zipcode,
+                // 'address': current_search.address
             },
             success: function (response) {
                 if (response) {
