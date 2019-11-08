@@ -29,9 +29,15 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
                 }
 
                 $carrier_code = Tools::getValue('carrier_code');
+                $last_address = Tools::getValue('last_address');
                 $frontend_key = Configuration::get('SHIPMONDO_FRONTEND_KEY');
 
                 $delivery_address = new Address($cart->id_address_delivery);
+
+                $response['address_changed'] = $this->hasAddressChanged($last_address, $delivery_address);
+                if(!$response['address_changed']) {
+                    break;
+                }
 
                 $sql = new DbQuery();
                 $sql
@@ -243,5 +249,13 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
             return $single;
         }
         return $plural;
+    }
+
+    private function hasAddressChanged($old_address, $new_address)
+    {
+        return !isset($old_address)
+            || $old_address->id_country != $new_address->id_country
+            || $old_address->zip_code != $new_address->zip_code 
+            || $old_address->address1 != $new_address->address1;
     }
 }
