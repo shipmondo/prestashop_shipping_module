@@ -30,7 +30,7 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
 
                 $carrier_code       = Tools::getValue('carrier_code');
                 $last_carrier_code  = Tools::getValue('last_carrier_code');
-                $last_address       = Tools::getValue('last_address');
+                $last_address       = (object) Tools::getValue('last_address');
                 $frontend_key       = Configuration::get('SHIPMONDO_FRONTEND_KEY');
 
                 $delivery_address = new Address($cart->id_address_delivery);
@@ -56,7 +56,11 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
                 }
 
                 $response = $this->getList($frontend_key, $carrier_code, $delivery_address->address1, $delivery_address->postcode, $country_code, $service_point_id);
-                $response['new_address'] = $delivery_address;
+                $response['new_address'] = [
+                    'id_country' => $delivery_address->id_country,
+                    'address1' => $delivery_address->address1,
+                    'postcode' => $delivery_address->postcode
+                ];
                 $response['address_changed'] = true;
 
                 break;
@@ -262,7 +266,7 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
     {
         return !isset($old_address)
             || $old_address->id_country != $new_address->id_country
-            || $old_address->zip_code != $new_address->zip_code 
+            || $old_address->postcode != $new_address->postcode 
             || $old_address->address1 != $new_address->address1;
     }
 }
