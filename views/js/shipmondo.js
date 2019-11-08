@@ -44,7 +44,7 @@ jQuery(document).ready(function ($) {
     }
 
     function getAddress() {
-        var id_delivery = prestashop.cart.id_address_delivery;
+        var id_delivery = prestashop.cart.id_address_delivery; //Always null and legacy from older PS?
         var delivery_address_id_from_plugin = (window.Shipmondo && window.Shipmondo.getDeliveryAddressID) ? window.Shipmondo.getDeliveryAddressID() : null;
         if (!id_delivery && delivery_address_id_from_plugin) {
             id_delivery = delivery_address_id_from_plugin;
@@ -54,6 +54,8 @@ jQuery(document).ready(function ($) {
 
 
         var address_data = prestashop.customer.addresses[id_delivery];
+
+        console.log(prestashop.customer.addresses);
 
         if (!address_data) {
             alert('Shipmondo - Error');
