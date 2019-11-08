@@ -14,14 +14,11 @@ jQuery(document).ready(function ($) {
     var pickup_points_json = 'input[name="shipmondo_pickup_points_json"]';
     var map = null;
     var bounds = null;
-    // var current_search = null;
     var current_shop = null;
     var ajax_success = null;
     var infowindow;
     var hidden_chosen_shop = '#hidden_chosen_shop';
     var selected_shop_context = '#selected_shop_context';
-
-
     var last_address = null;
     var last_carrier_code = null;
 
@@ -47,43 +44,28 @@ jQuery(document).ready(function ($) {
         dropdown_button.removeClass('open');
     }
 
-    function getAddress() {
-        var id_delivery = prestashop.cart.id_address_delivery; //Always null and legacy from older PS?
-        var delivery_address_id_from_plugin = (window.Shipmondo && window.Shipmondo.getDeliveryAddressID) ? window.Shipmondo.getDeliveryAddressID() : null;
-        if (!id_delivery && delivery_address_id_from_plugin) {
-            id_delivery = delivery_address_id_from_plugin;
-        } else {
-            id_delivery = $('input[name="id_address_delivery"]:checked').val();
-        }
-
-        var address_data = prestashop.customer.addresses[id_delivery];
-
-        if (!address_data) {
-            alert('Shipmondo - Error');
-            return
-        }
-
-        return {
-            carrier_code: getSelectedCarrierCode(),
-            address: address_data.address1,
-            zipcode: address_data.postcode,
-            country: address_data.country
-        };
-    }
-
-    function isLastSearch(search) {
-        var last_search = current_search;
-        var _current_search = getAddress();
-
-        if (last_search !== null && ajax_success && _current_search.carrier_code === last_search.carrier_code && _current_search.zipcode === last_search.zipcode && _current_search.address === last_search.address && _current_search.country === last_search.country) {
-            return true;
-        }
-
-        if (search === true) {
-            current_search = _current_search;
-        }
-
-        return false;
+    function getServicePointsEndpoint(successCallback, errorCallback) {
+        var current_carrier_code = getSelectedCarrierCode();
+        $.ajax({
+            url: service_points_endpoint,
+            type: 'POST',
+            data: {
+                'method': 'get_list',
+                'carrier_code': current_carrier_code,
+                'last_carrier_code': last_carrier_code,
+                'last_address': last_address
+            },
+            success: function (response) {
+                if (response) {
+                    last_carrier_code = current_carrier_code; //keep track of changes
+                    successCallback(response);
+                } else {
+                    errorCallback(response)
+                }
+            }, error: function (response) {
+                errorCallback(response)
+            }
+        });
     }
 
     function getPickupPointsDropdown() {
@@ -98,50 +80,29 @@ jQuery(document).ready(function ($) {
 
         var dropdown_content = dropdown.find('.shipmondo-removable-content');
 
-        if (isLastSearch(true)) {
-            return;
-        }
-
         dropdown.addClass('loading');
 
         dropdown_content.empty();
 
-        ajax_success = false;
+        ajax_success = false; //also move?
 
-        //TODO maybe reuse from modal
-        $.ajax({
-            url: service_points_endpoint,
-            type: 'POST',
-            data: {
-                'method': 'get_list',
-                'carrier_code': current_search.carrier_code,
-                'last_carrier_code' :last_carrier_code,
-                'last_address': last_address
-                // 'zip_code': current_search.zipcode,
-                // 'address': current_search.address
-            },
-            success: function (response) {
-                if (response) {
-                    var returned = JSON.parse(response);
 
-                    if (returned.status === "error") {
-                        dropdown_error.html(returned.error);
-                        dropdown_error.addClass('visible');
-                    } else {
-                        dropdown_content.html(returned.service_points_html);
+        getServicePointsEndpoint(function (response) {
+            var returned = JSON.parse(response);
 
-                        ajax_success = true;
-                    }
-                    $('.shipmondo-modal-content').addClass('visible');
-                    dropdown.removeClass('loading');
-                } else {
-                    dropdown_error.addClass('visible');
-                    dropdown.removeClass('loading');
-                }
-            }, error: function () {
+            if (returned.status === "error") {
+                dropdown_error.html(returned.error);
                 dropdown_error.addClass('visible');
-                dropdown.removeClass('loading');
+            } else {
+                dropdown_content.html(returned.service_points_html);
+
+                ajax_success = true;
             }
+            $('.shipmondo-modal-content').addClass('visible');
+            dropdown.removeClass('loading');
+        }, function () {
+            dropdown_error.addClass('visible');
+            dropdown.removeClass('loading');
         });
     }
 
@@ -152,63 +113,38 @@ jQuery(document).ready(function ($) {
             modal.addClass('visible');
         }, 100);
 
-        if (isLastSearch(true)) {
-            return;
-        }
-
         modal.addClass('loading');
 
         modal_content.empty();
 
         ajax_success = false;
 
-        $.ajax({
-            url: service_points_endpoint,
-            type: 'POST',
-            data: {
-                'method': 'get_list',
-                'carrier_code': current_search.carrier_code,
-                'last_carrier_code' :last_carrier_code,
-                'last_address': last_address
-                // 'zip_code': current_search.zipcode,
-                // 'address': current_search.address
-            },
-            success: function (response) {
-                if (response) {
-                    var returned = JSON.parse(response);
-                    if (returned.status === "error") {
-                        if (returned.error) {
-                            modal_error.find('p').html(returned.error);
-                            modal_error.addClass('visible');
-                        }
-                    } else {
-                        modal_content.html(returned.service_points_html);
-                        //Set selected
-                        if (current_shop && current_shop.id) {
-                            // $('.shipmondo-shoplist-ul > li[data-id=' + current_shop.id + ']').addClass('selected');
-                            var current_li = $('.shipmondo-shoplist-ul > li[data-id=' + current_shop.id + ']');
-                            $('.custom-radio input', current_li).prop('checked', true);
-                        }
-                        ajax_success = true;
-                    }
-                    $('.shipmondo-modal-content').addClass('visible');
-                    modal.removeClass('loading');
-                } else {
+        getServicePointsEndpoint(function (response) {
+            var returned = JSON.parse(response);
+            if (returned.status === "error") {
+                if (returned.error) {
+                    modal_error.find('p').html(returned.error);
                     modal_error.addClass('visible');
-                    modal.removeClass('loading');
                 }
-            }, error: function () {
-                modal_error.addClass('visible');
-                modal.removeClass('loading');
+            } else {
+                modal_content.html(returned.service_points_html);
+                //Set selected
+                if (current_shop && current_shop.id) {
+                    var current_li = $('.shipmondo-shoplist-ul > li[data-id=' + current_shop.id + ']');
+                    $('.custom-radio input', current_li).prop('checked', true);
+                }
+                ajax_success = true;
             }
+            $('.shipmondo-modal-content').addClass('visible');
+            modal.removeClass('loading');
+        }, function () {
+            modal_error.addClass('visible');
+            modal.removeClass('loading');
         });
     }
 
 
     function loadRadioButtons() {
-        //Populate data but don't stop
-        isLastSearch(true);
-
         var radio_container = $('.shipmondo-shipping-field-wrap .shipmondo-radio-content');
         var radio_content = $(radio_container).find('.shipmondo-removable-content');
         var radio_error = radio_container.find('.shipmondo-error');
@@ -221,52 +157,31 @@ jQuery(document).ready(function ($) {
 
         radio_content.empty();
 
-        //TODO maybe reuse from modal
-        $.ajax({
-            url: service_points_endpoint,
-            type: 'POST',
-            data: {
-                'method': 'get_list',
-                'carrier_code': current_search.carrier_code,
-                'last_carrier_code' :last_carrier_code,
-                'last_address': last_address
-                // 'carrier_code': current_search.carrier_code,
-
-                // 'zip_code': current_search.zipcode,
-                // 'address': current_search.address
-            },
-            success: function (response) {
-                if (response) {
-                    var returned = JSON.parse(response);
-                    if (returned.status === "error") {
-                        radio_error.html(returned.error);
-                        radio_error.addClass('visible');
-                    } else {
-                        radio_content.html(returned.service_points_html);
-                        if (current_shop && current_shop.id) {
-                            //Preselect if all ready selected
-                            var current_li = $('.shipmondo-shoplist-ul > li[data-id=' + current_shop.id + ']');
-                            if (current_li.size() > 0) {
-                                // current_li.addClass('selected');
-                                $('.custom-radio input', current_li).prop('checked', true);
-                            } else {
-                                shopSelected($('.shipmondo-shoplist-ul > li').first());
-                            }
-                        } else {
-                            shopSelected($('.shipmondo-shoplist-ul > li').first());
-                        }
-
-                        ajax_success = true;
-                    }
-                    radio_container.removeClass('loading');
-                } else {
-                    radio_error.addClass('visible');
-                    radio_container.removeClass('loading');
-                }
-            }, error: function () {
+        getServicePointsEndpoint(function (response) {
+            var returned = JSON.parse(response);
+            if (returned.status === "error") {
+                radio_error.html(returned.error);
                 radio_error.addClass('visible');
-                radio_container.removeClass('loading');
+            } else {
+                radio_content.html(returned.service_points_html);
+                if (current_shop && current_shop.id) {
+                    //Preselect if all ready selected
+                    var current_li = $('.shipmondo-shoplist-ul > li[data-id=' + current_shop.id + ']');
+                    if (current_li.size() > 0) {
+                        $('.custom-radio input', current_li).prop('checked', true);
+                    } else {
+                        shopSelected($('.shipmondo-shoplist-ul > li').first());
+                    }
+                } else {
+                    shopSelected($('.shipmondo-shoplist-ul > li').first());
+                }
+
+                ajax_success = true;
             }
+            radio_container.removeClass('loading');
+        }, function () {
+            radio_error.addClass('visible');
+            radio_container.removeClass('loading');
         });
     }
 
@@ -369,7 +284,7 @@ jQuery(document).ready(function ($) {
                 'address': shop.address,
                 'city': shop.city,
                 'zip_code': shop.zip_code,
-                'carrier_code': current_search.carrier_code
+                'carrier_code': last_carrier_code
             },
             dataType: 'json',
             error: function (response) {
