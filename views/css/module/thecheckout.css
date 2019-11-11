@@ -9,12 +9,13 @@
     margin: 0 0 20px;
 }
 
-#shipmondo_find_shop_btn{
-    margin-top: 0 !important;
-}
+/*#shipmondo_find_shop_btn{*/
+    /*margin-top: 0 !important;*/
+/*}*/
+
 
 .shipmondo-radio-content ul.shipmondo-shoplist-ul {
-    margin: 0 2px;
+    margin: 0 10px;
     max-height: 240px;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
