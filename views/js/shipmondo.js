@@ -20,6 +20,7 @@ jQuery(document).ready(function ($) {
     var selected_shop_context = '#selected_shop_context';
     var last_address = null;
     var last_carrier_code = null;
+    var service_points_html = null; //rename to service_points_html ? TODO
 
     function hideModal() {
         modal.removeClass('visible').removeClass('loading');
@@ -46,7 +47,6 @@ jQuery(document).ready(function ($) {
     function getServicePointsEndpoint(successCallback, errorCallback) {
         var current_carrier_code = getSelectedCarrierCode();
 
-        console.log(last_address);
         $.ajax({
             url: service_points_endpoint,
             type: 'POST',
@@ -74,7 +74,6 @@ jQuery(document).ready(function ($) {
         var dropdown_button = $('.shipmondo_dropdown_button');
         var dropdown_content = dropdown.find('.shipmondo-removable-content');
         var dropdown_error = dropdown.find('.shipmondo-error');
-        var existing_content = dropdown_content.html();
 
         dropdown.removeClass('shipmondo-hidden');
 
@@ -92,11 +91,10 @@ jQuery(document).ready(function ($) {
                 dropdown_error.addClass('visible');
             } else {
                 if (response.address_changed) {
-                    last_address = response.new_address; //TODO move to other
-                    dropdown_content.html(response.service_points_html);
-                } else {
-                    dropdown_content.html(existing_content);
+                    last_address = response.new_address;
+                    service_points_html = response.service_points_html;
                 }
+                dropdown_content.html(service_points_html);
             }
             $('.shipmondo-modal-content').addClass('visible');
             dropdown.removeClass('loading');
@@ -107,7 +105,8 @@ jQuery(document).ready(function ($) {
     }
 
     function getPickupPointsModal() {
-        var existing_content = modal_content.html();
+        // var existing_content = modal_content.html();
+
 
         modal.removeClass('shipmondo-hidden');
         setTimeout(function () {
@@ -127,16 +126,15 @@ jQuery(document).ready(function ($) {
                 }
             } else {
                 if (response.address_changed) {
-                    last_address = response.new_address; //TODO move to other
+                    last_address = response.new_address;
+                    service_points_html = response.service_points_html;
+                }
+                modal_content.html(service_points_html);
 
-                    modal_content.html(response.service_points_html);
-                    //Set selected
-                    if (current_shop && current_shop.id) {
-                        var current_li = $('.shipmondo-shoplist-ul > li[data-id=' + current_shop.id + ']');
-                        $('.custom-radio input', current_li).prop('checked', true);
-                    }
-                } else {
-                    modal_content.html(existing_content);
+                //Set selected
+                if (current_shop && current_shop.id) {
+                    var current_li = $('.shipmondo-shoplist-ul > li[data-id=' + current_shop.id + ']');
+                    $('.custom-radio input', current_li).prop('checked', true);
                 }
             }
             $('.shipmondo-modal-content').addClass('visible');
@@ -152,7 +150,7 @@ jQuery(document).ready(function ($) {
         var radio_container = $('.shipmondo-shipping-field-wrap .shipmondo-radio-content');
         var radio_content = $(radio_container).find('.shipmondo-removable-content');
         var radio_error = radio_container.find('.shipmondo-error');
-        var existing_content = radio_content.html();
+        // var existing_content = radio_content.html();
 
         radio_error.removeClass('visible');
 
@@ -166,10 +164,12 @@ jQuery(document).ready(function ($) {
                 radio_error.addClass('visible');
             } else {
                 if (response.address_changed) {
-                    radio_content.html(response.service_points_html);
-                } else {
-                    radio_content.html(existing_content);
+                    last_address = response.new_address;
+                    service_points_html = response.service_points_html;
                 }
+
+                radio_content.html(service_points_html);
+
 
                 if (current_shop && current_shop.id) {
                     //Preselect if all ready selected
@@ -352,6 +352,7 @@ jQuery(document).ready(function ($) {
     }
 
     function getCarrierCodeByVal(val) {
+        // if (val) {
         //Strip ',' etc.
         var carrierId = val.replace(/\D/g, '');
 
@@ -367,6 +368,9 @@ jQuery(document).ready(function ($) {
             default:
                 return ''
         }
+        // } else {
+        //     return ''
+        // }
     }
 
     //Add find button
@@ -393,7 +397,12 @@ jQuery(document).ready(function ($) {
             $(extra_content).find('#shipmondo_find_shop_btn').data("shipping-type", carrier_code);
 
             if (frontend_type == 'radio') {
-                loadRadioButtons();
+                //Wait for Dom to settle (Some checkout modules will have delay for input:checked)
+                //TODO maybe move to init as it only there the problem acures//
+                //TODO also it will shopselect and it will do it under again so showC will not work. redo this
+                setTimeout(function () {
+                    loadRadioButtons();
+                }, 200);
             }
 
             //TODO I dont think this is enough - we should also use address etc.
@@ -485,15 +494,6 @@ jQuery(document).ready(function ($) {
             $(('#js-delivery .continue')).hide();
             $('.select-service-point-to-continue').show();
         }
-        // window.SMShowContinueBtn = show;
-        //
-        // if (show) {
-        //     $((window.SMContinueBtnSelector ? window.SMContinueBtnSelector : '#js-delivery .continue')).show();
-        //     $('.select-service-point-to-continue').hide();
-        // } else {
-        //     $((window.SMContinueBtnSelector ? window.SMContinueBtnSelector :'#js-delivery .continue')).hide();
-        //     $('.select-service-point-to-continue').show();
-        // }
     }
 
     //load service points if you go back to edit

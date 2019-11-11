@@ -4,28 +4,14 @@
  *  @license   All rights reserved
  */
 
-/*#shipmondo_pickup_point_selector_dropdown {*/
-    /*min-width: 261px;*/
-/*}*/
 
-/*@media screen and (max-width: 767px) {*/
-    /*.shipmondo-shipping-field-wrap {*/
-        /*margin: 0;*/
-    /*}*/
-/*}*/
+.shipmondo-shipping-field-wrap {
+    margin: 0 0 20px;
+}
 
-/*.shipmondo-radio-content .shipmondo-pickup-point-info {*/
-    /*padding: 5px 0 5px 25px;*/
-/*}*/
-
-/*.shipmondo-radio-content .shipmondo-pickup-point-info, .shipmondo-dropdown-content .shipmondo-pickup-point-info {*/
-    /*font-size: inherit;*/
-/*}*/
-
-/*.shipmondo-radio-content .shipmondo-pickup-point-info .shipmondo-pickup-point-name, .shipmondo-dropdown-content .shipmondo-pickup-point-info .shipmondo-pickup-point-name {*/
-    /*color: #000000;*/
-/*}*/
-
+#shipmondo_find_shop_btn{
+    margin-top: 0 !important;
+}
 
 .shipmondo-radio-content ul.shipmondo-shoplist-ul {
     margin: 0 2px;
@@ -40,30 +26,6 @@
     margin: 0;
 }
 
-/*.shipmondo-radio-content .custom-radio input[type=radio] {*/
-    /*opacity: 1;*/
-/*}*/
-
-/*.shipmondo-radio-content .custom-radio input[type=radio]:checked + span {*/
-    /*display: none;*/
-/*}*/
-
-/*.shipmondo-radio-content .shipmondo-pickup-point-info, .shipmondo-dropdown-content .shipmondo-pickup-point-info {*/
-    /*font-size: 12px;*/
-/*}*/
-
-/*.shipmondo-radio-footer {*/
-    /*font-size: 10px;*/
-    /*height: 26px;*/
-/*}*/
-
-/*.shipmondo-shop-header {*/
-    /*color: #000000;*/
-/*}*/
-
-/*#shipping-method td.carrier-extra-content {*/
-    /*display: block;*/
-    /*box-sizing: border-box;*/
-    /*clear: both;*/
-    /*padding: 0 !important;*/
-/*}*/
+.shipmondo-removable-content .custom-radio {
+    position: absolute !important;
+}
