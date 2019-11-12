@@ -157,9 +157,8 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
             'frontend_key'          => $frontend_key,
             'request_url'           => _PS_BASE_URL_,
             'request_version'       => _PS_VERSION_,
-            'module_version'        => Module::getInstanceByName('shipmondo')->version, //TODO is there a easier way of obtaining module version?
+            'module_version'        => Module::getInstanceByName('shipmondo')->version,
             'shipping_module_type'  => 'prestashop',
-            
             'carrier_code'          => $carrier_code,
             'zipcode'               => $zip_code,
             'country'               => $country,
@@ -219,7 +218,7 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
             'carrier_code' => $carrier_code,
             'carrier_logo' => _MODULE_DIR_ . 'shipmondo/views/img/' . $carrier_code . '.png',
             'service_points_json' => htmlentities(Tools::jsonEncode($service_points), ENT_QUOTES, 'UTF-8'),
-            'service_points_count' => sprintf($this->_n($this->l('%s pickup point found'), $this->l('%s pickup points found'), $count), $count)
+            'service_points_count' => sprintf($this->amount($this->l('%s pickup point found'), $this->l('%s pickup points found'), $count), $count)
         ]);
         $response['service_points_html'] = $this->module->fetch('module:shipmondo/views/templates/front/' . Tools::strtolower($frontend_type) . '/content.tpl');
 
@@ -254,8 +253,7 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
         return $result;
     }
 
-    // In place of WordPress function _n https://developer.wordpress.org/reference/functions/_n/
-    private function _n($single, $plural, $amount)
+    private function amount($single, $plural, $amount)
     {
         if ($amount == 1) {
             return $single;
