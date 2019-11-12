@@ -12,7 +12,7 @@
             {*
             <?php echo sprintf(_n('%s pickup point found', '%s pickup points found', $pickup_points_number,'pakkelabels-for-woocommerce'), $pickup_points_number); ?>
             *}
-            {$service_points_count}
+            {$service_points_count nofilter}
         </p>
     </div>
     <div class="shipmondo-modal-body">
