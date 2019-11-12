@@ -37,7 +37,7 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
 
                 // Check if reload of service point is needed
                 $address_changed = $this->hasAddressChanged($last_address, $delivery_address);
-                if(!$address_changed && $carrier_code == $last_carrier_code) {
+                if (!$address_changed && $carrier_code == $last_carrier_code) {
                     $response['address_changed'] = false;
                     $response['status'] = 'success';
                     break;
@@ -265,7 +265,7 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
     {
         return !isset($old_address)
             || $old_address->id_country != $new_address->id_country
-            || $old_address->postcode != $new_address->postcode 
+            || $old_address->postcode != $new_address->postcode
             || $old_address->address1 != $new_address->address1;
     }
 }
