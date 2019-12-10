@@ -237,8 +237,10 @@ body.shipmondo-modal-open {
 }
 
 .shipmondo-modal-header {
-    padding: 40px 40px 24px;
-    height: 136px;
+    /*padding: 40px 40px 24px;*/
+    /*height: 136px;*/
+    padding: 30px 20px 24px;
+    height: 120px;
     box-sizing: border-box;
 }
 
@@ -319,7 +321,8 @@ body.shipmondo-modal-open {
     -webkit-flex-wrap: wrap;
     -ms-flex-wrap: wrap;
     flex-wrap: wrap;
-    margin: 32px 23px 0 40px;
+    /*margin: 32px 23px 0 40px;*/
+    margin: 25px 15px 0 15px;
 }
 
 .shipmondo-radio-content ul.shipmondo-shoplist-ul {
@@ -332,7 +335,7 @@ body.shipmondo-modal-open {
     cursor: pointer;
     width: 50%;
     float: left;
-    margin-bottom: 24px;
+    margin-bottom: 10px;
 }
 
 .shipmondo-modal-content ul.shipmondo-shoplist-ul li.shipmondo-shop-list:nth-of-type(2n+1), .shipmondo-radio-content ul.shipmondo-shoplist-ul li.shipmondo-shop-list:nth-of-type(2n+1) {
