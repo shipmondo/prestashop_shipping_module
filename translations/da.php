@@ -52,3 +52,6 @@ $_MODULE['<{shipmondo}prestashop>error_d3d2e617335f08df83599665eef8a418'] = 'Luk
 $_MODULE['<{shipmondo}prestashop>modal_42fa20e4c9cbc4e708ada0d922590419'] = 'Service point modal';
 $_MODULE['<{shipmondo}prestashop>modal_325a357f60b95f37fec18b15cb39fbb0'] = 'Det gik noget galt. Prøv venligst igen';
 $_MODULE['<{shipmondo}prestashop>modal_d3d2e617335f08df83599665eef8a418'] = 'Luk';
+$_MODULE['<{shipmondo}prestashop>selection-button_4dda4c47623f65c66527da0d6e75c242'] = 'Find nærmeste afhentningssted';
+$_MODULE['<{shipmondo}prestashop>selection-button_8595ec5084dd8aed018e95fc8a7bb5e3'] = 'Nuværende valgt afhentningssted:';
+$_MODULE['<{shipmondo}prestashop>selection-button_ae1a50ade0fee03ed99755e82dd33f13'] = 'Indtast venligst et postnummer for at vælge afhentningssted';

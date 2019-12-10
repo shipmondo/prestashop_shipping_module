@@ -37,7 +37,7 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
 
                 // Check if reload of service point is needed
                 $address_changed = $this->hasAddressChanged($last_address, $delivery_address);
-                if(!$address_changed && $carrier_code == $last_carrier_code) {
+                if (!$address_changed && $carrier_code == $last_carrier_code) {
                     $response['address_changed'] = false;
                     $response['status'] = 'success';
                     break;
@@ -156,9 +156,9 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
         $data = [
             'frontend_key'          => $frontend_key,
             'request_url'           => _PS_BASE_URL_,
-            'module_version'        => Module::getInstanceByName('shipmondo')->version, //TODO is there a easier way of obtaining module version?
+            'request_version'       => _PS_VERSION_,
+            'module_version'        => Module::getInstanceByName('shipmondo')->version,
             'shipping_module_type'  => 'prestashop',
-            
             'carrier_code'          => $carrier_code,
             'zipcode'               => $zip_code,
             'country'               => $country,
@@ -218,7 +218,7 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
             'carrier_code' => $carrier_code,
             'carrier_logo' => _MODULE_DIR_ . 'shipmondo/views/img/' . $carrier_code . '.png',
             'service_points_json' => htmlentities(Tools::jsonEncode($service_points), ENT_QUOTES, 'UTF-8'),
-            'service_points_count' => sprintf($this->_n($this->l('%s pickup point found'), $this->l('%s pickup points found'), $count), $count)
+            'service_points_count' => sprintf($this->amount($this->l('%s pickup point found'), $this->l('%s pickup points found'), $count), $count)
         ]);
         $response['service_points_html'] = $this->module->fetch('module:shipmondo/views/templates/front/' . Tools::strtolower($frontend_type) . '/content.tpl');
 
@@ -253,8 +253,7 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
         return $result;
     }
 
-    // In place of WordPress function _n https://developer.wordpress.org/reference/functions/_n/
-    private function _n($single, $plural, $amount)
+    private function amount($single, $plural, $amount)
     {
         if ($amount == 1) {
             return $single;
@@ -266,7 +265,7 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
     {
         return !isset($old_address)
             || $old_address->id_country != $new_address->id_country
-            || $old_address->postcode != $new_address->postcode 
+            || $old_address->postcode != $new_address->postcode
             || $old_address->address1 != $new_address->address1;
     }
 }
