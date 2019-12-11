@@ -239,7 +239,7 @@ body.shipmondo-modal-open {
 .shipmondo-modal-header {
     /*padding: 40px 40px 24px;*/
     /*height: 136px;*/
-    padding: 30px 20px 24px;
+    padding: 30px 30px 24px;
     height: 120px;
     box-sizing: border-box;
 }
@@ -322,7 +322,8 @@ body.shipmondo-modal-open {
     -ms-flex-wrap: wrap;
     flex-wrap: wrap;
     /*margin: 32px 23px 0 40px;*/
-    margin: 25px 15px 0 15px;
+    /*margin: 25px 15px 0 15px;*/
+    margin: 25px 25px 0 25px;
 }
 
 .shipmondo-radio-content ul.shipmondo-shoplist-ul {
