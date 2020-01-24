@@ -204,7 +204,7 @@ jQuery(document).ready(function ($) {
 
         google.maps.event.addListener(marker, 'click', (function (marker) {
             return function () {
-                infowindow.setContent('<strong>' + data.company_name + '</strong><br/>' + data.address + "<br/> " + data.city + ' <br/> ' + data.zipcode + '<br/><div id="shipmondo-button-wrapper"><button class="button btn btn-primary" id="shipmondo-select-shop" data-number="' + data.number + '">' + choose_service_point_header + '</button></div>');
+                infowindow.setContent('<strong>' + data.company_name + '</strong><br/>' + data.address + "<br/> " + data.city + ' <br/> ' + data.zipcode + '<br/><div id="shipmondo-button-wrapper"><button class="button btn btn-primary" id="shipmondo-select-shop" data-number="' + data.number + '">' + choose_pickup_point_text + '</button></div>');
                 infowindow.open(map, marker);
             };
         })(marker));
@@ -507,7 +507,7 @@ jQuery(document).ready(function ($) {
     }
 
     // Add Prevent continue button -
-    $('#js-delivery').append('<button type="button" class="btn btn-primary select-service-point-to-continue">' + modal_header_title + '</button>');
+    $('#js-delivery').append('<button type="button" class="btn btn-primary select-service-point-to-continue">' + choose_pickup_point_text + '</button>');
 
     $(document).on('click', '.select-service-point-to-continue', function (e) {
         e.preventDefault();

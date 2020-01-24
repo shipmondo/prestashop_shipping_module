@@ -471,7 +471,7 @@ class Shipmondo extends CarrierModule
 
         if (in_array($current_page, $order_pages)) {
             Media::addJsDef([
-                'modal_header_title' => $this->l('Choose pickup point'),
+                'choose_pickup_point_text' => $this->l('Choose pickup point'),
                 'gls_carrier_id' => $gls->id,
                 'dao_carrier_id' => $dao->id,
                 'postnord_carrier_id' => $pdk->id,
