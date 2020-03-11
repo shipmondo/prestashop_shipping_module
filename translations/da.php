@@ -3,13 +3,13 @@
 global $_MODULE;
 $_MODULE = [];
 $_MODULE['<{shipmondo}prestashop>shipmondo_2d1af97c75a1358086d634a188a7fca0'] = 'Shipmondo';
-$_MODULE['<{shipmondo}prestashop>shipmondo_bff89b3c2336557e08d05f68835aa9e7'] = 'GLS, PostNord, DAO og Bring Shipping til PrestaShop';
+$_MODULE['<{shipmondo}prestashop>shipmondo_bff89b3c2336557e08d05f68835aa9e7'] = 'GLS, PostNord, dao og Bring Shipping til PrestaShop';
 $_MODULE['<{shipmondo}prestashop>shipmondo_2d13aa4a4d1a2a0dedf1a03323d294b8'] = 'Udfyld venligst alle påkrævede felter.';
 $_MODULE['<{shipmondo}prestashop>shipmondo_7b5bb346783a60a25733abc425cf0ee2'] = 'Ugyldig konfiguration, kontroller venligst:';
 $_MODULE['<{shipmondo}prestashop>shipmondo_e2934b472eb90cb40d996a7035b72559'] = 'Frontend Key';
 $_MODULE['<{shipmondo}prestashop>shipmondo_ff95ec56e99d00574b22ef78f10ffd34'] = 'Google map API key';
 $_MODULE['<{shipmondo}prestashop>shipmondo_8f9f5acff27f8d6a3edbc296dae3fea7'] = 'GLS transportør id';
-$_MODULE['<{shipmondo}prestashop>shipmondo_e0e05ab154ef2c97a806a7d85a25d618'] = 'DAO transportør id';
+$_MODULE['<{shipmondo}prestashop>shipmondo_e0e05ab154ef2c97a806a7d85a25d618'] = 'dao transportør id';
 $_MODULE['<{shipmondo}prestashop>shipmondo_bd7d7dc628e361958d76fbcaae80c0c4'] = 'PostNord transportør ID';
 $_MODULE['<{shipmondo}prestashop>shipmondo_185c5f67dd07836cc722990915111c8d'] = 'Bring transportør ID';
 $_MODULE['<{shipmondo}prestashop>shipmondo_f4f70727dc34561dfde1a3c529b6205c'] = 'Indstillinger';
@@ -21,7 +21,7 @@ $_MODULE['<{shipmondo}prestashop>shipmondo_6fe0aed781a33237273e99a3cbf4434e'] = 
 $_MODULE['<{shipmondo}prestashop>shipmondo_85a0541d05df52f6fc4eb7b31d9bce59'] = 'Indsæt din Google API key her. Du kan generere en nøgle fra';
 $_MODULE['<{shipmondo}prestashop>shipmondo_d5918cdada286565f4e8f6b3ae7cf0fa'] = 'GLS pakkeshop';
 $_MODULE['<{shipmondo}prestashop>shipmondo_584acf3f7ba9b3af9a85ddfe1d9ee200'] = 'PostNord pakkeshop';
-$_MODULE['<{shipmondo}prestashop>shipmondo_f574e6b3e63539497d327620b15d347e'] = 'DAO pakkeshop';
+$_MODULE['<{shipmondo}prestashop>shipmondo_f574e6b3e63539497d327620b15d347e'] = 'dao pakkeshop';
 $_MODULE['<{shipmondo}prestashop>shipmondo_89146219797dc48d04808598722150f3'] = 'Bring pakkeshop';
 $_MODULE['<{shipmondo}prestashop>shipmondo_0d4c14a20b4d98a5de54e1480bf99a25'] = 'Popup';
 $_MODULE['<{shipmondo}prestashop>shipmondo_7498c445a737312f3678aa1494e01a38'] = 'Dropdown';
