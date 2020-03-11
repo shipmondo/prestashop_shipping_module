@@ -26,8 +26,8 @@ class Shipmondo extends CarrierModule
         'postnord_service_point' => 'PostNord Valgfrit udleveringssted',
         'postnord_private' => 'PostNord - Omdeling til privat',
         'postnord_business' => 'PostNord - Omdeling til erhverv',
-        'dao_service_point' => 'DAO Pakkeshop',
-        'dao_direct' => 'DAO Direkte',
+        'dao_service_point' => 'dao Pakkeshop',
+        'dao_direct' => 'dao Direkte',
         'bring_service_point' => 'Bring - Valgfrit udleveringssted',
         'bring_private' => 'Bring - Aftenlevering til privat',
         'bring_business' => 'Bring - Omdeling til erhverv',
@@ -49,7 +49,7 @@ class Shipmondo extends CarrierModule
             'max' => _PS_VERSION_,
         ];
         $this->displayName = $this->l('Shipmondo');
-        $this->description = $this->l('GLS, PostNord, DAO and Bring Shipping for PrestaShop');
+        $this->description = $this->l('GLS, PostNord, dao and Bring Shipping for PrestaShop');
     }
 
     public function hookNewOrder($params)
@@ -196,7 +196,7 @@ class Shipmondo extends CarrierModule
             $valid &= $this->validateAndUpdateValue(
                 $dao_carrier_id,
                 'SHIPMONDO_DAO_CARRIER_ID',
-                $this->l('DAO carrier ID')
+                $this->l('dao carrier ID')
             );
 
             $valid &= $this->validateAndUpdateValue(
