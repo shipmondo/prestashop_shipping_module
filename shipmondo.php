@@ -308,7 +308,7 @@ class Shipmondo extends CarrierModule
                         'id' => 'id_option',
                         'name' => 'name',
                     ],
-                    'label' => $this->l('DAO pickup point'),
+                    'label' => $this->l('dao pickup point'),
                     'required' => true,
                 ],
                 [
