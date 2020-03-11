@@ -39,7 +39,7 @@ class Shipmondo extends CarrierModule
     {
         $this->name = 'shipmondo';
         $this->tab = 'shipping_logistics';
-        $this->version = '1.0.2';
+        $this->version = '1.0.3';
         $this->author = 'Shipmondo';
         $this->need_instance = 0;
         $this->bootstrap = true;
@@ -218,6 +218,9 @@ class Shipmondo extends CarrierModule
                 $output .= $this->displayError($validation_error_title);
             }
         }
+
+        # Check if database table still exists
+        $output .= $this->checkDatabaseTableExists();
 
         return $output . $this->displayForm();
     }
@@ -772,5 +775,27 @@ class Shipmondo extends CarrierModule
                 Configuration::deleteByName($pkl_key);
             }
         }
+    }
+
+    private function checkDatabaseTableExists()
+    {
+        $db_instance = Db::getInstance();
+        $table_name =  _DB_PREFIX_ . 'shipmondo_selected_service_points';
+
+        $sql = "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = '{$table_name}'";
+        $table_exists = !empty($db_instance->getValue($sql, false));
+
+        if(!$table_exists) {
+            $this->createDatabaseTables();
+            $table_exists = !empty($db_instance->getValue($sql, false));
+
+            if($table_exists) {
+                return $this->displayConfirmation($this->l('Database table "') . $table_name . $this->l('" didn\'t exists, but it was possible to create.'));
+            } else {
+                return $this->displayError($this->l('Database table "') . $table_name . $this->l('" does not exists and it was not possible to create.'));
+            }
+        }       
+
+        return '';
     }
 }
