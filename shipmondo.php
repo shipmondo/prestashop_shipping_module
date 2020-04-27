@@ -5,7 +5,7 @@
  *  @license   All rights reserved
  */
 
-if (!defined('_PS_VERSION_')) {
+if (!\defined('_PS_VERSION_')) {
     exit;
 }
 
@@ -117,7 +117,7 @@ class Shipmondo extends CarrierModule
                     $service_point_address->address2 = $service_point->address2;
                     $service_point_address->postcode = $service_point->zip_code;
                     $service_point_address->city = $service_point->city;
-                    $service_point_address->alias = $alias . ': ' . trim($service_point->address2);
+                    $service_point_address->alias = $alias . ': ' . \trim($service_point->address2);
                     $service_point_address->deleted = true; // Address only used for this order
                     $service_point_address->active = true;
 
@@ -219,7 +219,7 @@ class Shipmondo extends CarrierModule
             }
         }
 
-        # Check if database table still exists
+        // Check if database table still exists
         $output .= $this->checkDatabaseTableExists();
 
         return $output . $this->displayForm();
@@ -465,14 +465,12 @@ class Shipmondo extends CarrierModule
 
         $current_page = Tools::getValue('controller');
 
-
-
         $order_pages = [
             'order', //default PS
-            'supercheckout' //Knowband
+            'supercheckout', //Knowband
         ];
 
-        if (in_array($current_page, $order_pages)) {
+        if (\in_array($current_page, $order_pages, true)) {
             Media::addJsDef([
                 'choose_pickup_point_text' => $this->l('Choose pickup point'),
                 'gls_carrier_id' => $gls->id,
@@ -484,9 +482,9 @@ class Shipmondo extends CarrierModule
                 'modal_html' => $this->fetch('module:shipmondo/views/templates/front/popup/modal.tpl'),
                 'module_base_url' => Tools::getProtocol(Tools::usingSecureMode()) . $_SERVER['HTTP_HOST'] . $this->getPathUri(),
                 'service_points_endpoint' => Context::getContext()->link->getModuleLink('shipmondo', 'servicepoints'),
-                'extentions_endpoint' => Context::getContext()->link->getModuleLink('shipmondo', 'extensions')
+                'extentions_endpoint' => Context::getContext()->link->getModuleLink('shipmondo', 'extensions'),
             ]);
-            if (Configuration::get('SHIPMONDO_FRONTEND_TYPE') === 'popup') {
+            if ('popup' === Configuration::get('SHIPMONDO_FRONTEND_TYPE')) {
                 // Loads Google map API
                 $context->registerJavascript(
                     'google-maps',
@@ -503,10 +501,10 @@ class Shipmondo extends CarrierModule
             // Add theme overrides to views/css/theme.
             $themes = [
                 // Add themes into this array
-                'warehouse'
+                'warehouse',
             ];
 
-            if (in_array(_THEME_NAME_, $themes)) {
+            if (\in_array(_THEME_NAME_, $themes, true)) {
                 $context->addCSS($this->_path . 'views/css/theme/' . _THEME_NAME_ . '.css', 'all');
             }
 
@@ -515,7 +513,7 @@ class Shipmondo extends CarrierModule
                 // Add modules into this array
                 'onepagecheckoutps', //Prestateam - Tested with v1.0.3
                 'supercheckout', //Knowband - Tested with v4.0.6,
-                'thecheckout' // Prestamodules / Zelarg - v3.2.5
+                'thecheckout', // Prestamodules / Zelarg - v3.2.5
             ];
             foreach ($modules as $module) {
                 if (Module::isInstalled($module) && Module::isEnabled($module)) {
@@ -545,11 +543,12 @@ class Shipmondo extends CarrierModule
             }
 
             // The first part of the key is name of logo
-            $logo_name = implode('_', array_slice(explode('_', $key), 0, 1));
+            $logo_name = \implode('_', \array_slice(\explode('_', $key), 0, 1));
 
             // Assign/overwrite carrier logo
-            copy(_PS_MODULE_DIR_ . 'shipmondo/views/img/carrier_logos/' . $logo_name . '.jpg', _PS_SHIP_IMG_DIR_ . '/' . (int) $carrier->id . '.jpg');
+            \copy(_PS_MODULE_DIR_ . 'shipmondo/views/img/carrier_logos/' . $logo_name . '.jpg', _PS_SHIP_IMG_DIR_ . '/' . (int) $carrier->id . '.jpg');
         }
+
         return true;
     }
 
@@ -585,7 +584,7 @@ class Shipmondo extends CarrierModule
 
     protected function deleteCarriers()
     {
-        $keys = array_keys($this->carriers);
+        $keys = \array_keys($this->carriers);
         foreach ($keys as $key) {
             $carrier_id = Configuration::get(self::PREFIX . $key);
             $carrier = new Carrier($carrier_id);
@@ -706,8 +705,6 @@ class Shipmondo extends CarrierModule
 
             return $carrier;
         }
-
-        return null;
     }
 
     private function validateAndUpdateValue($value, $value_key, $error_message)
@@ -740,7 +737,7 @@ class Shipmondo extends CarrierModule
             'bring_business' => 'pakkelabels_bring_business',
         ];
 
-        foreach (array_keys($this->carriers) as $key) {
+        foreach (\array_keys($this->carriers) as $key) {
             $pkl_key = 'pakkelabels_shipping_' . $pkl_carrier_keys[$key];
             $value = Configuration::get($pkl_key);
             if (isset($value)) {
@@ -767,7 +764,7 @@ class Shipmondo extends CarrierModule
             $value = Configuration::get($pkl_key);
 
             if (isset($value)) {
-                if ($smd_key == 'SHIPMONDO_FRONTEND_TYPE') {
+                if ('SHIPMONDO_FRONTEND_TYPE' === $smd_key) {
                     $value = Tools::strtolower($value); // fix frontend type
                 }
 
@@ -780,21 +777,21 @@ class Shipmondo extends CarrierModule
     private function checkDatabaseTableExists()
     {
         $db_instance = Db::getInstance();
-        $table_name =  _DB_PREFIX_ . 'shipmondo_selected_service_points';
+        $table_name = _DB_PREFIX_ . 'shipmondo_selected_service_points';
 
         $sql = "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = '{$table_name}'";
         $table_exists = !empty($db_instance->getValue($sql, false));
 
-        if(!$table_exists) {
+        if (!$table_exists) {
             $this->createDatabaseTables();
             $table_exists = !empty($db_instance->getValue($sql, false));
 
-            if($table_exists) {
+            if ($table_exists) {
                 return $this->displayConfirmation($this->l('Database table "') . $table_name . $this->l('" didn\'t exists, but it was possible to create.'));
-            } else {
-                return $this->displayError($this->l('Database table "') . $table_name . $this->l('" does not exists and it was not possible to create.'));
             }
-        }       
+
+            return $this->displayError($this->l('Database table "') . $table_name . $this->l('" does not exists and it was not possible to create.'));
+        }
 
         return '';
     }

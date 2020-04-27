@@ -28,16 +28,16 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
                     $service_point_id = Tools::jsonDecode($result['service_point'])->id;
                 }
 
-                $carrier_code       = Tools::getValue('carrier_code');
-                $last_carrier_code  = Tools::getValue('last_carrier_code');
-                $last_address       = (object) Tools::getValue('last_address');
-                $frontend_key       = Configuration::get('SHIPMONDO_FRONTEND_KEY');
+                $carrier_code = Tools::getValue('carrier_code');
+                $last_carrier_code = Tools::getValue('last_carrier_code');
+                $last_address = (object) Tools::getValue('last_address');
+                $frontend_key = Configuration::get('SHIPMONDO_FRONTEND_KEY');
 
                 $delivery_address = new Address($cart->id_address_delivery);
 
                 // Check if reload of service point is needed
                 $address_changed = $this->hasAddressChanged($last_address, $delivery_address);
-                if (!$address_changed && $carrier_code == $last_carrier_code) {
+                if (!$address_changed && $carrier_code === $last_carrier_code) {
                     $response['address_changed'] = false;
                     $response['status'] = 'success';
                     break;
@@ -59,7 +59,7 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
                 $response['new_address'] = [
                     'id_country' => $delivery_address->id_country,
                     'address1' => $delivery_address->address1,
-                    'postcode' => $delivery_address->postcode
+                    'postcode' => $delivery_address->postcode,
                 ];
                 $response['address_changed'] = true;
 
@@ -72,13 +72,13 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
                 $service_point_id = Tools::getValue('service_point_id');
 
                 $service_point_address = [
-                    'id'            => $service_point_id,
-                    'company_name'  => Tools::getValue('company_name'),
-                    'address'       => Tools::getValue('address'),
-                    'address2'      => "ID: {$carrier_code}-{$service_point_id}",
-                    'zip_code'      => Tools::getValue('zip_code'),
-                    'city'          => Tools::getValue('city'),
-                    'carrier_code'  => $carrier_code,
+                    'id' => $service_point_id,
+                    'company_name' => Tools::getValue('company_name'),
+                    'address' => Tools::getValue('address'),
+                    'address2' => "ID: {$carrier_code}-{$service_point_id}",
+                    'zip_code' => Tools::getValue('zip_code'),
+                    'city' => Tools::getValue('city'),
+                    'carrier_code' => $carrier_code,
                 ];
 
                 $sql = new DbQuery();
@@ -154,22 +154,22 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
         $method = 'GET';
         $url = 'https://service-points.shipmondo.com/pickup-points.json';
         $data = [
-            'frontend_key'          => $frontend_key,
-            'request_url'           => _PS_BASE_URL_,
-            'request_version'       => _PS_VERSION_,
-            'module_version'        => Module::getInstanceByName('shipmondo')->version,
-            'shipping_module_type'  => 'prestashop',
-            'carrier_code'          => $carrier_code,
-            'zipcode'               => $zip_code,
-            'country'               => $country,
-            'address'               => $address,
+            'frontend_key' => $frontend_key,
+            'request_url' => _PS_BASE_URL_,
+            'request_version' => _PS_VERSION_,
+            'module_version' => Module::getInstanceByName('shipmondo')->version,
+            'shipping_module_type' => 'prestashop',
+            'carrier_code' => $carrier_code,
+            'zipcode' => $zip_code,
+            'country' => $country,
+            'address' => $address,
         ];
 
         $response = [];
 
         if (empty($zip_code) || empty($address) || empty($frontend_key)) {
             return [
-                'status' => "error",
+                'status' => 'error',
                 'error' => $this->l('Enter zipcode and address to see pickup points'),
             ];
         }
@@ -178,23 +178,23 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
 
         if (empty($service_points)) {
             return [
-                'status' => "error",
+                'status' => 'error',
                 'error' => $this->l('No pickup points found. Please confirm address.'),
             ];
         }
 
         if (!empty($service_points->message)) {
-            if ($service_points->message === 'Invalid frontend_key') {
+            if ('Invalid frontend_key' === $service_points->message) {
                 return [
-                    'status' => "error",
+                    'status' => 'error',
                     'error' => $this->l('Please add a valid delivery module key in back office.'),
                 ];
-            } else {
-                return [
-                    'status' => "error",
-                    'error' => $service_points->message,
-                ];
             }
+
+            return [
+                'status' => 'error',
+                'error' => $service_points->message,
+            ];
         }
 
         $frontend_type = Configuration::get('SHIPMONDO_FRONTEND_TYPE');
@@ -210,15 +210,14 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
             $selected_service_point_id = 0;
         }
 
-        
-        $count = count($service_points);
+        $count = \count($service_points);
         $this->context->smarty->assign([
             'service_points' => $service_points,
             'selected_service_point_id' => $selected_service_point_id,
             'carrier_code' => $carrier_code,
             'carrier_logo' => _MODULE_DIR_ . 'shipmondo/views/img/' . $carrier_code . '.png',
-            'service_points_json' => htmlentities(Tools::jsonEncode($service_points), ENT_QUOTES, 'UTF-8'),
-            'service_points_count' => sprintf($this->amount($this->l('%s pickup point found'), $this->l('%s pickup points found'), $count), $count)
+            'service_points_json' => \htmlentities(Tools::jsonEncode($service_points), \ENT_QUOTES, 'UTF-8'),
+            'service_points_count' => \sprintf($this->amount($this->l('%s pickup point found'), $this->l('%s pickup points found'), $count), $count),
         ]);
         $response['service_points_html'] = $this->module->fetch('module:shipmondo/views/templates/front/' . Tools::strtolower($frontend_type) . '/content.tpl');
 
@@ -227,45 +226,46 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
 
     private function callShipmondoAPI($method, $url, $data = false)
     {
-        $curl = curl_init();
+        $curl = \curl_init();
         switch ($method) {
             case 'POST':
-                curl_setopt($curl, CURLOPT_POST, 1);
+                \curl_setopt($curl, \CURLOPT_POST, 1);
                 if ($data) {
-                    curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+                    \curl_setopt($curl, \CURLOPT_POSTFIELDS, $data);
                 }
                 break;
             default:
                 if ($data) {
-                    $url = sprintf('%s?%s', $url, http_build_query($data));
+                    $url = \sprintf('%s?%s', $url, \http_build_query($data));
                 }
         }
 
         // Optional Authentication
-        curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-        curl_setopt($curl, CURLOPT_USERPWD, 'username:password');
-        curl_setopt($curl, CURLOPT_URL, $url);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        \curl_setopt($curl, \CURLOPT_HTTPAUTH, \CURLAUTH_BASIC);
+        \curl_setopt($curl, \CURLOPT_USERPWD, 'username:password');
+        \curl_setopt($curl, \CURLOPT_URL, $url);
+        \curl_setopt($curl, \CURLOPT_RETURNTRANSFER, 1);
 
-        $result = curl_exec($curl);
-        curl_close($curl);
+        $result = \curl_exec($curl);
+        \curl_close($curl);
 
         return $result;
     }
 
     private function amount($single, $plural, $amount)
     {
-        if ($amount == 1) {
+        if (1 === $amount) {
             return $single;
         }
+
         return $plural;
     }
 
     private function hasAddressChanged($old_address, $new_address)
     {
         return !isset($old_address)
-            || $old_address->id_country != $new_address->id_country
-            || $old_address->postcode != $new_address->postcode
-            || $old_address->address1 != $new_address->address1;
+            || $old_address->id_country !== $new_address->id_country
+            || $old_address->postcode !== $new_address->postcode
+            || $old_address->address1 !== $new_address->address1;
     }
 }
