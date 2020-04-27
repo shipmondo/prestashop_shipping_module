@@ -20,6 +20,12 @@ jQuery(document).ready(function ($) {
                 var container = $(textNode).find(window.Shipmondo.deliveryOptionRowSelector);
                 //Add "Missing" extra content.
                 container.append('<td class="carrier-extra-content"></td>');
+
+                var current_radio = $('.supercheckout_shipping_option:checked');
+                if(current_radio.val()){
+                    //init click when there are preselected shipping methods
+                    current_radio.trigger('click');
+                }
             }
         }
     });
