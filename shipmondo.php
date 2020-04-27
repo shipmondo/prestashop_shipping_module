@@ -39,7 +39,7 @@ class Shipmondo extends CarrierModule
     {
         $this->name = 'shipmondo';
         $this->tab = 'shipping_logistics';
-        $this->version = '1.0.3';
+        $this->version = '1.0.4';
         $this->author = 'Shipmondo';
         $this->need_instance = 0;
         $this->bootstrap = true;
@@ -513,9 +513,9 @@ class Shipmondo extends CarrierModule
             // Add module overrides to views/css/module.
             $modules = [
                 // Add modules into this array
-                'onepagecheckoutps', //Prestateam - Testet with v4.0.6
-                'supercheckout', //knowband - Testet with v1.0.3,
-                'thecheckout' // Prestamodules - v3.2.5
+                'onepagecheckoutps', //Prestateam - Tested with v1.0.3
+                'supercheckout', //Knowband - Tested with v4.0.6,
+                'thecheckout' // Prestamodules / Zelarg - v3.2.5
             ];
             foreach ($modules as $module) {
                 if (Module::isInstalled($module) && Module::isEnabled($module)) {
