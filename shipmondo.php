@@ -463,15 +463,19 @@ class Shipmondo extends CarrierModule
 
         $current_page = Tools::getValue('controller');
 
-//print_r($current_page);
-//die;
-
-
         $order_pages = [
             'order', //default PS
-            'supercheckout', //Knowband
-            'checkout'
         ];
+        
+        // Knowband - SuperCheckout
+        if (Module::isInstalled('supercheckout') && Module::isEnabled('supercheckout')) {
+            $order_pages[] = 'supercheckout';
+        }
+
+        // Prestaworks - Easy Checkout (NETS Easy)
+        if (Module::isInstalled('easycheckout') && Module::isEnabled('easycheckout')) {
+            $order_pages[] = 'checkout';
+        }
 
         if (in_array($current_page, $order_pages)) {
             Media::addJsDef([
