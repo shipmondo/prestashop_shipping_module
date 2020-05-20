@@ -263,7 +263,7 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
 
     private function hasAddressChanged($old_address, $new_address)
     {
-        return !isset($old_address)
+        return !empty($old_address)
             || $old_address->id_country != $new_address->id_country
             || $old_address->postcode != $new_address->postcode
             || $old_address->address1 != $new_address->address1;

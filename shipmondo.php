@@ -39,7 +39,7 @@ class Shipmondo extends CarrierModule
     {
         $this->name = 'shipmondo';
         $this->tab = 'shipping_logistics';
-        $this->version = '1.0.3';
+        $this->version = '1.0.5';
         $this->author = 'Shipmondo';
         $this->need_instance = 0;
         $this->bootstrap = true;
@@ -104,14 +104,12 @@ class Shipmondo extends CarrierModule
                 if ($result['service_point']) {
                     $service_point = Tools::jsonDecode($result['service_point']);
 
-                    $id_address_max = (int) Db::getInstance()->getValue('SELECT MAX(`id_address`) FROM `' . _DB_PREFIX_ . 'address`');
-                    $new_id = $id_address_max + 1;
-
                     $delivery_address = new Address($order->id_address_delivery);
                     $invoice_id = $order->id_address_invoice;
-                    $service_point_address = clone $delivery_address;
 
-                    $service_point_address->id = $new_id;
+                    // Create address for service point
+                    $service_point_address = clone $delivery_address;
+                    $service_point_address->id = null;
                     $service_point_address->company = $service_point->company_name;
                     $service_point_address->address1 = $service_point->address;
                     $service_point_address->address2 = $service_point->address2;
@@ -120,12 +118,12 @@ class Shipmondo extends CarrierModule
                     $service_point_address->alias = $alias . ': ' . trim($service_point->address2);
                     $service_point_address->deleted = true; // Address only used for this order
                     $service_point_address->active = true;
+                    $service_point_address->save();
+                    
+                    $new_id = $service_point_address->id;
 
+                    // Update delivery adress to be service point address
                     $order->id_address_delivery = $new_id;
-
-                    // Update and/or add
-                    $service_point_address->add();
-                    $service_point_address->update();
                     $order->save();
 
                     // Update cart
@@ -513,10 +511,9 @@ class Shipmondo extends CarrierModule
             // Add module overrides to views/css/module.
             $modules = [
                 // Add modules into this array
-                'onepagecheckoutps', //Prestateam - Testet with v4.0.6
-                'supercheckout', //knowband - Testet with v1.0.3,
-                'thecheckout', // Prestamodules - v3.2.5
-                'easycheckout' // Nets easy v.1.2.11
+                'onepagecheckoutps', //Prestateam - Tested with v1.0.3
+                'supercheckout', //Knowband - Tested with v4.0.6,
+                'thecheckout' // Prestamodules / Zelarg - v3.2.5
             ];
             foreach ($modules as $module) {
                 if (Module::isInstalled($module) && Module::isEnabled($module)) {
