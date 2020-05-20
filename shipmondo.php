@@ -463,11 +463,14 @@ class Shipmondo extends CarrierModule
 
         $current_page = Tools::getValue('controller');
 
+//print_r($current_page);
+//die;
 
 
         $order_pages = [
             'order', //default PS
-            'supercheckout' //Knowband
+            'supercheckout', //Knowband
+            'checkout'
         ];
 
         if (in_array($current_page, $order_pages)) {
@@ -513,7 +516,8 @@ class Shipmondo extends CarrierModule
                 // Add modules into this array
                 'onepagecheckoutps', //Prestateam - Tested with v1.0.3
                 'supercheckout', //Knowband - Tested with v4.0.6,
-                'thecheckout' // Prestamodules / Zelarg - v3.2.5
+                'thecheckout', // Prestamodules / Zelarg - Tested with v3.2.5
+                'easycheckout' // Easycheckout - Tested with v.1.2.11
             ];
             foreach ($modules as $module) {
                 if (Module::isInstalled($module) && Module::isEnabled($module)) {
