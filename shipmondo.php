@@ -515,7 +515,8 @@ class Shipmondo extends CarrierModule
                 // Add modules into this array
                 'onepagecheckoutps', //Prestateam - Testet with v4.0.6
                 'supercheckout', //knowband - Testet with v1.0.3,
-                'thecheckout' // Prestamodules - v3.2.5
+                'thecheckout', // Prestamodules - v3.2.5
+                'easycheckout' // Nets easy v.1.2.11
             ];
             foreach ($modules as $module) {
                 if (Module::isInstalled($module) && Module::isEnabled($module)) {
