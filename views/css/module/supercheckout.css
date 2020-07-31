@@ -61,9 +61,25 @@
     font-size: 12px;
 }
 
+.shipmondo-radio-content .shipmondo-pickup-point-info .custom-radio {
+    z-index: 0;
+    width: 18px;
+    height: 18px;
+    top: calc(50% - 9px);
+    margin-left: 2px;
+}
+
+.shipmondo-radio-content .custom-radio input[type=radio] {
+    pointer-events: none !important;
+}
+
 .shipmondo-radio-footer {
     font-size: 10px;
     height: 26px;
+}
+
+.shipmondo-radio-footer:before {
+    display: none;
 }
 
 .shipmondo-shop-header {
