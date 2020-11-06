@@ -151,13 +151,15 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
 
     private function getList($frontend_key, $carrier_code, $address, $zip_code, $country = 'DK', $selected_service_point_id = null)
     {
+        $module = Module::getInstanceByName('shipmondo');
+
         $method = 'GET';
         $url = 'https://service-points.shipmondo.com/pickup-points.json';
         $data = [
             'frontend_key'          => $frontend_key,
             'request_url'           => _PS_BASE_URL_,
             'request_version'       => _PS_VERSION_,
-            'module_version'        => Module::getInstanceByName('shipmondo')->version,
+            'module_version'        => $module->version,
             'shipping_module_type'  => 'prestashop',
             'carrier_code'          => $carrier_code,
             'zipcode'               => $zip_code,
@@ -170,7 +172,7 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
         if (empty($zip_code) || empty($address) || empty($frontend_key)) {
             return [
                 'status' => "error",
-                'error' => $this->l('Enter zipcode and address to see pickup points'),
+                'error' => $module->l('Enter zipcode and address to see pickup points', 'servicepoints'),
             ];
         }
 
@@ -179,7 +181,7 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
         if (empty($service_points)) {
             return [
                 'status' => "error",
-                'error' => $this->l('No pickup points found. Please confirm address.'),
+                'error' => $module->l('No pickup points found. Please confirm address.', 'servicepoints'),
             ];
         }
 
@@ -187,7 +189,7 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
             if ($service_points->message === 'Invalid frontend_key') {
                 return [
                     'status' => "error",
-                    'error' => $this->l('Please add a valid delivery module key in back office.'),
+                    'error' => $module->l('Please add a valid delivery module key in back office.', 'servicepoints'),
                 ];
             } else {
                 return [
@@ -210,15 +212,18 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
             $selected_service_point_id = 0;
         }
 
-        
+        $single = $module->l('%s pickup point found', 'servicepoints');
+        $plural = $module->l('%s pickup points found', 'servicepoints');
         $count = count($service_points);
+        $count_text = $this->amount($single, $plural, $count);
+        
         $this->context->smarty->assign([
             'service_points' => $service_points,
             'selected_service_point_id' => $selected_service_point_id,
             'carrier_code' => $carrier_code,
             'carrier_logo' => _MODULE_DIR_ . 'shipmondo/views/img/' . $carrier_code . '.png',
             'service_points_json' => htmlentities(Tools::jsonEncode($service_points), ENT_QUOTES, 'UTF-8'),
-            'service_points_count' => sprintf($this->amount($this->l('%s pickup point found'), $this->l('%s pickup points found'), $count), $count)
+            'service_points_count' => sprintf($count_text, $count)
         ]);
         $response['service_points_html'] = $this->module->fetch('module:shipmondo/views/templates/front/' . Tools::strtolower($frontend_type) . '/content.tpl');
 
