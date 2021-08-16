@@ -470,6 +470,17 @@ class Shipmondo extends CarrierModule
         // Knowband - SuperCheckout
         if (Module::isInstalled('supercheckout') && Module::isEnabled('supercheckout')) {
             $order_pages[] = 'supercheckout';
+
+            $module = Module::getInstanceByName('supercheckout');
+            $version = $module->version;
+            dump($version);
+
+            if($version < 7){
+            //use old 'supercheckout' that uses td
+            }else{
+            //make copy of old supercheckout and check for div instead of td. But I have a feeling the cusom information is not needed anymore?
+            }
+
         }
 
         // Prestaworks - Easy Checkout (NETS Easy)
