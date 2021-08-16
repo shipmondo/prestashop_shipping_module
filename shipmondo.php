@@ -477,6 +477,7 @@ class Shipmondo extends CarrierModule
 
             if($version < 7){
             //use old 'supercheckout' that uses td
+
             }else{
             //make copy of old supercheckout and check for div instead of td. But I have a feeling the cusom information is not needed anymore?
             }
