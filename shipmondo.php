@@ -39,7 +39,7 @@ class Shipmondo extends CarrierModule
     {
         $this->name = 'shipmondo';
         $this->tab = 'shipping_logistics';
-        $this->version = '1.0.7';
+        $this->version = '1.0.8';
         $this->author = 'Shipmondo';
         $this->need_instance = 0;
         $this->bootstrap = true;
@@ -471,17 +471,11 @@ class Shipmondo extends CarrierModule
         if (Module::isInstalled('supercheckout') && Module::isEnabled('supercheckout')) {
             $order_pages[] = 'supercheckout';
 
+            // Only add JS for versions older than 7
             $module = Module::getInstanceByName('supercheckout');
-            $version = $module->version;
-            dump($version);
-
-            if($version < 7){
-            //use old 'supercheckout' that uses td
-
-            }else{
-            //make copy of old supercheckout and check for div instead of td. But I have a feeling the cusom information is not needed anymore?
+            if ($module->version < 7) {
+                $context->addJS($this->_path . 'views/js/module/supercheckout_pre7.js', 'all');
             }
-
         }
 
         // Prestaworks - Easy Checkout (NETS Easy)
