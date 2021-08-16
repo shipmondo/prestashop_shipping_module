@@ -470,12 +470,6 @@ class Shipmondo extends CarrierModule
         // Knowband - SuperCheckout
         if (Module::isInstalled('supercheckout') && Module::isEnabled('supercheckout')) {
             $order_pages[] = 'supercheckout';
-
-            // Only add JS for versions older than 7
-            $module = Module::getInstanceByName('supercheckout');
-            if ($module->version < 7) {
-                $context->addJS($this->_path . 'views/js/module/supercheckout_pre7.js', 'all');
-            }
         }
 
         // Prestaworks - Easy Checkout (NETS Easy)
@@ -531,8 +525,14 @@ class Shipmondo extends CarrierModule
             ];
             foreach ($modules as $module) {
                 if (Module::isInstalled($module) && Module::isEnabled($module)) {
-                    $context->addCSS($this->_path . 'views/css/module/' . $module . '.css', 'all');
-                    $context->addJS($this->_path . 'views/js/module/' . $module . '.js', 'all');
+                    //Major changes in 7
+                    if ($module == 'supercheckout' && Module::getInstanceByName('supercheckout')->version < 7){
+                        $context->addJS($this->_path . 'views/css/module/supercheckout_pre7.css', 'all');
+                        $context->addJS($this->_path . 'views/js/module/supercheckout_pre7.js', 'all');
+                    }else{
+                        $context->addCSS($this->_path . 'views/css/module/' . $module . '.css', 'all');
+                        $context->addJS($this->_path . 'views/js/module/' . $module . '.js', 'all');
+                    }
                 }
             }
 

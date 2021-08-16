@@ -20,14 +20,19 @@
 
 .shipmondo-radio-content .shipmondo-pickup-point-info, .shipmondo-dropdown-content .shipmondo-pickup-point-info {
     font-size: inherit;
+    /*font-size: 12px;*/
 }
 
 .shipmondo-radio-content .shipmondo-pickup-point-info .shipmondo-pickup-point-name, .shipmondo-dropdown-content .shipmondo-pickup-point-info .shipmondo-pickup-point-name {
     color: #000000;
 }
 
-.shipmondo-radio-content .shipmondo-pickup-point-info .shipmondo-pickup-point-address, .shipmondo-radio-content .shipmondo-pickup-point-info .shipmondo-pickup-point-zipcode-city {
-    color: #000000;
+.shipmondo-radio-content .custom-radio {
+    border: none;
+    height: auto;
+    width: auto;
+    background: none;
+    left: 1px;
 }
 
 .shipmondo-radio-content ul.shipmondo-shoplist-ul {
@@ -43,19 +48,25 @@
     margin: 0;
 }
 
+.shipmondo-radio-content .custom-radio input[type=radio] {
+    opacity: 1;
+}
+
+.shipmondo-radio-content .custom-radio input[type=radio]:checked + span {
+    display: none;
+}
+
 .shipmondo-radio-content .shipmondo-pickup-point-info, .shipmondo-dropdown-content .shipmondo-pickup-point-info {
+    /*font-size: inherit;*/
     font-size: 12px;
 }
 
 .shipmondo-radio-content .shipmondo-pickup-point-info .custom-radio {
-    border: 1px solid #cac8c8;
-    margin-left: -2px;
+    z-index: 0;
     width: 18px;
     height: 18px;
-}
-
-.shipmondo-radio-content .shipmondo-pickup-point-info .custom-radio input[type=radio]:checked + span {
-    background-color: #8ed6aa;
+    top: calc(50% - 9px);
+    margin-left: 2px;
 }
 
 .shipmondo-radio-content .custom-radio input[type=radio] {
@@ -73,4 +84,11 @@
 
 .shipmondo-shop-header {
     color: #000000;
+}
+
+#shipping-method td.carrier-extra-content {
+    display: block;
+    box-sizing: border-box;
+    clear: both;
+    padding: 0 !important;
 }
