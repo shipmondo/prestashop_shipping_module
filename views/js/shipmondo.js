@@ -365,6 +365,8 @@ jQuery(document).ready(function ($) {
                 return 'pdk';
             case bring_carrier_id:
                 return 'bring';
+            case dhl_freight_carrier_id:
+                return 'dhl_freight';
             default:
                 return ''
         }
@@ -502,7 +504,7 @@ jQuery(document).ready(function ($) {
     });
 
     //if a shipping method chosen on pageload, trigger click event of that method
-    if ($('.js-current-step').attr('id') == 'checkout-delivery-step' && $.inArray($('.delivery-option input:checked').val(), [gls_carrier_id + ",", postnord_carrier_id + ",", dao_carrier_id + ",", bring_carrier_id + ","]) >= 0) {
+    if ($('.js-current-step').attr('id') == 'checkout-delivery-step' && $.inArray($('.delivery-option input:checked').val(), [gls_carrier_id + ",", postnord_carrier_id + ",", dao_carrier_id + ",", bring_carrier_id + ",", dhl_freight_carrier_id + ","]) >= 0) {
         setCurrentShopBySession();
     }
 

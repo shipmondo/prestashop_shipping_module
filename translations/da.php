@@ -3,7 +3,7 @@
 global $_MODULE;
 $_MODULE = [];
 $_MODULE['<{shipmondo}prestashop>shipmondo_2d1af97c75a1358086d634a188a7fca0'] = 'Shipmondo';
-$_MODULE['<{shipmondo}prestashop>shipmondo_bff89b3c2336557e08d05f68835aa9e7'] = 'GLS, PostNord, dao og Bring Shipping til PrestaShop';
+$_MODULE['<{shipmondo}prestashop>shipmondo_bff89b3c2336557e08d05f68835aa9e7'] = 'GLS, PostNord, dao, Bring og DHL Freight Shipping til PrestaShop';
 $_MODULE['<{shipmondo}prestashop>shipmondo_2d13aa4a4d1a2a0dedf1a03323d294b8'] = 'Udfyld venligst alle påkrævede felter.';
 $_MODULE['<{shipmondo}prestashop>shipmondo_7b5bb346783a60a25733abc425cf0ee2'] = 'Ugyldig konfiguration, kontroller venligst:';
 $_MODULE['<{shipmondo}prestashop>shipmondo_e2934b472eb90cb40d996a7035b72559'] = 'Frontend Key';

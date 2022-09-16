@@ -2,8 +2,8 @@
 <module>
     <name>shipmondo</name>
     <displayName><![CDATA[Shipmondo]]></displayName>
-    <version><![CDATA[1.0.8]]></version>
-    <description><![CDATA[GLS, PostNord, dao and Bring Shipping for PrestaShop]]></description>
+    <version><![CDATA[1.1.0]]></version>
+    <description><![CDATA[GLS, PostNord, dao, Bring and DHL Freight Shipping for PrestaShop]]></description>
     <author><![CDATA[Shipmondo]]></author>
     <tab><![CDATA[shipping_logistics]]></tab>
     <is_configurable>1</is_configurable>

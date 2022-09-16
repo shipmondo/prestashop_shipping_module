@@ -9,6 +9,10 @@ if (!defined('_PS_VERSION_')) {
     exit;
 }
 
+ini_set('display_errors', '1');
+ini_set('display_startup_errors', '1');
+error_reporting(E_ALL);
+
 class Shipmondo extends CarrierModule
 {
     const PREFIX = 'shipmondo_';
@@ -31,6 +35,9 @@ class Shipmondo extends CarrierModule
         'bring_service_point' => 'Bring - Valgfrit udleveringssted',
         'bring_private' => 'Bring - Aftenlevering til privat',
         'bring_business' => 'Bring - Omdeling til erhverv',
+        'dhl-freight_private' => 'DHL Freight - Omdeling til privat',
+        'dhl-freight_business' => 'DHL Freight - Omdeling til erhverv',
+        'dhl-freight_service_point' => 'DHL Freight - Valgfrit udleveringssted'
     ];
 
     private $validation_errors = [];
@@ -39,7 +46,7 @@ class Shipmondo extends CarrierModule
     {
         $this->name = 'shipmondo';
         $this->tab = 'shipping_logistics';
-        $this->version = '1.0.8';
+        $this->version = '1.1.0';
         $this->author = 'Shipmondo';
         $this->need_instance = 0;
         $this->bootstrap = true;
@@ -74,22 +81,33 @@ class Shipmondo extends CarrierModule
             Configuration::get('SHIPMONDO_BRING_CARRIER_ID')
         );
 
+        $dhl_freight_carrier = Carrier::getCarrierByReference(
+            Configuration::get('SHIPMONDO_DHL_FREIGHT_CARRIER_ID')
+        );
+
         $add_address = false;
-        if ($gls_carrier->id === $carrier_id) {
-            $alias = 'GLS';
-            $add_address = true;
-        }
-        if ($dao_carrier->id === $carrier_id) {
-            $alias = 'DAO';
-            $add_address = true;
-        }
-        if ($postnord_carrier->id === $carrier_id) {
-            $alias = 'PDK';
-            $add_address = true;
-        }
-        if ($bring_carrier->id === $carrier_id) {
-            $alias = 'Bring';
-            $add_address = true;
+        $alias = '';
+        switch($carrier_id) {
+            case $gls_carrier->id:
+                $alias = 'GLS';
+                $add_address = true;
+                break;
+            case $dao_carrier->id:
+                $alias = 'dao';
+                $add_address = true;
+                break;
+            case $postnord_carrier->id:
+                $alias = 'PDK';
+                $add_address = true;
+                break;
+            case $bring_carrier->id:
+                $alias = 'Bring';
+                $add_address = true;
+                break;
+            case $dhl_freight_carrier->id:
+                $alias = 'DHLF';
+                $add_address = true;
+                break;
         }
 
         if ($add_address) {
@@ -109,16 +127,20 @@ class Shipmondo extends CarrierModule
 
                     // Create address for service point
                     $service_point_address = clone $delivery_address;
-                    $service_point_address->id = null;
-                    $service_point_address->company = $service_point->company_name;
-                    $service_point_address->address1 = $service_point->address;
-                    $service_point_address->address2 = $service_point->address2;
-                    $service_point_address->postcode = $service_point->zip_code;
-                    $service_point_address->city = $service_point->city;
-                    $service_point_address->alias = $alias . ': ' . trim($service_point->address2);
-                    $service_point_address->deleted = true; // Address only used for this order
-                    $service_point_address->active = true;
-                    $service_point_address->save();
+                    try {
+                        $service_point_address->id = null;
+                        $service_point_address->company = $service_point->company_name;
+                        $service_point_address->address1 = $service_point->address;
+                        $service_point_address->address2 = $service_point->address2;
+                        $service_point_address->postcode = $service_point->zip_code;
+                        $service_point_address->city = $service_point->city;
+                        $service_point_address->alias = substr($alias . ': ' . trim($service_point->address2), 0, 32); # max 32 chars
+                        $service_point_address->deleted = true; // Address only used for this order
+                        $service_point_address->active = true;
+                        $service_point_address->save();
+                    } catch (Exception $e) {
+                        PrestaShopLogger::addLog('Caught exception: ' .  $e->getMessage() . ". address2: " . $service_point_address->address2);
+                    }
                     
                     $new_id = $service_point_address->id;
 
@@ -155,6 +177,7 @@ class Shipmondo extends CarrierModule
             $dao_carrier_id = (string) Tools::getValue('SHIPMONDO_DAO_CARRIER_ID');
             $postnord_carrier_id = (string) Tools::getValue('SHIPMONDO_POSTNORD_CARRIER_ID');
             $bring_carrier_id = (string) Tools::getValue('SHIPMONDO_BRING_CARRIER_ID');
+            $dhl_freight_carrier_id = (string) Tools::getValue('SHIPMONDO_DHL_FREIGHT_CARRIER_ID');
             $frontend_type = (string) Tools::getValue('SHIPMONDO_FRONTEND_TYPE');
 
             $validation_error_title = $this->l('Please fill out all required fields.') . '<br>';
@@ -209,6 +232,12 @@ class Shipmondo extends CarrierModule
                 $this->l('Bring carrier ID')
             );
 
+            $valid &= $this->validateAndUpdateValue(
+                $dhl_freight_carrier_id,
+                'SHIPMONDO_DHL_FREIGHT_CARRIER_ID',
+                $this->l('DHL Freight carrier ID')
+            );
+
             if (!$valid) {
                 foreach ($this->validation_errors as $key) {
                     $validation_error_title .= '<li class="test">' . $key . '</li>';
@@ -238,7 +267,7 @@ class Shipmondo extends CarrierModule
         }
         $fields_form = [];
 
-        $prestashop_guide_url = 'https://kundecenter.pakkelabels.dk/da/articles/2027196-prestashop-1-7-opsaetning-af-shipmondo-fragtmodul';
+        $prestashop_guide_url = 'https://help.shipmondo.com/articles/2027196';
 
         // Init fields form
         $fields_form[0]['form'] = [
@@ -321,6 +350,17 @@ class Shipmondo extends CarrierModule
                     'required' => true,
                 ],
                 [
+                    'name' => 'SHIPMONDO_DHL_FREIGHT_CARRIER_ID',
+                    'type' => 'select',
+                    'options' => [
+                        'query' => $carriers,
+                        'id' => 'id_option',
+                        'name' => 'name',
+                    ],
+                    'label' => $this->l('DHL Freight chosen pickup point'),
+                    'required' => true,
+                ],
+                [
                     'name' => 'SHIPMONDO_FRONTEND_TYPE',
                     'type' => 'radio',
                     'values' => [
@@ -372,6 +412,7 @@ class Shipmondo extends CarrierModule
         $helper->fields_value['SHIPMONDO_POSTNORD_CARRIER_ID'] = Configuration::get('SHIPMONDO_POSTNORD_CARRIER_ID');
         $helper->fields_value['SHIPMONDO_DAO_CARRIER_ID'] = Configuration::get('SHIPMONDO_DAO_CARRIER_ID');
         $helper->fields_value['SHIPMONDO_BRING_CARRIER_ID'] = Configuration::get('SHIPMONDO_BRING_CARRIER_ID');
+        $helper->fields_value['SHIPMONDO_DHL_FREIGHT_CARRIER_ID'] = Configuration::get('SHIPMONDO_DHL_FREIGHT_CARRIER_ID');
         $helper->fields_value['SHIPMONDO_FRONTEND_TYPE'] = Configuration::get('SHIPMONDO_FRONTEND_TYPE');
 
         return $helper->generateForm($fields_form);
@@ -460,6 +501,7 @@ class Shipmondo extends CarrierModule
         $dao = Carrier::getCarrierByReference(Configuration::get('SHIPMONDO_DAO_CARRIER_ID'));
         $pdk = Carrier::getCarrierByReference(Configuration::get('SHIPMONDO_POSTNORD_CARRIER_ID'));
         $bring = Carrier::getCarrierByReference(Configuration::get('SHIPMONDO_BRING_CARRIER_ID'));
+        $dhl_freight = Carrier::getCarrierByReference(Configuration::get('SHIPMONDO_DHL_FREIGHT_CARRIER_ID'));
 
         $current_page = Tools::getValue('controller');
 
@@ -484,6 +526,7 @@ class Shipmondo extends CarrierModule
                 'dao_carrier_id' => $dao->id,
                 'postnord_carrier_id' => $pdk->id,
                 'bring_carrier_id' => $bring->id,
+                'dhl_freight_carrier_id' => $dhl_freight->id,
                 'frontend_type' => Configuration::get('SHIPMONDO_FRONTEND_TYPE'),
                 'selection_button_html' => $this->fetch('module:shipmondo/views/templates/front/' . Configuration::get('SHIPMONDO_FRONTEND_TYPE') . '/selection_button.tpl'),
                 'modal_html' => $this->fetch('module:shipmondo/views/templates/front/popup/modal.tpl'),
@@ -615,6 +658,7 @@ class Shipmondo extends CarrierModule
         Configuration::deleteByName('SHIPMONDO_POSTNORD_CARRIER_ID');
         Configuration::deleteByName('SHIPMONDO_DAO_CARRIER_ID');
         Configuration::deleteByName('SHIPMONDO_BRING_CARRIER_ID');
+        Configuration::deleteByName('SHIPMONDO_DHL_FREIGHT_CARRIER_ID');
         Configuration::deleteByName('SHIPMONDO_FRONTEND_TYPE');
 
         return true;
@@ -713,6 +757,9 @@ class Shipmondo extends CarrierModule
                     break;
                 case 'bring_service_point':
                     Configuration::updateValue('SHIPMONDO_BRING_CARRIER_ID', $carrier->id);
+                    break;
+                case 'dhl_freight_service_point':
+                    Configuration::updateValue('SHIPMONDO_DHL_FREIGHT_CARRIER_ID', $carrier->id);
                     break;
             }
 
