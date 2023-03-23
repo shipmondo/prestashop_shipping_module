@@ -1,10 +1,9 @@
 /**
  *  @author    Shipmondo
- *  @copyright 2021 Shipmondo
+ *  @copyright 2023 Shipmondo
  *  @license   All rights reserved
  *
  */
-
 
 jQuery(document).ready(function ($) {
     var supercheckout_selector = '#supercheckout-fieldset';
@@ -19,7 +18,7 @@ jQuery(document).ready(function ($) {
         if ($(textNode).is(window.Shipmondo.deliveryOptionInputContainerSelector)) {
             var current_radio = $('.supercheckout_shipping_option:checked');
             if (current_radio.val()) {
-                //init click when there are preselected shipping methods
+                // init click when there are preselected shipping methods
                 current_radio.trigger('click');
             }
         }

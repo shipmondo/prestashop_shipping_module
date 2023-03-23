@@ -1,10 +1,9 @@
 <?php
 /**
  *  @author    Shipmondo
- *  @copyright 2021 Shipmondo
+ *  @copyright 2023 Shipmondo
  *  @license   All rights reserved
  */
-
 if (!defined('_PS_VERSION_')) {
     exit;
 }
@@ -39,7 +38,7 @@ class Shipmondo extends CarrierModule
     {
         $this->name = 'shipmondo';
         $this->tab = 'shipping_logistics';
-        $this->version = '1.0.8';
+        $this->version = '1.1.0';
         $this->author = 'Shipmondo';
         $this->need_instance = 0;
         $this->bootstrap = true;
@@ -56,7 +55,7 @@ class Shipmondo extends CarrierModule
     {
         $carrier_id = $params['order']->id_carrier;
 
-        $order = new Order((int) ($params['order']->id));
+        $order = new Order((int) $params['order']->id);
 
         $gls_carrier = Carrier::getCarrierByReference(
             Configuration::get('SHIPMONDO_GLS_CARRIER_ID')
@@ -75,6 +74,7 @@ class Shipmondo extends CarrierModule
         );
 
         $add_address = false;
+        $alias = '';
         if ($gls_carrier->id === $carrier_id) {
             $alias = 'GLS';
             $add_address = true;
@@ -102,7 +102,7 @@ class Shipmondo extends CarrierModule
                 $result = Db::getInstance()->getRow($sql);
 
                 if ($result['service_point']) {
-                    $service_point = Tools::jsonDecode($result['service_point']);
+                    $service_point = json_decode($result['service_point']);
 
                     $delivery_address = new Address($order->id_address_delivery);
                     $invoice_id = $order->id_address_invoice;
@@ -119,7 +119,7 @@ class Shipmondo extends CarrierModule
                     $service_point_address->deleted = true; // Address only used for this order
                     $service_point_address->active = true;
                     $service_point_address->save();
-                    
+
                     $new_id = $service_point_address->id;
 
                     // Update delivery adress to be service point address
@@ -165,7 +165,7 @@ class Shipmondo extends CarrierModule
 
             $frontend_key_error_html =
                 '<a target="_blank" href="https://app.shipmondo.com/main/app/#/setting/api">' .
-                    $this->l('Frontend Key') .
+                $this->l('Frontend Key') .
                 '</a>';
 
             $valid &= $this->validateAndUpdateValue(
@@ -176,7 +176,7 @@ class Shipmondo extends CarrierModule
 
             $google_error_html =
                 '<a target="_blank" href="https://developers.google.com/maps/documentation/javascript/get-api-key">' .
-                    $this->l('Google map API key') .
+                $this->l('Google map API key') .
                 '</a>';
 
             $valid &= $this->validateAndUpdateValue(
@@ -217,7 +217,7 @@ class Shipmondo extends CarrierModule
             }
         }
 
-        # Check if database table still exists
+        // Check if database table still exists
         $output .= $this->checkDatabaseTableExists();
 
         return $output . $this->displayForm();
@@ -250,9 +250,9 @@ class Shipmondo extends CarrierModule
                     'name' => 'SHIPMONDO_DESC',
                     'type' => 'html',
                     'html_content' => $this->l('Follow the setup guide') . ' :' .
-                        ' <a href="' . $prestashop_guide_url . '" target="_blank">' .
-                            $this->l('PrestaShop guide') .
-                        '</a>',
+                    ' <a href="' . $prestashop_guide_url . '" target="_blank">' .
+                    $this->l('PrestaShop guide') .
+                    '</a>',
                 ],
                 [
                     'name' => 'SHIPMONDO_FRONTEND_KEY',
@@ -464,9 +464,9 @@ class Shipmondo extends CarrierModule
         $current_page = Tools::getValue('controller');
 
         $order_pages = [
-            'order', //default PS
+            'order', // default PS
         ];
-        
+
         // Knowband - SuperCheckout
         if (Module::isInstalled('supercheckout') && Module::isEnabled('supercheckout')) {
             $order_pages[] = 'supercheckout';
@@ -489,8 +489,9 @@ class Shipmondo extends CarrierModule
                 'modal_html' => $this->fetch('module:shipmondo/views/templates/front/popup/modal.tpl'),
                 'module_base_url' => Tools::getProtocol(Tools::usingSecureMode()) . $_SERVER['HTTP_HOST'] . $this->getPathUri(),
                 'service_points_endpoint' => Context::getContext()->link->getModuleLink('shipmondo', 'servicepoints'),
-                'extentions_endpoint' => Context::getContext()->link->getModuleLink('shipmondo', 'extensions')
+                'extentions_endpoint' => Context::getContext()->link->getModuleLink('shipmondo', 'extensions'),
             ]);
+
             if (Configuration::get('SHIPMONDO_FRONTEND_TYPE') === 'popup') {
                 // Loads Google map API
                 $context->registerJavascript(
@@ -508,7 +509,7 @@ class Shipmondo extends CarrierModule
             // Add theme overrides to views/css/theme.
             $themes = [
                 // Add themes into this array
-                'warehouse'
+                'warehouse',
             ];
 
             if (in_array(_THEME_NAME_, $themes)) {
@@ -518,18 +519,21 @@ class Shipmondo extends CarrierModule
             // Add module overrides to views/css/module.
             $modules = [
                 // Add modules into this array
-                'onepagecheckoutps', //Prestateam - Tested with v1.0.3
-                'supercheckout', //Knowband - Tested with v4.0.6,
-                'thecheckout', // Prestamodules / Zelarg - Tested with v3.2.5
-                'easycheckout' // Easycheckout - Tested with v.1.2.11
+                'onepagecheckoutps',
+                // Prestateam - Tested with v1.0.3
+                'supercheckout',
+                // Knowband - Tested with v4.0.6,
+                'thecheckout',
+                // Prestamodules / Zelarg - Tested with v3.2.5
+                'easycheckout', // Easycheckout - Tested with v.1.2.11
             ];
             foreach ($modules as $module) {
                 if (Module::isInstalled($module) && Module::isEnabled($module)) {
-                    //Major changes in 7
-                    if ($module == 'supercheckout' && Module::getInstanceByName('supercheckout')->version < 7){
+                    // Major changes in 7
+                    if ($module == 'supercheckout' && Module::getInstanceByName('supercheckout')->version < 7) {
                         $context->addCSS($this->_path . 'views/css/module/supercheckout_pre7.css', 'all');
                         $context->addJS($this->_path . 'views/js/module/supercheckout_pre7.js', 'all');
-                    }else{
+                    } else {
                         $context->addCSS($this->_path . 'views/css/module/' . $module . '.css', 'all');
                         $context->addJS($this->_path . 'views/js/module/' . $module . '.js', 'all');
                     }
@@ -572,8 +576,8 @@ class Shipmondo extends CarrierModule
             . '`id_cart` int(10), '
             . '`service_point` text, '
             . '`id_carrier` int(10) '
-        . ')';
-        $db_instance = DB::getInstance();
+            . ')';
+        $db_instance = Db::getInstance();
 
         return $db_instance->Execute($sql_carts);
     }
@@ -590,7 +594,7 @@ class Shipmondo extends CarrierModule
     protected function deleteDatabaseTables()
     {
         $sql_carts = 'DROP TABLE IF EXISTS `' . _DB_PREFIX_ . 'shipmondo_selected_service_points`';
-        $db_instance = DB::getInstance();
+        $db_instance = Db::getInstance();
 
         return $db_instance->Execute($sql_carts);
     }
@@ -792,21 +796,21 @@ class Shipmondo extends CarrierModule
     private function checkDatabaseTableExists()
     {
         $db_instance = Db::getInstance();
-        $table_name =  _DB_PREFIX_ . 'shipmondo_selected_service_points';
+        $table_name = _DB_PREFIX_ . 'shipmondo_selected_service_points';
 
         $sql = "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = '{$table_name}'";
         $table_exists = !empty($db_instance->getValue($sql, false));
 
-        if(!$table_exists) {
+        if (!$table_exists) {
             $this->createDatabaseTables();
             $table_exists = !empty($db_instance->getValue($sql, false));
 
-            if($table_exists) {
+            if ($table_exists) {
                 return $this->displayConfirmation($this->l('Database table "') . $table_name . $this->l('" didn\'t exists, but it was possible to create.'));
             } else {
                 return $this->displayError($this->l('Database table "') . $table_name . $this->l('" does not exists and it was not possible to create.'));
             }
-        }       
+        }
 
         return '';
     }

@@ -1,9 +1,8 @@
 /**
  *  @author    Shipmondo
- *  @copyright 2021 Shipmondo
+ *  @copyright 2023 Shipmondo
  *  @license   All rights reserved
  */
-
 jQuery(document).ready(function ($) {
     var body = $('body');
     var selection_button = '#shipmondo_find_shop_btn';
@@ -20,7 +19,7 @@ jQuery(document).ready(function ($) {
     var selected_shop_context = '#selected_shop_context';
     var last_address = null;
     var last_carrier_code = null;
-    var service_points_html = null; //rename to service_points_html ? TODO
+    var service_points_html = null; // rename to service_points_html ? TODO
 
     function hideModal() {
         modal.removeClass('visible').removeClass('loading');
@@ -58,7 +57,7 @@ jQuery(document).ready(function ($) {
             },
             success: function (response) {
                 if (response) {
-                    last_carrier_code = current_carrier_code; //keep track of changes
+                    last_carrier_code = current_carrier_code; // keep track of changes
                     successCallback(JSON.parse(response));
                 } else {
                     errorCallback(response)
@@ -131,7 +130,7 @@ jQuery(document).ready(function ($) {
                 }
                 modal_content.html(service_points_html);
 
-                //Set selected
+                // Set selected
                 if (current_shop && current_shop.id) {
                     var current_li = $('.shipmondo-shoplist-ul > li[data-id=' + current_shop.id + ']');
                     $('.custom-radio input', current_li).prop('checked', true);
@@ -172,7 +171,7 @@ jQuery(document).ready(function ($) {
 
 
                 if (current_shop && current_shop.id) {
-                    //Preselect if all ready selected
+                    // Preselect if all ready selected
                     var current_li = $('.shipmondo-shoplist-ul > li[data-id=' + current_shop.id + ']');
                     if (current_li.size() > 0) {
                         $('.custom-radio input', current_li).prop('checked', true);
@@ -260,7 +259,7 @@ jQuery(document).ready(function ($) {
             setSelectionSession(current_shop);
         }
 
-        //Not used for radio buttons
+        // Not used for radio buttons
         $('input[name="shipmondo"]', hidden_chosen_shop).val(current_shop.id);
         $('input[name="shop_name"]', hidden_chosen_shop).val(current_shop.company_name);
         $('input[name="shop_address"]', hidden_chosen_shop).val(current_shop.address);
@@ -272,7 +271,7 @@ jQuery(document).ready(function ($) {
         $('.shipmondo-shop-address', selected_shop_context).html(current_shop.address);
         $('.shipmondo-shop-zip-and-city', selected_shop_context).html(current_shop.zip_code + ', ' + current_shop.city);
 
-        $('#selected_shop_context').addClass('active'); //TODO delete - legacy?
+        $('#selected_shop_context').addClass('active'); // TODO delete - legacy?
 
 
         showContinueBtn(true);
@@ -346,14 +345,14 @@ jQuery(document).ready(function ($) {
         }
     });
 
-    //Prestashop copy
+    // Prestashop copy
     function getSelectedCarrierCode() {
         return getCarrierCodeByVal($(((window.Shipmondo && window.Shipmondo.deliveryOptionInputContainerSelector) ? window.Shipmondo.deliveryOptionInputContainerSelector : '.delivery-option') + ' input:checked').val());
     }
 
     function getCarrierCodeByVal(val) {
         // if (val) {
-        //Strip ',' etc.
+        // Strip ',' etc.
         var carrierId = val.replace(/\D/g, '');
 
         switch (parseInt(carrierId)) {
@@ -373,7 +372,7 @@ jQuery(document).ready(function ($) {
         // }
     }
 
-    //Add find button
+    // Add find button
     $(document).on('click', ((window.Shipmondo && window.Shipmondo.deliveryOptionInputContainerSelector) ? window.Shipmondo.deliveryOptionInputContainerSelector : '.delivery-option') + ' input', function (event) {
         var carrier_code = getCarrierCodeByVal($(this).val());
 
@@ -384,7 +383,7 @@ jQuery(document).ready(function ($) {
             // // Remove wrapper
             // $('.shipmondo-shipping-field-wrap').remove();
 
-            var dev_option = $(this).closest((window.Shipmondo && window.Shipmondo.deliveryOptionRowSelector) ? window.Shipmondo.deliveryOptionRowSelector : '.delivery-option'); //row
+            var dev_option = $(this).closest((window.Shipmondo && window.Shipmondo.deliveryOptionRowSelector) ? window.Shipmondo.deliveryOptionRowSelector : '.delivery-option'); // row
             var extra_content = $(dev_option).find('.carrier-extra-content');
 
             if ($(extra_content).length < 1) {
@@ -393,19 +392,19 @@ jQuery(document).ready(function ($) {
 
             $(extra_content).html(selection_button_html);
 
-            //TODO remove this if we can set it in selection_button.tpl as WC
+            // TODO remove this if we can set it in selection_button.tpl as WC
             $(extra_content).find('#shipmondo_find_shop_btn').data("shipping-type", carrier_code);
 
             if (frontend_type == 'radio') {
-                //Wait for Dom to settle (Some checkout modules will have delay for input:checked)
-                //TODO maybe move to init as it only there the problem acures//
-                //TODO also it will shopselect and it will do it under again so showC will not work. redo this
+                // Wait for Dom to settle (Some checkout modules will have delay for input:checked)
+                // TODO maybe move to init as it only there the problem acures//
+                // TODO also it will shopselect and it will do it under again so showC will not work. redo this
                 setTimeout(function () {
                     loadRadioButtons();
                 }, 200);
             }
 
-            //TODO I dont think this is enough - we should also use address etc.
+            // TODO I dont think this is enough - we should also use address etc.
             if (current_shop && (carrier_code == current_shop.carrier_code)) {
                 shopSelected(current_shop);
             } else {
@@ -416,7 +415,7 @@ jQuery(document).ready(function ($) {
         }
     });
 
-    //TODO move to INIT? Init modal?
+    // TODO move to INIT? Init modal?
     if (frontend_type == 'popup') {
         body.append(modal_html);
         modal = $('.shipmondo-modal');
@@ -485,7 +484,7 @@ jQuery(document).ready(function ($) {
         });
     }
 
-    //TODO only add prevent button where it works. So check if the html exists before adding. If we want to support it in all plugin we need to do below more generic:
+    // TODO only add prevent button where it works. So check if the html exists before adding. If we want to support it in all plugin we need to do below more generic:
     function showContinueBtn(show) {
         if (show) {
             $(('#js-delivery .continue')).show();
@@ -496,12 +495,12 @@ jQuery(document).ready(function ($) {
         }
     }
 
-    //load service points if you go back to edit
+    // load service points if you go back to edit
     $('#checkout-delivery-step span.step-edit').on('click', function () {
         setCurrentShopBySession();
     });
 
-    //if a shipping method chosen on pageload, trigger click event of that method
+    // if a shipping method chosen on pageload, trigger click event of that method
     if ($('.js-current-step').attr('id') == 'checkout-delivery-step' && $.inArray($('.delivery-option input:checked').val(), [gls_carrier_id + ",", postnord_carrier_id + ",", dao_carrier_id + ",", bring_carrier_id + ","]) >= 0) {
         setCurrentShopBySession();
     }
@@ -512,14 +511,14 @@ jQuery(document).ready(function ($) {
     $(document).on('click', '.select-service-point-to-continue', function (e) {
         e.preventDefault();
 
-        //Somehow above is not working correctly so for now use timeout - but this should be solved
+        // Somehow above is not working correctly so for now use timeout - but this should be solved
         setTimeout(function () {
             var find_shop_btn = $(selection_button);
             find_shop_btn.trigger("click");
             $("body,html").animate({
                     scrollTop: find_shop_btn.offset().top
                 },
-                800 //speed
+                800 // speed
             );
         }, 100);
     });
