@@ -45,7 +45,7 @@ class Shipmondo extends CarrierModule
         parent::__construct();
         $this->ps_versions_compliancy = [
             'min' => '1.7.6.0',
-            'max' => _PS_VERSION_,
+            'max' => '8',
         ];
         $this->displayName = $this->l('Shipmondo');
         $this->description = $this->l('GLS, PostNord, dao and Bring Shipping for PrestaShop');
@@ -759,7 +759,7 @@ class Shipmondo extends CarrierModule
         foreach (array_keys($this->carriers) as $key) {
             $pkl_key = 'pakkelabels_shipping_' . $pkl_carrier_keys[$key];
             $value = Configuration::get($pkl_key);
-            if (isset($value)) {
+            if (!empty($value)) {
                 $carrier = Carrier::getCarrierByReference($value);
                 $carrier->external_module_name = $this->name;
                 $carrier->update();
@@ -782,7 +782,7 @@ class Shipmondo extends CarrierModule
         foreach ($pkl_config_keys as $smd_key => $pkl_key) {
             $value = Configuration::get($pkl_key);
 
-            if (isset($value)) {
+            if (!empty($value)) {
                 if ($smd_key == 'SHIPMONDO_FRONTEND_TYPE') {
                     $value = Tools::strtolower($value); // fix frontend type
                 }
