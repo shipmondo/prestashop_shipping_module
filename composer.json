@@ -2,7 +2,7 @@
   "name": "Shipmondo",
   "description": "GLS, PostNord, DAO and Bring Shipping for PrestaShop",
   "homepage": "https://shipmondo.com/dk/",
-  "license": "© 2023 Shipmondo. Alle rettigheder reserveret.",
+  "license": "© 2021 Shipmondo. Alle rettigheder reserveret.",
   "authors": [
     {
       "name": "Shipmondo",
@@ -11,10 +11,5 @@
   ],
   "require": {
     "php": ">=7.1.3"
-  },
-  "config": {
-    "platform": {
-      "php": "7.1.3"
-    }
   }
 }
