@@ -38,7 +38,7 @@ class Shipmondo extends CarrierModule
     {
         $this->name = 'shipmondo';
         $this->tab = 'shipping_logistics';
-        $this->version = '1.1.0';
+        $this->version = '1.1.1';
         $this->author = 'Shipmondo';
         $this->need_instance = 0;
         $this->bootstrap = true;
