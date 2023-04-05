@@ -238,7 +238,7 @@ class Shipmondo extends CarrierModule
         }
         $fields_form = [];
 
-        $prestashop_guide_url = 'https://kundecenter.pakkelabels.dk/da/articles/2027196-prestashop-1-7-opsaetning-af-shipmondo-fragtmodul';
+        $prestashop_guide_url = 'https://help.shipmondo.com/articles/7197780';
 
         // Init fields form
         $fields_form[0]['form'] = [
