@@ -34,3 +34,6 @@
 
 = 1.2.4 - 26-11-2018 =
 * Fixed bug when customer is signed in, that causes the payment options not be clickable, if the default carrier is from pakkelabels *
+
+= 1.2.5 - 15-09-2023 =
+* Change all URLs from pakkelabels.dk to shipmondo.com for continued support *

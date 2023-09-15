@@ -12,7 +12,7 @@ class Pakkelabels_Shoplist_Controller extends Module
     {
         
         $method = 'GET';
-        $url = 'https://service-points.pakkelabels.dk/pickup-points.json';
+        $url = 'https://service-points.shipmondo.com/pickup-points.json';
         $data = array(  'frontend_key' => $frontend_key,
             'agent' => $agent,
             'zipcode' => $zipcode,

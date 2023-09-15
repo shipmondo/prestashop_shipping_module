@@ -36,7 +36,7 @@ class pakkelabels_shipping extends CarrierModule
     {
         $this->name = 'pakkelabels_shipping';
         $this->tab = 'shipping_logistics';
-        $this->version = '1.2.4';
+        $this->version = '1.2.5';
         $this->v16 = _PS_VERSION_ >= "1.6.0.0";
         $this->v17 = _PS_VERSION_ >= "1.7.0.0";
         $this->author = 'Pakkelabels.dk';
@@ -163,7 +163,7 @@ class pakkelabels_shipping extends CarrierModule
             $bError = false;
             Configuration::updateValue('PAKKELABELS_FRONT_OPTION', $pakkelabels_option);
             if (empty($sPakkelabels_Frontend_key) || !Validate::isGenericName($sPakkelabels_Frontend_key)) {
-                $aError[]  = '<a target="_blank" href="https://app.pakkelabels.dk/main/app/#/setting/api">'
+                $aError[]  = '<a target="_blank" href="https://app.shipmondo.com/main/app/#/setting/api">'
                 . $this->l('Frontend Key') . '</a>';
                 Configuration::updateValue('PAKKELABELS_SHIPPING_FRONTEND_KEY', "");
                 $bError = true;
@@ -256,14 +256,14 @@ class pakkelabels_shipping extends CarrierModule
                     'name' => 'PAKKELABELS_SHIPPING_DESC',
                     'type' => $type,
                     $desc => $this->l('Follow the setup guide for Prestashop'). ':
-                    <a href="https://www.pakkelabels.dk/integration/prestashop-fragtmodul/" target="_blank">
+                    <a href="https://help.shipmondo.com/en/articles/2027196" target="_blank">
                     https://www.pakkelabels.dk/integration/prestashop-fragtmodul/</a>',
                 ), 
                 array(
                     'name' => 'PAKKELABELS_SHIPPING_DESC_BEES',
                     'type' => $type,
                     $desc => $this->l('Follow the setup guide for thirty bees'). ':
-                    <a href="https://www.pakkelabels.dk/integration/thirty-bees-fragtmodul/" target="_blank">
+                    <a href="https://help.shipmondo.com/en/articles/2027426" target="_blank">
                     https://www.pakkelabels.dk/integration/thirty-bees-fragtmodul/</a>',
                 ),
                 array(
@@ -271,7 +271,7 @@ class pakkelabels_shipping extends CarrierModule
                     'type' => 'text',
                     'label' => $this->l('Frontend Key'),
                     'desc' => $this->l('Insert Frontend Key here - Get the key from') . ': 
-                    <a target="_blank" href="https://app.pakkelabels.dk/main/app/#/setting/api">
+                    <a target="_blank" href="https://app.shipmondo.com/main/app/#/setting/api">
                     Pakkelabels.dk</a>',
                     'required' => true,
                 ),
