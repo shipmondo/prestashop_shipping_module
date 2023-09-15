@@ -1,0 +1,426 @@
+
+
+
+
+#selected_shop_header
+{
+	font-weight: bold;
+}
+
+#selected_shop_context > .pakkelabels-company-name
+{
+	font-weight: normal;
+}
+
+
+.pakkelabels-company-name
+{
+	font-weight: bold;
+}
+
+
+.not-active
+{
+	pointer-events: none;
+	cursor: default;
+}
+
+
+.blockOverlay.pakkelabels-loader {
+	z-index: 1000 !important;
+	border: medium none !important;
+	margin: 0px !important;
+	padding: 0px !important;
+	width: 100% !important;
+	height: 100% !important;
+	top: 0px !important;
+	left: 0px !important;
+	background: rgb(255, 255, 255) none repeat scroll 0% 0% !important;
+	opacity: 0.6 !important;
+	cursor: default !important;
+	position: absolute !important;
+}
+.powered-by-pakkelabels {
+	color:#707070;
+	font-size: 9px;
+	text-align: center;
+	padding-bottom: 20px;
+	background-image: url('../img/pakkelabels-logo.png');
+	background-position:center bottom;
+	background-repeat:no-repeat;
+	background-size:100px auto;
+}
+
+#selected_shop_wrapper
+{
+	margin-bottom: 7px;
+	margin-top: 5px;
+	border: 1px solid rgb(238, 238, 238);
+	font-size: 13px;
+	line-height: 17px;
+	padding: 5px 10px;
+	opacity: 1;
+	border-style: solid;
+}
+
+
+.shipping_pickup_cart
+{
+	font-size: 13px;
+	font-style: italic;
+	text-indent: 0px !important;
+}
+/*
+.no_cords_found
+{
+	font-size: 12px;
+	font-style: italic;
+	margin-top:5px;
+
+}*/
+
+#pakkelabels_find_shop_btn
+{
+	margin-top: 5px;
+	width: 100%;
+	padding: 5px;
+	white-space: normal;
+}
+
+#Pakkelabels_zipcode_field {
+	margin: 5px 0 0 0;
+	width:100%;
+	border: 1px solid #cfcfcf;
+	text-indent: 1px;
+	padding: 5px;
+}
+
+
+#pakkelabels_find_shop_btn.btn[disabled] {
+    cursor: not-allowed;
+}
+
+.pakkelabels_shipping_field-wrap {
+	width:100%;
+	display:block;
+}
+.pakkelabels_shipping_field
+{
+	max-width: 275px;
+	display:inline-block;
+}
+ul.pakkelabels-shoplist-ul {
+	padding:0;
+	margin:0;
+}
+
+
+.pakkelabels-single-shop
+{
+	padding-top:5px;
+	padding-right:5px;
+	padding-bottom:5px;
+	padding-left: 35px;
+
+
+}
+
+.pakkelabels-hidden
+{
+	display: none;
+}
+
+#selected_shop_wrapper
+{
+	margin-bottom: 7px;
+}
+
+.pakkelabels-hidden
+{
+	margin: 0 0 0 0;
+}
+#selected_shop_context
+{
+	font-style: italic;
+}
+
+.pakkelabels-clearfix:after {
+	content: "";
+	display: table;
+	clear: both;
+}
+
+ul.pakkelabels-shoplist-ul {
+	display: -webkit-flex;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-flex-direction: row;
+	-ms-flex-direction: row;
+	flex-direction: row;
+	-webkit-flex-wrap: wrap;
+	-ms-flex-wrap: wrap;
+	flex-wrap: wrap;
+}
+
+ul.pakkelabels-shoplist-ul li.pakkelabels-shop-list
+{
+	list-style: none !important;
+	border-bottom:1px solid #eee;
+	padding-bottom: 4px;
+	padding-top: 4px;
+	cursor:pointer;
+	width: 50%;
+	float: left;
+}
+ul.pakkelabels-shoplist-ul li.pakkelabels-shop-list:nth-of-type(2n+1) {
+	clear:left;
+	border-right: 1px solid #eee;
+}
+ul.pakkelabels-shoplist-ul li.pakkelabels-shop-list:nth-last-of-type(1),
+ul.pakkelabels-shoplist-ul li.pakkelabels-shop-list:nth-last-of-type(2) {
+	border-bottom:none;
+}
+
+
+
+
+#pakkelabel-map-wrapper
+{
+	padding-bottom: 15px;
+	height: 300px;
+	width: 100%;
+	background-color: white;
+}
+.pakkelabels_shipping_field-wrap,
+#selected_shop_wrapper, .pakkelabels_stores
+{
+	text-indent: 0px;
+}
+
+
+.pakkelabels-single-shop .no_cords_found ~ .no_cords_found {
+	display:none;
+}
+
+.pakkelabel-open-close-button-wrap {
+	display:none;
+	cursor:pointer;
+}
+.pakkelabels-single-shop {
+	position:relative;
+	font-size: 16px;
+	line-height: 1.5em;
+}
+.pakkelabels-single-shop .pakkelabels-radio-button{
+	display: -webkit-flex;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-align-items: center;
+	-ms-flex-align: center;
+	align-items: center;
+	-webkit-justify-content: center;
+	-ms-flex-pack: center;
+	justify-content: center;
+	position: absolute;
+	border: 2px solid #9e9e9e;
+	border-radius: 100%;
+	height: 21px;
+	width: 21px;
+	top: 50%;
+	left: 5px;
+	z-index: 5;
+	-webkit-transform: translate(0,-50%);
+	-ms-transform: translate(0,-50%);
+	transform: translate(0,-50%);
+}
+.pakkelabels-single-shop:hover .pakkelabels-radio-button {
+	border-color:#1a1a1a;
+}
+
+.pakkelabels-single-shop .pakkelabels-radio-button:before {
+
+	display: block;
+	content: '';
+	border-radius: 100%;
+	height: 9px;
+	width: 9px;
+	top: 3px;
+	left: 3px;
+	margin: auto;
+	transition: background 0.1s linear;
+	-webkit-transition: background 0.1s linear;
+}
+.pakkelabels-shop-list.selected .pakkelabels-radio-button{
+	border-color: #1a1a1a;
+}
+.pakkelabels-shop-list.selected .pakkelabels-radio-button:before {
+	background: #1a1a1a;
+}
+
+.pakkelabels_shipping_field {
+	width:100%;
+}
+/*dropdown design*/
+
+.pakkelabels-shoplist.dropdown .btn-primary {
+	color: #fff;
+	background-color: #666666 !important;
+	border: none;
+	width: 100%;
+	text-align: left;
+	font-weight: bold;
+}
+#selected_shop_wrapper {
+	padding: 5px 0;
+}
+.pakkelabels-shoplist-dropdownul li .col-xs-2 {
+	padding-right: 0;
+}
+.pakkelabels-shoplist-dropdownul li .col-xs-10 {
+	padding: 2px 0 0 6px;
+	padding-right: 15px;
+}
+.pakkelabels-shoplist.dropdown .caret {
+	position: absolute;
+	right: 8px;
+	top: 17px;
+}
+.pakkelabels-shoplist-dropdownul.dropdown-menu {
+	border: 1px solid #dadada;
+	width: 100%;
+	margin-top: -2px;
+	padding-top: 0px;
+}
+/* .pakkelabels-shoplist-dropdownul li {
+	border-bottom: 1px solid #dadada;
+} */
+.pakkelabels-shoplist-dropdownul li:hover {
+	background: #DFDFDF;
+	cursor: pointer;
+}
+.pakkelabels_lilogo:hover {
+	background: none !important;
+	cursor: unset !important;
+}
+.pakkelabels-shoplist-dropdownul li:last-child {
+	border-bottom: none;
+	padding-top: 4px;
+}
+.pakkelabels-shoplist-dropdownul .pakkelabels-single-shop {
+    font-size: 13px;
+    line-height: unset;
+    padding: 6px 0;
+}
+.pakkelabels-shoplist-dropdownul .pakkelabels-Address {
+	display: inline-block;
+}
+.pakkelabels-shoplist-dropdownul .pakkelabels-Packetshop{
+	display: none;
+}
+.loading_drop{
+	width: 26px;
+	position: absolute;
+	right: 7px;
+	top: 5px;
+}
+.pakkelabels-dropimage {
+	width: 29px;
+	margin: 8px auto;
+    padding-left: 6px;
+}
+.pakkelabels-shoplist-dropdownul .pakkelabels-company-name {
+	font-weight: bold;
+	font-size: 12px;
+}
+.pakkelabels-shoplist-dropdownul .pakkelabels-Address, .pakkelabels-shoplist-dropdownul .pakkelabels-ZipAndCity span, .pakkelabels-shoplist-dropdownul .pakkelabels-Packetshop{
+	font-size: 11px;
+	line-height: 13px;
+}
+.pakkelabels_lilogo img {
+	width: 108px !important;
+}
+.pakkelabels_lilogo {
+	text-align: center;
+	font-size: 11px;
+}
+/*opc-standard checkout */
+#opc-main-block .pakkelabels_shipping_field {
+	max-width:255px;
+}
+#opc-main-block  #pakkelabels_find_shop_btn.button.button-small {
+	width:100%;
+}
+
+/*super checkout */
+#supercheckout-fieldset #buttonWithProgres {
+	width: 270px !important;
+}
+
+/**************RESPONSIVE ******************/
+/**************RESPONSIVE ******************/
+/**************RESPONSIVE ******************/
+/**************RESPONSIVE ******************/
+/**************RESPONSIVE ******************/
+/**************RESPONSIVE ******************/
+@media (max-width: 991px) {
+	#checkout .delivery-option {
+		-webkit-box-direction: normal;
+		-ms-flex-direction: column;
+			flex-direction: column;
+	}
+}
+@media (max-width: 540px) {
+	ul.pakkelabels-shoplist-ul {
+		display:block;
+	}
+	ul.pakkelabels-shoplist-ul li.pakkelabels-shop-list {
+		width:100%;
+	}
+	ul.pakkelabels-shoplist-ul li.pakkelabels-shop-list:nth-last-of-type(2) {
+		border-bottom:1px solid #eee;
+	}
+
+	
+	#pakkelabel-modal .pakkelabel-modal-title {
+		font-size: 15px !important;
+	}
+	
+	#Pakkelabels_zipcode_field {
+		font-size: 16px !important;
+	}
+
+    
+}
+@media (max-height: 780px) {
+	#pakkelabel-map-wrapper {
+		display:none;
+	}
+	.pakkelabel-open-close-button-wrap {
+		display:inline-block;
+	}
+	.pakkelabel-open-close-button-wrap .pakkelabel-open-close-button.pakkelabel-hide-map {
+		display:none;
+	}
+}
+@media (max-height: 540px) {
+
+}
+
+
+
+
+
+
+/**************END RESPONSIVE ******************/
+/**************END RESPONSIVE ******************/
+/**************END RESPONSIVE ******************/
+/**************END RESPONSIVE ******************/
+/**************END RESPONSIVE ******************/
+/**************END RESPONSIVE ******************/
+/**************END RESPONSIVE ******************/
+
+
+
+
+
+
