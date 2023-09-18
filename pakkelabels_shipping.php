@@ -256,14 +256,14 @@ class pakkelabels_shipping extends CarrierModule
                     'name' => 'PAKKELABELS_SHIPPING_DESC',
                     'type' => $type,
                     $desc => $this->l('Follow the setup guide for Prestashop'). ':
-                    <a href="https://help.shipmondo.com/en/articles/2027196" target="_blank">
+                    <a href="https://help.shipmondo.com/articles/2027196" target="_blank">
                     https://www.pakkelabels.dk/integration/prestashop-fragtmodul/</a>',
                 ), 
                 array(
                     'name' => 'PAKKELABELS_SHIPPING_DESC_BEES',
                     'type' => $type,
                     $desc => $this->l('Follow the setup guide for thirty bees'). ':
-                    <a href="https://help.shipmondo.com/en/articles/2027426" target="_blank">
+                    <a href="https://help.shipmondo.com/articles/2027426" target="_blank">
                     https://www.pakkelabels.dk/integration/thirty-bees-fragtmodul/</a>',
                 ),
                 array(
