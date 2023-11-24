@@ -15,8 +15,7 @@ class Shipmondo extends CarrierModule
         'actionCarrierUpdate',
         'newOrder',
         'displayHeader',
-        'header',
-        'footer',
+        'displayFooter',
     ];
     protected $carriers = [
         'gls_service_point' => 'GLS PakkeShop',
@@ -38,7 +37,7 @@ class Shipmondo extends CarrierModule
     {
         $this->name = 'shipmondo';
         $this->tab = 'shipping_logistics';
-        $this->version = '1.1.1';
+        $this->version = '1.1.2';
         $this->author = 'Shipmondo';
         $this->need_instance = 0;
         $this->bootstrap = true;
