@@ -1,31 +1,39 @@
 /**
  *  @author    Shipmondo
- *  @copyright 2023 Shipmondo
+ *  @copyright 2024 Shipmondo
  *  @license   All rights reserved
  */
 jQuery(document).ready(function ($) {
-    var supercheckout_selector = '#supercheckout-fieldset';
+    const supercheckout_selector = '#supercheckout-fieldset';
 
     window.Shipmondo = {
         deliveryOptionInputContainerSelector: '#shipping-method',
         deliveryOptionRowSelector: '.highlight'
     };
 
-    $(supercheckout_selector).bind("DOMNodeInserted", function (e) {
-        var textNode = e.target;
-        if ($(textNode).is(window.Shipmondo.deliveryOptionInputContainerSelector)) {
-            //Only append once
-            if ($(textNode).find('td.carrier-extra-content').size() == 0) {
-                var container = $(textNode).find(window.Shipmondo.deliveryOptionRowSelector);
-                //Add "Missing" extra content.
-                container.append('<td class="carrier-extra-content"></td>');
+    const supercheckout_element = $(supercheckout_selector);
 
-                var current_radio = $('.supercheckout_shipping_option:checked');
-                if(current_radio.val()){
-                    //init click when there are preselected shipping methods
-                    current_radio.trigger('click');
-                }
-            }
-        }
-    });
+    if (supercheckout_element && supercheckout_element.length === 1) {
+        const observer = new MutationObserver(mutationList =>
+            mutationList.filter(m => m.type === 'childList').forEach(m => {
+                m.addedNodes.forEach(function (textNode) {
+                    if ($(textNode).is(window.Shipmondo.deliveryOptionInputContainerSelector)) {
+                        //Only append once
+                        if ($(textNode).find('td.carrier-extra-content').size() == 0) {
+                            const container = $(textNode).find(window.Shipmondo.deliveryOptionRowSelector);
+                            //Add "Missing" extra content.
+                            container.append('<td class="carrier-extra-content"></td>');
+
+                            const current_radio = $('.supercheckout_shipping_option:checked');
+                            if (current_radio.val()) {
+                                //init click when there are preselected shipping methods
+                                current_radio.trigger('click');
+                            }
+                        }
+                    }
+                });
+
+            }));
+        observer.observe(supercheckout_element[0], {childList: true, subtree: true});
+    }
 });

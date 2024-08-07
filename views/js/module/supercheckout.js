@@ -1,26 +1,52 @@
 /**
  *  @author    Shipmondo
- *  @copyright 2023 Shipmondo
+ *  @copyright 2024 Shipmondo
  *  @license   All rights reserved
  *
  */
 
 jQuery(document).ready(function ($) {
-    var supercheckout_selector = '#supercheckout-fieldset';
-
     window.Shipmondo = {
         deliveryOptionInputContainerSelector: '#shipping-method',
         deliveryOptionRowSelector: '.highlight'
     };
 
-    $(supercheckout_selector).bind("DOMNodeInserted", function (e) {
-        var textNode = e.target;
-        if ($(textNode).is(window.Shipmondo.deliveryOptionInputContainerSelector)) {
-            var current_radio = $('.supercheckout_shipping_option:checked');
-            if (current_radio.val()) {
-                // init click when there are preselected shipping methods
-                current_radio.trigger('click');
-            }
+    const supercheckout_selector = '#supercheckout-fieldset';
+    const supercheckout_element = $(supercheckout_selector);
+
+    const triggerShippingOption = function (radio) {
+        if (radio && radio.val()) {
+            // init click when there are preselected shipping methods
+            radio.trigger('click');
         }
-    });
+    };
+
+    if (supercheckout_element) {
+        const shipping_method_element = supercheckout_element.find(window.Shipmondo.deliveryOptionInputContainerSelector);
+        //Element ready from start (Version 9)
+        if (shipping_method_element) {
+            const observer = new MutationObserver(mutationList =>
+                mutationList.filter(m => m.type === 'childList').forEach(m => {
+                    m.addedNodes.forEach(function (textNode) {
+                        //Version 9 inserts ul
+                        if ($(textNode).is('ul')) {
+                            triggerShippingOption($(textNode).find('.supercheckout_shipping_option:checked'));
+                        }
+                    });
+
+                }));
+            observer.observe(shipping_method_element[0], {childList: true, subtree: true});
+        } else {
+            //We need to wait on the element to be inserted (Version 8)
+            const observer = new MutationObserver(mutationList =>
+                mutationList.filter(m => m.type === 'childList').forEach(m => {
+                    m.addedNodes.forEach(function (textNode) {
+                        if ($(textNode).is(window.Shipmondo.deliveryOptionInputContainerSelector)) {
+                            triggerShippingOption($('.supercheckout_shipping_option:checked'));
+                        }
+                    });
+                }));
+            observer.observe(supercheckout_element[0], {childList: true, subtree: true});
+        }
+    }
 });
