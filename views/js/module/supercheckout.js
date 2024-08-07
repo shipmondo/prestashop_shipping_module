@@ -39,11 +39,18 @@ jQuery(document).ready(function ($) {
                 mutationList.filter(m => m.type === 'childList').forEach(m => {
                     m.addedNodes.forEach(function (textNode) {
                         console.log('textnode', textNode);
-                        if ($(textNode).is('.supercheckout_shipping_option')) {
-                            console.log('found via observe');
-                            console.log('checked', $(textNode).is(':checked'));
-                            //triggerShippingOption();
-                        }
+                        console.log('basic', $(textNode).find('.textNode.supercheckout_shipping_option'));
+                        console.log('checked', $(textNode).find('.textNode.supercheckout_shipping_option:checked'));
+                        console.log('ul?', $(textNode).is('ul'));
+
+
+                        /*  if ($(textNode).is('.supercheckout_shipping_option')) {
+                              console.log('found via observe');
+                              console.log('checked', $(textNode).is(':checked'));
+                              //triggerShippingOption();
+                          }
+
+                         */
                     });
 
                 }));
