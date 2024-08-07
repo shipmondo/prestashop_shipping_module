@@ -42,6 +42,17 @@ jQuery(document).ready(function ($) {
                         console.log('basic', $(textNode).find('.supercheckout_shipping_option'));
                         console.log('checked', $(textNode).find('.supercheckout_shipping_option:checked'));
                         console.log('ul?', $(textNode).is('ul'));
+                        if ($(textNode).is('ul')) {
+                            console.log('we are on UL')
+                            const checked_radio_button = $(textNode).find('.supercheckout_shipping_option:checked');
+                            console.log('checked_radio_button', checked_radio_button);
+                            if (checked_radio_button.val()) {
+                                console.log('trigger');
+
+                                // init click when there are preselected shipping methods
+                                checked_radio_button.trigger('click');
+                            }
+                        }
 
 
                         /*  if ($(textNode).is('.supercheckout_shipping_option')) {
