@@ -27,11 +27,28 @@ jQuery(document).ready(function ($) {
 
     if (supercheckout_element) {
         console.log('supercheckout_element', supercheckout_element);
-        //Element ready from start
-        if (supercheckout_element.find(window.Shipmondo.deliveryOptionInputContainerSelector)) {
-            console.log('element found');
 
-            triggerShippingOption();
+        const shipping_method_element = supercheckout_element.find(window.Shipmondo.deliveryOptionInputContainerSelector);
+        //Element ready from start
+        if (shipping_method_element) {
+            console.log('element found', shipping_method_element);
+
+            //triggerShippingOption();
+
+            const observer = new MutationObserver(mutationList =>
+                mutationList.filter(m => m.type === 'childList').forEach(m => {
+                    m.addedNodes.forEach(function (textNode) {
+                        console.log('textnode', textNode);
+                        if ($(textNode).is('.supercheckout_shipping_option')) {
+                            console.log('found via observe');
+                            console.log('checked', $(textNode).is(':checked'));
+                            //triggerShippingOption();
+                        }
+                    });
+
+                }));
+            observer.observe(shipping_method_element[0], {childList: true, subtree: true});
+
         } else {
             console.log('observe');
 
