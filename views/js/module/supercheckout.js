@@ -39,8 +39,8 @@ jQuery(document).ready(function ($) {
                 mutationList.filter(m => m.type === 'childList').forEach(m => {
                     m.addedNodes.forEach(function (textNode) {
                         console.log('textnode', textNode);
-                        console.log('basic', $(textNode).find('.textNode.supercheckout_shipping_option'));
-                        console.log('checked', $(textNode).find('.textNode.supercheckout_shipping_option:checked'));
+                        console.log('basic', $(textNode).find('.supercheckout_shipping_option'));
+                        console.log('checked', $(textNode).find('.supercheckout_shipping_option:checked'));
                         console.log('ul?', $(textNode).is('ul'));
 
 
