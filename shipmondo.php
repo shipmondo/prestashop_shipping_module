@@ -36,7 +36,7 @@ class Shipmondo extends CarrierModule
     {
         $this->name = 'shipmondo';
         $this->tab = 'shipping_logistics';
-        $this->version = '1.1.4';
+        $this->version = '1.1.5';
         $this->author = 'Shipmondo';
         $this->need_instance = 0;
         $this->bootstrap = true;
@@ -549,7 +549,7 @@ class Shipmondo extends CarrierModule
                 Configuration::get(self::PREFIX . $key)
             );
 
-            if (!isset($carrier) || $carrier->id <= 0 || $carrier->deleted) {
+            if (!isset($carrier) || $carrier === false || $carrier->id <= 0 || $carrier->deleted) {
                 // Create new carrier
                 $carrier = $this->createCarrier($key, $value);
             }
