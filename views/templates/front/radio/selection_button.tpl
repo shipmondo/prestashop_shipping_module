@@ -5,6 +5,7 @@
 *}
 
 <div class="shipmondo-shipping-field-wrap">
+    <input type="hidden" name="shipmondo_carrier_code" value="{$carrier_code}">
     <div class="shipmondo-radio-content">
         <div class="shipmondo-loader-wrapper">
             <div class="shipmondo-loader"></div>

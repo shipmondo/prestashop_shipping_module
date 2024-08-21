@@ -1,0 +1,27 @@
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
+
+{% block content %}
+	<div class="container">
+		<h1>Shipmondo Carrier Listing</h1>
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th>ID</th>
+					<th>Carrier ID</th>
+					<th>Carrier Code</th>
+					<th>Product Code</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for carrier in carriers %}
+					<tr>
+						<td>{{ carrier.getId() }}</td>
+						<td>{{ carrier.getCarrierId() }}</td>
+						<td>{{ carrier.getCarrierCode() }}</td>
+						<td>{{ carrier.getProductCode() }}</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+{% endblock %}

@@ -50,7 +50,7 @@ jQuery(document).ready(function ($) {
             url: service_points_endpoint,
             type: 'POST',
             data: {
-                'method': 'get_list',
+                'action': 'getExternalList',
                 'carrier_code': current_carrier_code,
                 'last_carrier_code': last_carrier_code,
                 'last_address': last_address
@@ -347,7 +347,8 @@ jQuery(document).ready(function ($) {
 
     // Prestashop copy
     function getSelectedCarrierCode() {
-        return getCarrierCodeByVal($(((window.Shipmondo && window.Shipmondo.deliveryOptionInputContainerSelector) ? window.Shipmondo.deliveryOptionInputContainerSelector : '.delivery-option') + ' input:checked').val());
+        return $('input[name=shipmondo_carrier_code]').val()
+        //return getCarrierCodeByVal($(((window.Shipmondo && window.Shipmondo.deliveryOptionInputContainerSelector) ? window.Shipmondo.deliveryOptionInputContainerSelector : '.delivery-option') + ' input:checked').val());
     }
 
     function getCarrierCodeByVal(val) {
@@ -373,7 +374,7 @@ jQuery(document).ready(function ($) {
     }
 
     // Add find button
-    $(document).on('click', ((window.Shipmondo && window.Shipmondo.deliveryOptionInputContainerSelector) ? window.Shipmondo.deliveryOptionInputContainerSelector : '.delivery-option') + ' input', function (event) {
+    /*$(document).on('click', ((window.Shipmondo && window.Shipmondo.deliveryOptionInputContainerSelector) ? window.Shipmondo.deliveryOptionInputContainerSelector : '.delivery-option') + ' input', function (event) {
         var carrier_code = getCarrierCodeByVal($(this).val());
 
         // Remove wrapper
@@ -413,7 +414,7 @@ jQuery(document).ready(function ($) {
         } else {
             showContinueBtn(true);
         }
-    });
+    });*/
 
     // TODO move to INIT? Init modal?
     if (frontend_type == 'popup') {

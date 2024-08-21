@@ -1,0 +1,7 @@
+ps_controller_shipmondo_shipmondo_carriers:
+    path: /shipmondo/shipmondo_carriers
+    methods: [GET]
+    defaults:
+        _controller: 'Shipmondo\Controller\Admin\ShipmondoCarrierController::indexAction'
+        _legacy_controller: 'AdminShipmondoShipmondoCarrier'
+        _legacy_link: 'AdminShipmondoShipmondoCarrier'

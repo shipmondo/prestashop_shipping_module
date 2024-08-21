@@ -5,6 +5,7 @@
 *}
 
 <div class="shipmondo-shipping-field-wrap">
+    <input type="hidden" name="shipmondo_carrier_code" value="{$carrier_code}">
     <div class="shipmondo-clearfix" id="shipmondo_shipping_button">
         <div class="shipmondo_stores">
             <button class="button button-medium btn btn-primary" id="shipmondo_find_shop_btn" name="shipmondo_find_shop" type="button"

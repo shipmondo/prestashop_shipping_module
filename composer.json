@@ -1,5 +1,5 @@
 {
-  "name": "Shipmondo",
+  "name": "shipmondo/shipmondo",
   "description": "GLS, PostNord, DAO and Bring Shipping for PrestaShop",
   "homepage": "https://shipmondo.com/dk/",
   "license": "© 2023 Shipmondo. All rights reserved.",
@@ -11,5 +11,14 @@
   ],
   "require": {
     "php": ">=7.1.3"
-  }
+  },
+  "autoload": {
+    "psr-4": {
+      "Shipmondo\\": "src/"
+    }
+  },
+  "config": {
+    "prepend-autoloader": false
+  },
+  "type": "prestashop-module"
 }
