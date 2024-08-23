@@ -92,7 +92,7 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
                     'User-Agent' => 'Shipmondo Prestashop Module v' . $this->module->version,
                 ],
                 'query' => [
-                    'frontend_key' => '',
+                    'frontend_key' => $frontendKey,
                     'request_url' => _PS_BASE_URL_,
                     'request_version' => _PS_VERSION_,
                     'module_version' => $this->module->version,

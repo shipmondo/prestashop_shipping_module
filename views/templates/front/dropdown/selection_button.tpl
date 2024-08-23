@@ -34,5 +34,5 @@
             </div>
         </div>
     </div>
-
+    {include file='module:shipmondo/views/templates/front/_partials/selected_service_point.tpl'}
 </div>
