@@ -1,0 +1,21 @@
+<div class="card">
+	<div class="card-header">
+		<h3 class="card-header-title">{{ 'Service Point'|trans({}, 'Modules.Shipmondo.Admin') }}</h3>
+	</div>
+	<div
+		class="card-body">
+		{# TODO David make it pretty #}
+		{{ service_point.getName }}<br>
+		{{ service_point.getAddress1 }}<br>
+		{% if service_point.getAddress2 %} {{ service_point.getAddress2 }}<br> {% endif %}
+		{{ service_point.getZipCode }} {{ service_point.getCity }}<br>
+        {{ service_point.getCountryCode }}<br>
+		<strong>Service Point ID:</strong><br>
+		{{ service_point.getServicePointId }}<br>
+		<strong>Carrier Code:</strong><br>
+		{{ service_point.getCarrierCode }}
+		<div class="text-center text-muted">
+			<small>{{ 'Powered by Shipmondo'|trans({}, 'Modules.Shipmondo.Admin') }}</small>
+		</div>
+	</div>
+</div>

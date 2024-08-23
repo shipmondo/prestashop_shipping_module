@@ -13,8 +13,8 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
 
         $action = Tools::getValue('action');
         switch ($action) {
-            case 'read':
-                $this->readServicePoint();
+            case 'get':
+                $this->getServicePoint();
                 break;
             case 'update':
                 $this->updateServicePoint();
@@ -33,82 +33,103 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
         $cart = Context::getContext()->cart;
         $repo = $this->getRepository();
 
-        $servicePoint = $repo->findOneBy(['id_cart' => $cart->id]);
+        $servicePoint = $repo->findOneBy(['cartId' => $cart->id]);
         if (!$servicePoint) {
             $servicePoint = new ShipmondoServicePoint();
             $servicePoint->setCartId($cart->id);
         }
+
+        $deliveryAddress = new Address($cart->id_address_delivery);
+        $countryCode = Country::getIsoById($deliveryAddress->id_country);
+        $address2 = Tools::getValue('address2');
 
         $servicePoint
             ->setServicePointId(Tools::getValue('service_point_id'))
             ->setCarrierCode(Tools::getValue('carrier_code'))
             ->setName(Tools::getValue('name'))
             ->setAddress1(Tools::getValue('address1'))
-            ->setAddress2(Tools::getValue('address2'))
+            ->setAddress2($address2 ? $address2 : null)
             ->setZipCode(Tools::getValue('zip_code'))
-            ->setCity(Tools::getValue('city'));
+            ->setCity(Tools::getValue('city'))
+            ->setCountryCode($countryCode);
 
-        $repo->persist($servicePoint);
-        $repo->flush();
+        $entityManager = $this->container->get('doctrine.orm.entity_manager');
+        $entityManager->persist($servicePoint);
+        $entityManager->flush();
 
-        $this->ajaxDie(json_encode(['success' => true, 'message' => 'Service point updated successfully']));
+        $this->ajaxDie(json_encode(['success' => true, 'service_point' => $servicePoint->toArray()]));
     }
 
-    private function readServicePoint()
+    private function getServicePoint()
     {
-        $id = Tools::getValue('id');
-        $servicePoint = $this->getRepository()->find($id);
+        $cart = Context::getContext()->cart;
+        $repo = $this->getRepository();
+
+        $servicePoint = $repo->findOneBy(['cartId' => $cart->id]);
+        if (!$servicePoint) {
+            $this->ajaxDie(json_encode(['success' => false, 'message' => 'Service point not found for cart']));
+        }
 
         $this->ajaxDie(json_encode(['success' => true, 'data' => $servicePoint]));
     }
 
     private function getExternalServicePointList()
     {
-        $carrier_code       = Tools::getValue('carrier_code');
-        $frontend_key       = Configuration::get('SHIPMONDO_FRONTEND_KEY');
-        $frontend_type      = Configuration::get('SHIPMONDO_FRONTEND_TYPE');
+        $carrierCode = Tools::getValue('carrier_code');
+        $frontendKey = Configuration::get('SHIPMONDO_FRONTEND_KEY');
+        $frontendType = Configuration::get('SHIPMONDO_FRONTEND_TYPE');
 
         $cart = Context::getContext()->cart;
-        $delivery_address = new Address($cart->id_address_delivery);
+        $deliveryAddress = new Address($cart->id_address_delivery);
+        $servicePoint = $this->getRepository()->findOneBy(['cartId' => $cart->id]);
+        $servicePointId = $servicePoint ? $servicePoint->getServicePointId() : 0;
 
-        $client = new GuzzleHttp\Client();
-        $url = 'https://service-points.shipmondo.com/pickup-points.json';
-        $response = $client->request('GET', $url, [
-            'headers' => [
-                'User-Agent' => 'Shipmondo Prestashop Module v' . $this->module->version,
-            ],
-            'query' => [
-                'frontend_key'          => $frontend_key,
-                'request_url'           => _PS_BASE_URL_,
-                'request_version'       => _PS_VERSION_,
-                'module_version'        => $this->module->version,
-                'shipping_module_type'  => 'prestashop',
-                'carrier_code'          => $carrier_code,
-                'zipcode'               => $delivery_address->postcode,
-                'country'               => Country::getIsoById($delivery_address->id_country),
-                'address'               => $delivery_address->address1
-            ]
-        ]);
+        try {
+            $client = new GuzzleHttp\Client();
+            $url = 'https://service-points.shipmondo.com/pickup-points.json';
+            $response = $client->request('GET', $url, [
+                'headers' => [
+                    'User-Agent' => 'Shipmondo Prestashop Module v' . $this->module->version,
+                ],
+                'query' => [
+                    'frontend_key' => '',
+                    'request_url' => _PS_BASE_URL_,
+                    'request_version' => _PS_VERSION_,
+                    'module_version' => $this->module->version,
+                    'shipping_module_type' => 'prestashop',
+                    'carrier_code' => $carrierCode,
+                    'zipcode' => $deliveryAddress->postcode,
+                    'country' => Country::getIsoById($deliveryAddress->id_country),
+                    'address' => $deliveryAddress->address1
+                ]
+            ]);
+        } catch (GuzzleHttp\Exception\GuzzleException $e) {
+            $this->ajaxDie(json_encode(['success' => false, 'message' => 'Failed to fetch service points']));
+        }
 
-        $service_points = json_decode($response->getBody()->getContents());
+        $servicePoints = json_decode($response->getBody()->getContents());
 
-        $carrier_logo_path = _MODULE_DIR_ . 'shipmondo/views/img/' . $carrier_code . '.png';
-        if (!file_exists($carrier_logo_path)) {
-            $carrier_logo_path = _MODULE_DIR_ . 'shipmondo/views/img/default.png';
+        $carrierLogoPath = 'shipmondo/views/img/' . $carrierCode . '.png';
+        if (!file_exists(_PS_MODULE_DIR_ . $carrierLogoPath)) {
+            $carrierLogoPath = 'shipmondo/views/img/pdk.png'; # TODO add default logo
         }
 
         $this->context->smarty->assign([
-            'service_points' => $service_points,
-            'selected_service_point_id' => 0,
-            'carrier_code' => $carrier_code,
-            'carrier_logo' => $carrier_logo_path,
-            'service_points_json' => json_encode($service_points),
-            'service_points_count' => 0,
-        ]); 
-        $html = $this->module->fetch('module:shipmondo/views/templates/front/' . Tools::strtolower($frontend_type) . '/content.tpl');
-        $this->ajaxDie($html);
+            'service_points' => $servicePoints,
+            'selected_service_point_id' => $servicePointId,
+            'carrier_code' => $carrierCode,
+            'carrier_logo' => _MODULE_DIR_ . $carrierLogoPath,
+            'service_points_json' => json_encode($servicePoints),
+            'service_points_count' => count($servicePoints),
+        ]);
+        $html = $this->module->fetch('module:shipmondo/views/templates/front/' . Tools::strtolower($frontendType) . '/content.tpl');
 
-        $this->ajaxDie(json_encode(['success' => true, 'service_points_html' => $html]));
+        $this->ajaxDie(json_encode([
+            'success' => true,
+            'service_points_html' => $html,
+            'service_points' => $servicePoints,
+            'address_changed' => true
+        ]));
     }
 
     private function invalidAction()

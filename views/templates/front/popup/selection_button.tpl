@@ -5,7 +5,7 @@
 *}
 
 <div class="shipmondo-shipping-field-wrap">
-    <input type="hidden" name="shipmondo_carrier_code" value="{$carrier_code}">
+    <input type="hidden" name="shipmondo_carrier_code_{$carrier_id}" value="{$carrier_code}">
     <div class="shipmondo-clearfix" id="shipmondo_shipping_button">
         <div class="shipmondo_stores">
             <button class="button button-medium btn btn-primary" id="shipmondo_find_shop_btn" name="shipmondo_find_shop" type="button"
@@ -24,11 +24,11 @@
         <input type="hidden" name="shop_carrier_code">
         <input type="hidden" name="shop_ID">
     </div>
-    <div class="shipmondo-clearfix" id="selected_shop_context">
+    <div class="shipmondo-clearfix {if $service_point}active{/if}" id="selected_shop_context">
         <div class="shipmondo-shop-header">{l s='Currently chosen pickup point:' mod='shipmondo'}</div>
-        <div class="shipmondo-shop-name"></div>
-        <div class="shipmondo-shop-address"></div>
-        <div class="shipmondo-shop-zip-and-city"></div>
-        <div class="shipmondo-shop-id"></div>
+        <div class="shipmondo-shop-name">{if $service_point}{$service_point->getName()}{/if}</div>
+        <div class="shipmondo-shop-address">{if $service_point}{$service_point->getAddress1()}{/if}</div>
+        <div class="shipmondo-shop-zip-and-city">{if $service_point}{$service_point->getZipCode()} {$service_point->getCity()}{/if}</div>
+        <div class="shipmondo-shop-id">{if $service_point}{$service_point->getServicePointId()}{/if}</div>
     </div>
 </div>

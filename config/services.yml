@@ -1,0 +1,15 @@
+services:
+  _defaults:
+    public: true
+
+  shipmondo.repository.shipmondo_carrier:
+      class: Shipmondo\Repository\ShipmondoCarrierRepository
+      factory: ['@doctrine.orm.entity_manager', getRepository]
+      arguments:
+          - Shipmondo\Entity\ShipmondoCarrier
+
+  shipmondo.repository.shipmondo_service_point:
+      class: Shipmondo\Repository\ShipmondoServicePointRepository
+      factory: ['@doctrine.orm.entity_manager', getRepository]
+      arguments:
+          - Shipmondo\Entity\ShipmondoServicePoint

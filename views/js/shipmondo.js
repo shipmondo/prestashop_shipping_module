@@ -282,10 +282,10 @@ jQuery(document).ready(function ($) {
             url: service_points_endpoint,
             type: 'POST',
             data: {
-                'method': "save_address",
-                'company_name': shop.company_name,
+                'action': "update",
+                'name': shop.company_name,
                 'service_point_id': shop.id,
-                'address': shop.address,
+                'address1': shop.address,
                 'city': shop.city,
                 'zip_code': shop.zip_code,
                 'carrier_code': last_carrier_code
@@ -347,7 +347,8 @@ jQuery(document).ready(function ($) {
 
     // Prestashop copy
     function getSelectedCarrierCode() {
-        return $('input[name=shipmondo_carrier_code]').val()
+        var carrier_id = $(((window.Shipmondo && window.Shipmondo.deliveryOptionInputContainerSelector) ? window.Shipmondo.deliveryOptionInputContainerSelector : '.delivery-option') + ' input:checked').val().replace(/\D/g, '');
+        return $('input[name="shipmondo_carrier_code_' + carrier_id + '"]').val();
         //return getCarrierCodeByVal($(((window.Shipmondo && window.Shipmondo.deliveryOptionInputContainerSelector) ? window.Shipmondo.deliveryOptionInputContainerSelector : '.delivery-option') + ' input:checked').val());
     }
 

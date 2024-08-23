@@ -14,14 +14,17 @@ if (file_exists(__DIR__ . '/vendor/autoload.php')) {
 
 use Shipmondo\Controller\Admin\ShipmondoCarrierController;
 use Shipmondo\Entity\ShipmondoCarrier;
+use Shipmondo\Entity\ShipmondoServicePoint;
 
 class Shipmondo extends CarrierModule
 {
     const PREFIX = 'shipmondo_';
 
     protected $hooks = [
+        'displayAdminOrderSide',
         'displayHeader',
-        'displayCarrierExtraContent'
+        'displayCarrierExtraContent',
+        'newOrder'
     ];
 
     protected $tables = [
@@ -46,7 +49,7 @@ class Shipmondo extends CarrierModule
             'max' => '8.99.99',
         ];
         $this->displayName = "Shipmondo";
-        $this->description = $this->trans('ModuleDescription', [], 'Modules.Shipmondo.Admin'); # TODO description
+        $this->description = $this->trans('A complete shipping solution for PrestaShop', [], 'Modules.Shipmondo.Admin'); # TODO description
 
         $this->tabs = [
             [
@@ -86,13 +89,14 @@ class Shipmondo extends CarrierModule
 
             $google_error_html =
                 '<a target="_blank" href="https://developers.google.com/maps/documentation/javascript/get-api-key">' .
-                $this->trans('Google map API key', [], 'Modules.Shipmondo.Admin') .
+                $this->trans('Google Maps API key', [], 'Modules.Shipmondo.Admin') .
                 '</a>';
 
             $valid &= $this->validateAndUpdateValue(
                 $google_api_key,
                 'SHIPMONDO_GOOGLE_API_KEY',
-                $google_error_html
+                $google_error_html,
+                $frontend_type != 'popup'
             );
 
             if (!$valid) {
@@ -133,7 +137,7 @@ class Shipmondo extends CarrierModule
                     'type' => 'text',
                     'label' => $this->trans('Shipping module API key', [], 'Modules.Shipmondo.Admin'),
                     'desc' => $this->trans('Insert your shipping module API key here. You can generate a key from', [], 'Modules.Shipmondo.Admin') . ': 
-                        <a target="_blank" href="https://app.shipmondo.com/main/app/#/setting/api">
+                        <a target="_blank" href="https://app.shipmondo.com/main/app/#/setting/freight-module">
                             Shipmondo
                         </a>',
                     'required' => true,
@@ -142,7 +146,7 @@ class Shipmondo extends CarrierModule
                 [
                     'name' => 'SHIPMONDO_GOOGLE_API_KEY',
                     'type' => 'text',
-                    'label' => $this->trans('Google API Map Key', [], 'Modules.Shipmondo.Admin'),
+                    'label' => $this->trans('Google Maps API key', [], 'Modules.Shipmondo.Admin'),
                     'desc' => $this->trans('Insert your Google API key here. You can generate a key from', [], 'Modules.Shipmondo.Admin') . ': 
                         <a target="_blank" href="https://developers.google.com/maps/documentation/javascript/get-api-key">
                             Google
@@ -259,6 +263,18 @@ class Shipmondo extends CarrierModule
         return $this->getOrderShippingCost($params, 0);
     }
 
+    public function hookDisplayAdminOrderSide($params)
+    {
+        $servicePoint = $this->get('shipmondo.repository.shipmondo_service_point')
+            ->findOneBy(['orderId' => $params['id_order']]);
+
+        if ($servicePoint) {
+            return $this->get('twig')->render('@Modules/shipmondo/views/templates/admin/order_side.html.twig', [
+                'service_point' => $servicePoint
+            ]);
+        }
+    }
+
     public function hookDisplayHeader($params)
     {
         $context = $this->context->controller;
@@ -344,14 +360,43 @@ class Shipmondo extends CarrierModule
 
     public function hookDisplayCarrierExtraContent($params)
     {
-        $repo = $this->get('doctrine')->getRepository(ShipmondoCarrier::class);
-        $carrier = $repo->findOneBy(['carrierId' => $params['carrier']['id_reference']]);
+        $carrier = $this->get('shipmondo.repository.shipmondo_carrier')->findOneBy(['carrierId' => $params['carrier']['id_reference']]);
 
         if ($carrier && $carrier->getProductCode() === 'service_point') {
+            $servicePoint = $this->get('shipmondo.repository.shipmondo_service_point')
+                ->findOneBy([
+                    'cartId' => $params['cart']->id,
+                    'carrierCode' => $carrier->getCarrierCode()
+                ]);
+
             $this->context->smarty->assign([
                 'carrier_code' => $carrier->getCarrierCode(),
+                'carrier_id' => $params['carrier']['id'],
+                'service_point' => $servicePoint
             ]);
             return $this->fetch('module:shipmondo/views/templates/front/' . Configuration::get('SHIPMONDO_FRONTEND_TYPE') . '/selection_button.tpl');
+        }
+    }
+
+    public function hookNewOrder($params)
+    {
+        $carrier = new Carrier((int) $params['order']->id_carrier);
+        $smdCarrier = $this->get('shipmondo.repository.shipmondo_carrier')->findOneBy(['carrierId' => $carrier->id_reference]);
+
+        if ($smdCarrier && $smdCarrier->getProductCode() === 'service_point') {
+            $servicePoint = $this->get('shipmondo.repository.shipmondo_service_point')
+                ->findOneBy([
+                    'cartId' => $params['cart']->id,
+                    'carrierCode' => $smdCarrier->getCarrierCode()
+                ]);
+
+            if ($servicePoint) {
+                $servicePoint->setOrderId($params['order']->id);
+
+                $entityManager = $this->get('doctrine.orm.entity_manager');
+                $entityManager->persist($servicePoint);
+                $entityManager->flush();
+            }
         }
     }
 
@@ -391,8 +436,8 @@ class Shipmondo extends CarrierModule
     {
         $sql = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'shipmondo_service_point` ('
             . 'id_smd_service_point INT AUTO_INCREMENT NOT NULL PRIMARY KEY, '
-            . 'id_cart INT NOT NULL, '
-            . 'id_order INT NOT NULL, '
+            . 'id_cart INT, '
+            . 'id_order INT, '
             . 'carrier_code VARCHAR(255) NOT NULL, '
             . 'service_point_id VARCHAR(255) NOT NULL, '
             . 'name VARCHAR(255) NOT NULL, '
@@ -446,13 +491,17 @@ class Shipmondo extends CarrierModule
         return true;
     }
 
-    private function validateAndUpdateValue($value, $value_key, $error_message)
+    private function validateAndUpdateValue($value, $value_key, $error_message, $optional = false)
     {
         if (empty($value) || !Validate::isGenericName($value)) {
-            $this->validation_errors[] = $error_message;
             Configuration::updateValue($value_key, '');
 
-            return false;
+            if ($optional) {
+                return true;
+            } else {
+                $this->validation_errors[] = $error_message;
+                return false;
+            }
         }
 
         Configuration::updateValue($value_key, $value);

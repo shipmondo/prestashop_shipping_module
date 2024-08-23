@@ -3,7 +3,7 @@
     <name>shipmondo</name>
     <displayName><![CDATA[Shipmondo]]></displayName>
     <version><![CDATA[2.0.0]]></version>
-    <description><![CDATA[ModuleDescription]]></description>
+    <description><![CDATA[A complete shipping solution for PrestaShop]]></description>
     <author><![CDATA[Shipmondo]]></author>
     <tab><![CDATA[shipping_logistics]]></tab>
     <is_configurable>1</is_configurable>
