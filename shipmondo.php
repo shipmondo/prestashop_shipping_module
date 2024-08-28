@@ -24,7 +24,8 @@ class Shipmondo extends CarrierModule
         'displayAdminOrderSide',
         'displayHeader',
         'displayCarrierExtraContent',
-        'newOrder'
+        'newOrder',
+        'updateCarrier'
     ];
 
     protected $tables = [
@@ -49,13 +50,13 @@ class Shipmondo extends CarrierModule
             'max' => '8.99.99',
         ];
         $this->displayName = "Shipmondo";
-        $this->description = $this->trans('A complete shipping solution for PrestaShop', [], 'Modules.Shipmondo.Admin'); # TODO description
+        $this->description = $this->trans('A complete shipping solution for PrestaShop', [], 'Modules.Shipmondo.Admin');
 
         $this->tabs = [
             [
                 'name' => 'Shipmondo',
                 'class_name' => ShipmondoCarrierController::TAB_CLASS_NAME,
-                'route_name' => 'ps_controller_shipmondo_shipmondo_carriers',
+                'route_name' => 'shipmondo_shipmondo_carriers_search',
                 'visible' => true,
                 'parent_class_name' => 'AdminParentShipping',
             ],
@@ -360,7 +361,7 @@ class Shipmondo extends CarrierModule
 
     public function hookDisplayCarrierExtraContent($params)
     {
-        $carrier = $this->get('shipmondo.repository.shipmondo_carrier')->findOneBy(['carrierId' => $params['carrier']['id_reference']]);
+        $carrier = $this->get('shipmondo.repository.shipmondo_carrier')->findOneBy(['carrierId' => $params['carrier']['id']]);
 
         if ($carrier && $carrier->getProductCode() === 'service_point') {
             $servicePoint = $this->get('shipmondo.repository.shipmondo_service_point')
@@ -381,7 +382,7 @@ class Shipmondo extends CarrierModule
     public function hookNewOrder($params)
     {
         $carrier = new Carrier((int) $params['order']->id_carrier);
-        $smdCarrier = $this->get('shipmondo.repository.shipmondo_carrier')->findOneBy(['carrierId' => $carrier->id_reference]);
+        $smdCarrier = $this->get('shipmondo.repository.shipmondo_carrier')->findOneBy(['carrierId' => $carrier->id_carrier]);
 
         if ($smdCarrier && $smdCarrier->getProductCode() === 'service_point') {
             $servicePoint = $this->get('shipmondo.repository.shipmondo_service_point')
@@ -397,6 +398,22 @@ class Shipmondo extends CarrierModule
                 $entityManager->persist($servicePoint);
                 $entityManager->flush();
             }
+        }
+    }
+
+    public function hookUpdateCarrier($params)
+    {
+        $oldCarrierId = (int) $params['id_carrier'];
+        $newCarrierId = (int) $params['carrier']->id;
+        
+        $smdCarriers = $this->get('shipmondo.repository.shipmondo_carrier')->findBy(['carrierId' => $oldCarrierId]);
+        if($smdCarriers) {
+            foreach($smdCarriers as $smdCarrier) {
+                $smdCarrier->setCarrierId($newCarrierId);
+            }
+
+            $entityManager = $this->get('doctrine.orm.entity_manager');
+            $entityManager->flush();
         }
     }
 

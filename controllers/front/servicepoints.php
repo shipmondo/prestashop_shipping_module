@@ -76,8 +76,10 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
     private function getExternalServicePointList()
     {
         $carrierCode = Tools::getValue('carrier_code');
-        $frontendKey = Configuration::get('SHIPMONDO_FRONTEND_KEY');
         $frontendType = Configuration::get('SHIPMONDO_FRONTEND_TYPE');
+
+        $client = new Shipmondo\ApiClient();
+        $client->setFrontendKey(Configuration::get('SHIPMONDO_FRONTEND_KEY'));
 
         $cart = Context::getContext()->cart;
         $deliveryAddress = new Address($cart->id_address_delivery);
@@ -85,30 +87,20 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
         $servicePointId = $servicePoint ? $servicePoint->getServicePointId() : 0;
 
         try {
-            $client = new GuzzleHttp\Client();
-            $url = 'https://service-points.shipmondo.com/pickup-points.json';
-            $response = $client->request('GET', $url, [
-                'headers' => [
-                    'User-Agent' => 'Shipmondo Prestashop Module v' . $this->module->version,
-                ],
-                'query' => [
-                    'frontend_key' => $frontendKey,
-                    'request_url' => _PS_BASE_URL_,
-                    'request_version' => _PS_VERSION_,
-                    'module_version' => $this->module->version,
-                    'shipping_module_type' => 'prestashop',
-                    'carrier_code' => $carrierCode,
-                    'zipcode' => $deliveryAddress->postcode,
-                    'country' => Country::getIsoById($deliveryAddress->id_country),
-                    'address' => $deliveryAddress->address1
-                ]
+            $servicePoints = $client->getServicePoints([
+                'request_url' => _PS_BASE_URL_,
+                'request_version' => _PS_VERSION_,
+                'module_version' => $this->module->version,
+                'shipping_module_type' => 'prestashop',
+                'carrier_code' => $carrierCode,
+                'zipcode' => $deliveryAddress->postcode,
+                'country' => Country::getIsoById($deliveryAddress->id_country),
+                'address' => $deliveryAddress->address1
             ]);
         } catch (GuzzleHttp\Exception\GuzzleException $e) {
             $this->ajaxDie(json_encode(['success' => false, 'message' => 'Failed to fetch service points']));
         }
-
-        $servicePoints = json_decode($response->getBody()->getContents());
-
+        
         $carrierLogoPath = 'shipmondo/views/img/' . $carrierCode . '.png';
         if (!file_exists(_PS_MODULE_DIR_ . $carrierLogoPath)) {
             $carrierLogoPath = 'shipmondo/views/img/pdk.png'; # TODO add default logo

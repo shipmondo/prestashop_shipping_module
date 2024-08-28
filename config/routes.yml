@@ -1,7 +1,39 @@
-ps_controller_shipmondo_shipmondo_carriers:
+shipmondo_shipmondo_carriers_index:
     path: /shipmondo/shipmondo_carriers
     methods: [GET]
     defaults:
         _controller: 'Shipmondo\Controller\Admin\ShipmondoCarrierController::indexAction'
-        _legacy_controller: 'AdminShipmondoShipmondoCarrier'
-        _legacy_link: 'AdminShipmondoShipmondoCarrier'
+        _legacy_controller: "AdminShipmondoShipmondoCarrier"
+        _legacy_link: "AdminShipmondoShipmondoCarrier"
+
+shipmondo_shipmondo_carriers_search:
+    path: /shipmondo/shipmondo_carriers
+    methods: [POST]
+    defaults:
+        _controller: 'Shipmondo\Controller\Admin\ShipmondoCarrierController::searchAction'
+        _legacy_controller: "AdminShipmondoShipmondoCarrier"
+        _legacy_link: "AdminShipmondoShipmondoCarrier:search"
+
+shipmondo_shipmondo_carriers_create:
+    path: /shipmondo/shipmondo_carriers/create
+    methods: [GET, POST]
+    defaults:
+        _controller: 'Shipmondo\Controller\Admin\ShipmondoCarrierController::createAction'
+        _legacy_controller: "AdminShipmondoShipmondoCarrier"
+        _legacy_link: "AdminShipmondoShipmondoCarrier:create"
+
+shipmondo_shipmondo_carriers_edit:
+    path: /shipmondo/shipmondo_carriers/{id}/edit
+    methods: [GET, POST]
+    defaults:
+        _controller: 'Shipmondo\Controller\Admin\ShipmondoCarrierController::editAction'
+        _legacy_controller: "AdminShipmondoShipmondoCarrier"
+        _legacy_link: "AdminShipmondoShipmondoCarrier:edit"
+
+shipmondo_shipmondo_carriers_delete:
+    path: /shipmondo/shipmondo_carriers/{id}/delete
+    methods: [GET]
+    defaults:
+        _controller: 'Shipmondo\Controller\Admin\ShipmondoCarrierController::deleteAction'
+        _legacy_controller: "AdminShipmondoShipmondoCarrier"
+        _legacy_link: "AdminShipmondoShipmondoCarrier:delete"

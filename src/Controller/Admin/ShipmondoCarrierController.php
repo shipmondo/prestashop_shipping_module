@@ -3,21 +3,143 @@
 namespace Shipmondo\Controller\Admin;
 
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Service\Grid\ResponseBuilder;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Shipmondo\Grid\Definition\Factory\ShipmondoCarrierGridDefinitionFactory;
+use Shipmondo\Grid\Filters\ShipmondoCarrierFilters;
 use Shipmondo\Entity\ShipmondoCarrier;
-use Doctrine\ORM\EntityManagerInterface;
+use Shipmondo\Form\Type\ShipmondoCarrierFormType;
+use Carrier;
+use Configuration;
+use Group;
+use Zone;
 
 class ShipmondoCarrierController extends FrameworkBundleAdminController
 {
     const TAB_CLASS_NAME = 'AdminShipmondoShipmondoCarrier';
 
-    public function indexAction()
+    public function indexAction(ShipmondoCarrierFilters $filters)
     {
-        $entityManager = $this->get('doctrine.orm.entity_manager');
-        $repo = $entityManager->getRepository(ShipmondoCarrier::class);
-        $carriers = $repo->findAll();
+        $carrierGridFactory = $this->get('shipmondo.grid.factory.shipmondo_carriers');
+        $carrierGrid = $carrierGridFactory->getGrid($filters);
 
-        return $this->render('@Modules/shipmondo/views/templates/admin/index.html.twig', [
-            'carriers' => $carriers,
+        return $this->render(
+            '@Modules/shipmondo/views/templates/admin/index.html.twig',
+            [
+                'enableSidebar' => true,
+                'layoutTitle' => $this->trans('Shipmondo Carriers', 'Modules.Shipmondo.Admin'),
+                'layoutHeaderToolbarBtn' => [
+                    'add' => [
+                        'desc' => $this->trans('Add Shipmondo Carrier', 'Modules.Shipmondo.Admin'),
+                        'icon' => 'add_circle_outline',
+                        'href' => $this->generateUrl('shipmondo_shipmondo_carriers_create'),
+                    ]
+                ],
+                'carrierGrid' => $this->presentGrid($carrierGrid),
+            ]
+        );
+    }
+
+    public function searchAction(Request $request)
+    {
+        /** @var ResponseBuilder $responseBuilder */
+        $responseBuilder = $this->get('prestashop.bundle.grid.response_builder');
+
+        return $responseBuilder->buildSearchResponse(
+            $this->get('shipmondo.grid.definition.factory.shipmondo_carriers'),
+            $request,
+            ShipmondoCarrierGridDefinitionFactory::GRID_ID,
+            'shipmondo_shipmondo_carriers_index'
+        );
+    }
+
+    public function createAction(Request $request): Response
+    {
+        $carrier = new ShipmondoCarrier();
+        $form = $this->createForm(ShipmondoCarrierFormType::class, $carrier, ['action' => $this->generateUrl('shipmondo_shipmondo_carriers_create')]);
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($carrier->getCarrierId() == 0) {
+                $psCarrier = new Carrier();
+                $psCarrier->name = $carrier->getCarrierCode() . ' - ' . $carrier->getProductCode();
+                $psCarrier->active = false;
+                $psCarrier->deleted = false;
+                $psCarrier->shipping_handling = true;
+                $psCarrier->range_behavior = 0;
+                $psCarrier->is_module = true;
+                $psCarrier->shipping_external = true;
+                $psCarrier->external_module_name = 'shipmondo';
+                $psCarrier->need_range = true;
+                $psCarrier->is_free = true;
+                $psCarrier->delay[Configuration::get('PS_LANG_DEFAULT')] = '1-2 days';
+
+                if ($psCarrier->add()) {
+                    $groups = Group::getGroups(true);
+                    $group_ids = array_column($groups, 'id_group');
+                    $psCarrier->setGroups($group_ids);
+
+                    $zones = Zone::getZones(true);
+                    foreach ($zones as $zone) {
+                        $psCarrier->addZone($zone['id_zone']);
+                    }
+
+                    $carrier->setCarrierId($psCarrier->id);
+                }
+            }
+
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($carrier);
+            $em->flush();
+
+            return $this->redirectToRoute('shipmondo_shipmondo_carriers_index');
+        }
+
+        return $this->render('@Modules/shipmondo/views/templates/admin/shipmondo_carrier_form.html.twig', [
+            'form' => $form->createView(),
+            'layoutTitle' => $this->trans('Shipmondo Carrier', 'Modules.Shipmondo.Admin'),
+            'isEdit' => false
         ]);
+    }
+
+    public function editAction(Request $request, int $id): Response
+    {
+        $em = $this->getDoctrine()->getManager();
+        $carrier = $em->getRepository(ShipmondoCarrier::class)->find($id);
+
+        if (!$carrier) {
+            throw $this->createNotFoundException('The carrier does not exist');
+        }
+
+        $form = $this->createForm(ShipmondoCarrierFormType::class, $carrier, ['action' => $this->generateUrl('shipmondo_shipmondo_carriers_edit', ['id' => $id])]);
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em->flush();
+
+            return $this->redirectToRoute('shipmondo_shipmondo_carriers_index');
+        }
+
+        return $this->render('@Modules/shipmondo/views/templates/admin/shipmondo_carrier_form.html.twig', [
+            'form' => $form->createView(),
+            'layoutTitle' => $this->trans('Shipmondo Carrier', 'Modules.Shipmondo.Admin'),
+            'isEdit' => true
+        ]);
+    }
+
+    public function deleteAction(int $id): Response
+    {
+        $em = $this->getDoctrine()->getManager();
+        $carrier = $em->getRepository(ShipmondoCarrier::class)->find($id);
+
+        if (!$carrier) {
+            throw $this->createNotFoundException('The carrier does not exist');
+        }
+
+        $em->remove($carrier);
+        $em->flush();
+
+        return $this->redirectToRoute('shipmondo_shipmondo_carriers_index');
     }
 }

@@ -1,0 +1,70 @@
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
+{% form_theme form '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
+
+{% block content %}
+	{{ form_start(form) }}
+	<div class="card">
+		<h3 class="card-header">
+			<i class="material-icons">settings</i> {{ 'Shipmondo Carrier'|trans({}, 'Modules.Shipmondo.Admin') }}
+		</h3>
+
+		<div class="card-body">
+			<div class="form-wrapper">
+				{{ form_widget(form) }}
+			</div>
+		</div>
+
+		<div class="card-footer">
+			<div class="d-flex justify-content-end">
+				<button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+			</div>
+		</div>
+	</div>
+	{{ form_end(form) }}
+{% endblock %}
+
+{% block javascripts %} 
+    {{ parent() }}
+
+    <script>
+        const form = $("form[name=shipmondo_carrier_form]");
+        const psCarrierSelect = form.find('#shipmondo_carrier_form_carrier_id');
+        const carriersSelect = form.find('#shipmondo_carrier_form_carrier_code');
+        const productsSelect = form.find('#shipmondo_carrier_form_product_code');
+
+        {% if isEdit %}
+            psCarrierSelect.attr('disabled', true);
+            psCarrierSelect.parent().append('<input type="hidden" name="shipmondo_carrier_form[carrier_id]" value="' + psCarrierSelect.val() + '" />');
+        {% endif %}
+
+        carriersSelect.on('change', function(event) {
+            productsSelect.attr('disabled', true);
+
+            var selected = productsSelect.val();
+            var url = form.attr('action');
+            var requestBody = carriersSelect.serialize() + '&' + productsSelect.serialize();
+            var method = form.attr('method');
+            $.ajax({
+                url: url,
+                method: method,
+                data: requestBody,
+                success: function(response) {
+                    var html = $(response).find('#shipmondo_carrier_form_product_code').html();
+                    productsSelect.html(html);
+                    var values = productsSelect.find('option').map(function() {
+                        return $(this).val();
+                    }).get();
+
+                    // Select the previously selected value if it still exists
+                    if ($.inArray(selected, values) !== -1) {
+                        productsSelect.val(selected);
+                    }
+
+                    productsSelect.attr('disabled', false);
+                }
+            });
+        });
+
+        carriersSelect.trigger('change');
+    </script>
+{% endblock %}
