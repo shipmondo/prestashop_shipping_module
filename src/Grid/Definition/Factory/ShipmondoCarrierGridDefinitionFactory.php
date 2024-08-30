@@ -50,24 +50,24 @@ final class ShipmondoCarrierGridDefinitionFactory extends AbstractGridDefinition
                 (new LinkColumn('carrier_link'))
                     ->setName($this->trans('Carrier', [], 'Modules.Shipmondo.Admin'))
                     ->setOptions([
-                        'field' => 'id_carrier',
+                        'field' => 'ps_carrier_name', // Join on carrier table
                         'route' => 'admin_carriers_edit',
                         'route_param_name' => 'carrierId',
                         'route_param_field' => 'id_carrier',
                     ])
             )
             ->add(
-                (new DataColumn('carrier_code'))
-                    ->setName($this->trans('Carrier Code', [], 'Modules.Shipmondo.Admin'))
+                (new DataColumn('carrier_name'))
+                    ->setName($this->trans('Shipmondo Carrier', [], 'Modules.Shipmondo.Admin'))
                     ->setOptions([
-                        'field' => 'carrier_code',
+                        'field' => 'carrier_name', // Set in decorator
                     ])
             )
             ->add(
-                (new DataColumn('product_code'))
-                    ->setName($this->trans('Product Code', [], 'Modules.Shipmondo.Admin'))
+                (new DataColumn('product_name'))
+                    ->setName($this->trans('Product', [], 'Modules.Shipmondo.Admin'))
                     ->setOptions([
-                        'field' => 'product_code',
+                        'field' => 'product_name', // Set in decorator
                     ])
             )
             ->add(

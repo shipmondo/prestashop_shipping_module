@@ -11,7 +11,7 @@ services:
             - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
             - "@=service('prestashop.adapter.legacy.context').getContext().shop.id"
 
-    shipmondo.grid.data_provider.shipmondo_carriers:
+    shipmondo.grid.data.factory.shipmondo_carriers:
         class: "%prestashop.core.grid.data.factory.doctrine_grid_data_factory%"
         arguments:
             - "@shipmondo.grid.query_builder.shipmondo_carrier"
@@ -19,12 +19,18 @@ services:
             - "@prestashop.core.grid.query.doctrine_query_parser"
             - "product"
 
+    shipmondo.grid.data.factory.shipmondo_carriers_decorator:
+        class: 'Shipmondo\Grid\Data\Factory\ShipmondoCarrierGridDataFactoryDecorator'
+        arguments:
+            - "@shipmondo.grid.data.factory.shipmondo_carriers"
+            - "Configuration::get('PS_SHOP_DOMAIN')"
+
     shipmondo.grid.factory.shipmondo_carriers:
         class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
         public: true
         arguments:
             - "@shipmondo.grid.definition.factory.shipmondo_carriers"
-            - "@shipmondo.grid.data_provider.shipmondo_carriers"
+            - '@shipmondo.grid.data.factory.shipmondo_carriers_decorator'
             - "@prestashop.core.grid.filter.form_factory"
             - "@prestashop.core.hook.dispatcher"
 

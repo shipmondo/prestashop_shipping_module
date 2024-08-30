@@ -34,7 +34,8 @@ final class ShipmondoCarrierQueryBuilder extends AbstractDoctrineQueryBuilder
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $qb = $this->getBaseQuery();
-        $qb->select('c.id_smd_carrier, c.id_carrier, c.carrier_code, c.product_code')
+        $qb->select('sc.id_smd_carrier, sc.id_carrier, sc.carrier_code, sc.product_code')
+            ->addSelect('c.name AS ps_carrier_name')
             ->orderBy(
                 $searchCriteria->getOrderBy(),
                 $searchCriteria->getOrderWay()
@@ -44,7 +45,7 @@ final class ShipmondoCarrierQueryBuilder extends AbstractDoctrineQueryBuilder
     
         foreach ($searchCriteria->getFilters() as $filterName => $filterValue) {
             if ('id_smd_carrier' === $filterName) {
-                $qb->andWhere("c.id_smd_carrier = :$filterName");
+                $qb->andWhere("sc.id_smd_carrier = :$filterName");
                 $qb->setParameter($filterName, $filterValue);
 
                 continue;
@@ -61,7 +62,7 @@ final class ShipmondoCarrierQueryBuilder extends AbstractDoctrineQueryBuilder
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $qb = $this->getBaseQuery();
-        $qb->select('COUNT(c.id_smd_carrier)');
+        $qb->select('COUNT(sc.id_smd_carrier)');
 
         return $qb;
     }
@@ -71,9 +72,10 @@ final class ShipmondoCarrierQueryBuilder extends AbstractDoctrineQueryBuilder
     {
         return $this->connection
             ->createQueryBuilder()
-            ->from($this->dbPrefix.'shipmondo_carrier', 'c')
+            ->from($this->dbPrefix.'shipmondo_carrier', 'sc')
             ->setParameter('context_lang_id', $this->contextLangId)
             ->setParameter('context_shop_id', $this->contextShopId)
+            ->leftJoin('sc', $this->dbPrefix . 'carrier', 'c', 'sc.id_carrier = c.id_carrier')
         ;
     }
 }

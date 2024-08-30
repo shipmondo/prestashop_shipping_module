@@ -62,31 +62,7 @@ class ShipmondoCarrierController extends FrameworkBundleAdminController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($carrier->getCarrierId() == 0) {
-                $psCarrier = new Carrier();
-                $psCarrier->name = $carrier->getCarrierCode() . ' - ' . $carrier->getProductCode();
-                $psCarrier->active = false;
-                $psCarrier->deleted = false;
-                $psCarrier->shipping_handling = true;
-                $psCarrier->range_behavior = 0;
-                $psCarrier->is_module = true;
-                $psCarrier->shipping_external = true;
-                $psCarrier->external_module_name = 'shipmondo';
-                $psCarrier->need_range = true;
-                $psCarrier->is_free = true;
-                $psCarrier->delay[Configuration::get('PS_LANG_DEFAULT')] = '1-2 days';
-
-                if ($psCarrier->add()) {
-                    $groups = Group::getGroups(true);
-                    $group_ids = array_column($groups, 'id_group');
-                    $psCarrier->setGroups($group_ids);
-
-                    $zones = Zone::getZones(true);
-                    foreach ($zones as $zone) {
-                        $psCarrier->addZone($zone['id_zone']);
-                    }
-
-                    $carrier->setCarrierId($psCarrier->id);
-                }
+                $this->createPsCarrier($carrier);
             }
 
             $em = $this->getDoctrine()->getManager();
@@ -141,5 +117,38 @@ class ShipmondoCarrierController extends FrameworkBundleAdminController
         $em->flush();
 
         return $this->redirectToRoute('shipmondo_shipmondo_carriers_index');
+    }
+
+    /**
+     * Create a new carrier in PrestaShop and set relation to Shipmondo Carrier
+     * 
+     * @param ShipmondoCarrier $carrier
+     */
+    private function createPsCarrier(ShipmondoCarrier $carrier) {
+        $psCarrier = new Carrier();
+        $psCarrier->name = $carrier->getCarrierName() . ' - ' . $carrier->getProductName();
+        $psCarrier->active = false;
+        $psCarrier->deleted = false;
+        $psCarrier->shipping_handling = true;
+        $psCarrier->range_behavior = 0;
+        $psCarrier->is_module = true;
+        $psCarrier->shipping_external = true;
+        $psCarrier->external_module_name = 'shipmondo';
+        $psCarrier->need_range = true;
+        $psCarrier->is_free = true;
+        $psCarrier->delay[Configuration::get('PS_LANG_DEFAULT')] = '?'; # TODO what to do?
+
+        if ($psCarrier->add()) {
+            $groups = Group::getGroups(true);
+            $group_ids = array_column($groups, 'id_group');
+            $psCarrier->setGroups($group_ids);
+
+            $zones = Zone::getZones(true);
+            foreach ($zones as $zone) {
+                $psCarrier->addZone($zone['id_zone']);
+            }
+
+            $carrier->setCarrierId($psCarrier->id);
+        }
     }
 }

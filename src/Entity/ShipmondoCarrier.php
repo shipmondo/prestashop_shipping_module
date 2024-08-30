@@ -43,6 +43,16 @@ class ShipmondoCarrier
     private $productCode;
 
     /**
+     * @var string
+     */
+    private $carrierName;
+    
+    /**
+     * @var string
+     */
+    private $productName;
+
+    /**
      * Get the value of id
      *
      * @return int
@@ -119,6 +129,42 @@ class ShipmondoCarrier
     }
 
     /**
+     * Summary of getCarrierName
+     * @return string|null
+     */
+    public function getCarrierName()
+    {
+        if ($this->carrierName) {
+            return $this->carrierName;
+        }
+
+        $carriers = self::getAvailableCarriers();
+        foreach ($carriers as $carrier) {
+            if ($carrier->code === $this->carrierCode) {
+                $this->carrierName = $carrier->name;
+            }
+        }
+
+        return $this->carrierName;
+    }
+
+    public function getProductName()
+    {
+        if ($this->productName) {
+            return $this->productName;
+        }
+
+        $products = self::getAvailableProducts($this->carrierCode);
+        foreach ($products as $product) {
+            if ($product->code === $this->productCode) {
+                $this->productName = $product->name;
+            }
+        }
+
+        return $this->productName;
+    }
+
+    /**
      * Convert the entity to an array
      *
      * @return array
@@ -131,69 +177,5 @@ class ShipmondoCarrier
             'carrier_code' => $this->getCarrierCode(),
             'product_code' => $this->getProductCode()
         ];
-    }
-
-    /**
-     * Calls Shipmondo API to get available carriers
-     *
-     * @return array
-     */
-    public static function getAvailableCarriers()
-    {
-        $config_key = 'SHIPMONDO_AVAILABLE_CARRIERS';
-        $expiration_config_key = 'SHIPMONDO_AVAILABLE_CARRIERS_EXPIRATION';
-
-        $carriersJson = Configuration::get($config_key);
-        $expiration = (int) Configuration::get($expiration_config_key);
-        
-        if ($carriersJson && $expiration > time()) {
-            return json_decode($carriersJson);
-        }
-
-        $frontendKey = Configuration::get('SHIPMONDO_FRONTEND_KEY');
-        $client = new \Shipmondo\ApiClient($frontendKey);
-        $carriers = $client->getCarriers();
-        if (empty($carriers)) {
-            return [];            
-        }
-
-        // Change boolean values to array of products to prepare for the future
-        foreach ($carriers as $carrier) {
-            $products = [];
-            foreach ($carrier->products as $productCode => $hasProduct) {
-                if ($hasProduct) {
-                    $product = new \stdClass();
-                    $product->name = ucwords(str_replace('_', ' ', $productCode));
-                    $product->code = $productCode;
-                    $products[] = $product;
-                }
-            }
-            $carrier->products = $products;
-        }
-        
-        // TODO Should we cache shorter than 6 hours?
-        $expiration = time() + 21600; // Cache for 6 hours
-        Configuration::updateValue($config_key, json_encode($carriers));
-        Configuration::updateValue($expiration_config_key, $expiration);
-
-        return $carriers;
-    }
-
-        /**
-     * Calls Shipmondo API to get available carriers
-     *
-     * @return array
-     */
-    public static function getAvailableProducts(string $carrierCode)
-    {
-        $carriers = self::getAvailableCarriers();
-
-        foreach($carriers as $carrier) {
-            if ($carrier->code === $carrierCode) {
-                return $carrier->products;
-            }
-        }
-
-        return [];
     }
 }

@@ -1,15 +1,32 @@
 services:
-  _defaults:
-    public: true
-
-  shipmondo.repository.shipmondo_carrier:
-      class: Shipmondo\Repository\ShipmondoCarrierRepository
-      factory: ['@doctrine.orm.entity_manager', getRepository]
-      arguments:
+    shipmondo.repository.shipmondo_carrier:
+        class: Shipmondo\Repository\ShipmondoCarrierRepository
+        public: true
+        factory: ['@doctrine.orm.entity_manager', getRepository]
+        arguments:
           - Shipmondo\Entity\ShipmondoCarrier
 
-  shipmondo.repository.shipmondo_service_point:
-      class: Shipmondo\Repository\ShipmondoServicePointRepository
-      factory: ['@doctrine.orm.entity_manager', getRepository]
-      arguments:
-          - Shipmondo\Entity\ShipmondoServicePoint
+    shipmondo.repository.shipmondo_service_point:
+        class: Shipmondo\Repository\ShipmondoServicePointRepository
+        public: true
+        factory: ['@doctrine.orm.entity_manager', getRepository]
+        arguments:
+            - Shipmondo\Entity\ShipmondoServicePoint
+  
+    shipmondo.api_client:
+        class: 'Shipmondo\ApiClient'
+        public: true
+        arguments:
+            - "@shipmondo.module"
+            - "1234567890"
+            - '@shipmondo.guzzle.client'
+            - "https://service-points.shipmondo.com/"
+
+    shipmondo.module:
+        class: 'Module'
+        factory: ['Module', 'getInstanceByName']
+        arguments:
+            - 'shipmondo'
+
+    shipmondo.guzzle.client:
+        class: 'GuzzleHttp\Client'

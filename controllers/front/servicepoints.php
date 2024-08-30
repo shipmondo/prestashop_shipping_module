@@ -78,28 +78,23 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
         $carrierCode = Tools::getValue('carrier_code');
         $frontendType = Configuration::get('SHIPMONDO_FRONTEND_TYPE');
 
-        $client = new Shipmondo\ApiClient();
-        $client->setFrontendKey(Configuration::get('SHIPMONDO_FRONTEND_KEY'));
+        $client = $this->container->get('shipmondo.api_client');
 
         $cart = Context::getContext()->cart;
         $deliveryAddress = new Address($cart->id_address_delivery);
         $servicePoint = $this->getRepository()->findOneBy(['cartId' => $cart->id]);
         $servicePointId = $servicePoint ? $servicePoint->getServicePointId() : 0;
-
-        try {
-            $servicePoints = $client->getServicePoints([
-                'request_url' => _PS_BASE_URL_,
-                'request_version' => _PS_VERSION_,
-                'module_version' => $this->module->version,
-                'shipping_module_type' => 'prestashop',
-                'carrier_code' => $carrierCode,
-                'zipcode' => $deliveryAddress->postcode,
-                'country' => Country::getIsoById($deliveryAddress->id_country),
-                'address' => $deliveryAddress->address1
-            ]);
-        } catch (GuzzleHttp\Exception\GuzzleException $e) {
-            $this->ajaxDie(json_encode(['success' => false, 'message' => 'Failed to fetch service points']));
-        }
+        
+        $servicePoints = $client->getServicePoints([
+            'request_url' => _PS_BASE_URL_,
+            'request_version' => _PS_VERSION_,
+            'module_version' => $this->module->version,
+            'shipping_module_type' => 'prestashop',
+            'carrier_code' => $carrierCode,
+            'zipcode' => $deliveryAddress->postcode,
+            'country' => Country::getIsoById($deliveryAddress->id_country),
+            'address' => $deliveryAddress->address1
+        ]);
         
         $carrierLogoPath = 'shipmondo/views/img/' . $carrierCode . '.png';
         if (!file_exists(_PS_MODULE_DIR_ . $carrierLogoPath)) {

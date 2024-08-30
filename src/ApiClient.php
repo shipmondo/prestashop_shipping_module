@@ -2,6 +2,8 @@
 
 namespace Shipmondo;
 
+use Module;
+
 class ApiClient
 {
     /**
@@ -20,13 +22,22 @@ class ApiClient
     private $baseUrl;
 
     /**
-     * @param string $frontendKey
+     * @var Module
      */
-    public function __construct($frontendKey)
+    private $module;
+
+    /**
+     * @param string $frontendKey
+     * @param \GuzzleHttp\Client $client
+     * @param string $baseUrl
+     * @param Module $module
+     */
+    public function __construct(Module $module, string $frontendKey, \GuzzleHttp\Client $client, string $baseUrl)
     {
+        $this->module = $module;
         $this->frontendKey = $frontendKey;
-        $this->client = new \GuzzleHttp\Client();
-        $this->baseUrl = 'https://service-points.shipmondo.com/';
+        $this->client = $client;
+        $this->baseUrl = $baseUrl;
     }
 
     /**
@@ -54,16 +65,16 @@ class ApiClient
     private function request($method, $url, $query = [])
     {
         $fullUrl = $this->baseUrl . $url;
-        try {
+        //try {
             $response = $this->client->request($method, $fullUrl, [
                 'headers' => [
-                    'User-Agent' => 'Shipmondo Prestashop Module v',
+                    'User-Agent' => 'Shipmondo Prestashop Module v' . $this->module->version,
                 ],
                 'query' => array_merge($query, ['frontend_key' => $this->frontendKey]),
             ]);
-        } catch (\GuzzleHttp\Exception\GuzzleException $e) {
+        /*} catch (\GuzzleHttp\Exception\GuzzleException $e) {
             return [];
-        }
+        }*/
 
         return json_decode($response->getBody()->getContents());
     }
