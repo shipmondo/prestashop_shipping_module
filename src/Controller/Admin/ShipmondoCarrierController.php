@@ -125,8 +125,12 @@ class ShipmondoCarrierController extends FrameworkBundleAdminController
      * @param ShipmondoCarrier $carrier
      */
     private function createPsCarrier(ShipmondoCarrier $carrier) {
+        $carrierHandler = $this->get('shipmondo.carrier_handler');
+        $carrierName = $carrierHandler->getCarrierName($carrier->getCarrierCode());
+        $productName = $carrierHandler->getProductName($carrier->getProductCode());
+
         $psCarrier = new Carrier();
-        $psCarrier->name = $carrier->getCarrierName() . ' - ' . $carrier->getProductName();
+        $psCarrier->name = $carrierName . ' - ' . $productName;
         $psCarrier->active = false;
         $psCarrier->deleted = false;
         $psCarrier->shipping_handling = true;

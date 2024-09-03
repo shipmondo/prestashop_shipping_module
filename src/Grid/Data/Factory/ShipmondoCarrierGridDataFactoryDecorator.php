@@ -9,6 +9,8 @@ use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 use Shipmondo\Entity\ShipmondoCarrier;
 use Carrier;
+use Shipmondo\Exception\ShipmondoApiException;
+use Shipmondo\ShipmondoConfiguration;
 
 final class ShipmondoCarrierGridDataFactoryDecorator implements GridDataFactoryInterface
 {
@@ -17,10 +19,17 @@ final class ShipmondoCarrierGridDataFactoryDecorator implements GridDataFactoryI
      */
     private $shipmondoCarrierGridDataFactory;
 
+    /**
+     * @var ShipmondoConfiguration
+     */
+    private $shipmondoConfiguration;
+
     public function __construct(
-        GridDataFactoryInterface $shipmondoCarrierGridDataFactory
+        GridDataFactoryInterface $shipmondoCarrierGridDataFactory,
+        ShipmondoConfiguration $shipmondoConfiguration
     ) {
         $this->shipmondoCarrierGridDataFactory = $shipmondoCarrierGridDataFactory;
+        $this->shipmondoConfiguration = $shipmondoConfiguration;
     }
 
     /**
@@ -46,25 +55,35 @@ final class ShipmondoCarrierGridDataFactoryDecorator implements GridDataFactoryI
      */
     private function applyModifications(RecordCollectionInterface $carriers)
     {
-        $availableCarriers = ShipmondoCarrier::getAvailableCarriers();
+        $modifiedCarriers = [];
+        try {
+            $availableCarriers = $this->shipmondoConfiguration->getAvailableCarriers();
 
-        foreach ($carriers as $carrier) {
-            foreach ($availableCarriers as $availableCarrier) {
-                if ($carrier['carrier_code'] === $availableCarrier->code) {
-                    $carrier['carrier_name'] = $availableCarrier->name;
-
-                    foreach ($availableCarrier->products as $product) {
-                        if ($carrier['product_code'] === $product->code) {
-                            $carrier['product_name'] = $product->name;
-                            break;
+            foreach ($carriers as $carrier) {
+                foreach ($availableCarriers as $availableCarrier) {
+                    if ($carrier['carrier_code'] === $availableCarrier->code) {
+                        $carrier['carrier_name'] = $availableCarrier->name;
+    
+                        foreach ($availableCarrier->products as $product) {
+                            if ($carrier['product_code'] === $product->code) {
+                                $carrier['product_name'] = $product->name;
+                                break;
+                            }
                         }
+    
+                        break;
                     }
-
-                    break;
                 }
+    
+                $modifiedCarriers[] = $carrier;
             }
-
-            $modifiedCarriers[] = $carrier;
+        } catch (ShipmondoApiException $e) {
+            // Use codes as backups if API call fails
+            foreach ($carriers as $carrier) {
+                $carrier['carrier_name'] = $carrier['carrier_code'];
+                $carrier['product_name'] = $carrier['product_code'];
+                $modifiedCarriers[] = $carrier;
+            }
         }
 
         return new RecordCollection($modifiedCarriers);

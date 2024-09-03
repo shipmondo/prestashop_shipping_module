@@ -1,6 +1,7 @@
 <?php
 
 use Shipmondo\Entity\ShipmondoServicePoint;
+use Shipmondo\Exception\ShipmondoApiException;
 
 class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
 {
@@ -84,18 +85,22 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
         $deliveryAddress = new Address($cart->id_address_delivery);
         $servicePoint = $this->getRepository()->findOneBy(['cartId' => $cart->id]);
         $servicePointId = $servicePoint ? $servicePoint->getServicePointId() : 0;
-        
-        $servicePoints = $client->getServicePoints([
-            'request_url' => _PS_BASE_URL_,
-            'request_version' => _PS_VERSION_,
-            'module_version' => $this->module->version,
-            'shipping_module_type' => 'prestashop',
-            'carrier_code' => $carrierCode,
-            'zipcode' => $deliveryAddress->postcode,
-            'country' => Country::getIsoById($deliveryAddress->id_country),
-            'address' => $deliveryAddress->address1
-        ]);
-        
+
+        try {
+            $servicePoints = $client->getServicePoints([
+                'request_url' => _PS_BASE_URL_,
+                'request_version' => _PS_VERSION_,
+                'module_version' => $this->module->version,
+                'shipping_module_type' => 'prestashop',
+                'carrier_code' => $carrierCode,
+                'zipcode' => $deliveryAddress->postcode,
+                'country' => Country::getIsoById($deliveryAddress->id_country),
+                'address' => $deliveryAddress->address1
+            ]);
+        } catch (ShipmondoApiException $e) {
+            $this->ajaxDie(json_encode(['success' => false, 'message' => $e->getMessage()]));
+        }
+
         $carrierLogoPath = 'shipmondo/views/img/' . $carrierCode . '.png';
         if (!file_exists(_PS_MODULE_DIR_ . $carrierLogoPath)) {
             $carrierLogoPath = 'shipmondo/views/img/pdk.png'; # TODO add default logo

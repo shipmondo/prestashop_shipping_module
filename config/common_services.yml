@@ -12,15 +12,9 @@ services:
         factory: ['@doctrine.orm.entity_manager', getRepository]
         arguments:
             - Shipmondo\Entity\ShipmondoServicePoint
-  
-    shipmondo.api_client:
-        class: 'Shipmondo\ApiClient'
-        public: true
-        arguments:
-            - "@shipmondo.module"
-            - "1234567890"
-            - '@shipmondo.guzzle.client'
-            - "https://service-points.shipmondo.com/"
+
+    shipmondo.guzzle.client:
+        class: 'GuzzleHttp\Client'
 
     shipmondo.module:
         class: 'Module'
@@ -28,5 +22,15 @@ services:
         arguments:
             - 'shipmondo'
 
-    shipmondo.guzzle.client:
-        class: 'GuzzleHttp\Client'
+    shipmondo.api_client:
+        class: 'Shipmondo\ApiClient'
+        arguments:
+            - '@shipmondo.module'
+            - "INSERT FRONTEND KEY HERE"
+            - '@shipmondo.guzzle.client'
+            - 'https://service-points.shipmondo.com/'
+
+    shipmondo.configuration:
+        class: 'Shipmondo\ShipmondoConfiguration'
+        arguments:
+            - '@shipmondo.api_client'

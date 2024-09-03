@@ -1,45 +1,53 @@
 services:
     shipmondo.grid.definition.factory.shipmondo_carriers:
         class: 'Shipmondo\Grid\Definition\Factory\ShipmondoCarrierGridDefinitionFactory'
-        parent: "prestashop.core.grid.definition.factory.abstract_grid_definition"
+        parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
 
     shipmondo.grid.query_builder.shipmondo_carrier:
         class: 'Shipmondo\Grid\Query\ShipmondoCarrierQueryBuilder'
-        parent: "prestashop.core.grid.abstract_query_builder"
+        parent: 'prestashop.core.grid.abstract_query_builder'
         public: true
         arguments:
             - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
             - "@=service('prestashop.adapter.legacy.context').getContext().shop.id"
 
     shipmondo.grid.data.factory.shipmondo_carriers:
-        class: "%prestashop.core.grid.data.factory.doctrine_grid_data_factory%"
+        class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
         arguments:
-            - "@shipmondo.grid.query_builder.shipmondo_carrier"
-            - "@prestashop.core.hook.dispatcher"
-            - "@prestashop.core.grid.query.doctrine_query_parser"
-            - "product"
+            - '@shipmondo.grid.query_builder.shipmondo_carrier'
+            - '@prestashop.core.hook.dispatcher'
+            - '@prestashop.core.grid.query.doctrine_query_parser'
+            - 'shipmondo_carriers'
 
     shipmondo.grid.data.factory.shipmondo_carriers_decorator:
         class: 'Shipmondo\Grid\Data\Factory\ShipmondoCarrierGridDataFactoryDecorator'
         arguments:
-            - "@shipmondo.grid.data.factory.shipmondo_carriers"
-            - "Configuration::get('PS_SHOP_DOMAIN')"
+            - '@shipmondo.grid.data.factory.shipmondo_carriers'
+            - '@shipmondo.configuration'
 
     shipmondo.grid.factory.shipmondo_carriers:
         class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
         public: true
         arguments:
-            - "@shipmondo.grid.definition.factory.shipmondo_carriers"
+            - '@shipmondo.grid.definition.factory.shipmondo_carriers'
             - '@shipmondo.grid.data.factory.shipmondo_carriers_decorator'
-            - "@prestashop.core.grid.filter.form_factory"
-            - "@prestashop.core.hook.dispatcher"
+            - '@prestashop.core.grid.filter.form_factory'
+            - '@prestashop.core.hook.dispatcher'
 
     shipmondo.form.type.shipmondo_carrier_form_type:
         class: 'Shipmondo\Form\Type\ShipmondoCarrierFormType'
         parent: 'form.type.translatable.aware'
         public: true
         tags:
-        - { name: form.type }
+            - { name: form.type }
+        arguments:
+            - "@shipmondo.carrier_handler"
+
+    shipmondo.carrier_handler:
+        class: 'Shipmondo\ShipmondoCarrierHandler'
+        public: true
+        arguments:
+            - '@shipmondo.configuration'
 
 imports:
     - { resource: common_services.yml }

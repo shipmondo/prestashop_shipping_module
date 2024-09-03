@@ -2,89 +2,66 @@
 
 namespace Shipmondo;
 
+use Shipmondo\ShipmondoConfiguration;
+
 class ShipmondoCarrierHandler
 {
-
     /**
-     * @var string
+     * @var ShipmondoConfiguration
      */
-    private const AVAILABLE_CARRIERS_CONFIG_KEY = 'SHIPMONDO_AVAILABLE_CARRIERS';
-
-    /**
-     * @var string
-     */
-    private const AVAILABLE_CARRIERS_EXPIRATION_CONFIG_KEY = 'SHIPMONDO_AVAILABLE_CARRIERS_EXPIRATION';
+    private $shipmondoConfiguration;
 
     /**
      * @var array
      */
-    private $availableCarriers;
-    
-    /**
-     * @var int
-     */
-    private $expirationTimestamp;
+    private $carriers;
 
-    public function __construct()
+    /**
+     * @param ShipmondoConfiguration $shipmondoConfiguration
+     */
+    public function __construct(ShipmondoConfiguration $shipmondoConfiguration)
     {
-        $this->availableCarriers = $this->getAvailableCarriers();
+        $this->shipmondoConfiguration = $shipmondoConfiguration;
     }
 
 
     /**
-     * Calls Shipmondo API to get available carriers
+     * Get available carriers from Shipmondo
      *
      * @return array
      */
     public function getCarriers()
     {
-        if (!$this->expirationTimestamp) {
-            $this->expirationTimestamp = (int) Configuration::get(self::AVAILABLE_CARRIERS_EXPIRATION_CONFIG_KEY);
+        if (!$this->carriers) {
+            $this->carriers = $this->shipmondoConfiguration->getAvailableCarriers();
         }
 
-        if ($this->availableCarriers && $this->expirationTimestamp > time()) {
-            return $this->availableCarriers;
-        }
-
-        $carriersJson = Configuration::get(self::AVAILABLE_CARRIERS_CONFIG_KEY);
-        if ($carriersJson && $this->expirationTimestamp > time()) {
-            $this->availableCarriers = json_decode($carriersJson);
-            return $this->availableCarriers;
-        }
-
-        $frontendKey = Configuration::get('SHIPMONDO_FRONTEND_KEY');
-        $client = new \Shipmondo\ApiClient($frontendKey);
-        $carriers = $client->getCarriers();
-        if (empty($carriers)) {
-            return [];            
-        }
-
-        // Change boolean values to array of products to prepare for the future
-        foreach ($carriers as $carrier) {
-            $products = [];
-            foreach ($carrier->products as $productCode => $hasProduct) {
-                if ($hasProduct) {
-                    $product = new \stdClass();
-                    $product->name = ucwords(str_replace('_', ' ', $productCode));
-                    $product->code = $productCode;
-                    $products[] = $product;
-                }
-            }
-            $carrier->products = $products;
-        }
-        
-        $this->availableCarriers = $carriers;
-        // TODO Should we cache shorter than 6 hours?
-        $this->expirationTimestamp = time() + 21600; // Cache for 6 hours
-        Configuration::updateValue(self::AVAILABLE_CARRIERS_CONFIG_KEY, json_encode($this->availableCarriers));
-        Configuration::updateValue(self::AVAILABLE_CARRIERS_EXPIRATION_CONFIG_KEY, $this->expirationTimestamp);
-
-        return $carriers;
+        return $this->carriers;
     }
 
-        /**
-     * Calls Shipmondo API to get available carriers
+    /**
+     * Get carrier by code
      *
+     * @param string $carrierCode
+     * @return object|null
+     */
+    public function getCarrier(string $carrierCode)
+    {
+        $carriers = self::getCarriers();
+
+        foreach($carriers as $carrier) {
+            if ($carrier->code === $carrierCode) {
+                return $carrier;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Get products for a carrier
+     *
+     * @param string $carrierCode
      * @return array
      */
     public function getProducts(string $carrierCode)
@@ -99,6 +76,30 @@ class ShipmondoCarrierHandler
 
         return [];
     }
+
+    /**
+     * Get carrier name. Fallback to carrier code if name is not found.
+     *
+     * @param string $carrierCode
+     * @return string
+     */
+    public function getCarrierName(string $carrierCode)
+    {
+        $carrier = self::getCarrier($carrierCode);
+        return $carrier ? $carrier->name : $carrierCode;
+    }
+
+    /**
+     * Get product name.
+     *
+     * @param string $productCode
+     * @return string
+     */
+    public function getProductName(string $productCode)
+    {
+        return ucwords(str_replace('_', ' ', $productCode));
+    }
+
 
 
 

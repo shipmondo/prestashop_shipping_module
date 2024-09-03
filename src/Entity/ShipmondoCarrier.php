@@ -129,42 +129,6 @@ class ShipmondoCarrier
     }
 
     /**
-     * Summary of getCarrierName
-     * @return string|null
-     */
-    public function getCarrierName()
-    {
-        if ($this->carrierName) {
-            return $this->carrierName;
-        }
-
-        $carriers = self::getAvailableCarriers();
-        foreach ($carriers as $carrier) {
-            if ($carrier->code === $this->carrierCode) {
-                $this->carrierName = $carrier->name;
-            }
-        }
-
-        return $this->carrierName;
-    }
-
-    public function getProductName()
-    {
-        if ($this->productName) {
-            return $this->productName;
-        }
-
-        $products = self::getAvailableProducts($this->carrierCode);
-        foreach ($products as $product) {
-            if ($product->code === $this->productCode) {
-                $this->productName = $product->name;
-            }
-        }
-
-        return $this->productName;
-    }
-
-    /**
      * Convert the entity to an array
      *
      * @return array

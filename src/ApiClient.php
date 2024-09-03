@@ -3,6 +3,7 @@
 namespace Shipmondo;
 
 use Module;
+use Shipmondo\Exception\ShipmondoApiException;
 
 class ApiClient
 {
@@ -61,20 +62,26 @@ class ApiClient
      * @param string $mtethod
      * @param string $url
      * @param array $query
+     * @return array
      */
     private function request($method, $url, $query = [])
     {
         $fullUrl = $this->baseUrl . $url;
-        //try {
+        try {
             $response = $this->client->request($method, $fullUrl, [
                 'headers' => [
                     'User-Agent' => 'Shipmondo Prestashop Module v' . $this->module->version,
                 ],
                 'query' => array_merge($query, ['frontend_key' => $this->frontendKey]),
             ]);
-        /*} catch (\GuzzleHttp\Exception\GuzzleException $e) {
-            return [];
-        }*/
+        } catch (\GuzzleHttp\Exception\GuzzleException $e) {
+            $error_message = $response_body = $e->getResponse()->getBody()->getContents();
+            $response_body = json_decode($response_body);
+            if (isset($response_body->message)) {
+                $error_message = $response_body->message;
+            }
+            throw new ShipmondoApiException($error_message);
+        }
 
         return json_decode($response->getBody()->getContents());
     }
