@@ -12,34 +12,23 @@ class ShipmondoConfiguration
      */
     private $apiClient;
 
+    /**
+     * @param ApiClient $apiClient
+     */
     public function __construct(ApiClient $apiClient)
     {
         $this->apiClient = $apiClient;
     }
 
     /**
-     * Get the frontend key
-     * @return string|null
+     * Get available carriers with available products from Shipmondo
+     * @return array
      */
-    public function getFrontendKey()
-    {
-        return Configuration::get('SHIPMONDO_FRONTEND_KEY');
-    }
-
-    /**
-     * Get the frontend type
-     * @return string|null
-     */
-    public function getFrontendType()
-    {
-        return Configuration::get('SHIPMONDO_FRONTEND_TYPE');
-    }
-
-    public function getAvailableCarriers()
+    public function getAvailableCarriers(): array
     {
         $availableCarriers = Configuration::get('SHIPMONDO_AVAILABLE_CARRIERS');
         $expirationTime = Configuration::get('SHIPMONDO_AVAILABLE_CARRIERS_EXPIRATION');
-        if (!$availableCarriers || ($expirationTime && $expirationTime < time())) {
+        if (!$availableCarriers || !$expirationTime || $expirationTime < time()) {
             $availableCarriers = $this->apiClient->getCarriers();
 
             // Change boolean values to array of products to prepare for the future

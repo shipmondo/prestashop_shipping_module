@@ -30,7 +30,7 @@ class ShipmondoCarrierFormType extends TranslatorAwareType
         $this->shipmondoCarrierHandler = $shipmondoCarrierHandler;
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $allPsCarriers = Carrier::getCarriers(Context::getContext()->language->id, false, false, false, null, Carrier::ALL_CARRIERS);
         $psCarriers = [$this->trans('Create new carrier', 'Module.Shipmondo.Admin') => 0];

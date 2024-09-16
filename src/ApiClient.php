@@ -44,7 +44,7 @@ class ApiClient
     /**
      * @return array
      */
-    public function getCarriers()
+    public function getCarriers(): array
     {
         return $this->request('GET', 'carriers.json');
     }
@@ -53,7 +53,7 @@ class ApiClient
      * @param array $query
      * @return array
      */
-    public function getServicePoints($query)
+    public function getServicePoints($query): array
     {
         return $this->request('GET', 'pickup-points.json', $query);
     }
@@ -64,7 +64,7 @@ class ApiClient
      * @param array $query
      * @return array
      */
-    private function request($method, $url, $query = [])
+    private function request($method, $url, $query = []): array
     {
         $fullUrl = $this->baseUrl . $url;
         try {

@@ -106,7 +106,7 @@ class ShipmondoServicePoint
      *
      * @return int
      */
-    public function getCartId()
+    public function getCartId(): int
     {
         return $this->cartId;
     }
@@ -117,7 +117,7 @@ class ShipmondoServicePoint
      * @param int $cartId
      * @return self
      */
-    public function setCartId($cartId)
+    public function setCartId(int $cartId): self
     {
         $this->cartId = $cartId;
         return $this;
@@ -128,7 +128,7 @@ class ShipmondoServicePoint
      *
      * @return int
      */
-    public function getOrderId()
+    public function getOrderId(): int
     {
         return $this->orderId;
     }
@@ -139,7 +139,7 @@ class ShipmondoServicePoint
      * @param int $orderId
      * @return self
      */
-    public function setOrderId($orderId)
+    public function setOrderId(int $orderId): int
     {
         $this->orderId = $orderId;
         return $this;
@@ -150,7 +150,7 @@ class ShipmondoServicePoint
      *
      * @return string
      */
-    public function getCarrierCode()
+    public function getCarrierCode(): string
     {
         return $this->carrierCode;
     }
@@ -161,7 +161,7 @@ class ShipmondoServicePoint
      * @param string $carrierCode
      * @return self
      */
-    public function setCarrierCode($carrierCode)
+    public function setCarrierCode(string $carrierCode): self
     {
         $this->carrierCode = $carrierCode;
         return $this;
@@ -172,7 +172,7 @@ class ShipmondoServicePoint
      *
      * @return string
      */
-    public function getServicePointId()
+    public function getServicePointId(): string
     {
         return $this->servicePointId;
     }
@@ -183,7 +183,7 @@ class ShipmondoServicePoint
      * @param string $servicePointId
      * @return self
      */
-    public function setServicePointId($servicePointId)
+    public function setServicePointId(string $servicePointId): self
     {
         $this->servicePointId = $servicePointId;
         return $this;
@@ -194,7 +194,7 @@ class ShipmondoServicePoint
      *
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -205,7 +205,7 @@ class ShipmondoServicePoint
      * @param string $name
      * @return self
      */
-    public function setName($name)
+    public function setName(string $name): self
     {
         $this->name = $name;
         return $this;
@@ -216,7 +216,7 @@ class ShipmondoServicePoint
      *
      * @return string
      */
-    public function getAddress1()
+    public function getAddress1(): string
     {
         return $this->address1;
     }
@@ -227,7 +227,7 @@ class ShipmondoServicePoint
      * @param string $address1
      * @return self
      */
-    public function setAddress1($address1)
+    public function setAddress1(string $address1): self
     {
         $this->address1 = $address1;
         return $this;
@@ -236,9 +236,9 @@ class ShipmondoServicePoint
     /**
      * Get the value of address2
      *
-     * @return string
+     * @return ?string
      */
-    public function getAddress2()
+    public function getAddress2(): ?string
     {
         return $this->address2;
     }
@@ -246,10 +246,10 @@ class ShipmondoServicePoint
     /**
      * Set the value of address2
      *
-     * @param string $address2
+     * @param ?string $address2
      * @return self
      */
-    public function setAddress2($address2)
+    public function setAddress2(?string $address2): self
     {
         $this->address2 = $address2;
         return $this;
@@ -260,7 +260,7 @@ class ShipmondoServicePoint
      *
      * @return string
      */
-    public function getZipCode()
+    public function getZipCode(): string
     {
         return $this->zipCode;
     }
@@ -271,7 +271,7 @@ class ShipmondoServicePoint
      * @param string $zipCode
      * @return self
      */
-    public function setZipCode($zipCode)
+    public function setZipCode(string $zipCode): self
     {
         $this->zipCode = $zipCode;
         return $this;
@@ -282,7 +282,7 @@ class ShipmondoServicePoint
      *
      * @return string
      */
-    public function getCity()
+    public function getCity(): string
     {
         return $this->city;
     }
@@ -293,7 +293,7 @@ class ShipmondoServicePoint
      * @param string $city
      * @return self
      */
-    public function setCity($city)
+    public function setCity(string $city): self
     {
         $this->city = $city;
         return $this;
@@ -304,7 +304,7 @@ class ShipmondoServicePoint
      *
      * @return string
      */
-    public function getCountryCode()
+    public function getCountryCode(): string
     {
         return $this->countryCode;
     }
@@ -315,7 +315,7 @@ class ShipmondoServicePoint
      * @param string $countryCode
      * @return self
      */
-    public function setCountryCode($countryCode)
+    public function setCountryCode(string $countryCode): self
     {
         $this->countryCode = $countryCode;
         return $this;
@@ -326,7 +326,7 @@ class ShipmondoServicePoint
      *
      * @return array
      */
-    public function toArray()
+    public function toArray(): array
     {
         return [
             'id_smd_service_point' => $this->getId(),

@@ -20,7 +20,7 @@ final class ShipmondoCarrierGridDefinitionFactory extends AbstractGridDefinition
     /**
      * {@inheritdoc}
      */
-    protected function getId()
+    protected function getId(): string
     {
         return self::GRID_ID;
     }
@@ -28,7 +28,7 @@ final class ShipmondoCarrierGridDefinitionFactory extends AbstractGridDefinition
     /**
      * {@inheritdoc}
      */
-    protected function getName()
+    protected function getName(): string
     {
         return $this->trans('Carriers', [], 'Modules.Shipmondo.Admin');
     }
@@ -36,7 +36,7 @@ final class ShipmondoCarrierGridDefinitionFactory extends AbstractGridDefinition
     /**
      * {@inheritdoc}
      */
-    protected function getColumns()
+    protected function getColumns(): ColumnCollection
     {
         return (new ColumnCollection())
             ->add(
@@ -107,7 +107,7 @@ final class ShipmondoCarrierGridDefinitionFactory extends AbstractGridDefinition
     /**
      * {@inheritdoc}
      */
-    protected function getFilters()
+    protected function getFilters(): FilterCollection
     {
         return (new FilterCollection())
             ->add(

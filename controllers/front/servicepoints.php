@@ -1,14 +1,19 @@
 <?php
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 use Shipmondo\Entity\ShipmondoServicePoint;
 use Shipmondo\Exception\ShipmondoApiException;
+use Doctrine\ORM\EntityRepository;
 
 class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
 {
 
     public $ajax = true;
 
-    public function initContent()
+    public function initContent(): void
     {
         parent::initContent();
 
@@ -29,7 +34,7 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
         }
     }
 
-    private function updateServicePoint()
+    private function updateServicePoint(): void
     {
         $cart = Context::getContext()->cart;
         $repo = $this->getRepository();
@@ -58,26 +63,46 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
         $entityManager->persist($servicePoint);
         $entityManager->flush();
 
-        $this->ajaxDie(json_encode(['success' => true, 'service_point' => $servicePoint->toArray()]));
+        $this->ajaxDie(json_encode(['status' => 'success', 'service_point' => $servicePoint->toArray()]));
     }
 
-    private function getServicePoint()
+    private function getServicePoint(): void
     {
         $cart = Context::getContext()->cart;
         $repo = $this->getRepository();
 
         $servicePoint = $repo->findOneBy(['cartId' => $cart->id]);
         if (!$servicePoint) {
-            $this->ajaxDie(json_encode(['success' => false, 'message' => 'Service point not found for cart']));
+            $this->ajaxDie(json_encode(['status' => 'error', 'error' => 'Service point not found for cart']));
         }
 
-        $this->ajaxDie(json_encode(['success' => true, 'data' => $servicePoint]));
+        $this->ajaxDie(json_encode(['status' => 'success', 'data' => $servicePoint]));
     }
 
-    private function getExternalServicePointList()
+    private function getExternalServicePointList(): void
     {
         $carrierCode = Tools::getValue('carrier_code');
         $frontendType = Configuration::get('SHIPMONDO_FRONTEND_TYPE');
+
+        $carrierCode       = Tools::getValue('carrier_code');
+        $lastCarrierCode  = Tools::getValue('last_carrier_code');
+        $lastAddress       = (object) Tools::getValue('last_address');
+
+        $cart = Context::getContext()->cart;
+        $deliveryAddress = new Address($cart->id_address_delivery);
+
+        // Check if reload of service point is needed
+        $addressChanged = $this->hasAddressChanged($lastAddress, $deliveryAddress);
+        if (!$addressChanged && $carrierCode == $lastCarrierCode) {
+            $response = [
+                'status' => 'success',
+                'service_points_html' => '',
+                'service_points' => [],
+                'address_changed' => false
+            ];
+
+            $this->ajaxDie(json_encode($response));
+        }
 
         $client = $this->container->get('shipmondo.api_client');
 
@@ -98,7 +123,7 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
                 'address' => $deliveryAddress->address1
             ]);
         } catch (ShipmondoApiException $e) {
-            $this->ajaxDie(json_encode(['success' => false, 'message' => $e->getMessage()]));
+            $this->ajaxDie(json_encode(['status' => 'error', 'error' => $e->getMessage()])); // TODO show generic error message?
         }
 
         $carrierLogoPath = 'shipmondo/views/img/' . $carrierCode . '.png';
@@ -117,20 +142,33 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
         $html = $this->module->fetch('module:shipmondo/views/templates/front/' . Tools::strtolower($frontendType) . '/content.tpl');
 
         $this->ajaxDie(json_encode([
-            'success' => true,
+            'status' => 'success',
             'service_points_html' => $html,
             'service_points' => $servicePoints,
-            'address_changed' => true
+            'address_changed' => true,
+            'new_address' => [
+                'id_country' => $deliveryAddress->id_country,
+                'address1' => $deliveryAddress->address1,
+                'postcode' => $deliveryAddress->postcode,
+            ]
         ]));
     }
 
-    private function invalidAction()
+    private function invalidAction(): void
     {
-        $this->ajaxDie(json_encode(['success' => false, 'message' => 'Invalid action']));
+        $this->ajaxDie(json_encode(['status' => 'error', 'error' => 'Invalid action']));
     }
 
-    private function getRepository()
+    private function getRepository(): EntityRepository
     {
-        return $this->module->get('doctrine')->getRepository(ShipmondoServicePoint::class);
+        return $this->module->get('shipmondo.repository.shipmondo_service_point');
+    }
+
+    private function hasAddressChanged(object $oldAddress, object $newAddress): bool
+    {
+        return !empty($oldAddress)
+            && ($oldAddress->id_country != $newAddress->id_country
+            || $oldAddress->postcode != $newAddress->postcode
+            || $oldAddress->address1 != $newAddress->address1);
     }
 }

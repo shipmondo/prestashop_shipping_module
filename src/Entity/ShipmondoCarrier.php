@@ -41,23 +41,13 @@ class ShipmondoCarrier
      * @ORM\Column(name="product_code", type="string", length=255)
      */
     private $productCode;
-
-    /**
-     * @var string
-     */
-    private $carrierName;
     
-    /**
-     * @var string
-     */
-    private $productName;
-
     /**
      * Get the value of id
      *
      * @return int
      */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
@@ -67,7 +57,7 @@ class ShipmondoCarrier
      *
      * @return int
      */
-    public function getCarrierId()
+    public function getCarrierId(): int
     {
         return $this->carrierId;
     }
@@ -78,7 +68,7 @@ class ShipmondoCarrier
      * @param int $carrierId
      * @return self
      */
-    public function setCarrierId($carrierId)
+    public function setCarrierId($carrierId): self
     {
         $this->carrierId = $carrierId;
         return $this;
@@ -89,7 +79,7 @@ class ShipmondoCarrier
      *
      * @return string
      */
-    public function getCarrierCode()
+    public function getCarrierCode(): string
     {
         return $this->carrierCode;
     }
@@ -100,7 +90,7 @@ class ShipmondoCarrier
      * @param string $carrierCode
      * @return self
      */
-    public function setCarrierCode($carrierCode)
+    public function setCarrierCode($carrierCode): self
     {
         $this->carrierCode = $carrierCode;
         return $this;
@@ -111,7 +101,7 @@ class ShipmondoCarrier
      *
      * @return string
      */
-    public function getProductCode()
+    public function getProductCode(): string
     {
         return $this->productCode;
     }
@@ -122,7 +112,7 @@ class ShipmondoCarrier
      * @param string $productCode
      * @return self
      */
-    public function setProductCode($productCode)
+    public function setProductCode($productCode): self
     {
         $this->productCode = $productCode;
         return $this;
@@ -133,7 +123,7 @@ class ShipmondoCarrier
      *
      * @return array
      */
-    public function toArray()
+    public function toArray(): array
     {
         return [
             'id_smd_carrier' => $this->getId(),

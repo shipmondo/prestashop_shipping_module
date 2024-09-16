@@ -3,6 +3,7 @@ namespace Shipmondo\Grid\Query;
 
 use PrestaShop\PrestaShop\Core\Grid\Query\AbstractDoctrineQueryBuilder;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Query\QueryBuilder;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 
 final class ShipmondoCarrierQueryBuilder extends AbstractDoctrineQueryBuilder
@@ -31,7 +32,7 @@ final class ShipmondoCarrierQueryBuilder extends AbstractDoctrineQueryBuilder
         $this->contextShopId = $contextShopId;
     }
 
-    public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria)
+    public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria): QueryBuilder
     {
         $qb = $this->getBaseQuery();
         $qb->select('sc.id_smd_carrier, sc.id_carrier, sc.carrier_code, sc.product_code')
@@ -59,7 +60,7 @@ final class ShipmondoCarrierQueryBuilder extends AbstractDoctrineQueryBuilder
     }
     
     // Get Count query builder that is used to get the total count of all records (products)
-    public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria)
+    public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria): QueryBuilder
     {
         $qb = $this->getBaseQuery();
         $qb->select('COUNT(sc.id_smd_carrier)');
@@ -68,7 +69,7 @@ final class ShipmondoCarrierQueryBuilder extends AbstractDoctrineQueryBuilder
     }
     
     // Base query can be used for both Search and Count query builders
-    private function getBaseQuery()
+    private function getBaseQuery(): QueryBuilder
     {
         return $this->connection
             ->createQueryBuilder()

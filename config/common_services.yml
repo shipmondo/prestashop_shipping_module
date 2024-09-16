@@ -22,11 +22,18 @@ services:
         arguments:
             - 'shipmondo'
 
+    shipmondo.configuration.frontend_key:
+        class: 'string'
+        factory: ['Configuration', 'get']
+        arguments:
+            - 'SHIPMONDO_FRONTEND_KEY'
+
     shipmondo.api_client:
         class: 'Shipmondo\ApiClient'
+        public: true
         arguments:
             - '@shipmondo.module'
-            - "INSERT FRONTEND KEY HERE"
+            - '@shipmondo.configuration.frontend_key'
             - '@shipmondo.guzzle.client'
             - 'https://service-points.shipmondo.com/'
 

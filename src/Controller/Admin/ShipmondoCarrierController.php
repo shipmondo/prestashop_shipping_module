@@ -19,7 +19,7 @@ class ShipmondoCarrierController extends FrameworkBundleAdminController
 {
     const TAB_CLASS_NAME = 'AdminShipmondoShipmondoCarrier';
 
-    public function indexAction(ShipmondoCarrierFilters $filters)
+    public function indexAction(ShipmondoCarrierFilters $filters): Response
     {
         $carrierGridFactory = $this->get('shipmondo.grid.factory.shipmondo_carriers');
         $carrierGrid = $carrierGridFactory->getGrid($filters);
@@ -41,7 +41,7 @@ class ShipmondoCarrierController extends FrameworkBundleAdminController
         );
     }
 
-    public function searchAction(Request $request)
+    public function searchAction(Request $request): Response
     {
         /** @var ResponseBuilder $responseBuilder */
         $responseBuilder = $this->get('prestashop.bundle.grid.response_builder');
@@ -124,7 +124,8 @@ class ShipmondoCarrierController extends FrameworkBundleAdminController
      * 
      * @param ShipmondoCarrier $carrier
      */
-    private function createPsCarrier(ShipmondoCarrier $carrier) {
+    private function createPsCarrier(ShipmondoCarrier $carrier): void
+    {
         $carrierHandler = $this->get('shipmondo.carrier_handler');
         $carrierName = $carrierHandler->getCarrierName($carrier->getCarrierCode());
         $productName = $carrierHandler->getProductName($carrier->getProductCode());

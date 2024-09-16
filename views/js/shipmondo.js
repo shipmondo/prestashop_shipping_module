@@ -312,7 +312,7 @@ jQuery(document).ready(function ($) {
             url: service_points_endpoint,
             type: 'GET',
             data: {
-                method: 'get_address',
+                action: 'get',
                 carrier_code: carrier_code
             },
             success: function (response) {

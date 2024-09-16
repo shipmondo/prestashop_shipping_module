@@ -30,7 +30,7 @@ class ShipmondoCarrierHandler
      *
      * @return array
      */
-    public function getCarriers()
+    public function getCarriers(): array
     {
         if (!$this->carriers) {
             $this->carriers = $this->shipmondoConfiguration->getAvailableCarriers();
@@ -43,9 +43,9 @@ class ShipmondoCarrierHandler
      * Get carrier by code
      *
      * @param string $carrierCode
-     * @return object|null
+     * @return ?object
      */
-    public function getCarrier(string $carrierCode)
+    public function getCarrier(string $carrierCode): ?object
     {
         $carriers = self::getCarriers();
 
@@ -64,7 +64,7 @@ class ShipmondoCarrierHandler
      * @param string $carrierCode
      * @return array
      */
-    public function getProducts(string $carrierCode)
+    public function getProducts(string $carrierCode): array
     {
         $carriers = self::getCarriers();
 
@@ -83,7 +83,7 @@ class ShipmondoCarrierHandler
      * @param string $carrierCode
      * @return string
      */
-    public function getCarrierName(string $carrierCode)
+    public function getCarrierName(string $carrierCode): string
     {
         $carrier = self::getCarrier($carrierCode);
         return $carrier ? $carrier->name : $carrierCode;
@@ -95,12 +95,8 @@ class ShipmondoCarrierHandler
      * @param string $productCode
      * @return string
      */
-    public function getProductName(string $productCode)
+    public function getProductName(string $productCode): string
     {
         return ucwords(str_replace('_', ' ', $productCode));
     }
-
-
-
-
 }

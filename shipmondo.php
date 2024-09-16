@@ -13,8 +13,6 @@ if (file_exists(__DIR__ . '/vendor/autoload.php')) {
 }
 
 use Shipmondo\Controller\Admin\ShipmondoCarrierController;
-use Shipmondo\Entity\ShipmondoCarrier;
-use Shipmondo\Entity\ShipmondoServicePoint;
 
 class Shipmondo extends CarrierModule
 {
@@ -46,7 +44,7 @@ class Shipmondo extends CarrierModule
         $this->bootstrap = true;
         parent::__construct();
         $this->ps_versions_compliancy = [
-            'min' => '1.7.6.0',
+            'min' => '8.0.0',
             'max' => '8.99.99',
         ];
         $this->displayName = "Shipmondo";

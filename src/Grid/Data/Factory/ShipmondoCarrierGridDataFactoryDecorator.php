@@ -35,7 +35,7 @@ final class ShipmondoCarrierGridDataFactoryDecorator implements GridDataFactoryI
     /**
      * {@inheritdoc}
      */
-    public function getData(SearchCriteriaInterface $searchCriteria)
+    public function getData(SearchCriteriaInterface $searchCriteria): GridData
     {
         $carrierData = $this->shipmondoCarrierGridDataFactory->getData($searchCriteria);
 
@@ -53,7 +53,7 @@ final class ShipmondoCarrierGridDataFactoryDecorator implements GridDataFactoryI
      *
      * @return RecordCollection
      */
-    private function applyModifications(RecordCollectionInterface $carriers)
+    private function applyModifications(RecordCollectionInterface $carriers): RecordCollection
     {
         $modifiedCarriers = [];
         try {
