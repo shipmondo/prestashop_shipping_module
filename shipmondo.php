@@ -13,6 +13,7 @@ if (file_exists(__DIR__ . '/vendor/autoload.php')) {
 }
 
 use Shipmondo\Controller\Admin\ShipmondoCarrierController;
+use Shipmondo\Entity\ShipmondoServicePoint;
 
 class Shipmondo extends CarrierModule
 {
@@ -21,9 +22,10 @@ class Shipmondo extends CarrierModule
     protected $hooks = [
         'displayAdminOrderSide',
         'displayHeader',
-        'displayCarrierExtraContent',
+        'displayAfterCarrier',
         'newOrder',
-        'updateCarrier'
+        'updateCarrier',
+        'addWebserviceResources'
     ];
 
     protected $tables = [
@@ -269,7 +271,8 @@ class Shipmondo extends CarrierModule
 
         if ($servicePoint) {
             return $this->get('twig')->render('@Modules/shipmondo/views/templates/admin/order_side.html.twig', [
-                'service_point' => $servicePoint
+                'service_point' => $servicePoint,
+                'carrier_name' => $this->get('shipmondo.carrier_handler')->getCarrierName($servicePoint->getCarrierCode())
             ]);
         }
     }
@@ -357,30 +360,15 @@ class Shipmondo extends CarrierModule
     }
 
 
-    public function hookDisplayCarrierExtraContent($params)
+    public function hookDisplayAfterCarrier($params)
     {
-        $carrier = $this->get('shipmondo.repository.shipmondo_carrier')->findOneBy(['carrierId' => $params['carrier']['id']]);
-
-        if ($carrier && $carrier->getProductCode() === 'service_point') {
-            $servicePoint = $this->get('shipmondo.repository.shipmondo_service_point')
-                ->findOneBy([
-                    'cartId' => $params['cart']->id,
-                    'carrierCode' => $carrier->getCarrierCode()
-                ]);
-
-            $this->context->smarty->assign([
-                'carrier_code' => $carrier->getCarrierCode(),
-                'carrier_id' => $params['carrier']['id'],
-                'service_point' => $servicePoint
-            ]);
-            return $this->fetch('module:shipmondo/views/templates/front/' . Configuration::get('SHIPMONDO_FRONTEND_TYPE') . '/selection_button.tpl');
-        }
+        return $this->fetch('module:shipmondo/views/templates/front/service_points_container.tpl');
     }
 
     public function hookNewOrder($params)
     {
         $carrier = new Carrier((int) $params['order']->id_carrier);
-        $smdCarrier = $this->get('shipmondo.repository.shipmondo_carrier')->findOneBy(['carrierId' => $carrier->id_carrier]);
+        $smdCarrier = $this->get('shipmondo.repository.shipmondo_carrier')->findOneBy(['carrierId' => $carrier->id]);
 
         if ($smdCarrier && $smdCarrier->getProductCode() === 'service_point') {
             $servicePoint = $this->get('shipmondo.repository.shipmondo_service_point')
@@ -413,6 +401,17 @@ class Shipmondo extends CarrierModule
             $entityManager = $this->get('doctrine.orm.entity_manager');
             $entityManager->flush();
         }
+    }
+
+    public function hookAddWebserviceResources($params)
+    {
+        return [
+            'shipmondo_service_points' => [
+                'description' => 'Service point from Shipmondo, that is selected in checkout and order.',
+                'class' => '\Shipmondo\Entity\ShipmondoServicePointWs',
+                'forbidden_method' => ['PUT', 'POST', 'PATCH', 'DELETE']
+            ]
+        ];
     }
 
     protected function createDatabaseTables()

@@ -55,9 +55,9 @@ class ShipmondoCarrier
     /**
      * Get the value of carrierId
      *
-     * @return int
+     * @return ?int
      */
-    public function getCarrierId(): int
+    public function getCarrierId(): ?int
     {
         return $this->carrierId;
     }
@@ -77,9 +77,9 @@ class ShipmondoCarrier
     /**
      * Get the value of carrierCode
      *
-     * @return string
+     * @return ?string
      */
-    public function getCarrierCode(): string
+    public function getCarrierCode(): ?string
     {
         return $this->carrierCode;
     }
@@ -99,9 +99,9 @@ class ShipmondoCarrier
     /**
      * Get the value of productCode
      *
-     * @return string
+     * @return ?string
      */
-    public function getProductCode(): string
+    public function getProductCode(): ?string
     {
         return $this->productCode;
     }

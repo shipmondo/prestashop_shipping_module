@@ -2,7 +2,6 @@
 
 namespace Shipmondo\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -94,9 +93,9 @@ class ShipmondoServicePoint
     /**
      * Get the value of id
      *
-     * @return int
+     * @return ?int
      */
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
@@ -104,9 +103,9 @@ class ShipmondoServicePoint
     /**
      * Get the value of cartId
      *
-     * @return int
+     * @return ?int
      */
-    public function getCartId(): int
+    public function getCartId(): ?int
     {
         return $this->cartId;
     }
@@ -126,9 +125,9 @@ class ShipmondoServicePoint
     /**
      * Get the value of orderId
      *
-     * @return int
+     * @return ?int
      */
-    public function getOrderId(): int
+    public function getOrderId(): ?int
     {
         return $this->orderId;
     }
@@ -139,7 +138,7 @@ class ShipmondoServicePoint
      * @param int $orderId
      * @return self
      */
-    public function setOrderId(int $orderId): int
+    public function setOrderId(int $orderId): self
     {
         $this->orderId = $orderId;
         return $this;
@@ -148,9 +147,9 @@ class ShipmondoServicePoint
     /**
      * Get the value of carrierCode
      *
-     * @return string
+     * @return ?string
      */
-    public function getCarrierCode(): string
+    public function getCarrierCode(): ?string
     {
         return $this->carrierCode;
     }
@@ -170,9 +169,9 @@ class ShipmondoServicePoint
     /**
      * Get the value of servicePointId
      *
-     * @return string
+     * @return ?string
      */
-    public function getServicePointId(): string
+    public function getServicePointId(): ?string
     {
         return $this->servicePointId;
     }
@@ -192,9 +191,9 @@ class ShipmondoServicePoint
     /**
      * Get the value of name
      *
-     * @return string
+     * @return ?string
      */
-    public function getName(): string
+    public function getName(): ?string
     {
         return $this->name;
     }
@@ -214,9 +213,9 @@ class ShipmondoServicePoint
     /**
      * Get the value of address1
      *
-     * @return string
+     * @return ?string
      */
-    public function getAddress1(): string
+    public function getAddress1(): ?string
     {
         return $this->address1;
     }
@@ -258,9 +257,9 @@ class ShipmondoServicePoint
     /**
      * Get the value of zipCode
      *
-     * @return string
+     * @return ?string
      */
-    public function getZipCode(): string
+    public function getZipCode(): ?string
     {
         return $this->zipCode;
     }
@@ -280,9 +279,9 @@ class ShipmondoServicePoint
     /**
      * Get the value of city
      *
-     * @return string
+     * @return ?string
      */
-    public function getCity(): string
+    public function getCity(): ?string
     {
         return $this->city;
     }
@@ -302,9 +301,9 @@ class ShipmondoServicePoint
     /**
      * Get the value of countryCode
      *
-     * @return string
+     * @return ?string
      */
-    public function getCountryCode(): string
+    public function getCountryCode(): ?string
     {
         return $this->countryCode;
     }

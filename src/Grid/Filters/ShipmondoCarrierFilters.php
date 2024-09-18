@@ -12,7 +12,7 @@ class ShipmondoCarrierFilters extends Filters
     /**
      * {@inheritdoc}
      */
-    public static function getDefaults()
+    public static function getDefaults(): array
     {
         return [
             'limit' => 10,
