@@ -13,12 +13,16 @@ jQuery(document).ready(function ($) {
 
         console.error('$(this).val()', $(this).val());
 
+        const carrier_id = $(this).val().replace(/\D/g, '');
+        console.error('carrier_id',carrier_id);
+
 
         jQuery.ajax({
             url: service_points_endpoint,
             type: 'GET',
             data: {
-                action: 'get'
+                action: 'get',
+                carrier_id: carrier_id
             },
             success: function (response) {
                 console.error('response', response);
