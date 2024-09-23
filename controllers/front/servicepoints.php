@@ -71,7 +71,12 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
         $cart = Context::getContext()->cart;
         $repo = $this->getRepository();
 
-        $carrier = $this->get('shipmondo.repository.shipmondo_carrier')->findOneBy(['carrierId' => $cart->id_carrier]);
+        $carrierId = Tools::getValue('carrier_id');
+        if(!$carrierId) {
+            $carrierId = $cart->id_carrier;
+        }
+
+        $carrier = $this->get('shipmondo.repository.shipmondo_carrier')->findOneBy(['carrierId' => $carrierId]);
 
         $html = '';
         if ($carrier && $carrier->getProductCode() === 'service_point') {
@@ -125,7 +130,7 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
             $html = $this->module->fetch('module:shipmondo/views/templates/front/' . Configuration::get('SHIPMONDO_FRONTEND_TYPE') . '/selection_button.tpl');
         }
 
-        $this->ajaxDie(json_encode(['status' => 'success', 'service_point' => $servicePoint->toArray(), 'service_point_html' => $html]));
+        $this->ajaxDie(json_encode(['status' => 'success', 'service_point_html' => $html]));
     }
 
     private function getExternalServicePointList(): void
