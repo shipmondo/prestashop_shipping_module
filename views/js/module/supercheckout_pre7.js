@@ -1,7 +1,7 @@
 /**
  *  @author    Shipmondo
  *  @copyright 2024 Shipmondo
- *  @license   All rights reserved
+ *  @license   https://opensource.org/license/bsd-3-clause BSD-3-Clause
  */
 jQuery(document).ready(function ($) {
     const supercheckout_selector = '#supercheckout-fieldset';

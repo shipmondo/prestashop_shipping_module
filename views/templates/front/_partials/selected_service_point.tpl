@@ -1,3 +1,9 @@
+{*
+*  @author    Shipmondo
+*  @copyright 2024-present Shipmondo
+*  @license   https://opensource.org/license/bsd-3-clause BSD-3-Clause
+*}
+
 <div id="hidden_chosen_shop">
     <input type="hidden" name="shipmondo">
     <input type="hidden" name="shop_name">

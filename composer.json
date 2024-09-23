@@ -1,8 +1,8 @@
 {
-  "name": "shipmondo/shipmondo",
+  "name": "shipmondo/prestashop_shipping_module",
   "description": "A complete shipping solution for PrestaShop",
   "homepage": "https://shipmondo.com",
-  "license": "© 2023 Shipmondo. All rights reserved.",
+  "license": "BSD-3-Clause",
   "authors": [
     {
       "name": "Shipmondo",
@@ -20,5 +20,8 @@
   "config": {
     "prepend-autoloader": false
   },
-  "type": "prestashop-module"
+  "type": "prestashop-module",
+  "require-dev": {
+    "prestashop/autoindex": "^2.1"
+  }
 }
