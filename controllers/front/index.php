@@ -1,6 +1,6 @@
 <?php
 /**
- *  @author    Shipmondo
+ *  @author    Shipmondo <support@shipmondo.com>
  *  @copyright Copyright (c) 2024-present, Shipmondo
  *  @license   BSD-3-Clause
  */
