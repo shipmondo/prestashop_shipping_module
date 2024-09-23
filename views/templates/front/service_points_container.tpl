@@ -1,5 +1,6 @@
 <div id="shipmondo-service-points-container">
     {* Replaced by the service point selector *}
+    <h1>test</h1>
 </div>
 
 {* TODO delete before release
