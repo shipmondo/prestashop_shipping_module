@@ -86,50 +86,57 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
         $html = '';
         if ($carrier && $carrier->getProductCode() === 'service_point') {
             $servicePoint = $repo->findOneBy(['cartId' => $cart->id]);
+            $externalServicePoints = [];
+            $selectedServicePoint = null;
 
-            if (!$servicePoint || $servicePoint->getCarrierCode() !== $carrier->getCarrierCode()) {
-                // Find and set the nearest service point
-                $deliveryAddress = new Address($cart->id_address_delivery);
-                
-                if ($deliveryAddress) {
-                    try {
-                        $externalServicePoints = $this->fetchExternalServicePoints($carrier->getCarrierCode(), $deliveryAddress);
-                    } catch (ShipmondoApiException $e) {
-                        $this->ajaxDie(json_encode(['status' => 'error', 'error' => $e->getMessage()])); // TODO show generic error message?
-                    }
-
-                    if (empty($externalServicePoints)) {
-                        $this->ajaxDie(json_encode(['status' => 'error', 'error' => 'No service points found']));
-                    }
-                    
-                    $externalServicePoint = $externalServicePoints[0];
-                    if ($externalServicePoint) {
-                        // Reuse existing service point if it exists
-                        if (!$servicePoint) {
-                            $servicePoint = new ShipmondoServicePoint();
-                            $servicePoint->setCartId($cart->id);
-                        }
-
-                        $servicePoint->setCarrierCode($carrier->getCarrierCode());
-                        $servicePoint->setServicePointId($externalServicePoint->id);
-                        $servicePoint->setName($externalServicePoint->name);
-                        $servicePoint->setAddress1($externalServicePoint->address);
-                        $servicePoint->setAddress2($externalServicePoint->address2);
-                        $servicePoint->setZipCode($externalServicePoint->zipcode);
-                        $servicePoint->setCity($externalServicePoint->city);
-                        $servicePoint->setCountryCode($externalServicePoint->country_code);
-
-                        $entityManager = $this->get('doctrine.orm.entity_manager');
-                        $entityManager->persist($servicePoint);
-                        $entityManager->flush();
-                    }
+            // Find and set the nearest service point
+            $deliveryAddress = new Address($cart->id_address_delivery);
+            
+            if ($deliveryAddress) {
+                try {
+                    $externalServicePoints = $this->fetchExternalServicePoints($carrier->getCarrierCode(), $deliveryAddress);
+                } catch (ShipmondoApiException $e) {
+                    $this->ajaxDie(json_encode(['status' => 'error', 'error' => $e->getMessage()])); // TODO show generic error message?
                 }
+
+                if (empty($externalServicePoints)) {
+                    $this->ajaxDie(json_encode(['status' => 'error', 'error' => 'No service points found']));
+                }
+                
+                if ($servicePoint) {
+                    foreach ($externalServicePoints as $externalServicePoint) {
+                        if ($servicePoint && $servicePoint->getServicePointId() == $externalServicePoint->id) {
+                            $selectedServicePoint = $externalServicePoint;
+                            break;
+                        }
+                    }
+                } else {
+                    $servicePoint = new ShipmondoServicePoint();
+                    $servicePoint->setCartId($cart->id);
+                }
+
+                if(!$selectedServicePoint) {
+                    $selectedServicePoint = $externalServicePoints[0];
+                }
+
+                $servicePoint->setCarrierCode($carrier->getCarrierCode());
+                $servicePoint->setServicePointId($selectedServicePoint->id);
+                $servicePoint->setName($selectedServicePoint->name);
+                $servicePoint->setAddress1($selectedServicePoint->address);
+                $servicePoint->setAddress2($selectedServicePoint->address2);
+                $servicePoint->setZipCode($selectedServicePoint->zipcode);
+                $servicePoint->setCity($selectedServicePoint->city);
+                $servicePoint->setCountryCode($selectedServicePoint->country_code);
+
+                $entityManager = $this->get('doctrine.orm.entity_manager');
+                $entityManager->persist($servicePoint);
+                $entityManager->flush();
             }
 
             $this->context->smarty->assign([
-                'carrier_code' => $carrier->getCarrierCode(),
-                'carrier_id' => $cart->id_carrier,
-                'service_point' => $servicePoint
+                'carrier' => new Carrier($carrierId),
+                'service_point' => $selectedServicePoint,
+                'service_points' => $externalServicePoints,
             ]);
             
             $html = $this->module->fetch('module:shipmondo/views/templates/front/' . Configuration::get('SHIPMONDO_FRONTEND_TYPE') . '/selection_button.tpl');
