@@ -5,7 +5,11 @@
  */
 jQuery(document).ready(function ($) {
 
-    console.error('window.frontend_type')
+    const frontend_type = window.frontend_type;
+    //const selection_button = '#shipmondo_find_shop_btn'; //CLEAN!
+    const selection_button = '.shipmondo_service_point_selection .selected_service_point';
+
+    console.error('window.frontend_type', frontend_type)
 
     $(document).on('click', ((window.Shipmondo && window.Shipmondo.deliveryOptionInputContainerSelector) ? window.Shipmondo.deliveryOptionInputContainerSelector : '.delivery-option') + ' input', function (event) {
 
@@ -14,7 +18,7 @@ jQuery(document).ready(function ($) {
         console.error('$(this).val()', $(this).val());
 
         const carrier_id = $(this).val().replace(/\D/g, '');
-        console.error('carrier_id',carrier_id);
+        console.error('carrier_id', carrier_id);
 
 
         jQuery.ajax({
@@ -38,6 +42,76 @@ jQuery(document).ready(function ($) {
                 }
             }
         });
+
+
+        // DROPDOWN
+        // Open dropdown
+        if (frontend_type === 'dropdown') {
+            // Get parent wrapper
+            function getWrapper(element) {
+                return element.parents('.shipmondo_service_point_selection')
+            }
+
+            function getDropdown(element) {
+                return getWrapper(element).find('.shipmondo-dropdown_wrapper');
+            }
+
+            function openDropdown(dropdownElement) {
+                dropdownElement.addClass('visible');
+                getWrapper(dropdownElement).find('.selected_service_point').addClass('selector_open');
+            }
+
+            function closeDropdown(dropdownElement) {
+                dropdownElement.removeClass('visible');
+                getWrapper(dropdownElement).find('.selected_service_point').removeClass('selector_open');
+            }
+
+            function toogleDropdown(element) {
+                const dropdown = getDropdown(element);
+
+                console.log('dropdown', dropdown);
+                if (element.hasClass('visible')) {
+                    closeDropdown(dropdown);
+                } else {
+                    openDropdown(dropdown);
+                }
+            }
+
+            $(document).on('click', selection_button, function (e) {
+                console.log('click', $(this));
+                e.stopPropagation();
+                toogleDropdown($(this))
+            });
+
+            // Hide dropdown when clicked outsite of it
+            $(document).on('click', function (e) {
+                var dropdown = $('.shipmondo-original .shipmondo-dropdown_wrapper.visible');
+
+                if (dropdown.length > 0 && (!dropdown.is(e.target) && dropdown.has(e.target).length === 0)) {
+                    closeDropdown(dropdown);
+                }
+            })
+
+            // Set selected shop
+            $(document).on('click', '.shipmondo-original .selector_type-dropdown .service_points_list .service_point', function () {
+                ServicePointSelected($(this));
+
+                closeDropdown(getDropdown($(this)));
+            });
+        }
+
+
+        /*$(document).on('click', selection_button, function (e) {
+            //var type = $(this).data('selection-type');
+            if (frontend_type === 'popup') {
+                console.log('popup');
+                //getPickupPointsModal();
+            } else if (frontend_type === 'dropdown') {
+                console.log('dropdown');
+            }
+        });
+
+         */
 
 
         /*var carrier_code = getCarrierCodeByVal($(this).val());
