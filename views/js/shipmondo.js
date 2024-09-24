@@ -71,7 +71,8 @@ jQuery(document).ready(function ($) {
             const dropdown = getDropdown(element);
 
             console.log('dropdown', dropdown);
-            if (element.hasClass('visible')) {
+            console.log('element', element);
+            if (dropdown.hasClass('visible')) {
                 closeDropdown(dropdown);
             } else {
                 openDropdown(dropdown);
