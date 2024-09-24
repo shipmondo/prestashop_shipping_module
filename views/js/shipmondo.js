@@ -6,6 +6,7 @@
 jQuery(document).ready(function ($) {
 
     const frontend_type = window.frontend_type;
+    const service_points_endpoint = window.service_points_endpoint;
     //const selection_button = '#shipmondo_find_shop_btn'; //CLEAN!
     const selection_button = '.shipmondo_service_point_selection .selected_service_point';
 
@@ -19,7 +20,6 @@ jQuery(document).ready(function ($) {
 
         const carrier_id = $(this).val().replace(/\D/g, '');
         console.error('carrier_id', carrier_id);
-
 
         jQuery.ajax({
             url: service_points_endpoint,
@@ -42,126 +42,182 @@ jQuery(document).ready(function ($) {
                 }
             }
         });
+    });
 
 
-        // DROPDOWN
-        // Open dropdown
-        if (frontend_type === 'dropdown') {
-            // Get parent wrapper
-            function getWrapper(element) {
-                return element.parents('.shipmondo_service_point_selection')
+    // DROPDOWN
+    // Open dropdown
+    if (frontend_type === 'dropdown') {
+        // Get parent wrapper
+        function getWrapper(element) {
+            return element.parents('.shipmondo_service_point_selection')
+        }
+
+        function getDropdown(element) {
+            return getWrapper(element).find('.shipmondo-dropdown_wrapper');
+        }
+
+        function openDropdown(dropdownElement) {
+            dropdownElement.addClass('visible');
+            getWrapper(dropdownElement).find('.selected_service_point').addClass('selector_open');
+        }
+
+        function closeDropdown(dropdownElement) {
+            dropdownElement.removeClass('visible');
+            getWrapper(dropdownElement).find('.selected_service_point').removeClass('selector_open');
+        }
+
+        function toogleDropdown(element) {
+            const dropdown = getDropdown(element);
+
+            console.log('dropdown', dropdown);
+            if (element.hasClass('visible')) {
+                closeDropdown(dropdown);
+            } else {
+                openDropdown(dropdown);
             }
+        }
 
-            function getDropdown(element) {
-                return getWrapper(element).find('.shipmondo-dropdown_wrapper');
-            }
+        // Service point selected
+        function ServicePointSelected(shopElement) {
+            console.log('shopElement', shopElement);
+            console.log('.data()', shopElement.data());
+            /* var index = getShippingIndex(shopElement)
+             var agent = getShippingAgent(shopElement)
+             const selectedServicePoint = getSelectedServicePoint(shopElement)
 
-            function openDropdown(dropdownElement) {
-                dropdownElement.addClass('visible');
-                getWrapper(dropdownElement).find('.selected_service_point').addClass('selector_open');
-            }
+             const servicePoint = shopElement.data('service_point')
 
-            function closeDropdown(dropdownElement) {
-                dropdownElement.removeClass('visible');
-                getWrapper(dropdownElement).find('.selected_service_point').removeClass('selector_open');
-            }
+             if(selectedServicePoint.id === servicePoint.id) {
+                 return
+             }
 
-            function toogleDropdown(element) {
-                const dropdown = getDropdown(element);
+             var shop = {
+                 'id': servicePoint.id,
+                 'name': servicePoint.name,
+                 'address': servicePoint.address,
+                 'zipcode': servicePoint.zipcode,
+                 'city': servicePoint.city,
+             }
 
-                console.log('dropdown', dropdown);
-                if (element.hasClass('visible')) {
-                    closeDropdown(dropdown);
-                } else {
-                    openDropdown(dropdown);
+             setSelectedServicePoint(shopElement, servicePoint)
+
+             setSelectionSession(shop, agent, index)
+
+             setShopHTML(index, shop, shopElement)
+
+
+             */
+
+            const data = shopElement.data();
+            data.action =  "update";
+
+            $.ajax({
+                url: service_points_endpoint,
+                type: 'POST',
+                data: data,
+                dataType: 'json',
+                error: function (response) {
+                    console.error('error', response);
+                    //TODO SHOW ERROR?
+                    // Error
+                },
+                success: function (response) {
+                    if (response.status == "success") {
+                        // Success
+                    } else if (response.status == "error") {
+                        // $(".error_msg").html(noPointSelectedErrorText);
+                    }
                 }
-            }
-
-            $(document).on('click', selection_button, function (e) {
-                console.log('click', $(this));
-                e.stopPropagation();
-                toogleDropdown($(this))
-            });
-
-            // Hide dropdown when clicked outsite of it
-            $(document).on('click', function (e) {
-                var dropdown = $('.shipmondo-original .shipmondo-dropdown_wrapper.visible');
-
-                if (dropdown.length > 0 && (!dropdown.is(e.target) && dropdown.has(e.target).length === 0)) {
-                    closeDropdown(dropdown);
-                }
-            })
-
-            // Set selected shop
-            $(document).on('click', '.shipmondo-original .selector_type-dropdown .service_points_list .service_point', function () {
-                ServicePointSelected($(this));
-
-                closeDropdown(getDropdown($(this)));
             });
         }
 
-
-        /*$(document).on('click', selection_button, function (e) {
-            //var type = $(this).data('selection-type');
-            if (frontend_type === 'popup') {
-                console.log('popup');
-                //getPickupPointsModal();
-            } else if (frontend_type === 'dropdown') {
-                console.log('dropdown');
-            }
+        $(document).on('click', selection_button, function (e) {
+            console.log('click', $(this));
+            e.stopPropagation();
+            toogleDropdown($(this))
         });
 
-         */
 
+        // Hide dropdown when clicked outsite of it
+        $(document).on('click', function (e) {
+            var dropdown = $('.shipmondo-original .shipmondo-dropdown_wrapper.visible');
 
-        /*var carrier_code = getCarrierCodeByVal($(this).val());
-
-
-
-
-
-
-        // Remove wrapper
-        $('.shipmondo-shipping-field-wrap').remove();
-
-        if (carrier_code != '') {
-            // // Remove wrapper
-            // $('.shipmondo-shipping-field-wrap').remove();
-
-            var dev_option = $(this).closest((window.Shipmondo && window.Shipmondo.deliveryOptionRowSelector) ? window.Shipmondo.deliveryOptionRowSelector : '.delivery-option'); // row
-            var extra_content = $(dev_option).find('.carrier-extra-content');
-
-            if ($(extra_content).length < 1) {
-                extra_content = $(dev_option).next('.carrier-extra-content');
+            if (dropdown.length > 0 && (!dropdown.is(e.target) && dropdown.has(e.target).length === 0)) {
+                closeDropdown(dropdown);
             }
+        })
 
-            $(extra_content).html(selection_button_html);
+        //TODO USE selection_button instead
+        // Set selected shop
+        $(document).on('click', '.shipmondo-original .selector_type-dropdown .service_points_list .service_point', function () {
+            ServicePointSelected($(this));
 
-            // TODO remove this if we can set it in selection_button.tpl as WC
-            $(extra_content).find('#shipmondo_find_shop_btn').data("shipping-type", carrier_code);
+            closeDropdown(getDropdown($(this)));
+        });
+    }
 
-            if (frontend_type == 'radio') {
-                // Wait for Dom to settle (Some checkout modules will have delay for input:checked)
-                // TODO maybe move to init as it only there the problem acures//
-                // TODO also it will shopselect and it will do it under again so showC will not work. redo this
-                setTimeout(function () {
-                    loadRadioButtons();
-                }, 200);
-            }
 
-            // TODO I dont think this is enough - we should also use address etc.
-            if (current_shop && (carrier_code == current_shop.carrier_code)) {
-                shopSelected(current_shop);
-            } else {
-                showContinueBtn(false);
-            }
-        } else {
-            showContinueBtn(true);
+    /*$(document).on('click', selection_button, function (e) {
+        //var type = $(this).data('selection-type');
+        if (frontend_type === 'popup') {
+            console.log('popup');
+            //getPickupPointsModal();
+        } else if (frontend_type === 'dropdown') {
+            console.log('dropdown');
+        }
+    });
+
+     */
+
+
+    /*var carrier_code = getCarrierCodeByVal($(this).val());
+
+
+
+
+
+
+    // Remove wrapper
+    $('.shipmondo-shipping-field-wrap').remove();
+
+    if (carrier_code != '') {
+        // // Remove wrapper
+        // $('.shipmondo-shipping-field-wrap').remove();
+
+        var dev_option = $(this).closest((window.Shipmondo && window.Shipmondo.deliveryOptionRowSelector) ? window.Shipmondo.deliveryOptionRowSelector : '.delivery-option'); // row
+        var extra_content = $(dev_option).find('.carrier-extra-content');
+
+        if ($(extra_content).length < 1) {
+            extra_content = $(dev_option).next('.carrier-extra-content');
         }
 
+        $(extra_content).html(selection_button_html);
 
-         */
-    });
+        // TODO remove this if we can set it in selection_button.tpl as WC
+        $(extra_content).find('#shipmondo_find_shop_btn').data("shipping-type", carrier_code);
+
+        if (frontend_type == 'radio') {
+            // Wait for Dom to settle (Some checkout modules will have delay for input:checked)
+            // TODO maybe move to init as it only there the problem acures//
+            // TODO also it will shopselect and it will do it under again so showC will not work. redo this
+            setTimeout(function () {
+                loadRadioButtons();
+            }, 200);
+        }
+
+        // TODO I dont think this is enough - we should also use address etc.
+        if (current_shop && (carrier_code == current_shop.carrier_code)) {
+            shopSelected(current_shop);
+        } else {
+            showContinueBtn(false);
+        }
+    } else {
+        showContinueBtn(true);
+    }
+
+
+     */
 
 
     /*
