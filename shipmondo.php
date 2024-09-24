@@ -302,7 +302,7 @@ class Shipmondo extends CarrierModule
             Media::addJsDef([
                 'choose_pickup_point_text' => $this->trans('Choose pickup point'),
                 'frontend_type' => Configuration::get('SHIPMONDO_FRONTEND_TYPE'),
-                'modal_html' => $this->fetch('module:shipmondo/views/templates/front/popup/modal.tpl'), //Jan?
+                //'modal_html' => $this->fetch('module:shipmondo/views/templates/front/popup/modal.tpl'), //TODO Jan?
                 'module_base_url' => Tools::getProtocol(Tools::usingSecureMode()) . $_SERVER['HTTP_HOST'] . $this->getPathUri(),
                 'service_points_endpoint' => Context::getContext()->link->getModuleLink('shipmondo', 'servicepoints'),
                 'extentions_endpoint' => Context::getContext()->link->getModuleLink('shipmondo', 'extensions'),
@@ -312,7 +312,7 @@ class Shipmondo extends CarrierModule
                 // Loads Google map API
                 $context->registerJavascript(
                     'google-maps',
-                    'https://maps.googleapis.com/maps/api/js?key=' . Configuration::get('SHIPMONDO_GOOGLE_API_KEY'),
+                    'https://maps.googleapis.com/maps/api/js?loading=async&callback=googleMapsInit&key=' . Configuration::get('SHIPMONDO_GOOGLE_API_KEY'),
                     [
                         'server' => 'remote',
                         'position' => 'bottom',
