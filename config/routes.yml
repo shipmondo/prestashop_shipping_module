@@ -1,3 +1,11 @@
+shipmondo_configuration:
+  path: /shipmondo/configuration
+  methods: [GET, POST]
+  defaults:
+    _controller: 'Shipmondo\Controller\Admin\ShipmondoConfigurationController::indexAction'
+    _legacy_controller: "AdminShipmondoConfiguration"
+    _legacy_link: "AdminShipmondoConfiguration"
+
 shipmondo_shipmondo_carriers_index:
     path: /shipmondo/shipmondo_carriers
     methods: [GET]

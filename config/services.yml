@@ -1,4 +1,32 @@
 services:
+    shipmondo.form.type.shipmondo_configuration_form_type:
+        class: 'Shipmondo\Form\Type\ShipmondoConfigurationFormType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        tags:
+        - { name: form.type }
+
+    shipmondo.form.shipmondo_configuration_data_configuration:
+        class: 'Shipmondo\Form\ShipmondoConfigurationDataConfiguration'
+        arguments:
+        - '@prestashop.adapter.legacy.configuration'
+        - '@translator'
+
+    shipmondo.form.shipmondo_configuration_form_data_provider:
+        class: 'Shipmondo\Form\ShipmondoConfigurationFormDataProvider'
+        arguments:
+        - '@shipmondo.form.shipmondo_configuration_data_configuration'
+
+    shipmondo.form.shipmondo_configuration_form_handler:
+        class: 'PrestaShop\PrestaShop\Core\Form\Handler'
+        public: true
+        arguments:
+        - '@form.factory'
+        - '@prestashop.core.hook.dispatcher'
+        - '@shipmondo.form.shipmondo_configuration_form_data_provider'
+        - 'Shipmondo\Form\Type\ShipmondoConfigurationFormType'
+        - 'Shipmondo'
+
     shipmondo.grid.definition.factory.shipmondo_carriers:
         class: 'Shipmondo\Grid\Definition\Factory\ShipmondoCarrierGridDefinitionFactory'
         parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
