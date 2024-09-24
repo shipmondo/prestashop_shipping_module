@@ -11,6 +11,11 @@ jQuery(document).ready(function ($) {
     const selection_button = '.shipmondo_service_point_selection .selected_service_point';
 
 
+    // Get parent wrapper
+    function getWrapper(element) {
+        return element.parents('.shipmondo_service_point_selection')
+    }
+
     $(document).on('click', ((window.Shipmondo && window.Shipmondo.deliveryOptionInputContainerSelector) ? window.Shipmondo.deliveryOptionInputContainerSelector : '.delivery-option') + ' input', function (event) {
         const carrier_id = $(this).val().replace(/\D/g, '');
 
@@ -32,14 +37,55 @@ jQuery(document).ready(function ($) {
         });
     });
 
+    function setShopHTML(servicePointElement, html) {
+        const wrapper = getWrapper(servicePointElement)
+
+        $(selection_button).html(html);
+
+        wrapper.find('.service_point.selected').removeClass('selected')
+        servicePointElement.addClass('selected')
+    }
+
+    // Service point selected
+    function ServicePointSelected(shopElement) {
+        const data = shopElement.data();
+        data.action = "update";
+
+        console.log('ServicePointSelected', data);
+
+
+        $.ajax({
+            url: service_points_endpoint,
+            type: 'POST',
+            data: data,
+            dataType: 'json',
+            error: function (response) {
+                console.error('error', response);
+                //TODO SHOW ERROR? look at WC
+                // Error
+                $(".shipmondo_service_point_selection").html('<div class="selected_service_point service_point dropdown no_service_point">Ingen tilgængelige udleveringssteder</div>');
+            },
+            success: function (response) {
+                if (response.status === "success") {
+                    //$(selection_button).html(response.selected_service_point_html);
+
+                    setShopHTML(shopElement, response.selected_service_point_html)
+
+
+                } else if (response.status === "error") {
+                    //TODO SHOW ERROR? look at WC
+                    $(".shipmondo_service_point_selection").html('<div class="selected_service_point service_point dropdown no_service_point">Ingen tilgængelige udleveringssteder</div>');
+                    // $(".error_msg").html(noPointSelectedErrorText);
+                }
+            }
+        });
+    }
+
 
     // DROPDOWN
     // Open dropdown
     if (frontend_type === 'dropdown') {
-        // Get parent wrapper
-        function getWrapper(element) {
-            return element.parents('.shipmondo_service_point_selection')
-        }
+
 
         function getDropdown(element) {
             return getWrapper(element).find('.shipmondo-dropdown_wrapper');
@@ -67,49 +113,8 @@ jQuery(document).ready(function ($) {
             }
         }
 
-        function setShopHTML(servicePointElement, html) {
-            const wrapper = getWrapper(servicePointElement)
-
-            $(selection_button).html(html);
-
-            wrapper.find('.service_point.selected').removeClass('selected')
-            servicePointElement.addClass('selected')
-        }
-
-        // Service point selected
-        function ServicePointSelected(shopElement) {
-            const data = shopElement.data();
-            data.action = "update";
-
-            console.log('ServicePointSelected', data);
 
 
-            $.ajax({
-                url: service_points_endpoint,
-                type: 'POST',
-                data: data,
-                dataType: 'json',
-                error: function (response) {
-                    console.error('error', response);
-                    //TODO SHOW ERROR? look at WC
-                    // Error
-                    $(".shipmondo_service_point_selection").html('<div class="selected_service_point service_point dropdown no_service_point">Ingen tilgængelige udleveringssteder</div>');
-                },
-                success: function (response) {
-                    if (response.status === "success") {
-                        //$(selection_button).html(response.selected_service_point_html);
-
-                        setShopHTML(shopElement, response.selected_service_point_html)
-
-
-                    } else if (response.status === "error") {
-                        //TODO SHOW ERROR? look at WC
-                        $(".shipmondo_service_point_selection").html('<div class="selected_service_point service_point dropdown no_service_point">Ingen tilgængelige udleveringssteder</div>');
-                        // $(".error_msg").html(noPointSelectedErrorText);
-                    }
-                }
-            });
-        }
 
         $(document).on('click', selection_button, function (e) {
             console.log('click', $(this));
@@ -133,6 +138,230 @@ jQuery(document).ready(function ($) {
             ServicePointSelected($(this));
             closeDropdown(getDropdown($(this)));
         });
+    } else {
+
+        // MODAL
+        /*function getSelectedServicePoint(element) {
+            return getWrapper(element).data('selected_service_point')
+        }
+
+         */
+
+        let googleMapsIsLoaded = false;
+
+        function getModal(element) {
+            return getWrapper(element).find('.shipmondo-modal')
+        }
+
+        function openModal(modal) {
+            modal.removeClass('shipmondo-hidden')
+
+            initializeMap(modal)
+
+            setTimeout(function () {
+                $('body').addClass('shipmondo_modal_open')
+                modal.addClass('visible')
+                modal.find('.shipmondo-modal_content').addClass('visible')
+            }, 100)
+        }
+
+        function closeModal(modal) {
+            modal.removeClass('visible')
+
+            $('body').removeClass('shipmondo_modal_open')
+
+            setTimeout(function () {
+                $('.shipmondo-modal-checkmark').removeClass('visible')
+                modal.addClass('shipmondo-hidden')
+            }, 300)
+        }
+
+        function loadGoogleMaps() {
+
+            console.log('loadGoogleMaps');
+            // Create the script tag, set the appropriate attributes
+            var script = document.createElement('script')
+            script.src = 'https://maps.googleapis.com/maps/api/js?key=' + shipmondo['google_maps_api_key'] + '&loading=async&callback=googleMapsInit'
+            script.async = true
+
+            // Append the 'script' element to 'head'
+            document.head.appendChild(script)
+        }
+
+        // Render map
+        var map = null
+        var bounds = null
+        var infowindow = null
+
+        function renderMap(element, modal) {
+            map = new google.maps.Map(element[0], {
+                zoom: 6,
+                center: {lat: 55.9150835, lng: 10.4713954},
+                mapTypeControl: false,
+                streetViewControl: false,
+                fullscreenControl: false
+            })
+
+            infowindow = new google.maps.InfoWindow()
+
+            bounds = new google.maps.LatLngBounds()
+
+            // const servicePoints = element.data('service_points') org wc
+            //const servicePoints = element.data('service_points')
+
+
+            console.log('renderMap', element);
+
+
+            //        service_points_list
+
+
+            //console.log(modal, $(modal));
+            //console.log('service_points_list', $(modal).find('.service_points_list .service_point'));
+
+
+            //const test = $(modal).find('.service_points_list').data('service_points');
+            //console.log('test', test);
+
+            //          const wrapper = getWrapper(servicePointElement)
+
+
+//            wrapper.find('.service_point.selected').removeClass('selected')
+
+
+            //const selectedServicePoint = getSelectedServicePoint(element)
+
+
+            //TODO get data array directly instead
+            const servicePoints = $(modal).find('.service_points_list .service_point');
+            //const selectedServicePoint = servicePoints.hasClass('selected').data();
+
+            console.log('servicePoints', servicePoints);
+
+            //console.log('selectedServicePoint', selectedServicePoint);
+
+            $.each(servicePoints, function (index, element) {
+                const el = $(element);
+                const data = el.data();
+                if (el.hasClass('selected')) {
+                    data.selected = true;
+                }
+                //shipmondoLoadMarker(data, selectedServicePoint)
+                shipmondoLoadMarker(data);
+            });
+
+
+            setTimeout(function () {
+                map.fitBounds(bounds)
+            }, 100)
+        }
+
+
+        // Select shop
+        $(document).on('click', '.shipmondo-original .selector_type-modal .service_points_list .service_point', function () {
+
+            console.log('click!');
+            ServicePointSelected($(this));
+
+            $('.shipmondo-modal_content').removeClass('visible');
+            $('.shipmondo-modal-checkmark').addClass('visible');
+
+            const modal = getModal($(this))
+
+            setTimeout(function () {
+                closeModal(modal);
+            }, 1800);
+        });
+
+        // Select shop
+        /*$(document).on('click', '.shipmondo-original #shipmondo-select-shop', function(e) {
+            e.preventDefault();
+
+            var servicePointElement = getWrapper($(this)).find('.service_point[data-id=' + $(this).data('number') + ']');
+
+            servicePointElement.trigger('click');
+        });
+
+         */
+
+
+        // Render Markers
+        function shipmondoLoadMarker(data) {
+            var marker = new google.maps.Marker({
+                position: {lat: parseFloat(data.latitude), lng: parseFloat(data.longitude)},
+                map: map,
+                icon: {
+                    //url: selectedServicePoint.id === data.id ? shipmondo['icon_url_selected'] : shipmondo['icon_url'], TODO
+                    url: module_base_url + '/views/img/' + ((data.selected) ? 'picker_green' : 'picker_default') + '.png',
+                    size: new google.maps.Size(48, 48),
+                    scaledSize: new google.maps.Size(48, 48),
+                    anchor: new google.maps.Point(24, 24)
+                }
+            })
+
+            google.maps.event.addListener(marker, 'click', (function (marker) {
+                return function () {
+                    console.log('click!', data);
+
+
+                    //var servicePointElement = getWrapper($(this)).find('.service_point[data-id=' + $(this).data('number') + ']');
+
+                    //servicePointElement.trigger('click');
+
+                    //infowindow.setContent('<strong>' + data.company_name + '</strong><br/>' + data.address + "<br/> " + data.city + ' <br/> ' + data.zipcode + '<br/><div id="shipmondo-button-wrapper"><button class="button" id="shipmondo-select-shop" data-number="' + data.number + '">' + shipmondo.select_shop_text + '</button></div>');
+                    //infowindow.setContent('<strong>' + data.company_name + '</strong><br/>' + data.address + "<br/> " + data.city + ' <br/> ' + data.zipcode + '<br/><div id="shipmondo-button-wrapper"><button class="button" id="shipmondo-select-shop" data-number="' + data.number + '">' + 'hej' + '</button></div>');
+                    //infowindow.open(map, marker)
+                }
+            })(marker))
+
+            bounds.extend(marker.position)
+        }
+
+        var currentModalElement = null
+
+        function initializeMap(modal) {
+            console.log('initialize map');
+            if (typeof google === 'undefined' || typeof google.maps === 'undefined') {
+                currentModalElement = modal;
+                loadGoogleMaps();
+            } else {
+                renderMap(modal.find('.service_points_map'), modal);
+            }
+        }
+
+
+        // Show modal
+        $(document).on('click', '.shipmondo-original .selected_service_point.selector_type-modal', function (e) {
+            e.stopPropagation()
+            openModal(getModal($(e.target)))
+        })
+
+        // Hide modal on close button
+        $(document).on('click', '.shipmondo-original .shipmondo-modal_close', function (e) {
+            e.preventDefault()
+            closeModal(getModal($(e.target)))
+        });
+
+        // Hide modal when clicking outsite modal content
+        $(document).on('click', '.shipmondo-original .shipmondo-modal', function (e) {
+            if (typeof e.target !== 'undefined' && $(e.target).hasClass('shipmondo-modal')) {
+                closeModal(getModal($(e.target)))
+            }
+        });
+
+        // Render map after google maps load
+        $(document).on('googleMapsLoaded', function () {
+            console.log('googleMapsLoaded');
+
+            googleMapsIsLoaded = true;
+            //renderMap(currentModalElement.find('.service_points_map'))
+        })
+
+
+        window.googleMapsInit = function googleMapsInit() {
+            console.log('googleMapsInit');
+            $(document).trigger('googleMapsLoaded');
+        }
     }
 
 

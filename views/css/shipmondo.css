@@ -863,6 +863,8 @@ body.shipmondo-modal-open {
     }
 }
 
+/* Info window?
+
 .shipmondo_service_point_selection .service_points_modal .shipmondo-modal_wrapper .shipmondo-modal_content .service_points_map .gm-style-iw {
     max-height: 300px !important
 }
@@ -897,6 +899,8 @@ body.shipmondo-modal-open {
     outline: none
 }
 
+
+ */
 .shipmondo_service_point_selection .service_points_modal .service_points_list {
     margin: 0;
     overflow-y: auto;
