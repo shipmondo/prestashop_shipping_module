@@ -68,7 +68,23 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
         $entityManager->persist($servicePoint);
         $entityManager->flush();
 
-        $this->ajaxDie(json_encode(['status' => 'success', 'service_point' => $servicePoint->toArray()]));
+        $this->context->smarty->assign([
+            'carrier' => new Carrier($cart->id_carrier),
+            'service_point' => (object) [
+                'id' => $servicePoint->getServicePointId(),
+                'name' => $servicePoint->getName(),
+                'address' => $servicePoint->getAddress1(),
+                'address2' => $servicePoint->getAddress2(),
+                'zipcode' => $servicePoint->getZipCode(),
+                'city' => $servicePoint->getCity(),
+                'country_code' => $servicePoint->getCountryCode(),
+                'distance' => Tools::getValue('distance'),
+            ],
+        ]);
+        $html = $this->module->fetch('module:shipmondo/views/templates/front/_partials/selected_service_point.tpl');
+
+
+        $this->ajaxDie(json_encode(['status' => 'success', 'selected_service_point_html' => $html]));
     }
 
     private function getServicePoint(): void
