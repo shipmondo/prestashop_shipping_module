@@ -37,6 +37,50 @@ jQuery(document).ready(function ($) {
         });
     });
 
+    function setShopHTML(servicePointElement, html) {
+        const wrapper = getWrapper(servicePointElement)
+
+        $(selection_button).html(html);
+
+        wrapper.find('.service_point.selected').removeClass('selected')
+        servicePointElement.addClass('selected')
+    }
+
+    // Service point selected
+    function ServicePointSelected(shopElement) {
+        const data = shopElement.data();
+        data.action = "update";
+
+        console.log('ServicePointSelected', data);
+
+
+        $.ajax({
+            url: service_points_endpoint,
+            type: 'POST',
+            data: data,
+            dataType: 'json',
+            error: function (response) {
+                console.error('error', response);
+                //TODO SHOW ERROR? look at WC
+                // Error
+                $(".shipmondo_service_point_selection").html('<div class="selected_service_point service_point dropdown no_service_point">Ingen tilgængelige udleveringssteder</div>');
+            },
+            success: function (response) {
+                if (response.status === "success") {
+                    //$(selection_button).html(response.selected_service_point_html);
+
+                    setShopHTML(shopElement, response.selected_service_point_html)
+
+
+                } else if (response.status === "error") {
+                    //TODO SHOW ERROR? look at WC
+                    $(".shipmondo_service_point_selection").html('<div class="selected_service_point service_point dropdown no_service_point">Ingen tilgængelige udleveringssteder</div>');
+                    // $(".error_msg").html(noPointSelectedErrorText);
+                }
+            }
+        });
+    }
+
 
     // DROPDOWN
     // Open dropdown
@@ -69,49 +113,8 @@ jQuery(document).ready(function ($) {
             }
         }
 
-        function setShopHTML(servicePointElement, html) {
-            const wrapper = getWrapper(servicePointElement)
-
-            $(selection_button).html(html);
-
-            wrapper.find('.service_point.selected').removeClass('selected')
-            servicePointElement.addClass('selected')
-        }
-
-        // Service point selected
-        function ServicePointSelected(shopElement) {
-            const data = shopElement.data();
-            data.action = "update";
-
-            console.log('ServicePointSelected', data);
 
 
-            $.ajax({
-                url: service_points_endpoint,
-                type: 'POST',
-                data: data,
-                dataType: 'json',
-                error: function (response) {
-                    console.error('error', response);
-                    //TODO SHOW ERROR? look at WC
-                    // Error
-                    $(".shipmondo_service_point_selection").html('<div class="selected_service_point service_point dropdown no_service_point">Ingen tilgængelige udleveringssteder</div>');
-                },
-                success: function (response) {
-                    if (response.status === "success") {
-                        //$(selection_button).html(response.selected_service_point_html);
-
-                        setShopHTML(shopElement, response.selected_service_point_html)
-
-
-                    } else if (response.status === "error") {
-                        //TODO SHOW ERROR? look at WC
-                        $(".shipmondo_service_point_selection").html('<div class="selected_service_point service_point dropdown no_service_point">Ingen tilgængelige udleveringssteder</div>');
-                        // $(".error_msg").html(noPointSelectedErrorText);
-                    }
-                }
-            });
-        }
 
         $(document).on('click', selection_button, function (e) {
             console.log('click', $(this));
@@ -253,19 +256,34 @@ jQuery(document).ready(function ($) {
             }, 100)
         }
 
-      /*  function selectShopFromMap(){
-            e.preventDefault();
-            var shop = $('.shipmondo-shoplist-ul > li[data-id=' + $(this).data('number') + ']');
-            shopSelected(shop);
-            $('.shipmondo-modal-content').removeClass('visible');
+
+        // Select shop
+        $(document).on('click', '.shipmondo-original .selector_type-modal .service_points_list .service_point', function () {
+
+            console.log('click!');
+            ServicePointSelected($(this));
+
+            $('.shipmondo-modal_content').removeClass('visible');
             $('.shipmondo-modal-checkmark').addClass('visible');
 
-            setTimeout(function () {
-                hideModal();
-            }, 1800);
-        }
+            const modal = getModal($(this))
 
-       */
+            setTimeout(function () {
+                closeModal(modal);
+            }, 1800);
+        });
+
+        // Select shop
+        /*$(document).on('click', '.shipmondo-original #shipmondo-select-shop', function(e) {
+            e.preventDefault();
+
+            var servicePointElement = getWrapper($(this)).find('.service_point[data-id=' + $(this).data('number') + ']');
+
+            servicePointElement.trigger('click');
+        });
+
+         */
+
 
         // Render Markers
         function shipmondoLoadMarker(data) {
@@ -286,10 +304,13 @@ jQuery(document).ready(function ($) {
                     console.log('click!', data);
 
 
+                    //var servicePointElement = getWrapper($(this)).find('.service_point[data-id=' + $(this).data('number') + ']');
+
+                    //servicePointElement.trigger('click');
 
                     //infowindow.setContent('<strong>' + data.company_name + '</strong><br/>' + data.address + "<br/> " + data.city + ' <br/> ' + data.zipcode + '<br/><div id="shipmondo-button-wrapper"><button class="button" id="shipmondo-select-shop" data-number="' + data.number + '">' + shipmondo.select_shop_text + '</button></div>');
-                    infowindow.setContent('<strong>' + data.company_name + '</strong><br/>' + data.address + "<br/> " + data.city + ' <br/> ' + data.zipcode + '<br/><div id="shipmondo-button-wrapper"><button class="button" id="shipmondo-select-shop" data-number="' + data.number + '">' + 'hej' + '</button></div>');
-                    infowindow.open(map, marker)
+                    //infowindow.setContent('<strong>' + data.company_name + '</strong><br/>' + data.address + "<br/> " + data.city + ' <br/> ' + data.zipcode + '<br/><div id="shipmondo-button-wrapper"><button class="button" id="shipmondo-select-shop" data-number="' + data.number + '">' + 'hej' + '</button></div>');
+                    //infowindow.open(map, marker)
                 }
             })(marker))
 
