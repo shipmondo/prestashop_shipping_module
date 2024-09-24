@@ -3,6 +3,8 @@
  *  @copyright 2024-present Shipmondo
  *  @license   https://opensource.org/license/bsd-3-clause BSD-3-Clause
  */
+
+/*
 body.shipmondo-modal-open {
     overflow: hidden;
 }
@@ -235,9 +237,8 @@ body.shipmondo-modal-open {
     -webkit-overflow-scrolling: touch;
 }
 
+
 .shipmondo-modal-header {
-    /*padding: 40px 40px 24px;*/
-    /*height: 136px;*/
     padding: 30px 30px 24px;
     height: 120px;
     box-sizing: border-box;
@@ -305,7 +306,6 @@ body.shipmondo-modal-open {
 
 .shipmondo-radio-content {
     position: relative;
-    /*margin-bottom: 30px;*/
     min-height: 68px;
     box-sizing: border-box;
 }
@@ -320,8 +320,6 @@ body.shipmondo-modal-open {
     -webkit-flex-wrap: wrap;
     -ms-flex-wrap: wrap;
     flex-wrap: wrap;
-    /*margin: 32px 23px 0 40px;*/
-    /*margin: 25px 15px 0 15px;*/
     margin: 25px 25px 0 25px;
 }
 
@@ -350,7 +348,7 @@ body.shipmondo-modal-open {
 }
 
 .shipmondo-pickup-point-name, .shipmondo-pickup-point-address, .shipmondo-pickup-point-zipcode-city {
-    display: block; /* Fallback for non-webkit */
+    display: block;
     display: -webkit-box;
     -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
@@ -580,7 +578,6 @@ body.shipmondo-modal-open {
     margin: 8px 0 12px;
 }
 
-/*Mobile*/
 @media screen and (max-width: 767px) {
     .shipmondo-shipping-field-wrap {
         margin: 8px 15px 12px;
@@ -621,7 +618,7 @@ body.shipmondo-modal-open {
     display: none;
     float: right;
 }
-
+*/
 
 /*new/copy from wc CLEAN ABOVE WHEN DONE*/
 

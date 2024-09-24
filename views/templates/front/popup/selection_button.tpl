@@ -1,18 +1,121 @@
 {*
-*  @author    Shipmondo <support@shipmondo.com>
+*  @author    Shipmondo support@shipmondo.com
 *  @copyright 2024-present Shipmondo
 *  @license   https://opensource.org/license/bsd-3-clause BSD-3-Clause
 *}
 
-<div class="shipmondo-shipping-field-wrap">
-    <input type="hidden" name="shipmondo_carrier_code_{$carrier_id}" value="{$carrier_code}">
-    <div class="shipmondo-clearfix" id="shipmondo_shipping_button">
-        <div class="shipmondo_stores">
-            <button class="button button-medium btn btn-primary" id="shipmondo_find_shop_btn" name="shipmondo_find_shop" type="button"
-                    data-selection-type="popup">
-                {l s='Find nearest pickup point' mod='shipmondo'}
-            </button>
+
+<h3 class="service_point_title">{l s='Pickup point' mod='shipmondo'}</h3>
+<div class="shipmondo-original">
+    <div class="shipmondo_service_point_selection selector_type-dropdown">
+        <div class="selected_service_point service_point selector_type-dropdown">
+            {include file='module:shipmondo/views/templates/front/_partials/selected_service_point.tpl'}
+        </div>
+        <div class="shipmondo-dropdown_wrapper">
+            <div class="service_points_dropdown">
+                <div class="service_points_list">
+                    {foreach $service_points as $sp}
+                    <div class="service_point{if $sp->id == $service_point->id} selected{/if}"
+                         data-service_point_id="{$sp->id}"
+                         data-name="{$sp->name}"
+                         data-address1="{$sp->address}"
+                         data-city="{$sp->city}"
+                         data-zip_code="{$sp->zipcode}"
+                         data-distance="{$sp->distance}"
+                         data-carrier_code="{$sp->carrier_code}">
+                        <div class="header"><span class="name">{$sp->name}</span></div>
+                        <div class="location">
+                            <div class="address_info">{$sp->address}, {$sp->zipcode} {$sp->city}</div>
+                            {if $sp->distance}
+                            <div class="distance">{$sp->distance / 1000} km</div>
+                            {/if}
+                        </div>
+                    </div>
+                    {/foreach}
+                </div>
+                <div class="shipmondo-modal_footer">
+                    <div class="powered_by_shipmondo">
+                        <p>Powered by Shipmondo</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="powered_by_shipmondo">
+            <p>Powered by Shipmondo</p>
         </div>
     </div>
-    {include file='module:shipmondo/views/templates/front/_partials/selected_service_point.tpl'}
+</div>
+
+
+<div class="shipmondo-original">
+    <div class="shipmondo_service_point_selection selector_type-modal" data-shipping_agent="gls" data-shipping_index="0">
+        <div class="selected_service_point service_point selector_type-modal">
+            {include file='module:shipmondo/views/templates/front/_partials/selected_service_point.tpl'}
+        </div>
+        <div class="powered_by_shipmondo">
+            <p>Powered by Shipmondo</p>
+        </div>
+
+        <div class="shipmondo-modal service_points_modal shipmondo-hidden" tabindex="-1" role="dialog"
+             aria-labelledby="udleveringssted popup">
+            <div class="shipmondo-modal_wrapper">
+                <div class="shipmondo-modal_content visible">
+                    <button class="shipmondo-modal_close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                    <div class="shipmondo-modal_header">
+                        <h4>Vælg udleveringssted</h4>
+                    </div>
+                    <div class="service_points_map"
+                         style="position: relative; overflow: hidden;">
+                        <div style="height: 100%; width: 100%; position: absolute; top: 0px; left: 0px; background-color: rgb(229, 227, 223);">
+
+                        </div>
+                    </div>
+                    <div class="service_points_list">
+                        <div class="service_point" data-id="96578"
+                             data-address="Algade 51, 4000 Roskilde" data-distance="0.18 km">
+                            <div class="header">
+                                <span class="name">Superbrugsen Roskilde</span>
+                            </div>
+                            <div class="location">
+                                <div class="address_info">
+                                    Algade 51, 4000 Roskilde
+                                </div>
+                                <div class="distance">
+                                    0.18 km
+                                </div>
+                            </div>
+                        </div>
+                        <div class="service_point" data-id="96566"
+                             data-address="Jernbanegade 1, 4000 Roskilde" data-distance="0.96 km">
+                            <div class="header">
+                                <span class="name">DSB 7-Eleven Roskilde Station</span>
+                            </div>
+                            <div class="location">
+                                <div class="address_info">
+                                    Jernbanegade 1, 4000 Roskilde
+                                </div>
+                                <div class="distance">
+                                    0.96 km
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="shipmondo-modal_footer">
+                        <div class="powered_by_shipmondo">
+                            <p>Powered by Shipmondo</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="shipmondo-modal-checkmark">
+                    <svg class="shipmondo-checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+                        <circle class="shipmondo-checkmark_circle" cx="26" cy="26" r="25" fill="none"></circle>
+                        <path class="shipmondo-checkmark_check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"></path>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
