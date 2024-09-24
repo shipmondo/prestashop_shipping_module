@@ -1123,6 +1123,7 @@ body.shipmondo_modal_open {
     margin-left: -22px
 }
 
+/*
 #order_review #shipping_method.shipping__list {
     text-align: left
 }
@@ -1139,6 +1140,8 @@ body.shipmondo_modal_open {
 #order_review #shipping_method.shipping__list .shipping__list_label {
     flex: auto
 }
+
+ */
 
 .service-point-selector-error {
     text-transform: none

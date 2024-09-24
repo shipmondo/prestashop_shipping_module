@@ -120,13 +120,15 @@ jQuery(document).ready(function ($) {
                 dataType: 'json',
                 error: function (response) {
                     console.error('error', response);
-                    //TODO SHOW ERROR?
+                    //TODO SHOW ERROR? look at WC
                     // Error
                 },
                 success: function (response) {
                     if (response.status == "success") {
                         // Success
                     } else if (response.status == "error") {
+                        //TODO SHOW ERROR? look at WC
+
                         // $(".error_msg").html(noPointSelectedErrorText);
                     }
                 }
