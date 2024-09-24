@@ -40,11 +40,6 @@ class ShipmondoCarrierController extends FrameworkBundleAdminController
                         'icon' => 'add_circle_outline',
                         'href' => $this->generateUrl('shipmondo_shipmondo_carriers_create'),
                     ],
-                    'configuration' => [
-                        'desc' => $this->trans('Configuration', 'Modules.Shipmondo.Admin'),
-                        'icon' => 'settings',
-                        'href' => $this->generateUrl('shipmondo_configuration'),
-                    ]
                 ],
                 'carrierGrid' => $this->presentGrid($carrierGrid),
             ]

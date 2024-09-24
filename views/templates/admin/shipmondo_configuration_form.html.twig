@@ -7,10 +7,16 @@
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
 {% block content %}
-  <div class="card">
-    <div class="card-body">
-      {{'Follow the setup guide'|trans({}, 'Modules.Shipmondo.Admin')}}: <a href="https://help.shipmondo.com/articles/7197780" target="_blank">{{ 'PrestaShop guide'|trans({}, 'Modules.Shipmondo.Admin') }}</a>
-    </div>
+  <div class="alert alert-info" role="alert">
+    <p class="alert-text">
+        {{'Follow the setup guide'|trans({}, 'Modules.Shipmondo.Admin')}}: <a href="https://help.shipmondo.com/articles/7197780" target="_blank">{{ 'PrestaShop guide'|trans({}, 'Modules.Shipmondo.Admin') }}</a>
+    </p>
+  </div>
+
+  <div class="alert alert-info" role="alert">
+    <p class="alert-text">
+        {{'When have configured the module, go to'|trans({}, 'Modules.Shipmondo.Admin')}} <a href="{{path('shipmondo_shipmondo_carriers_search')}}">{{ 'Shipping'|trans({}, 'Modules.Shipmondo.Admin') }} > Shipmondo</a> {{'to setup carriers'|trans({}, 'Modules.Shipmondo.Admin')}}.
+    </p>
   </div>
 
   {{ form_start(shipmondoConfigurationForm) }}
