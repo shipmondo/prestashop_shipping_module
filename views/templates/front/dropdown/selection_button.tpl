@@ -26,7 +26,7 @@
                             <div class="location">
                                 <div class="address_info">{$sp->address}, {$sp->zipcode} {$sp->city}</div>
                                 {if $sp->distance}
-                                    <div class="distance">{$sp->distance / 1000} km</div>
+                                    <div class="distance">{($sp->distance / 1000)|string_format:"%.2f"} km</div>
                                 {/if}
                             </div>
                         </div>
