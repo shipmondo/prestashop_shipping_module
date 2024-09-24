@@ -11,6 +11,6 @@
 <div class="location">
     <div class="address_info">{$service_point->address}, {$service_point->zipcode} {$service_point->city}</div>
     {if $service_point->distance}
-    <div class="distance">{$service_point->distance / 1000} km</div>
+        <div class="distance">{$service_point->distance / 1000} km</div>
     {/if}
 </div>

@@ -3,25 +3,18 @@
  *  @copyright 2024-present Shipmondo
  *  @license   https://opensource.org/license/bsd-3-clause BSD-3-Clause
  */
-jQuery(document).ready(function ($) {
 
+jQuery(document).ready(function ($) {
     const frontend_type = window.frontend_type;
     const service_points_endpoint = window.service_points_endpoint;
     //const selection_button = '#shipmondo_find_shop_btn'; //CLEAN!
     const selection_button = '.shipmondo_service_point_selection .selected_service_point';
 
-    console.error('window.frontend_type', frontend_type)
 
     $(document).on('click', ((window.Shipmondo && window.Shipmondo.deliveryOptionInputContainerSelector) ? window.Shipmondo.deliveryOptionInputContainerSelector : '.delivery-option') + ' input', function (event) {
-
-        console.error('click', this);
-
-        console.error('$(this).val()', $(this).val());
-
         const carrier_id = $(this).val().replace(/\D/g, '');
-        console.error('carrier_id', carrier_id);
 
-        jQuery.ajax({
+        $.ajax({
             url: service_points_endpoint,
             type: 'GET',
             data: {
@@ -29,15 +22,10 @@ jQuery(document).ready(function ($) {
                 carrier_id: carrier_id
             },
             success: function (response) {
-                console.error('response', response);
-
                 response = JSON.parse(response);
 
-                console.error('response after json', response);
-
-
-                if (response['status'] == 'success') {
-                    var html = response['service_point_html'];
+                if (response['status'] === 'success') {
+                    const html = response['service_point_html'];
                     $('#shipmondo-service-points-container').html(html);
                 }
             }
@@ -79,39 +67,22 @@ jQuery(document).ready(function ($) {
             }
         }
 
+        function setShopHTML(servicePointElement, html) {
+            const wrapper = getWrapper(servicePointElement)
+
+            $(selection_button).html(html);
+
+            wrapper.find('.service_point.selected').removeClass('selected')
+            servicePointElement.addClass('selected')
+        }
+
         // Service point selected
         function ServicePointSelected(shopElement) {
-            console.log('shopElement', shopElement);
-            console.log('.data()', shopElement.data());
-            /* var index = getShippingIndex(shopElement)
-             var agent = getShippingAgent(shopElement)
-             const selectedServicePoint = getSelectedServicePoint(shopElement)
-
-             const servicePoint = shopElement.data('service_point')
-
-             if(selectedServicePoint.id === servicePoint.id) {
-                 return
-             }
-
-             var shop = {
-                 'id': servicePoint.id,
-                 'name': servicePoint.name,
-                 'address': servicePoint.address,
-                 'zipcode': servicePoint.zipcode,
-                 'city': servicePoint.city,
-             }
-
-             setSelectedServicePoint(shopElement, servicePoint)
-
-             setSelectionSession(shop, agent, index)
-
-             setShopHTML(index, shop, shopElement)
-
-
-             */
-
             const data = shopElement.data();
-            data.action =  "update";
+            data.action = "update";
+
+            console.log('ServicePointSelected', data);
+
 
             $.ajax({
                 url: service_points_endpoint,
@@ -122,13 +93,18 @@ jQuery(document).ready(function ($) {
                     console.error('error', response);
                     //TODO SHOW ERROR? look at WC
                     // Error
+                    $(".shipmondo_service_point_selection").html('<div class="selected_service_point service_point dropdown no_service_point">Ingen tilgængelige udleveringssteder</div>');
                 },
                 success: function (response) {
-                    if (response.status == "success") {
-                        // Success
-                    } else if (response.status == "error") {
-                        //TODO SHOW ERROR? look at WC
+                    if (response.status === "success") {
+                        //$(selection_button).html(response.selected_service_point_html);
 
+                        setShopHTML(shopElement, response.selected_service_point_html)
+
+
+                    } else if (response.status === "error") {
+                        //TODO SHOW ERROR? look at WC
+                        $(".shipmondo_service_point_selection").html('<div class="selected_service_point service_point dropdown no_service_point">Ingen tilgængelige udleveringssteder</div>');
                         // $(".error_msg").html(noPointSelectedErrorText);
                     }
                 }
@@ -155,7 +131,6 @@ jQuery(document).ready(function ($) {
         // Set selected shop
         $(document).on('click', '.shipmondo-original .selector_type-dropdown .service_points_list .service_point', function () {
             ServicePointSelected($(this));
-
             closeDropdown(getDropdown($(this)));
         });
     }

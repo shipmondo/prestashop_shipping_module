@@ -17,9 +17,10 @@
                         <div class="service_point{if $sp->id == $service_point->id} selected{/if}"
                              data-service_point_id="{$sp->id}"
                              data-name="{$sp->name}"
-                             data-address="{$sp->address}"
+                             data-address1="{$sp->address}"
                              data-city="{$sp->city}"
                              data-zip_code="{$sp->zipcode}"
+                             data-distance="{$sp->distance}"
                              data-carrier_code="{$sp->carrier_code}">
                             <div class="header"><span class="name">{$sp->name}</span></div>
                             <div class="location">
