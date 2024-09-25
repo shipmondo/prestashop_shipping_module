@@ -160,6 +160,11 @@ class Shipmondo extends CarrierModule
         }
 
         if (in_array($current_page, $order_pages)) {
+            $servicePointCarriers = $this->get('shipmondo.repository.shipmondo_carrier')->findBy(['productCode' => 'service_point']);
+            $servicePointCarrierIds = array_map(function ($servicePointCarrier) {
+                return $servicePointCarrier->getCarrierId();
+            }, $servicePointCarriers);
+
             Media::addJsDef([
                 'shipmondo_shipping_module' => [
                     'choose_pickup_point_text' => $this->trans('Choose pickup point'),
@@ -168,6 +173,7 @@ class Shipmondo extends CarrierModule
                     'module_base_url' => Tools::getProtocol(Tools::usingSecureMode()) . $_SERVER['HTTP_HOST'] . $this->getPathUri(),
                     'service_points_endpoint' => Context::getContext()->link->getModuleLink('shipmondo', 'servicepoints'),
                     'extentions_endpoint' => Context::getContext()->link->getModuleLink('shipmondo', 'extensions'),
+                    'service_point_carrier_ids' => $servicePointCarrierIds,
                 ]
             ]);
 
