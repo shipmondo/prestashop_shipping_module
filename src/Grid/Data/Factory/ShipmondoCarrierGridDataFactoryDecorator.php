@@ -15,7 +15,7 @@ use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 use Shipmondo\Entity\ShipmondoCarrier;
 use Carrier;
 use Shipmondo\Exception\ShipmondoApiException;
-use Shipmondo\ShipmondoConfiguration;
+use Shipmondo\ShipmondoCarrierHandler;
 
 final class ShipmondoCarrierGridDataFactoryDecorator implements GridDataFactoryInterface
 {
@@ -25,16 +25,16 @@ final class ShipmondoCarrierGridDataFactoryDecorator implements GridDataFactoryI
     private $shipmondoCarrierGridDataFactory;
 
     /**
-     * @var ShipmondoConfiguration
+     * @var ShipmondoCarrierHandler
      */
-    private $shipmondoConfiguration;
+    private $shipmondoCarrierHandler;
 
     public function __construct(
         GridDataFactoryInterface $shipmondoCarrierGridDataFactory,
-        ShipmondoConfiguration $shipmondoConfiguration
+        ShipmondoCarrierHandler $shipmondoCarrierHandler
     ) {
         $this->shipmondoCarrierGridDataFactory = $shipmondoCarrierGridDataFactory;
-        $this->shipmondoConfiguration = $shipmondoConfiguration;
+        $this->shipmondoCarrierHandler = $shipmondoCarrierHandler;
     }
 
     /**
@@ -62,7 +62,7 @@ final class ShipmondoCarrierGridDataFactoryDecorator implements GridDataFactoryI
     {
         $modifiedCarriers = [];
         try {
-            $availableCarriers = $this->shipmondoConfiguration->getAvailableCarriers();
+            $availableCarriers = $this->shipmondoCarrierHandler->getCarriers();
 
             foreach ($carriers as $carrier) {
                 foreach ($availableCarriers as $availableCarrier) {

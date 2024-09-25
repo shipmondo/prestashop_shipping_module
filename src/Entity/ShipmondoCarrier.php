@@ -8,8 +8,6 @@
 namespace Shipmondo\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Configuration;
-
 
 /**
  * @ORM\Table()

@@ -1,6 +1,6 @@
 <?php
 /**
- *  @author    Shipmondo <support@shipmondo.com>
+ *  @author    Shipmondo
  *  @copyright 2024-present Shipmondo
  *  @license   https://opensource.org/license/bsd-3-clause BSD-3-Clause
  */
@@ -17,6 +17,8 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormError;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Shipmondo\ShipmondoCarrierHandler;
 use Shipmondo\Entity\ShipmondoCarrier;
 
@@ -57,7 +59,7 @@ class ShipmondoCarrierFormType extends TranslatorAwareType
 
         $builder
             ->add('carrier_id', ChoiceType::class, [
-                'label' => $this->trans("Carrier", 'Module.Shipmondo.Admin'),
+                'label' => $this->trans("Carrier", 'Admin.Global'),
                 'required' => true,
                 'choices' => $psCarriers
             ])
@@ -109,5 +111,19 @@ class ShipmondoCarrierFormType extends TranslatorAwareType
         $builder->get('carrier_code')->addEventListener(FormEvents::POST_SUBMIT, $handleFormEvent);
 
         $builder->setAction($options['action']);
+    }
+
+    public function configureOptions(OptionsResolver $resolver): void
+    {
+        $resolver->setDefaults([
+            'data_class' => ShipmondoCarrier::class,
+            'constraints' => [
+                new UniqueEntity([
+                    'fields' => 'carrierId',
+                    'message' => $this->trans('The selected carrier is already associated with a Shipmondo carrier.', 'Module.Shipmondo.Admin'),
+                    'errorPath' => 'carrierId',
+                ])
+            ],
+        ]);
     }
 }

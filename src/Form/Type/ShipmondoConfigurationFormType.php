@@ -17,14 +17,14 @@ class ShipmondoConfigurationFormType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $frontendKeyHelp = $this->trans('Insert your shipping module API key here. You can generate a key from', 'Modules.Shipmondo.Admin');
-        $frontendKeyHelp .= ' <a target="_blank" href="https://app.shipmondo.com/main/app/#/setting/freight-module">Shipmondo</a>';
+        $frontendKeyHelp .= ' <a target="_blank" href="https://app.shipmondo.com/main/app/#/setting/freight-module">Shipmondo</a>.';
 
         $googleApiKeyHelp = $this->trans('Insert your Google API key here. You can generate a key from', 'Modules.Shipmondo.Admin');
-        $googleApiKeyHelp .= ' <a target="_blank" href="https://developers.google.com/maps/documentation/javascript/get-api-key">Google</a>';
+        $googleApiKeyHelp .= ' <a target="_blank" href="https://developers.google.com/maps/documentation/javascript/get-api-key">Google</a>.';
 
         $builder
             ->add('frontend_key', TextType::class, [
-                'label' => $this->trans('Shipping module API key', 'Modules.Shipmondo.Admin'),
+                'label' => $this->trans('Shipping module key', 'Modules.Shipmondo.Admin'),
                 'help' => $frontendKeyHelp,
                 'help_html' => true,
                 'required' => true,
@@ -36,7 +36,7 @@ class ShipmondoConfigurationFormType extends TranslatorAwareType
                 'required' => false,
             ])
             ->add('frontend_type', ChoiceType::class, [
-                'label' => $this->trans('Display on checkout', 'Modules.Shipmondo.Admin'),
+                'label' => $this->trans('Show service points in', 'Modules.Shipmondo.Admin'),
                 'required' => true,
                 'choices' => [
                     $this->trans('Modal', 'Modules.Shipmondo.Admin') => 'popup',

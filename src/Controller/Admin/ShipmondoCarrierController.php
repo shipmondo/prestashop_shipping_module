@@ -30,7 +30,7 @@ class ShipmondoCarrierController extends FrameworkBundleAdminController
         $carrierGrid = $carrierGridFactory->getGrid($filters);
 
         return $this->render(
-            '@Modules/shipmondo/views/templates/admin/index.html.twig',
+            '@Modules/shipmondo/views/templates/admin/shipmondo_carrier_index.html.twig',
             [
                 'enableSidebar' => true,
                 'layoutTitle' => $this->trans('Shipmondo Carriers', 'Modules.Shipmondo.Admin'),

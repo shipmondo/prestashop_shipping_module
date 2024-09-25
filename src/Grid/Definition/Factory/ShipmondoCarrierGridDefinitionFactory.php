@@ -54,7 +54,7 @@ final class ShipmondoCarrierGridDefinitionFactory extends AbstractGridDefinition
             )
             ->add(
                 (new LinkColumn('carrier_link'))
-                    ->setName($this->trans('Carrier', [], 'Modules.Shipmondo.Admin'))
+                    ->setName($this->trans('Carrier', [], 'Admin.Global'))
                     ->setOptions([
                         'field' => 'ps_carrier_name', // Join on carrier table
                         'route' => 'admin_carriers_edit',
