@@ -160,13 +160,21 @@ class Shipmondo extends CarrierModule
         }
 
         if (in_array($current_page, $order_pages)) {
+            $servicePointCarriers = $this->get('shipmondo.repository.shipmondo_carrier')->findBy(['productCode' => 'service_point']);
+            $servicePointCarrierIds = array_map(function ($servicePointCarrier) {
+                return $servicePointCarrier->getCarrierId();
+            }, $servicePointCarriers);
+
             Media::addJsDef([
-                'choose_pickup_point_text' => $this->trans('Choose pickup point'),
-                'frontend_type' => Configuration::get('SHIPMONDO_FRONTEND_TYPE'),
-                //'modal_html' => $this->fetch('module:shipmondo/views/templates/front/popup/modal.tpl'), //TODO Jan?
-                'module_base_url' => Tools::getProtocol(Tools::usingSecureMode()) . $_SERVER['HTTP_HOST'] . $this->getPathUri(),
-                'service_points_endpoint' => Context::getContext()->link->getModuleLink('shipmondo', 'servicepoints'),
-                'extentions_endpoint' => Context::getContext()->link->getModuleLink('shipmondo', 'extensions'),
+                'shipmondo_shipping_module' => [
+                    'choose_pickup_point_text' => $this->trans('Choose pickup point'),
+                    'frontend_type' => Configuration::get('SHIPMONDO_FRONTEND_TYPE'),
+                    //'modal_html' => $this->fetch('module:shipmondo/views/templates/front/popup/modal.tpl'), //TODO Jan?
+                    'module_base_url' => Tools::getProtocol(Tools::usingSecureMode()) . $_SERVER['HTTP_HOST'] . $this->getPathUri(),
+                    'service_points_endpoint' => Context::getContext()->link->getModuleLink('shipmondo', 'servicepoints'),
+                    'extentions_endpoint' => Context::getContext()->link->getModuleLink('shipmondo', 'extensions'),
+                    'service_point_carrier_ids' => $servicePointCarrierIds,
+                ]
             ]);
 
             if (Configuration::get('SHIPMONDO_FRONTEND_TYPE') === 'popup') {
@@ -253,10 +261,10 @@ class Shipmondo extends CarrierModule
     {
         $oldCarrierId = (int) $params['id_carrier'];
         $newCarrierId = (int) $params['carrier']->id;
-        
+
         $smdCarriers = $this->get('shipmondo.repository.shipmondo_carrier')->findBy(['carrierId' => $oldCarrierId]);
-        if($smdCarriers) {
-            foreach($smdCarriers as $smdCarrier) {
+        if ($smdCarriers) {
+            foreach ($smdCarriers as $smdCarrier) {
                 $smdCarrier->setCarrierId($newCarrierId);
             }
 

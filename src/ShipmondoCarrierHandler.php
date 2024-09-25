@@ -7,14 +7,20 @@
 
 namespace Shipmondo;
 
-use Shipmondo\ShipmondoConfiguration;
+use Shipmondo\ApiClient;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 
 class ShipmondoCarrierHandler
 {
     /**
-     * @var ShipmondoConfiguration
+     * @var ConfigurationInterface
      */
-    private $shipmondoConfiguration;
+    private $configuration;
+
+    /**
+     * @var ApiClient
+     */
+    private $apiClient;
 
     /**
      * @var array
@@ -22,11 +28,12 @@ class ShipmondoCarrierHandler
     private $carriers;
 
     /**
-     * @param ShipmondoConfiguration $shipmondoConfiguration
+     * @param ApiClient $apiClient
      */
-    public function __construct(ShipmondoConfiguration $shipmondoConfiguration)
+    public function __construct(ConfigurationInterface $configuration, ApiClient $apiClient)
     {
-        $this->shipmondoConfiguration = $shipmondoConfiguration;
+        $this->configuration = $configuration;
+        $this->apiClient = $apiClient;
     }
 
 
@@ -38,7 +45,7 @@ class ShipmondoCarrierHandler
     public function getCarriers(): array
     {
         if (!$this->carriers) {
-            $this->carriers = $this->shipmondoConfiguration->getAvailableCarriers();
+            $this->carriers = $this->fetchCarriers();
         }
 
         return $this->carriers;
@@ -103,5 +110,39 @@ class ShipmondoCarrierHandler
     public function getProductName(string $productCode): string
     {
         return ucwords(str_replace('_', ' ', $productCode));
+    }
+
+    /**
+     * Fetch carriers from Shipmondo API if cache is not valid
+     * @return array
+     */
+    private function fetchCarriers(): array
+    {
+        $availableCarriers = $this->configuration->get('SHIPMONDO_AVAILABLE_CARRIERS');
+        $expirationTime = $this->configuration->get('SHIPMONDO_AVAILABLE_CARRIERS_EXPIRATION');
+        if (!$availableCarriers || !$expirationTime || $expirationTime < time()) {
+            $availableCarriers = $this->apiClient->getCarriers();
+
+            // Change boolean values to array of products to prepare for the future
+            foreach ($availableCarriers as $availableCarrier) {
+                $products = [];
+                foreach ($availableCarrier->products as $productCode => $hasProduct) {
+                    if ($hasProduct) {
+                        $product = new \stdClass();
+                        $product->name = ucwords(str_replace('_', ' ', $productCode));
+                        $product->code = $productCode;
+                        $products[] = $product;
+                    }
+                }
+                $availableCarrier->products = $products;
+            }
+
+            $this->configuration->set('SHIPMONDO_AVAILABLE_CARRIERS', json_encode($availableCarriers));
+            $this->configuration->set('SHIPMONDO_AVAILABLE_CARRIERS_EXPIRATION', time() + 21600); // TODO Should it be 6 hours?
+
+            return $availableCarriers;
+        }
+
+        return json_decode($availableCarriers);
     }
 }

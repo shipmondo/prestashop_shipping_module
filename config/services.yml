@@ -51,7 +51,7 @@ services:
         class: 'Shipmondo\Grid\Data\Factory\ShipmondoCarrierGridDataFactoryDecorator'
         arguments:
             - '@shipmondo.grid.data.factory.shipmondo_carriers'
-            - '@shipmondo.configuration'
+            - '@shipmondo.carrier_handler'
 
     shipmondo.grid.factory.shipmondo_carriers:
         class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
@@ -75,7 +75,8 @@ services:
         class: 'Shipmondo\ShipmondoCarrierHandler'
         public: true
         arguments:
-            - '@shipmondo.configuration'
+            - '@prestashop.adapter.legacy.configuration'
+            - '@shipmondo.api_client'
 
 imports:
     - { resource: common_services.yml }

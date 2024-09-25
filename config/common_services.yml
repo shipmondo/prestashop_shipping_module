@@ -36,8 +36,3 @@ services:
             - '@shipmondo.configuration.frontend_key'
             - '@shipmondo.guzzle.client'
             - 'https://service-points.shipmondo.com/'
-
-    shipmondo.configuration:
-        class: 'Shipmondo\ShipmondoConfiguration'
-        arguments:
-            - '@shipmondo.api_client'
