@@ -16,7 +16,7 @@ class ShipmondoConfigurationFormType extends TranslatorAwareType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $frontendKeyHelp = $this->trans('Insert your shipping module API key here. You can generate a key from', 'Modules.Shipmondo.Admin');
+        $frontendKeyHelp = $this->trans('Insert your shipping module key here. You can generate a key from', 'Modules.Shipmondo.Admin');
         $frontendKeyHelp .= ' <a target="_blank" href="https://app.shipmondo.com/main/app/#/setting/freight-module">Shipmondo</a>.';
 
         $googleApiKeyHelp = $this->trans('Insert your Google API key here. You can generate a key from', 'Modules.Shipmondo.Admin');
