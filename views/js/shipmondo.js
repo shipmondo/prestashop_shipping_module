@@ -5,8 +5,9 @@
  */
 
 jQuery(document).ready(function ($) {
-    const frontend_type = window.frontend_type;
-    const service_points_endpoint = window.service_points_endpoint;
+    const frontendType = window.shipmondo_shipping_module.frontend_type;
+    const servicePointsEndpoint = window.shipmondo_shipping_module.service_points_endpoint;
+    const servicePointCarrierIds = window.shipmondo_shipping_module.service_point_carrier_ids;
     const selection_button = '.shipmondo_service_point_selection .selected_service_point';
 
 
@@ -38,7 +39,7 @@ jQuery(document).ready(function ($) {
         data.action = "update";
 
         $.ajax({
-            url: service_points_endpoint, type: 'POST', data: data, dataType: 'json', error: function (response) {
+            url: servicePointsEndpoint, type: 'POST', data: data, dataType: 'json', error: function (response) {
                 console.error('error', response);
                 //TODO SHOW ERROR? look at WC
                 // Error
@@ -55,26 +56,54 @@ jQuery(document).ready(function ($) {
     }
 
     $(document).on('click', ((window.Shipmondo && window.Shipmondo.deliveryOptionInputContainerSelector) ? window.Shipmondo.deliveryOptionInputContainerSelector : '.delivery-option') + ' input', function (event) {
-        const carrier_id = $(this).val().replace(/\D/g, '');
+        const carrierID = parseInt($(this).val().replace(/\D/g, ''));
+        const containerEl = $('#shipmondo-service-points-container');
+        console.log('delivery-option clicked maybe add loader?');
+        console.log('carrierID', carrierID);
 
-        console.log('delivery-option clicked maybe add loader?')
 
-        $.ajax({
-            url: service_points_endpoint, type: 'GET', data: {
-                action: 'get', carrier_id: carrier_id
-            }, success: function (response) {
-                response = JSON.parse(response);
-
-                if (response['status'] === 'success') {
-                    const html = response['service_point_html'];
-                    $('#shipmondo-service-points-container').html(html);
-                }
-            }
+        $.each(servicePointCarrierIds, function (index, id) {
+            console.log('id', id)
         });
+
+//TODO Du er kommet her til . Det er ud til at virke OK men du skal bruge klasser i stedet for at tilføje meget ens html. h3 og powered by fx. burde være der altid
+        console.log(servicePointCarrierIds.includes(carrierID));
+        if (servicePointCarrierIds.includes(carrierID)) {
+            containerEl.html(
+                '<h3 class="service_point_title">Pickup point</h3>' +
+                '<div class="shipmondo_service_point_selection">' +
+                '   <div class="selected_service_point loading" style="height: 82px;display: flex;align-items: center;justify-content: center;"><span>Arbejder...</span></div>' +
+                '</div>' +
+                '<div class="powered_by_shipmondo">' +
+                '   <p>Powered by Shipmondo</p>' +
+                '</div>'
+            );
+            //start loading
+              $.ajax({
+                    url: servicePointsEndpoint, type: 'GET', data: {
+                        action: 'get', carrier_id: carrierID
+                    }, success: function (response) {
+                        response = JSON.parse(response);
+
+                        if (response['status'] === 'success') {
+                            const html = response['service_point_html'];
+                            containerEl.html(html);
+                        }
+                    }
+                });
+
+            //$('#shipmondo-service-points-container').html(html);
+
+            //
+
+        } else {
+            containerEl.empty();
+        }
     });
 
+
     // DROPDOWN
-    if (frontend_type === 'dropdown') {
+    if (frontendType === 'dropdown') {
         function getDropdown(element) {
             return getWrapper(element).find('.shipmondo-dropdown_wrapper');
         }
@@ -190,12 +219,9 @@ jQuery(document).ready(function ($) {
         function shipmondoLoadMarker(servicePointEl) {
             const marker = new google.maps.Marker({
                 position: {
-                    lat: parseFloat(servicePointEl.data('latitude')),
-                    lng: parseFloat(servicePointEl.data('longitude'))
-                },
-                map: map,
-                icon: {
-                    url: module_base_url + '/views/img/' + (servicePointEl.hasClass('selected') ? 'picker_green' : 'picker_default') + '.png',
+                    lat: parseFloat(servicePointEl.data('latitude')), lng: parseFloat(servicePointEl.data('longitude'))
+                }, map: map, icon: {
+                    url: window.shipmondo_shipping_module.module_base_url + '/views/img/' + (servicePointEl.hasClass('selected') ? 'picker_green' : 'picker_default') + '.png',
                     size: new google.maps.Size(48, 48),
                     scaledSize: new google.maps.Size(48, 48),
                     anchor: new google.maps.Point(24, 24)
