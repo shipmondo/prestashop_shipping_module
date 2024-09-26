@@ -79,18 +79,18 @@ jQuery(document).ready(function ($) {
                 '</div>'
             );
             //start loading
-              $.ajax({
-                    url: servicePointsEndpoint, type: 'GET', data: {
-                        action: 'get', carrier_id: carrierID
-                    }, success: function (response) {
-                        response = JSON.parse(response);
+            $.ajax({
+                url: servicePointsEndpoint, type: 'GET', data: {
+                    action: 'get', carrier_id: carrierID
+                }, success: function (response) {
+                    response = JSON.parse(response);
 
-                        if (response['status'] === 'success') {
-                            const html = response['service_point_html'];
-                            containerEl.html(html);
-                        }
+                    if (response['status'] === 'success') {
+                        const html = response['service_point_html'];
+                        containerEl.html(html);
                     }
-                });
+                }
+            });
 
             //$('#shipmondo-service-points-container').html(html);
 
@@ -276,4 +276,21 @@ jQuery(document).ready(function ($) {
             googleMapsIsLoaded = true;
         }
     }
+
+    console.log("$('.delivery-option input:checked')", $('.delivery-option input:checked'));
+
+
+    //INIT CLICK TODO could it work with other chekcouts?
+    const current_radio = $('.delivery-option input:checked');
+    //console.log('current_radio', current_radio);
+    //console.log('current_radio', current_radio.length);
+    if (current_radio.val()) {
+        //console.log('trigger');
+        //TODO test if this works in all situations
+        //init click when there are preselected shipping methods
+        current_radio.trigger('click');
+    }
+
+
+    //$('.delivery-option input:checked').trigger();
 });
