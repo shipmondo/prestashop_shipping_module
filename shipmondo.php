@@ -238,6 +238,8 @@ class Shipmondo extends CarrierModule
 
     public function hookDisplayAfterCarrier($params)
     {
+        $this->smarty->assign('frontendType', Configuration::get('SHIPMONDO_FRONTEND_TYPE'));
+
         return $this->fetch('module:shipmondo/views/templates/front/service_points_container.tpl');
     }
 

@@ -153,9 +153,10 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
                 'carrier' => new Carrier($carrierId),
                 'service_point' => $selectedServicePoint,
                 'service_points' => $externalServicePoints,
+                'frontendType' => Configuration::get('SHIPMONDO_FRONTEND_TYPE')
             ]);
             
-            $html = $this->module->fetch('module:shipmondo/views/templates/front/' . Configuration::get('SHIPMONDO_FRONTEND_TYPE') . '/selection_button.tpl');
+            $html = $this->module->fetch('module:shipmondo/views/templates/front/service_points_selector.tpl');
         }
 
         $this->ajaxDie(json_encode(['status' => 'success', 'service_point_html' => $html]));
