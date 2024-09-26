@@ -9,7 +9,7 @@
     <span class="rate_name">{$carrier->name}</span>
 </div>
 <div class="location">
-    <div class="address_info">{$service_point->address}, {$service_point->zipcode} {$service_point->city}</div>
+<div class="address_info">{$service_point->address},{if $service_point->address2} {$service_point->address2},{/if} {$service_point->zipcode} {$service_point->city}</div>
     {if $service_point->distance}
         <div class="distance">{($service_point->distance / 1000)|string_format:"%.2f"} km</div>
     {/if}

@@ -83,10 +83,17 @@ const LEGACY_SERVICE_POINT_MAP = [
 
 function upgrade_module_2_0_0($module)
 {
-    return true; # TODO implement upgrade
+    return true; // TODO implement upgrade
 
     $isSuccessful = true;
     $entityManager = $module->get('doctrine.orm.entity_manager');
+
+    $frontendType = Configuration::get('SHIPMONDO_FRONTEND_TYPE');
+    if($frontendType === 'radio') {
+        // Radio buttons are removed as dropdown not serves the same purpose
+        Configuration::updateValue('SHIPMONDO_FRONTEND_TYPE', 'dropdown');
+        $frontendType = 'dropdown';
+    }
 
     $migratedCarrierIds = [];
     foreach(self::LEGACY_CARRIER_MAP as $reference => $carrierDetails) {
