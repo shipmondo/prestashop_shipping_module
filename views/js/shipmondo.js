@@ -58,6 +58,7 @@ jQuery(document).ready(function ($) {
     $(document).on('click', ((window.Shipmondo && window.Shipmondo.deliveryOptionInputContainerSelector) ? window.Shipmondo.deliveryOptionInputContainerSelector : '.delivery-option') + ' input', function (event) {
         const carrierID = parseInt($(this).val().replace(/\D/g, ''));
         const containerEl = $('#shipmondo-service-points-container');
+        const contentEl = containerEl.find('.shipmondo-service-points-content');
         console.log('delivery-option clicked maybe add loader?');
         console.log('carrierID', carrierID);
 
@@ -69,16 +70,10 @@ jQuery(document).ready(function ($) {
 //TODO Du er kommet her til . Det er ud til at virke OK men du skal bruge klasser i stedet for at tilføje meget ens html. h3 og powered by fx. burde være der altid
         console.log(servicePointCarrierIds.includes(carrierID));
         if (servicePointCarrierIds.includes(carrierID)) {
-            containerEl.html(
-                '<h3 class="service_point_title">Pickup point</h3>' +
-                '<div class="shipmondo_service_point_selection">' +
-                '   <div class="selected_service_point loading" style="height: 82px;display: flex;align-items: center;justify-content: center;"><span>Arbejder...</span></div>' +
-                '</div>' +
-                '<div class="powered_by_shipmondo">' +
-                '   <p>Powered by Shipmondo</p>' +
-                '</div>'
-            );
-            //start loading
+            //containerEl.html('<div class="selected_service_point loading" style="height: 82px;display: flex;align-items: center;justify-content: center;">Arbejder...</div>');
+            contentEl.html('<div class="selected_service_point loading" style="text-align: center;">Arbejder...</div>');
+            containerEl.show();
+
             $.ajax({
                 url: servicePointsEndpoint, type: 'GET', data: {
                     action: 'get', carrier_id: carrierID
@@ -87,17 +82,14 @@ jQuery(document).ready(function ($) {
 
                     if (response['status'] === 'success') {
                         const html = response['service_point_html'];
-                        containerEl.html(html);
+                        contentEl.html(html);
+
+
                     }
                 }
             });
-
-            //$('#shipmondo-service-points-container').html(html);
-
-            //
-
         } else {
-            containerEl.empty();
+            containerEl.hide();
         }
     });
 
