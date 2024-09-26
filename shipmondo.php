@@ -223,10 +223,10 @@ class Shipmondo extends CarrierModule
                     // Major changes in 7
                     if ($module == 'supercheckout' && Module::getInstanceByName('supercheckout')->version < 7) {
                         $context->addCSS($this->_path . 'views/css/module/supercheckout_pre7.css', 'all');
-                        //$context->addJS($this->_path . 'views/js/module/supercheckout_pre7.js', 'all');
+                        $context->addJS($this->_path . 'views/js/module/supercheckout_pre7.js', 'all');
                     } else {
                         $context->addCSS($this->_path . 'views/css/module/' . $module . '.css', 'all');
-                        //$context->addJS($this->_path . 'views/js/module/' . $module . '.js', 'all');
+                        $context->addJS($this->_path . 'views/js/module/' . $module . '.js', 'all');
                     }
                 }
             }
