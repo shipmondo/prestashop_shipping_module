@@ -4,7 +4,7 @@
 *  @license   https://opensource.org/license/bsd-3-clause BSD-3-Clause
 *}
 
-<h3 class="service_point_title">{l s='Pickup point' mod='shipmondo'}</h3>
+<h3 class="service_point_title">{l s='Pickup point' d='Modules.Shipmondo.Front'}</h3>
 <div class="shipmondo-original">
     <div class="shipmondo_service_point_selection selector_type-dropdown">
         <div class="selected_service_point service_point selector_type-dropdown">
@@ -24,7 +24,7 @@
                              data-carrier_code="{$sp->carrier_code}">
                             <div class="header"><span class="name">{$sp->name}</span></div>
                             <div class="location">
-                                <div class="address_info">{$sp->address}, {$sp->zipcode} {$sp->city}</div>
+                                <div class="address_info">{$sp->address},{if $sp->address2} {$sp->address2},{/if} {$sp->zipcode} {$sp->city}</div>
                                 {if $sp->distance}
                                     <div class="distance">{($sp->distance / 1000)|string_format:"%.2f"} km</div>
                                 {/if}

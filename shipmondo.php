@@ -126,6 +126,12 @@ class Shipmondo extends CarrierModule
         return $this->getOrderShippingCost($params, 0);
     }
 
+    // Declares that module uses the new translation system
+    public function isUsingNewTranslationSystem()
+    {
+        return true;
+    }
+
     public function hookDisplayAdminOrderSide($params)
     {
         $servicePoint = $this->get('shipmondo.repository.shipmondo_service_point')
@@ -167,7 +173,7 @@ class Shipmondo extends CarrierModule
 
             Media::addJsDef([
                 'shipmondo_shipping_module' => [
-                    //'choose_pickup_point_text' => $this->trans('Choose pickup point'),
+                    //'choose_pickup_point_text' => $this->trans('Choose pickup point', [], 'Modules.Shipmondo.Front'),
                     'frontend_type' => Configuration::get('SHIPMONDO_FRONTEND_TYPE'),
                     //'modal_html' => $this->fetch('module:shipmondo/views/templates/front/popup/modal.tpl'), //TODO Jan?
                     'module_base_url' => Tools::getProtocol(Tools::usingSecureMode()) . $_SERVER['HTTP_HOST'] . $this->getPathUri(),
@@ -217,10 +223,10 @@ class Shipmondo extends CarrierModule
                     // Major changes in 7
                     if ($module == 'supercheckout' && Module::getInstanceByName('supercheckout')->version < 7) {
                         $context->addCSS($this->_path . 'views/css/module/supercheckout_pre7.css', 'all');
-                        //$context->addJS($this->_path . 'views/js/module/supercheckout_pre7.js', 'all');
+                        $context->addJS($this->_path . 'views/js/module/supercheckout_pre7.js', 'all');
                     } else {
                         $context->addCSS($this->_path . 'views/css/module/' . $module . '.css', 'all');
-                        //$context->addJS($this->_path . 'views/js/module/' . $module . '.js', 'all');
+                        $context->addJS($this->_path . 'views/js/module/' . $module . '.js', 'all');
                     }
                 }
             }
