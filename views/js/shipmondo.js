@@ -5,12 +5,17 @@
  */
 
 jQuery(document).ready(function ($) {
-    const frontendType = window.shipmondo_shipping_module.frontend_type;
-    const servicePointsEndpoint = window.shipmondo_shipping_module.service_points_endpoint;
-    const servicePointCarrierIds = window.shipmondo_shipping_module.service_point_carrier_ids;
+    const shipmondoShippingModule = window.shipmondo_shipping_module;
+
+    const frontendType = shipmondoShippingModule.frontend_type;
+    const servicePointsEndpoint = shipmondoShippingModule.service_points_endpoint;
+    const servicePointCarrierIds = shipmondoShippingModule.service_point_carrier_ids;
     const selection_button = '.shipmondo_service_point_selection .selected_service_point';
 
+    const deliveryOptionSelector = shipmondoShippingModule.delivery_option_selector;
 
+
+    console.log('deliveryOptionSelector', deliveryOptionSelector);
     /* TODO
     - Håndter error
     - Håndter loading (Venter på janP)
@@ -59,7 +64,8 @@ jQuery(document).ready(function ($) {
     };
 
     //$(document).on('click', shippingOptionSelector, function (event) {
-    $(document).on('click', ((window.Shipmondo && window.Shipmondo.deliveryOptionInputContainerSelector) ? window.Shipmondo.deliveryOptionInputContainerSelector : '.delivery-option') + ' input', function (event) {
+    //$(document).on('click', ((window.Shipmondo && window.Shipmondo.deliveryOptionInputContainerSelector) ? window.Shipmondo.deliveryOptionInputContainerSelector : '.delivery-option') + ' input', function (event) {
+    $(document).on('click', deliveryOptionSelector, function (event) {
         const carrierID = parseInt($(this).val().replace(/\D/g, ''));
         const containerEl = $('#shipmondo-service-points-container');
         const contentEl = containerEl.find('.shipmondo-service-points-content');

@@ -174,6 +174,7 @@ class Shipmondo extends CarrierModule
             Media::addJsDef([
                 'shipmondo_shipping_module' => [
                     //'choose_pickup_point_text' => $this->trans('Choose pickup point', [], 'Modules.Shipmondo.Front'),
+                    'delivery_option_selector' => '.delivery-option input', //testing
                     'frontend_type' => Configuration::get('SHIPMONDO_FRONTEND_TYPE'),
                     //'modal_html' => $this->fetch('module:shipmondo/views/templates/front/popup/modal.tpl'), //TODO Jan?
                     'module_base_url' => Tools::getProtocol(Tools::usingSecureMode()) . $_SERVER['HTTP_HOST'] . $this->getPathUri(),

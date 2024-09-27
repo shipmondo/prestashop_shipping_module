@@ -6,13 +6,13 @@
  */
 
 jQuery(document).ready(function ($) {
-    window.Shipmondo = {
-        deliveryOptionInputContainerSelector: '#shipping-method',
-        deliveryOptionRowSelector: '.highlight'
-    };
+    const shippingMethodContainer = '#shipping-method';
+    const deliveryOptionSelector = 'input.supercheckout_shipping_option';
+    const supercheckoutElement = $('#supercheckout-fieldset');
 
-    const supercheckout_selector = '#supercheckout-fieldset';
-    const supercheckout_element = $(supercheckout_selector);
+    //Override default
+    window.shipmondo_shipping_module.delivery_option_selector = deliveryOptionSelector;
+
 
     const triggerShippingOption = function (radio) {
         if (radio && radio.val()) {
@@ -21,8 +21,8 @@ jQuery(document).ready(function ($) {
         }
     };
 
-    if (supercheckout_element) {
-        const shipping_method_element = supercheckout_element.find(window.Shipmondo.deliveryOptionInputContainerSelector);
+    if (supercheckoutElement) {
+        const shipping_method_element = supercheckoutElement.find(shippingMethodContainer);
         //Element ready from start (Version 9)
         if (shipping_method_element) {
             const observer = new MutationObserver(mutationList =>
@@ -30,7 +30,7 @@ jQuery(document).ready(function ($) {
                     m.addedNodes.forEach(function (textNode) {
                         //Version 9 inserts ul
                         if ($(textNode).is('ul')) {
-                            triggerShippingOption($(textNode).find('.supercheckout_shipping_option:checked'));
+                            triggerShippingOption($(textNode).find(deliveryOptionSelector + ':checked'));
                         }
                     });
 
@@ -42,11 +42,11 @@ jQuery(document).ready(function ($) {
                 mutationList.filter(m => m.type === 'childList').forEach(m => {
                     m.addedNodes.forEach(function (textNode) {
                         if ($(textNode).is(window.Shipmondo.deliveryOptionInputContainerSelector)) {
-                            triggerShippingOption($('.supercheckout_shipping_option:checked'));
+                            triggerShippingOption($(deliveryOptionSelector + ':checked'));
                         }
                     });
                 }));
-            observer.observe(supercheckout_element[0], {childList: true, subtree: true});
+            observer.observe(supercheckoutElement[0], {childList: true, subtree: true});
         }
     }
 });
