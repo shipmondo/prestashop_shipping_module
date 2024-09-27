@@ -219,19 +219,12 @@ class Shipmondo extends CarrierModule
                 // Prestamodules / Zelarg - Tested with v3.2.5
                 //'easycheckout', // Easycheckout - Tested with v.1.2.11
             ];
-            foreach ($modules as $module) {
+            /*foreach ($modules as $module) {
                 if (Module::isInstalled($module) && Module::isEnabled($module)) {
-                    // Major changes in 7
-                  /* No more support for that if ($module == 'supercheckout' && Module::getInstanceByName('supercheckout')->version < 7) {
-                        $context->addCSS($this->_path . 'views/css/module/supercheckout_pre7.css', 'all');
-                        $context->addJS($this->_path . 'views/js/module/supercheckout_pre7.js', 'all');
-                    } else {
-                    */
                         $context->addCSS($this->_path . 'views/css/module/' . $module . '.css', 'all');
                         $context->addJS($this->_path . 'views/js/module/' . $module . '.js', 'all');
-                   // }
                 }
-            }
+            }*/
 
             $context->addJS($this->_path . 'views/js/shipmondo.js', 'all');
         }

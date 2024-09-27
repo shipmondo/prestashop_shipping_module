@@ -467,10 +467,26 @@ body.shipmondo_modal_open {
     width: 100%
 }
 
-.shipping.recurring-total .shipmondo-original {
-    margin-left: -22px
+.shipmondo-original .shipmondo_service_point_selection .shipmondo-loading{
+    padding: 1em 1.6em 1em 1em;
+    border: 1px solid hsla(0, 0%, 7%, .11);
+    border-radius: 4px;
+    position: relative;
+    text-align: center;
+    opacity: .5;
+    cursor: progress;
+    display: none;
 }
 
-.service-point-selector-error {
-    text-transform: none
+
+.shipmondo-original .shipmondo_service_point_selection.loading .shipmondo-loading{
+    display: block;
+}
+
+.shipmondo-original .shipmondo_service_point_selection.loading .selected_service_point{
+    display: none;
+}
+
+.shipmondo-service-points-container{
+    display: none;
 }

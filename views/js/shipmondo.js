@@ -5,20 +5,23 @@
  */
 
 jQuery(document).ready(function ($) {
-    const shipmondoShippingModule = window.shipmondo_shipping_module;
-
-    const frontendType = shipmondoShippingModule.frontend_type;
-    const servicePointsEndpoint = shipmondoShippingModule.service_points_endpoint;
-    const servicePointCarrierIds = shipmondoShippingModule.service_point_carrier_ids;
-    const servicePointSelectorEl = '.shipmondo_service_point_selection .selected_service_point';
-    const deliveryOptionSelector = shipmondoShippingModule.delivery_option_selector;
+    const shipmondoShippingModuleSettings = window.shipmondo_shipping_module;
+    const frontendType = shipmondoShippingModuleSettings.frontend_type;
+    const servicePointsEndpoint = shipmondoShippingModuleSettings.service_points_endpoint;
+    const servicePointCarrierIds = shipmondoShippingModuleSettings.service_point_carrier_ids;
+    const servicePointSelector = '.shipmondo_service_point_selection .selected_service_point';
+    const deliveryOptionSelector = shipmondoShippingModuleSettings.delivery_option_selector;
     const shipmondoBaseSelector = '.shipmondo-original';
 
     console.log('deliveryOptionSelector', deliveryOptionSelector);
     /* TODO
+    - Wc kommer "ingen service point" og "fejl besked" direkte som html når det sker.
+    - Hvis vi gør det samme, skal jeg kun lave en loading box som kan vises/skjules afhængig af klasse Pt. er det lidt broken da jeg har flyttes noget ud
     - Håndter error
     - Håndter loading (Venter på janP)
      */
+
+    console.log('yoo', "{l s='Pickup point' d='Modules.Shipmondo.Front'}")
 
     // Get parent wrapper
     const getWrapper = function (element) {
@@ -28,10 +31,20 @@ jQuery(document).ready(function ($) {
     const setShopHTML = function (servicePointElement, html) {
         const wrapper = getWrapper(servicePointElement)
 
-        $(servicePointSelectorEl).html(html);
+        $(servicePointSelector).html(html);
 
         wrapper.find('.service_point.selected').removeClass('selected')
         servicePointElement.addClass('selected');
+    };
+
+    const setLoading = function (active) {
+        const el = $(shipmondoBaseSelector + ' .shipmondo_service_point_selection');
+        if (active) {
+            el.addClass('loading');
+        } else {
+            el.removeClass('loading');
+        }
+        console.log('setLoading');
     };
 
     // Service point selected
@@ -40,10 +53,14 @@ jQuery(document).ready(function ($) {
         data.action = "update";
 
         $.ajax({
-            url: servicePointsEndpoint, type: 'POST', data: data, dataType: 'json', error: function (response) {
+            url: servicePointsEndpoint, type: 'POST', data: data, dataType: 'json',
+            error: function (response) {
                 console.error('error', response);
                 //TODO SHOW ERROR? look at WC
                 // Error
+
+                //TODO Jan, would be great if this came from php
+
                 $(".shipmondo_service_point_selection").html('<div class="selected_service_point service_point dropdown no_service_point">Ingen tilgængelige udleveringssteder</div>');
             }, success: function (response) {
                 if (response.status === "success") {
@@ -58,13 +75,13 @@ jQuery(document).ready(function ($) {
 
     $(document).on('click', deliveryOptionSelector, function () {
         const carrierID = parseInt($(this).val().replace(/\D/g, ''));
-        const containerEl = $('#shipmondo-service-points-container');
-        const contentEl = containerEl.find('.shipmondo-service-points-content');
+        const containerEl = $('.shipmondo-service-points-container');
+        const contentEl = containerEl.find('.selected_service_point');
 
-//TODO Du er kommet her til . Det er ud til at virke OK men du skal bruge klasser i stedet for at tilføje meget ens html. h3 og powered by fx. burde være der altid
         if (servicePointCarrierIds.includes(carrierID)) {
-            contentEl.html('<div class="selected_service_point loading">Arbejder...</div>');
             containerEl.show();
+
+            setLoading(true)
 
             $.ajax({
                 url: servicePointsEndpoint,
@@ -73,9 +90,11 @@ jQuery(document).ready(function ($) {
                 data: {
                     action: 'get', carrier_id: carrierID
                 }, success: function (response) {
+                    setLoading(false);
                     if (response.status === 'success') {
                         contentEl.html(response.service_point_html);
                     } else if (response.status === 'error') {
+                        //TODO Jan, would be great if this came from php
                         contentEl.html('<div class="selected_service_point loading no_service_point has-error">Error</div>');
                         console.error('Shipmondo:', response.error);
                     }
@@ -113,7 +132,8 @@ jQuery(document).ready(function ($) {
             }
         };
 
-        $(document).on('click', servicePointSelectorEl, function (e) {
+        //Toggle (Open/close dropdown)
+        $(document).on('click', servicePointSelector, function (e) {
             e.stopPropagation();
             toggleDropdown($(this));
         });
@@ -167,37 +187,12 @@ jQuery(document).ready(function ($) {
             }, 300);
         };
 
-        const renderMap = function (modal) {
-            const mapEl = modal.find('.service_points_map');
-            map = new google.maps.Map(mapEl[0], {
-                zoom: 6,
-                center: {lat: 55.9150835, lng: 10.4713954},
-                mapTypeControl: false,
-                streetViewControl: false,
-                fullscreenControl: false
-            });
-
-            bounds = new google.maps.LatLngBounds();
-
-            //TODO get data array directly instead
-            const servicePoints = modal.find('.service_points_list .service_point');
-
-            $.each(servicePoints, function (index, element) {
-                shipmondoLoadMarker($(element));
-            });
-
-            setTimeout(function () {
-                map.fitBounds(bounds);
-            }, 100)
-        };
-
-
         const selectServicePointFromMarker = function (service_point_id, modal) {
             const servicePointElement = modal.find('.service_points_list .service_point[data-service_point_id=' + service_point_id + ']');
             servicePointElement.trigger('click');
         };
 
-        // Render Markers
+        // Render Map Markers
         const shipmondoLoadMarker = function (servicePointEl) {
             const marker = new google.maps.Marker({
                 position: {
@@ -220,14 +215,36 @@ jQuery(document).ready(function ($) {
             bounds.extend(marker.position);
         };
 
+        const renderMap = function (modal) {
+            const mapEl = modal.find('.service_points_map');
+            const servicePoints = modal.find('.service_points_list .service_point');
+
+            bounds = new google.maps.LatLngBounds();
+            map = new google.maps.Map(mapEl[0], {
+                zoom: 6,
+                center: {lat: 55.9150835, lng: 10.4713954},
+                mapTypeControl: false,
+                streetViewControl: false,
+                fullscreenControl: false
+            });
+
+            $.each(servicePoints, function (index, element) {
+                shipmondoLoadMarker($(element));
+            });
+
+            setTimeout(function () {
+                map.fitBounds(bounds);
+            }, 100)
+        };
+
         // Select shop
         $(document).on('click', shipmondoBaseSelector + ' .selector_type-modal .service_points_list .service_point', function () {
+            const modal = getModal($(this));
+
             ServicePointSelected($(this));
 
             $('.shipmondo-modal_content').removeClass('visible');
             $('.shipmondo-modal-checkmark').addClass('visible');
-
-            const modal = getModal($(this));
 
             setTimeout(function () {
                 closeModal(modal);
@@ -254,12 +271,13 @@ jQuery(document).ready(function ($) {
             }
         });
 
+        //Register Google Maps loaded
         window.googleMapsInit = function googleMapsInit() {
             googleMapsIsLoaded = true;
         }
     }
 
-    //INIT CLICK  (only work on default)
+    //Init click  (might not work with themes/checkouts. So custom code will be needed for those.)
     const currentRadio = $(deliveryOptionSelector + ':checked');
     if (currentRadio.val()) {
         currentRadio.trigger('click');
