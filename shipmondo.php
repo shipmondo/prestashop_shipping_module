@@ -200,7 +200,7 @@ class Shipmondo extends CarrierModule
             // Add theme overrides to views/css/theme.
             $themes = [
                 // Add themes into this array
-                'warehouse',
+                //'warehouse',
             ];
 
             if (in_array(_THEME_NAME_, $themes)) {
@@ -210,24 +210,25 @@ class Shipmondo extends CarrierModule
             // Add module overrides to views/css/module.
             $modules = [
                 // Add modules into this array
-                'onepagecheckoutps',
+                //'onepagecheckoutps',
                 // Prestateam - Tested with v1.0.3
                 'supercheckout',
                 // Knowband - Tested with v4.0.6,
-                'thecheckout',
+                //'thecheckout',
                 // Prestamodules / Zelarg - Tested with v3.2.5
-                'easycheckout', // Easycheckout - Tested with v.1.2.11
+                //'easycheckout', // Easycheckout - Tested with v.1.2.11
             ];
             foreach ($modules as $module) {
                 if (Module::isInstalled($module) && Module::isEnabled($module)) {
                     // Major changes in 7
-                    if ($module == 'supercheckout' && Module::getInstanceByName('supercheckout')->version < 7) {
+                  /* No more support for that if ($module == 'supercheckout' && Module::getInstanceByName('supercheckout')->version < 7) {
                         $context->addCSS($this->_path . 'views/css/module/supercheckout_pre7.css', 'all');
                         $context->addJS($this->_path . 'views/js/module/supercheckout_pre7.js', 'all');
                     } else {
+                    */
                         $context->addCSS($this->_path . 'views/css/module/' . $module . '.css', 'all');
                         $context->addJS($this->_path . 'views/js/module/' . $module . '.js', 'all');
-                    }
+                   // }
                 }
             }
 

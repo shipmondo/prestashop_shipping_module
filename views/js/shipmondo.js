@@ -12,29 +12,32 @@ jQuery(document).ready(function ($) {
 
 
     /* TODO
-    - Ryd op i CSS (Gammel og ubrugt)
     - Håndter error
     - Håndter loading (Venter på janP)
-    - skift til const hej(){} i stedet for function pga. scooping
     - generelt selector i consts så som fx. .shipmondo-original
      */
 
-    // Get parent wrapper
-    function getWrapper(element) {
-        return element.parents('.shipmondo_service_point_selection');
-    }
 
-    function setShopHTML(servicePointElement, html) {
+    //const shippingOptionSelector = '.delivery-option input'; //default
+    //const shippingOptionSelector = 'input.delivery_option_radio'; // supercheckout
+
+
+    // Get parent wrapper
+    const getWrapper = function (element) {
+        return element.parents('.shipmondo_service_point_selection');
+    };
+
+    const setShopHTML = function (servicePointElement, html) {
         const wrapper = getWrapper(servicePointElement)
 
         $(selection_button).html(html);
 
         wrapper.find('.service_point.selected').removeClass('selected')
         servicePointElement.addClass('selected');
-    }
+    };
 
     // Service point selected
-    function ServicePointSelected(shopElement) {
+    const ServicePointSelected = function (shopElement) {
         const data = shopElement.data();
         data.action = "update";
 
@@ -53,8 +56,9 @@ jQuery(document).ready(function ($) {
                 }
             }
         });
-    }
+    };
 
+    //$(document).on('click', shippingOptionSelector, function (event) {
     $(document).on('click', ((window.Shipmondo && window.Shipmondo.deliveryOptionInputContainerSelector) ? window.Shipmondo.deliveryOptionInputContainerSelector : '.delivery-option') + ' input', function (event) {
         const carrierID = parseInt($(this).val().replace(/\D/g, ''));
         const containerEl = $('#shipmondo-service-points-container');
@@ -71,20 +75,21 @@ jQuery(document).ready(function ($) {
         console.log(servicePointCarrierIds.includes(carrierID));
         if (servicePointCarrierIds.includes(carrierID)) {
             //containerEl.html('<div class="selected_service_point loading" style="height: 82px;display: flex;align-items: center;justify-content: center;">Arbejder...</div>');
-            contentEl.html('<div class="selected_service_point loading" style="text-align: center;">Arbejder...</div>');
+            contentEl.html('<div class="selected_service_point loading">Arbejder...</div>');
             containerEl.show();
 
             $.ajax({
-                url: servicePointsEndpoint, type: 'GET', data: {
+                url: servicePointsEndpoint,
+                type: 'GET',
+                dataType: 'json',
+                data: {
                     action: 'get', carrier_id: carrierID
                 }, success: function (response) {
-                    response = JSON.parse(response);
-
-                    if (response['status'] === 'success') {
-                        const html = response['service_point_html'];
-                        contentEl.html(html);
-
-
+                    if (response.status === 'success') {
+                        contentEl.html(response.service_point_html);
+                    } else if (response.status === 'error') {
+                        contentEl.html('<div class="selected_service_point loading no_service_point has-error">Error</div>');
+                        console.error('Shipmondo:', response.error);
                     }
                 }
             });
@@ -96,21 +101,21 @@ jQuery(document).ready(function ($) {
 
     // DROPDOWN
     if (frontendType === 'dropdown') {
-        function getDropdown(element) {
+        const getDropdown = function (element) {
             return getWrapper(element).find('.shipmondo-dropdown_wrapper');
-        }
+        };
 
-        function openDropdown(dropdownElement) {
+        const openDropdown = function (dropdownElement) {
             dropdownElement.addClass('visible');
             getWrapper(dropdownElement).find('.selected_service_point').addClass('selector_open');
-        }
+        };
 
-        function closeDropdown(dropdownElement) {
+        const closeDropdown = function (dropdownElement) {
             dropdownElement.removeClass('visible');
             getWrapper(dropdownElement).find('.selected_service_point').removeClass('selector_open');
-        }
+        };
 
-        function toggleDropdown(element) {
+        const toggleDropdown = function (element) {
             const dropdown = getDropdown(element);
 
             console.log('dropdown', dropdown);
@@ -120,7 +125,7 @@ jQuery(document).ready(function ($) {
             } else {
                 openDropdown(dropdown);
             }
-        }
+        };
 
         $(document).on('click', selection_button, function (e) {
             e.stopPropagation();
@@ -149,11 +154,11 @@ jQuery(document).ready(function ($) {
         let googleMapsIsLoaded = false;
         const body = $('body');
 
-        function getModal(element) {
+        const getModal = function (element) {
             return getWrapper(element).find('.shipmondo-modal');
-        }
+        };
 
-        function openModal(modal) {
+        const openModal = function (modal) {
             modal.removeClass('shipmondo-hidden');
 
             if (googleMapsIsLoaded) {
@@ -165,9 +170,9 @@ jQuery(document).ready(function ($) {
                 modal.addClass('visible');
                 modal.find('.shipmondo-modal_content').addClass('visible');
             }, 100)
-        }
+        };
 
-        function closeModal(modal) {
+        const closeModal = function (modal) {
             modal.removeClass('visible');
             body.removeClass('shipmondo_modal_open');
 
@@ -175,9 +180,9 @@ jQuery(document).ready(function ($) {
                 $('.shipmondo-modal-checkmark').removeClass('visible');
                 modal.addClass('shipmondo-hidden');
             }, 300);
-        }
+        };
 
-        function renderMap(modal) {
+        const renderMap = function (modal) {
             const mapEl = modal.find('.service_points_map');
             map = new google.maps.Map(mapEl[0], {
                 zoom: 6,
@@ -199,16 +204,16 @@ jQuery(document).ready(function ($) {
             setTimeout(function () {
                 map.fitBounds(bounds);
             }, 100)
-        }
+        };
 
 
-        function selectServicePointFromMarker(service_point_id, modal) {
+        const selectServicePointFromMarker = function (service_point_id, modal) {
             const servicePointElement = modal.find('.service_points_list .service_point[data-service_point_id=' + service_point_id + ']');
             servicePointElement.trigger('click');
-        }
+        };
 
         // Render Markers
-        function shipmondoLoadMarker(servicePointEl) {
+        const shipmondoLoadMarker = function (servicePointEl) {
             const marker = new google.maps.Marker({
                 position: {
                     lat: parseFloat(servicePointEl.data('latitude')), lng: parseFloat(servicePointEl.data('longitude'))
@@ -228,7 +233,7 @@ jQuery(document).ready(function ($) {
             })(marker))
 
             bounds.extend(marker.position);
-        }
+        };
 
         // Select shop
         $(document).on('click', '.shipmondo-original .selector_type-modal .service_points_list .service_point', function () {
@@ -272,17 +277,9 @@ jQuery(document).ready(function ($) {
     console.log("$('.delivery-option input:checked')", $('.delivery-option input:checked'));
 
 
-    //INIT CLICK TODO could it work with other chekcouts?
+    //INIT CLICK  (only work on default)
     const current_radio = $('.delivery-option input:checked');
-    //console.log('current_radio', current_radio);
-    //console.log('current_radio', current_radio.length);
     if (current_radio.val()) {
-        //console.log('trigger');
-        //TODO test if this works in all situations
-        //init click when there are preselected shipping methods
         current_radio.trigger('click');
     }
-
-
-    //$('.delivery-option input:checked').trigger();
 });

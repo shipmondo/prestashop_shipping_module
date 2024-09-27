@@ -3,29 +3,3 @@
  *  @copyright 2024-present Shipmondo
  *  @license   https://opensource.org/license/bsd-3-clause BSD-3-Clause
  */
-
-.shipmondo-shipping-field-wrap {
-    margin: 0 0 20px;
-}
-
-/*#shipmondo_find_shop_btn{*/
-    /*margin-top: 0 !important;*/
-/*}*/
-
-
-.shipmondo-radio-content ul.shipmondo-shoplist-ul {
-    margin: 0 10px;
-    max-height: 240px;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-}
-
-.shipmondo-radio-content ul.shipmondo-shoplist-ul li.shipmondo-shop-list {
-    width: 100%;
-    float: none;
-    margin: 0;
-}
-
-.shipmondo-removable-content .custom-radio {
-    position: absolute !important;
-}

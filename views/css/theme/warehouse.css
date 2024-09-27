@@ -3,13 +3,3 @@
  *  @copyright 2024-present Shipmondo
  *  @license   https://opensource.org/license/bsd-3-clause BSD-3-Clause
  */
-.shipmondo-shipping-field-wrap {
-    width: 100%;
-    margin: 0 15px 15px;
-}
-
-@media screen and (min-width: 768px) {
-    .shipmondo-radio-content ul.shipmondo-shoplist-ul {
-        margin: 0 21px;
-    }
-}

@@ -59,7 +59,8 @@
 .shipmondo_service_point_selection .selected_service_point.loading {
     cursor: wait;
     opacity: .5;
-    transition: opacity .2s ease
+    transition: opacity .2s ease;
+    text-align: center;
 }
 
 .shipmondo_service_point_selection .selected_service_point.loading:after {
