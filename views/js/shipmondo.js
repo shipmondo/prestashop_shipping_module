@@ -10,22 +10,15 @@ jQuery(document).ready(function ($) {
     const frontendType = shipmondoShippingModule.frontend_type;
     const servicePointsEndpoint = shipmondoShippingModule.service_points_endpoint;
     const servicePointCarrierIds = shipmondoShippingModule.service_point_carrier_ids;
-    const selection_button = '.shipmondo_service_point_selection .selected_service_point';
-
+    const servicePointSelectorEl = '.shipmondo_service_point_selection .selected_service_point';
     const deliveryOptionSelector = shipmondoShippingModule.delivery_option_selector;
-
+    const shipmondoBaseSelector = '.shipmondo-original';
 
     console.log('deliveryOptionSelector', deliveryOptionSelector);
     /* TODO
     - Håndter error
     - Håndter loading (Venter på janP)
-    - generelt selector i consts så som fx. .shipmondo-original
      */
-
-
-    //const shippingOptionSelector = '.delivery-option input'; //default
-    //const shippingOptionSelector = 'input.delivery_option_radio'; // supercheckout
-
 
     // Get parent wrapper
     const getWrapper = function (element) {
@@ -35,7 +28,7 @@ jQuery(document).ready(function ($) {
     const setShopHTML = function (servicePointElement, html) {
         const wrapper = getWrapper(servicePointElement)
 
-        $(selection_button).html(html);
+        $(servicePointSelectorEl).html(html);
 
         wrapper.find('.service_point.selected').removeClass('selected')
         servicePointElement.addClass('selected');
@@ -63,24 +56,13 @@ jQuery(document).ready(function ($) {
         });
     };
 
-    //$(document).on('click', shippingOptionSelector, function (event) {
-    //$(document).on('click', ((window.Shipmondo && window.Shipmondo.deliveryOptionInputContainerSelector) ? window.Shipmondo.deliveryOptionInputContainerSelector : '.delivery-option') + ' input', function (event) {
-    $(document).on('click', deliveryOptionSelector, function (event) {
+    $(document).on('click', deliveryOptionSelector, function () {
         const carrierID = parseInt($(this).val().replace(/\D/g, ''));
         const containerEl = $('#shipmondo-service-points-container');
         const contentEl = containerEl.find('.shipmondo-service-points-content');
-        console.log('delivery-option clicked maybe add loader?');
-        console.log('carrierID', carrierID);
-
-
-        $.each(servicePointCarrierIds, function (index, id) {
-            console.log('id', id)
-        });
 
 //TODO Du er kommet her til . Det er ud til at virke OK men du skal bruge klasser i stedet for at tilføje meget ens html. h3 og powered by fx. burde være der altid
-        console.log(servicePointCarrierIds.includes(carrierID));
         if (servicePointCarrierIds.includes(carrierID)) {
-            //containerEl.html('<div class="selected_service_point loading" style="height: 82px;display: flex;align-items: center;justify-content: center;">Arbejder...</div>');
             contentEl.html('<div class="selected_service_point loading">Arbejder...</div>');
             containerEl.show();
 
@@ -124,8 +106,6 @@ jQuery(document).ready(function ($) {
         const toggleDropdown = function (element) {
             const dropdown = getDropdown(element);
 
-            console.log('dropdown', dropdown);
-            console.log('element', element);
             if (dropdown.hasClass('visible')) {
                 closeDropdown(dropdown);
             } else {
@@ -133,23 +113,22 @@ jQuery(document).ready(function ($) {
             }
         };
 
-        $(document).on('click', selection_button, function (e) {
+        $(document).on('click', servicePointSelectorEl, function (e) {
             e.stopPropagation();
             toggleDropdown($(this));
         });
 
         // Hide dropdown when clicked outsite of it
         $(document).on('click', function (e) {
-            const dropdown = $('.shipmondo-original .shipmondo-dropdown_wrapper.visible');
+            const dropdown = $(shipmondoBaseSelector + ' .shipmondo-dropdown_wrapper.visible');
 
             if (dropdown.length > 0 && (!dropdown.is(e.target) && dropdown.has(e.target).length === 0)) {
                 closeDropdown(dropdown);
             }
         })
 
-        //TODO USE selection_button instead
         // Set selected shop
-        $(document).on('click', '.shipmondo-original .selector_type-dropdown .service_points_list .service_point', function () {
+        $(document).on('click', shipmondoBaseSelector + ' .selector_type-dropdown .service_points_list .service_point', function () {
             ServicePointSelected($(this));
             closeDropdown(getDropdown($(this)));
         });
@@ -242,7 +221,7 @@ jQuery(document).ready(function ($) {
         };
 
         // Select shop
-        $(document).on('click', '.shipmondo-original .selector_type-modal .service_points_list .service_point', function () {
+        $(document).on('click', shipmondoBaseSelector + ' .selector_type-modal .service_points_list .service_point', function () {
             ServicePointSelected($(this));
 
             $('.shipmondo-modal_content').removeClass('visible');
@@ -257,19 +236,19 @@ jQuery(document).ready(function ($) {
 
 
         // Show modal
-        $(document).on('click', '.shipmondo-original .selected_service_point.selector_type-modal', function (e) {
+        $(document).on('click', shipmondoBaseSelector + ' .selected_service_point.selector_type-modal', function (e) {
             e.stopPropagation();
             openModal(getModal($(e.target)));
         });
 
         // Hide modal on close button
-        $(document).on('click', '.shipmondo-original .shipmondo-modal_close', function (e) {
+        $(document).on('click', shipmondoBaseSelector + ' .shipmondo-modal_close', function (e) {
             e.preventDefault();
             closeModal(getModal($(e.target)));
         });
 
         // Hide modal when clicking outsite modal content
-        $(document).on('click', '.shipmondo-original .shipmondo-modal', function (e) {
+        $(document).on('click', shipmondoBaseSelector + ' .shipmondo-modal', function (e) {
             if (typeof e.target !== 'undefined' && $(e.target).hasClass('shipmondo-modal')) {
                 closeModal(getModal($(e.target)));
             }
@@ -280,12 +259,9 @@ jQuery(document).ready(function ($) {
         }
     }
 
-    console.log("$('.delivery-option input:checked')", $('.delivery-option input:checked'));
-
-
     //INIT CLICK  (only work on default)
-    const current_radio = $('.delivery-option input:checked');
-    if (current_radio.val()) {
-        current_radio.trigger('click');
+    const currentRadio = $(deliveryOptionSelector + ':checked');
+    if (currentRadio.val()) {
+        currentRadio.trigger('click');
     }
 });
