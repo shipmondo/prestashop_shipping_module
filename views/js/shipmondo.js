@@ -13,15 +13,12 @@ jQuery(document).ready(function ($) {
     const deliveryOptionSelector = shipmondoShippingModuleSettings.delivery_option_selector;
     const shipmondoBaseSelector = '.shipmondo-original';
 
-    console.log('deliveryOptionSelector', deliveryOptionSelector);
     /* TODO
     - Wc kommer "ingen service point" og "fejl besked" direkte som html når det sker.
     - Hvis vi gør det samme, skal jeg kun lave en loading box som kan vises/skjules afhængig af klasse Pt. er det lidt broken da jeg har flyttes noget ud
-    - Håndter error
-    - Håndter loading (Venter på janP)
+    - Håndter error(Venter på janP returnere fejlbsekder også)
      */
 
-    console.log('yoo', "{l s='Pickup point' d='Modules.Shipmondo.Front'}")
 
     // Get parent wrapper
     const getWrapper = function (element) {
@@ -44,7 +41,6 @@ jQuery(document).ready(function ($) {
         } else {
             el.removeClass('loading');
         }
-        console.log('setLoading');
     };
 
     // Service point selected
@@ -79,10 +75,9 @@ jQuery(document).ready(function ($) {
         const contentEl = containerEl.find('.selected_service_point');
 
         if (servicePointCarrierIds.includes(carrierID)) {
-            containerEl.show();
-
             setLoading(true)
 
+            containerEl.show();
             $.ajax({
                 url: servicePointsEndpoint,
                 type: 'GET',

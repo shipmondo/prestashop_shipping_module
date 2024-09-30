@@ -179,7 +179,7 @@ class Shipmondo extends CarrierModule
                     //'modal_html' => $this->fetch('module:shipmondo/views/templates/front/popup/modal.tpl'), //TODO Jan?
                     'module_base_url' => Tools::getProtocol(Tools::usingSecureMode()) . $_SERVER['HTTP_HOST'] . $this->getPathUri(),
                     'service_points_endpoint' => Context::getContext()->link->getModuleLink('shipmondo', 'servicepoints'),
-                    'extentions_endpoint' => Context::getContext()->link->getModuleLink('shipmondo', 'extensions'),
+                    //'extentions_endpoint' => Context::getContext()->link->getModuleLink('shipmondo', 'extensions'),
                     'service_point_carrier_ids' => $servicePointCarrierIds,
                 ]
             ]);

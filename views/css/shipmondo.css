@@ -21,7 +21,6 @@
 .shipmondo_service_point_selection .powered_by_shipmondo p {
     margin: 0;
     font-size: .8em;
-
 }
 
 .shipmondo_service_point_selection .selected_service_point {
@@ -31,6 +30,7 @@
     position: relative
 }
 
+/*  TODO use this ?*/
 .shipmondo_service_point_selection .selected_service_point.has-error {
     border-color: #cc1818
 }
@@ -56,6 +56,7 @@
     transform: rotate(90deg)
 }
 
+/*
 .shipmondo_service_point_selection .selected_service_point.loading {
     cursor: wait;
     opacity: .5;
@@ -83,6 +84,8 @@
 .shipmondo_service_point_selection .selected_service_point.no_service_point:hover {
     background: none
 }
+
+ */
 
 .shipmondo_service_point_selection .service_point {
     cursor: pointer;
@@ -358,15 +361,6 @@ body.shipmondo_modal_open {
     }
 }
 
-@keyframes shipmondo-loader-spin {
-    0% {
-        transform: rotate(0deg)
-    }
-    to {
-        transform: rotate(1turn)
-    }
-}
-
 .shipmondo-original {
     text-indent: 0;
     text-transform: none
@@ -467,6 +461,8 @@ body.shipmondo_modal_open {
     width: 100%
 }
 
+
+/*PS Specific:*/
 .shipmondo-original .shipmondo_service_point_selection .shipmondo-loading{
     padding: 1em 1.6em 1em 1em;
     border: 1px solid hsla(0, 0%, 7%, .11);
@@ -477,7 +473,6 @@ body.shipmondo_modal_open {
     cursor: progress;
     display: none;
 }
-
 
 .shipmondo-original .shipmondo_service_point_selection.loading .shipmondo-loading{
     display: block;
