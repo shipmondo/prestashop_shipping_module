@@ -184,7 +184,7 @@ class Shipmondo extends CarrierModule
                 ]
             ]);
 
-            if (Configuration::get('SHIPMONDO_FRONTEND_TYPE') === 'popup') {
+           /* if (Configuration::get('SHIPMONDO_FRONTEND_TYPE') === 'popup') {
                 // Loads Google map API
                 $context->registerJavascript(
                     'google-maps',
@@ -196,6 +196,7 @@ class Shipmondo extends CarrierModule
                     ]
                 );
             }
+        */
             $context->addCSS($this->_path . 'views/css/shipmondo.css', 'all');
 
             // Add theme overrides to views/css/theme.

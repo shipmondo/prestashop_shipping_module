@@ -151,21 +151,43 @@ jQuery(document).ready(function ($) {
         // MODAL
         let map = null;
         let bounds = null;
-        let googleMapsIsLoaded = false;
+        //let googleMapsIsLoaded = false;
         const body = $('body');
+
+        let currentModalElement = null
+
+
+        const googleMapsKey = "AIzaSyBXFAxSgXP7b5D25WEtjxkYqoWM2PjxaLg"; //TODO get from config
+
+        const loadGoogleMaps = function () {
+            // Create the script tag, set the appropriate attributes
+            var script = document.createElement('script')
+            script.src = 'https://maps.googleapis.com/maps/api/js?key=' + googleMapsKey + '&loading=async&callback=googleMapsInit'
+            script.async = true
+
+            // Append the 'script' element to 'head'
+            document.head.appendChild(script)
+        };
+
+
+        const initializeMap = function (modal) {
+            if (typeof google === 'undefined' || typeof google.maps === 'undefined') {
+                currentModalElement = modal
+                loadGoogleMaps()
+            } else {
+                renderMap(modal.find('.service_points_map'))
+            }
+        };
 
         const getModal = function (element) {
             return getWrapper(element).find('.shipmondo-modal');
         };
 
+
         const openModal = function (modal) {
             modal.removeClass('shipmondo-hidden');
 
-            console.log('openModal', googleMapsIsLoaded);
-
-            if (googleMapsIsLoaded) {
-                renderMap(modal);
-            }
+            initializeMap(modal)
 
             setTimeout(function () {
                 body.addClass('shipmondo_modal_open');
@@ -212,12 +234,11 @@ jQuery(document).ready(function ($) {
             bounds.extend(marker.position);
         };
 
-        const renderMap = function (modal) {
-            const mapEl = modal.find('.service_points_map');
-            const servicePoints = modal.find('.service_points_list .service_point');
+        const renderMap = function (element) {
+            const servicePoints = getWrapper(element).find('.service_points_list .service_point');
 
             bounds = new google.maps.LatLngBounds();
-            map = new google.maps.Map(mapEl[0], {
+            map = new google.maps.Map(element[0], {
                 zoom: 6,
                 center: {lat: 55.9150835, lng: 10.4713954},
                 mapTypeControl: false,
@@ -270,9 +291,7 @@ jQuery(document).ready(function ($) {
 
         // Render map after google maps load
         $(document).on('googleMapsLoaded', function () {
-            console.log('googleMapsIsLoaded')
-
-            googleMapsIsLoaded = true;
+            renderMap(currentModalElement.find('.service_points_map'))
         });
     }
 
@@ -285,7 +304,5 @@ jQuery(document).ready(function ($) {
 
 
 window.googleMapsInit = function googleMapsInit() {
-
-    console.log('trigger')
     jQuery(document).trigger('googleMapsLoaded');
-}
+};
