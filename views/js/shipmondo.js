@@ -266,10 +266,10 @@ jQuery(document).ready(function ($) {
             }
         });
 
-        //Register Google Maps loaded
-        window.googleMapsInit = function googleMapsInit() {
+        // Render map after google maps load
+        $(document).on('googleMapsLoaded', function() {
             googleMapsIsLoaded = true;
-        }
+        });
     }
 
     //Init click  (might not work with themes/checkouts. So custom code will be needed for those.)
@@ -278,3 +278,8 @@ jQuery(document).ready(function ($) {
         currentRadio.trigger('click');
     }
 });
+
+
+window.googleMapsInit = function googleMapsInit() {
+    jQuery(document).trigger('googleMapsLoaded');
+}
