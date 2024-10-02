@@ -14,7 +14,6 @@ if (file_exists(__DIR__ . '/vendor/autoload.php')) {
 }
 
 use Shipmondo\Controller\Admin\ShipmondoCarrierController;
-use Shipmondo\Entity\ShipmondoServicePoint;
 
 class Shipmondo extends CarrierModule
 {
@@ -48,7 +47,7 @@ class Shipmondo extends CarrierModule
         parent::__construct();
         $this->ps_versions_compliancy = [
             'min' => '8.0.0',
-            'max' => '8.99.99',
+            'max' => '8.99.99', // TODO Limit to 8 or use _PS_VERSION_?
         ];
         $this->displayName = "Shipmondo";
         $this->description = $this->trans('A complete shipping solution for PrestaShop', [], 'Modules.Shipmondo.Admin');
@@ -115,9 +114,9 @@ class Shipmondo extends CarrierModule
     }
 
     // Required for carrier modules
-    public function getOrderShippingCost($params, $shipping_cost)
+    public function getOrderShippingCost($params, $shippingCost)
     {
-        return $shipping_cost;
+        return $shippingCost;
     }
 
     // Required for carrier modules
@@ -127,12 +126,12 @@ class Shipmondo extends CarrierModule
     }
 
     // Declares that module uses the new translation system
-    public function isUsingNewTranslationSystem()
+    public function isUsingNewTranslationSystem(): bool
     {
         return true;
     }
 
-    public function hookDisplayAdminOrderSide($params)
+    public function hookDisplayAdminOrderSide($params): string
     {
         $servicePoint = $this->get('shipmondo.repository.shipmondo_service_point')
             ->findOneBy(['orderId' => $params['id_order']]);
@@ -143,90 +142,80 @@ class Shipmondo extends CarrierModule
                 'carrier_name' => $this->get('shipmondo.carrier_handler')->getCarrierName($servicePoint->getCarrierCode())
             ]);
         }
+
+        return '';
     }
 
-    public function hookDisplayHeader($params)
+    public function hookDisplayHeader($params): void
     {
         $context = $this->context->controller;
 
-        $current_page = Tools::getValue('controller');
+        $currentPage = Tools::getValue('controller');
 
-        $order_pages = [
+        $orderPages = [
             'order', // default PS
         ];
 
         // Knowband - SuperCheckout
         if (Module::isInstalled('supercheckout') && Module::isEnabled('supercheckout')) {
-            $order_pages[] = 'supercheckout';
+            $orderPages[] = 'supercheckout';
         }
 
         // Prestaworks - Easy Checkout (NETS Easy)
         if (Module::isInstalled('easycheckout') && Module::isEnabled('easycheckout')) {
-            $order_pages[] = 'checkout';
+            $orderPages[] = 'checkout';
         }
 
-        if (in_array($current_page, $order_pages)) {
+        if (in_array($currentPage, $orderPages)) {
             $servicePointCarriers = $this->get('shipmondo.repository.shipmondo_carrier')->findBy(['productCode' => 'service_point']);
             $servicePointCarrierIds = array_map(function ($servicePointCarrier) {
                 return $servicePointCarrier->getCarrierId();
             }, $servicePointCarriers);
 
             Media::addJsDef([
-                'shipmondo_shipping_module' => [
-                    //'choose_pickup_point_text' => $this->trans('Choose pickup point', [], 'Modules.Shipmondo.Front'),
-                    'delivery_option_selector' => '.delivery-option input', //testing
-                    'frontend_type' => Configuration::get('SHIPMONDO_FRONTEND_TYPE'),
-                    //'modal_html' => $this->fetch('module:shipmondo/views/templates/front/popup/modal.tpl'), //TODO Jan?
-                    'module_base_url' => Tools::getProtocol(Tools::usingSecureMode()) . $_SERVER['HTTP_HOST'] . $this->getPathUri(),
-                    'service_points_endpoint' => Context::getContext()->link->getModuleLink('shipmondo', 'servicepoints'),
-                    //'extentions_endpoint' => Context::getContext()->link->getModuleLink('shipmondo', 'extensions'),
-                    'service_point_carrier_ids' => $servicePointCarrierIds,
+                'shipmondoModule' => [
+                    'deliveryOptionSelector' => '.delivery-option input',
+                    'frontendType' => Configuration::get('SHIPMONDO_FRONTEND_TYPE'),
+                    'modulePath' => $this->getPathUri(),
+                    'servicePointsEndpoint' => Context::getContext()->link->getModuleLink('shipmondo', 'servicepoints'),
+                    'servicePointCarrierIds' => $servicePointCarrierIds,
                 ]
             ]);
 
             if (Configuration::get('SHIPMONDO_FRONTEND_TYPE') === 'popup') {
-                // Loads Google map API
+                // Load Google Maps API
                 $context->registerJavascript(
                     'google-maps',
                     'https://maps.googleapis.com/maps/api/js?loading=async&callback=googleMapsInit&key=' . Configuration::get('SHIPMONDO_GOOGLE_API_KEY'),
                     [
                         'server' => 'remote',
                         'position' => 'bottom',
-                        'priority' => 20,
+                        'priority' => 9999,
                     ]
                 );
             }
-            $context->addCSS($this->_path . 'views/css/shipmondo.css', 'all');
 
-            // Add theme overrides to views/css/theme.
-            $themes = [
-                // Add themes into this array
-                //'warehouse',
-            ];
-
-            if (in_array(_THEME_NAME_, $themes)) {
-                $context->addCSS($this->_path . 'views/css/theme/' . _THEME_NAME_ . '.css', 'all');
-            }
+            $context->addCSS($this->getPathUri() . 'views/css/shipmondo.css', 'all');
 
             // Add module overrides to views/css/module.
             $modules = [
-                // Add modules into this array
-                //'onepagecheckoutps',
-                // Prestateam - Tested with v1.0.3
                 'supercheckout',
-                // Knowband - Tested with v4.0.6,
-                //'thecheckout',
-                // Prestamodules / Zelarg - Tested with v3.2.5
-                //'easycheckout', // Easycheckout - Tested with v.1.2.11
             ];
-            /*foreach ($modules as $module) {
+            foreach ($modules as $module) {
                 if (Module::isInstalled($module) && Module::isEnabled($module)) {
-                        $context->addCSS($this->_path . 'views/css/module/' . $module . '.css', 'all');
-                        $context->addJS($this->_path . 'views/js/module/' . $module . '.js', 'all');
-                }
-            }*/
+                    $cssPath = $this->getPathUri() . 'views/css/module/' . $module . '.css';
+                    if (file_exists($cssPath)) {
+                        $context->addCSS($cssPath, 'all');
+                    }
 
-            $context->addJS($this->_path . 'views/js/shipmondo.js', 'all');
+                    $jsPath = $this->getPathUri() . 'views/js/module/' . $module . '.js';
+                    if (file_exists($jsPath)) {
+                        $context->addJS($jsPath, 'all');
+                    }
+                }
+            }
+
+            $context->addJS($this->getPathUri() . 'views/js/shipmondo.js', 'all');
         }
     }
 
@@ -341,8 +330,8 @@ class Shipmondo extends CarrierModule
     // If frontend type is not set, set as popup
     protected function setDefaultFrontendType()
     {
-        $frontend_type = Configuration::get('SHIPMONDO_FRONTEND_TYPE');
-        if (empty($frontend_type)) {
+        $frontendType = Configuration::get('SHIPMONDO_FRONTEND_TYPE');
+        if (empty($frontendType)) {
             Configuration::updateValue('SHIPMONDO_FRONTEND_TYPE', 'popup');
         }
     }

@@ -11,7 +11,7 @@ jQuery(document).ready(function ($) {
     const supercheckoutElement = $('#supercheckout-fieldset');
 
     //Override default
-    window.shipmondo_shipping_module.delivery_option_selector = deliveryOptionSelector;
+    window.shipmondoModule.deliveryOptionSelector = deliveryOptionSelector;
 
 
     const triggerShippingOption = function (radio) {

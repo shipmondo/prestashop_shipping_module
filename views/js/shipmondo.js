@@ -5,12 +5,12 @@
  */
 
 jQuery(document).ready(function ($) {
-    const shipmondoShippingModuleSettings = window.shipmondo_shipping_module;
-    const frontendType = shipmondoShippingModuleSettings.frontend_type;
-    const servicePointsEndpoint = shipmondoShippingModuleSettings.service_points_endpoint;
-    const servicePointCarrierIds = shipmondoShippingModuleSettings.service_point_carrier_ids;
+    const shipmondoShippingModuleSettings = window.shipmondoModule;
+    const frontendType = shipmondoShippingModuleSettings.frontendType;
+    const servicePointsEndpoint = shipmondoShippingModuleSettings.servicePointsEndpoint;
+    const servicePointCarrierIds = shipmondoShippingModuleSettings.servicePointCarrierIds;
     const servicePointSelector = '.shipmondo_service_point_selection .selected_service_point';
-    const deliveryOptionSelector = shipmondoShippingModuleSettings.delivery_option_selector;
+    const deliveryOptionSelector = shipmondoShippingModuleSettings.deliveryOptionSelector;
     const shipmondoBaseSelector = '.shipmondo-original';
 
     /* TODO
@@ -195,7 +195,7 @@ jQuery(document).ready(function ($) {
                 position: {
                     lat: parseFloat(servicePointEl.data('latitude')), lng: parseFloat(servicePointEl.data('longitude'))
                 }, map: map, icon: {
-                    url: window.shipmondo_shipping_module.module_base_url + '/views/img/' + (servicePointEl.hasClass('selected') ? 'picker_green' : 'picker_default') + '.png',
+                    url: window.shipmondoModule.modulePath + '/views/img/' + (servicePointEl.hasClass('selected') ? 'picker_green' : 'picker_default') + '.png',
                     size: new google.maps.Size(48, 48),
                     scaledSize: new google.maps.Size(48, 48),
                     anchor: new google.maps.Point(24, 24)

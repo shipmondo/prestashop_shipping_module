@@ -112,13 +112,13 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
                 try {
                     $externalServicePoints = $this->fetchExternalServicePoints($carrier->getCarrierCode(), $deliveryAddress);
                 } catch (ShipmondoApiException $e) {
-                    $errorMessage = $e->getMessage(); // TODO human error?
+                    $errorMessage = $this->trans('An error occured while fetching service points.', [], 'Modules.Shipmondo.Front');
                     $errorHtml = $this->getErrorHtml($errorMessage);
-                    $this->ajaxDie(json_encode(['status' => 'error', 'error' => $errorMessage, 'error_html' => $errorHtml]));
+                    $this->ajaxDie(json_encode(['status' => 'error', 'error' => $e->getMessage(), 'error_html' => $errorHtml]));
                 }
 
                 if (empty($externalServicePoints)) {
-                    $errorMessage = $this->trans('No service points found', [], 'Modules.Shipmondo.Front');
+                    $errorMessage = $this->trans('No service points found for the given address.', [], 'Modules.Shipmondo.Front');
                     $errorHtml = $this->getErrorHtml($errorMessage);
                     $this->ajaxDie(json_encode(['status' => 'error', 'error' => $errorMessage, 'error_html' => $errorHtml]));
                 }

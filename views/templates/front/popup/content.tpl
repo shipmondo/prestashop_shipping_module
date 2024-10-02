@@ -11,7 +11,7 @@
                 <span aria-hidden="true">×</span>
             </button>
             <div class="shipmondo-modal_header">
-                <h4>{l s='Choose pickup point' mod='shipmondo'}</h4>
+                <h4>{l s='Choose pickup point' d='Modules.Shipmondo.Front'}</h4>
             </div>
             <div class="service_points_map"></div>
             <div class="service_points_list">
