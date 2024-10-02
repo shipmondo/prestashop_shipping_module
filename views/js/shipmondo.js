@@ -72,7 +72,7 @@ jQuery(document).ready(function ($) {
     $(document).on('click', deliveryOptionSelector, function () {
         const carrierID = parseInt($(this).val().replace(/\D/g, ''));
         const containerEl = $('.shipmondo-service-points-container');
-        const contentEl = containerEl.find('.selected_service_point');
+        const contentEl = containerEl.find('.shipmondo-service-points-content');
 
         if (servicePointCarrierIds.includes(carrierID)) {
             setLoading(true)
