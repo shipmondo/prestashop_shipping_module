@@ -5,6 +5,8 @@
  *  @license   https://opensource.org/license/bsd-3-clause BSD-3-Clause
  */
 
+declare(strict_types=1);
+
 if (!defined('_PS_VERSION_')) {
     exit;
 }
@@ -148,7 +150,7 @@ class Shipmondo extends CarrierModule
 
     public function hookDisplayHeader($params): void
     {
-        $context = $this->context->controller;
+        $controller = $this->context->controller;
 
         $currentPage = Tools::getValue('controller');
 
@@ -177,13 +179,13 @@ class Shipmondo extends CarrierModule
                     'deliveryOptionSelector' => '.delivery-option input',
                     'frontendType' => Configuration::get('SHIPMONDO_FRONTEND_TYPE'),
                     'modulePath' => $this->getPathUri(),
-                    'servicePointsEndpoint' => Context::getContext()->link->getModuleLink('shipmondo', 'servicepoints'),
+                    'servicePointsEndpoint' => $this->context->link->getModuleLink('shipmondo', 'servicepoints'),
                     'servicePointCarrierIds' => $servicePointCarrierIds,
                     'googleMapsApiKey' => Configuration::get('SHIPMONDO_GOOGLE_API_KEY'),
                 ]
             ]);
 
-            $context->addCSS($this->getPathUri() . 'views/css/shipmondo.css', 'all');
+            $controller->addCSS($this->getPathUri() . 'views/css/shipmondo.css', 'all');
 
             // Add module overrides to views/css/module.
             $modules = [
@@ -191,19 +193,19 @@ class Shipmondo extends CarrierModule
             ];
             foreach ($modules as $module) {
                 if (Module::isInstalled($module) && Module::isEnabled($module)) {
-                    $cssPath = $this->getPathUri() . 'views/css/module/' . $module . '.css';
-                    if (file_exists($cssPath)) {
-                        $context->addCSS($cssPath, 'all');
+                    $cssPath = 'views/css/module/' . $module . '.css';
+                    if (file_exists($this->getLocalPath() . $cssPath)) {
+                        $controller->addCSS($this->getPathUri() . $cssPath, 'all');
                     }
 
-                    $jsPath = $this->getPathUri() . 'views/js/module/' . $module . '.js';
-                    if (file_exists($jsPath)) {
-                        $context->addJS($jsPath, 'all');
+                    $jsPath = 'views/js/module/' . $module . '.js';
+                    if (file_exists($this->getLocalPath() . $jsPath)) {
+                        $controller->addJS($this->getPathUri() . $jsPath, 'all');
                     }
                 }
             }
 
-            $context->addJS($this->getPathUri() . 'views/js/shipmondo.js', 'all');
+            $controller->addJS($this->getPathUri() . 'views/js/shipmondo.js', 'all');
         }
     }
 

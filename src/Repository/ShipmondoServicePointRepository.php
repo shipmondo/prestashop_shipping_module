@@ -5,6 +5,8 @@
  *  @license   https://opensource.org/license/bsd-3-clause BSD-3-Clause
  */
 
+declare(strict_types=1);
+
 namespace Shipmondo\Repository;
 
 use Doctrine\ORM\EntityRepository;

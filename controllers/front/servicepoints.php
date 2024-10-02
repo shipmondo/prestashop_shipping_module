@@ -5,6 +5,8 @@
  *  @license   https://opensource.org/license/bsd-3-clause BSD-3-Clause
  */
 
+declare(strict_types=1);
+
 if (!defined('_PS_VERSION_')) {
     exit;
 }
@@ -29,9 +31,6 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
                 break;
             case 'update':
                 $this->updateServicePoint();
-                break;
-            case 'getExternalList':
-                $this->getExternalServicePointList();
                 break;
             default:
                 $this->invalidAction();
@@ -164,70 +163,6 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
         }
 
         $this->ajaxDie(json_encode(['status' => 'success', 'service_point_html' => $html]));
-    }
-
-    private function getExternalServicePointList(): void
-    {
-        $carrierCode = Tools::getValue('carrier_code');
-        $frontendType = Configuration::get('SHIPMONDO_FRONTEND_TYPE');
-
-        $carrierCode = Tools::getValue('carrier_code');
-        $lastCarrierCode = Tools::getValue('last_carrier_code');
-        $lastAddress = (object) Tools::getValue('last_address');
-
-        $cart = Context::getContext()->cart;
-        $deliveryAddress = new Address($cart->id_address_delivery);
-
-        // Check if reload of service point is needed
-        $addressChanged = $this->hasAddressChanged($lastAddress, $deliveryAddress);
-        if (!$addressChanged && $carrierCode == $lastCarrierCode) {
-            $response = [
-                'status' => 'success',
-                'service_points_html' => '',
-                'service_points' => [],
-                'address_changed' => false
-            ];
-
-            $this->ajaxDie(json_encode($response));
-        }
-
-        $cart = Context::getContext()->cart;
-        $deliveryAddress = new Address($cart->id_address_delivery);
-        $servicePoint = $this->getRepository()->findOneBy(['cartId' => $cart->id, 'carrierCode' => $carrierCode]);
-        $servicePointId = $servicePoint ? $servicePoint->getServicePointId() : 0;
-
-        try {
-            $servicePoints = $this->fetchExternalServicePoints($carrierCode, $deliveryAddress);
-        } catch (ShipmondoApiException $e) {
-            $this->ajaxDie(json_encode(['status' => 'error', 'error' => $e->getMessage()])); // TODO show generic error message?
-        }
-
-        $carrierLogoPath = 'shipmondo/views/img/' . $carrierCode . '.png';
-        if (!file_exists(_PS_MODULE_DIR_ . $carrierLogoPath)) {
-            $carrierLogoPath = 'shipmondo/views/img/pdk.png'; # TODO add default logo
-        }
-
-        $this->context->smarty->assign([
-            'service_points' => $servicePoints,
-            'selected_service_point_id' => $servicePointId,
-            'carrier_code' => $carrierCode,
-            'carrier_logo' => _MODULE_DIR_ . $carrierLogoPath,
-            'service_points_json' => json_encode($servicePoints),
-            'service_points_count' => count($servicePoints),
-        ]);
-        $html = $this->module->fetch('module:shipmondo/views/templates/front/' . Tools::strtolower($frontendType) . '/content.tpl');
-
-        $this->ajaxDie(json_encode([
-            'status' => 'success',
-            'service_points_html' => $html,
-            'service_points' => $servicePoints,
-            'address_changed' => true,
-            'new_address' => [
-                'id_country' => $deliveryAddress->id_country,
-                'address1' => $deliveryAddress->address1,
-                'postcode' => $deliveryAddress->postcode,
-            ]
-        ]));
     }
 
     private function invalidAction(): void
