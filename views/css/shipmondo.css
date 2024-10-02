@@ -79,10 +79,12 @@
     text-align: center
 }
 */
-.shipmondo_service_point_selection .selected_service_point.no_service_point{
+/*.shipmondo_service_point_selection .selected_service_point.no_service_point{
     border-color: #cc1818;
     text-align: center;
 }
+
+ */
 
 .shipmondo_service_point_selection .selected_service_point.no_service_point:after {
     display: none
