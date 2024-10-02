@@ -157,7 +157,7 @@ jQuery(document).ready(function ($) {
         const loadGoogleMaps = function () {
             // Create the script tag, set the appropriate attributes
             var script = document.createElement('script')
-            script.src = 'https://maps.googleapis.com/maps/api/js?key=' + shipmondoShippingModuleSettings.google_maps_key + '&loading=async&callback=googleMapsInit'
+            script.src = 'https://maps.googleapis.com/maps/api/js?key=' + shipmondoShippingModuleSettings.googleMapsApiKey + '&loading=async&callback=googleMapsInit'
             script.async = true
 
             // Append the 'script' element to 'head'

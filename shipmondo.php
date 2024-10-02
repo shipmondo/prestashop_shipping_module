@@ -179,21 +179,9 @@ class Shipmondo extends CarrierModule
                     'modulePath' => $this->getPathUri(),
                     'servicePointsEndpoint' => Context::getContext()->link->getModuleLink('shipmondo', 'servicepoints'),
                     'servicePointCarrierIds' => $servicePointCarrierIds,
+                    'googleMapsApiKey' => Configuration::get('SHIPMONDO_GOOGLE_API_KEY'),
                 ]
             ]);
-
-            if (Configuration::get('SHIPMONDO_FRONTEND_TYPE') === 'popup') {
-                // Load Google Maps API
-                $context->registerJavascript(
-                    'google-maps',
-                    'https://maps.googleapis.com/maps/api/js?loading=async&callback=googleMapsInit&key=' . Configuration::get('SHIPMONDO_GOOGLE_API_KEY'),
-                    [
-                        'server' => 'remote',
-                        'position' => 'bottom',
-                        'priority' => 9999,
-                    ]
-                );
-            }
 
             $context->addCSS($this->getPathUri() . 'views/css/shipmondo.css', 'all');
 
