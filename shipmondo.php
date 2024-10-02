@@ -175,7 +175,7 @@ class Shipmondo extends CarrierModule
                 'shipmondo_shipping_module' => [
                     //'choose_pickup_point_text' => $this->trans('Choose pickup point', [], 'Modules.Shipmondo.Front'),
                     'delivery_option_selector' => '.delivery-option input',
-                    'google_maps_key' => 'AIzaSyBXFAxSgXP7b5D25WEtjxkYqoWM2PjxaLg', //TODO Jan
+                    'google_maps_key' => Configuration::get('SHIPMONDO_GOOGLE_API_KEY'),
                     'frontend_type' => Configuration::get('SHIPMONDO_FRONTEND_TYPE'),
                     //'modal_html' => $this->fetch('module:shipmondo/views/templates/front/popup/modal.tpl'), //TODO Jan?
                     'module_base_url' => Tools::getProtocol(Tools::usingSecureMode()) . $_SERVER['HTTP_HOST'] . $this->getPathUri(),
