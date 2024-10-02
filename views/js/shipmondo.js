@@ -151,18 +151,13 @@ jQuery(document).ready(function ($) {
         // MODAL
         let map = null;
         let bounds = null;
-        //let googleMapsIsLoaded = false;
-        const body = $('body');
-
         let currentModalElement = null
-
-
-        const googleMapsKey = "AIzaSyBXFAxSgXP7b5D25WEtjxkYqoWM2PjxaLg"; //TODO get from config
+        const body = $('body');
 
         const loadGoogleMaps = function () {
             // Create the script tag, set the appropriate attributes
             var script = document.createElement('script')
-            script.src = 'https://maps.googleapis.com/maps/api/js?key=' + googleMapsKey + '&loading=async&callback=googleMapsInit'
+            script.src = 'https://maps.googleapis.com/maps/api/js?key=' + shipmondoShippingModuleSettings.google_maps_key + '&loading=async&callback=googleMapsInit'
             script.async = true
 
             // Append the 'script' element to 'head'
