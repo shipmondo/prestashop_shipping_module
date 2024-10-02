@@ -1,3 +1,3 @@
-<div class="selected_service_point loading no_service_point has-error">
+<div class="selected_service_point no_service_point">
     {$errorMessage}
 </div>
