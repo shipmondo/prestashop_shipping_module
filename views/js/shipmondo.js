@@ -161,6 +161,8 @@ jQuery(document).ready(function ($) {
         const openModal = function (modal) {
             modal.removeClass('shipmondo-hidden');
 
+            console.log('openModal', googleMapsIsLoaded);
+
             if (googleMapsIsLoaded) {
                 renderMap(modal);
             }
@@ -267,7 +269,9 @@ jQuery(document).ready(function ($) {
         });
 
         // Render map after google maps load
-        $(document).on('googleMapsLoaded', function() {
+        $(document).on('googleMapsLoaded', function () {
+            console.log('googleMapsIsLoaded')
+
             googleMapsIsLoaded = true;
         });
     }
@@ -281,5 +285,7 @@ jQuery(document).ready(function ($) {
 
 
 window.googleMapsInit = function googleMapsInit() {
+
+    console.log('trigger')
     jQuery(document).trigger('googleMapsLoaded');
 }
