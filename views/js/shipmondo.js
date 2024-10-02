@@ -90,7 +90,7 @@ jQuery(document).ready(function ($) {
                         contentEl.html(response.service_point_html);
                     } else if (response.status === 'error') {
                         //TODO Jan, would be great if this came from php
-                        contentEl.html('<div class="selected_service_point loading no_service_point has-error">Error</div>');
+                        contentEl.html(response.error_html);
                         console.error('Shipmondo:', response.error);
                     }
                 }

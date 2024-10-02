@@ -93,7 +93,7 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
         $repo = $this->getRepository();
 
         $carrierId = Tools::getValue('carrier_id');
-        if(!$carrierId) {
+        if (!$carrierId) {
             $carrierId = $cart->id_carrier;
         }
 
@@ -107,18 +107,22 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
 
             // Find and set the nearest service point
             $deliveryAddress = new Address($cart->id_address_delivery);
-            
+
             if ($deliveryAddress) {
                 try {
                     $externalServicePoints = $this->fetchExternalServicePoints($carrier->getCarrierCode(), $deliveryAddress);
                 } catch (ShipmondoApiException $e) {
-                    $this->ajaxDie(json_encode(['status' => 'error', 'error' => $e->getMessage()])); // TODO show generic error message?
+                    $errorMessage = $e->getMessage(); // TODO human error?
+                    $errorHtml = $this->getErrorHtml($errorMessage);
+                    $this->ajaxDie(json_encode(['status' => 'error', 'error' => $errorMessage, 'error_html' => $errorHtml]));
                 }
 
                 if (empty($externalServicePoints)) {
-                    $this->ajaxDie(json_encode(['status' => 'error', 'error' => 'No service points found']));
+                    $errorMessage = $this->trans('No service points found', [], 'Modules.Shipmondo.Front');
+                    $errorHtml = $this->getErrorHtml($errorMessage);
+                    $this->ajaxDie(json_encode(['status' => 'error', 'error' => $errorMessage, 'error_html' => $errorHtml]));
                 }
-                
+
                 if ($servicePoint) {
                     foreach ($externalServicePoints as $externalServicePoint) {
                         if ($servicePoint && $servicePoint->getServicePointId() == $externalServicePoint->id) {
@@ -131,7 +135,7 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
                     $servicePoint->setCartId($cart->id);
                 }
 
-                if(!$selectedServicePoint) {
+                if (!$selectedServicePoint) {
                     $selectedServicePoint = $externalServicePoints[0];
                 }
 
@@ -155,7 +159,7 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
                 'service_points' => $externalServicePoints,
                 'frontendType' => Configuration::get('SHIPMONDO_FRONTEND_TYPE')
             ]);
-            
+
             $html = $this->module->fetch('module:shipmondo/views/templates/front/service_points_selector.tpl');
         }
 
@@ -167,9 +171,9 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
         $carrierCode = Tools::getValue('carrier_code');
         $frontendType = Configuration::get('SHIPMONDO_FRONTEND_TYPE');
 
-        $carrierCode       = Tools::getValue('carrier_code');
-        $lastCarrierCode  = Tools::getValue('last_carrier_code');
-        $lastAddress       = (object) Tools::getValue('last_address');
+        $carrierCode = Tools::getValue('carrier_code');
+        $lastCarrierCode = Tools::getValue('last_carrier_code');
+        $lastAddress = (object) Tools::getValue('last_address');
 
         $cart = Context::getContext()->cart;
         $deliveryAddress = new Address($cart->id_address_delivery);
@@ -241,7 +245,7 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
         return !empty($oldAddress)
             && property_exists($oldAddress, 'id_country')
             && property_exists($oldAddress, 'postcode')
-            && property_exists($oldAddress, 'address1') 
+            && property_exists($oldAddress, 'address1')
             && ($oldAddress->id_country != $newAddress->id_country
                 || $oldAddress->postcode != $newAddress->postcode
                 || $oldAddress->address1 != $newAddress->address1);
@@ -259,5 +263,14 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
             'country' => Country::getIsoById($deliveryAddress->id_country),
             'address' => $deliveryAddress->address1
         ]);
+    }
+
+    private function getErrorHtml(string $errorMessage): string
+    {
+        $this->context->smarty->assign([
+            'errorMessage' => $errorMessage
+        ]);
+
+        return $this->module->fetch('module:shipmondo/views/templates/front/_partials/error.tpl');
     }
 }
