@@ -13,13 +13,6 @@ jQuery(document).ready(function ($) {
     const deliveryOptionSelector = shipmondoShippingModuleSettings.deliveryOptionSelector;
     const shipmondoBaseSelector = '.shipmondo-original';
 
-    /* TODO
-    - Wc kommer "ingen service point" og "fejl besked" direkte som html når det sker.
-    - Hvis vi gør det samme, skal jeg kun lave en loading box som kan vises/skjules afhængig af klasse Pt. er det lidt broken da jeg har flyttes noget ud
-    - Håndter error(Venter på janP returnere fejlbsekder også)
-     */
-
-
     // Get parent wrapper
     const getWrapper = function (element) {
         return element.parents('.shipmondo_service_point_selection');
@@ -54,10 +47,11 @@ jQuery(document).ready(function ($) {
                 if (response.status === "success") {
                     setShopHTML(shopElement, response.html)
                 } else if (response.status === "error") {
-                    //TODO DP more specific selector
-                    $(".shipmondo_service_point_selection").html(response.html);
-
-                    //$(".shipmondo_service_point_selection").html('<div class="selected_service_point service_point dropdown no_service_point">Ingen tilgængelige udleveringssteder</div>');
+                    const containerEl = $('.shipmondo-service-points-container');
+                    const contentEl = containerEl.find('.shipmondo-service-points-content');
+                    contentEl.html(response.html);
+                    //Alternative
+                    //getWrapper($(servicePointSelector)).html(response.html);
                 }
             }
         });
@@ -70,8 +64,8 @@ jQuery(document).ready(function ($) {
 
         if (servicePointCarrierIds.includes(carrierID)) {
             setLoading(true)
-
             containerEl.show();
+
             $.ajax({
                 url: servicePointsEndpoint,
                 type: 'GET',
@@ -80,17 +74,9 @@ jQuery(document).ready(function ($) {
                     action: 'get', carrier_id: carrierID
                 }, success: function (response) {
                     setLoading(false);
-                    contentEl.html(response.html);
-                    /*
-                                        if (response.status === 'success') {
-                                            contentEl.html(response.service_point_html);
-                                        } else if (response.status === 'error') {
-                                            //TODO Jan, would be great if this came from php
-                                            contentEl.html(response.error_html);
-                                            console.error('Shipmondo:', response.error);
-                                        }
 
-                     */
+                    console.log('response', response);
+                    contentEl.html(response.html);
                 }
             });
         } else {
