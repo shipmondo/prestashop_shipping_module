@@ -24,17 +24,22 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
     {
         parent::initContent();
 
-        $action = Tools::getValue('action');
-        switch ($action) {
-            case 'get':
-                $this->getServicePoint();
-                break;
-            case 'update':
-                $this->updateServicePoint();
-                break;
-            default:
-                $this->invalidAction();
-                break;
+        try {
+            $action = Tools::getValue('action');
+            switch ($action) {
+                case 'get':
+                    $this->getServicePoint();
+                    break;
+                case 'update':
+                    $this->updateServicePoint();
+                    break;
+                default:
+                    $this->invalidAction();
+                    break;
+            }
+        } catch (Exception $e) {
+            $errorMessage = $this->trans('An unknown error occured.', [], 'Modules.Shipmondo.Front');
+            $this->ajaxDie(json_encode(['status' => 'error', 'error' => $e->getMessage(), 'html' => $this->getErrorHtml($errorMessage)]));
         }
     }
 
