@@ -83,7 +83,7 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
         $html = $this->module->fetch('module:shipmondo/views/templates/front/_partials/selected_service_point.tpl');
 
 
-        $this->ajaxDie(json_encode(['status' => 'success', 'selected_service_point_html' => $html]));
+        $this->ajaxDie(json_encode(['status' => 'success', 'html' => $html]));
     }
 
     private function getServicePoint(): void
@@ -113,13 +113,13 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
                 } catch (ShipmondoApiException $e) {
                     $errorMessage = $this->trans('An error occured while fetching service points.', [], 'Modules.Shipmondo.Front');
                     $errorHtml = $this->getErrorHtml($errorMessage);
-                    $this->ajaxDie(json_encode(['status' => 'error', 'error' => $e->getMessage(), 'error_html' => $errorHtml]));
+                    $this->ajaxDie(json_encode(['status' => 'error', 'error' => $e->getMessage(), 'html' => $errorHtml]));
                 }
 
                 if (empty($externalServicePoints)) {
                     $errorMessage = $this->trans('No service points found for the given address.', [], 'Modules.Shipmondo.Front');
                     $errorHtml = $this->getErrorHtml($errorMessage);
-                    $this->ajaxDie(json_encode(['status' => 'error', 'error' => $errorMessage, 'error_html' => $errorHtml]));
+                    $this->ajaxDie(json_encode(['status' => 'error', 'error' => $errorMessage, 'html' => $errorHtml]));
                 }
 
                 if ($servicePoint) {
@@ -162,7 +162,7 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
             $html = $this->module->fetch('module:shipmondo/views/templates/front/service_points_selector.tpl');
         }
 
-        $this->ajaxDie(json_encode(['status' => 'success', 'service_point_html' => $html]));
+        $this->ajaxDie(json_encode(['status' => 'success', 'html' => $html]));
     }
 
     private function invalidAction(): void
