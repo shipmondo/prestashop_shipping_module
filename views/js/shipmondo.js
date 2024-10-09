@@ -50,20 +50,14 @@ jQuery(document).ready(function ($) {
 
         $.ajax({
             url: servicePointsEndpoint, type: 'POST', data: data, dataType: 'json',
-            error: function (response) {
-                console.error('error', response);
-                //TODO SHOW ERROR? look at WC
-                // Error
-
-                //TODO Jan, would be great if this came from php
-
-                $(".shipmondo_service_point_selection").html('<div class="selected_service_point service_point dropdown no_service_point">Ingen tilgængelige udleveringssteder</div>');
-            }, success: function (response) {
+            success: function (response) {
                 if (response.status === "success") {
-                    setShopHTML(shopElement, response.selected_service_point_html)
+                    setShopHTML(shopElement, response.html)
                 } else if (response.status === "error") {
-                    //TODO SHOW ERROR? look at WC
-                    $(".shipmondo_service_point_selection").html('<div class="selected_service_point service_point dropdown no_service_point">Ingen tilgængelige udleveringssteder</div>');
+                    //TODO DP more specific selector
+                    $(".shipmondo_service_point_selection").html(response.html);
+
+                    //$(".shipmondo_service_point_selection").html('<div class="selected_service_point service_point dropdown no_service_point">Ingen tilgængelige udleveringssteder</div>');
                 }
             }
         });
@@ -86,13 +80,17 @@ jQuery(document).ready(function ($) {
                     action: 'get', carrier_id: carrierID
                 }, success: function (response) {
                     setLoading(false);
-                    if (response.status === 'success') {
-                        contentEl.html(response.service_point_html);
-                    } else if (response.status === 'error') {
-                        //TODO Jan, would be great if this came from php
-                        contentEl.html(response.error_html);
-                        console.error('Shipmondo:', response.error);
-                    }
+                    contentEl.html(response.html);
+                    /*
+                                        if (response.status === 'success') {
+                                            contentEl.html(response.service_point_html);
+                                        } else if (response.status === 'error') {
+                                            //TODO Jan, would be great if this came from php
+                                            contentEl.html(response.error_html);
+                                            console.error('Shipmondo:', response.error);
+                                        }
+
+                     */
                 }
             });
         } else {

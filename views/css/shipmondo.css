@@ -4,7 +4,7 @@
  *  @license   https://opensource.org/license/bsd-3-clause BSD-3-Clause
  */
 
-/* Copy from WC */
+/* Copy from WC Plugin */
 
 .shipmondo_service_point_selection h3.service_point_title {
     font-size: 1.1em;
@@ -30,13 +30,6 @@
     position: relative
 }
 
-/*  TODO use this ?*/
-/*.shipmondo_service_point_selection .selected_service_point.has-error {
-    border-color: #cc1818
-}
-
- */
-
 .shipmondo_service_point_selection .selected_service_point:after {
     background: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2724%27 height=%2724%27 aria-hidden=%27true%27 class=%27wc-block-components-panel__button-icon%27%3E%3Cpath d=%27M6.5 12.4 12 8l5.5 4.4-.9 1.2L12 10l-4.5 3.6z%27/%3E%3C/svg%3E") no-repeat 100%;
     background-size: cover;
@@ -58,46 +51,9 @@
     transform: rotate(90deg)
 }
 
-/*
-.shipmondo_service_point_selection .selected_service_point.loading {
-    cursor: wait;
-    opacity: .5;
-    transition: opacity .2s ease;
-    text-align: center;
-}
-
-.shipmondo_service_point_selection .selected_service_point.loading:after {
-    display: none
-}
-
-.shipmondo_service_point_selection .selected_service_point.loading:hover {
-    background: none
-}
-
-.shipmondo_service_point_selection .selected_service_point.no_service_point {
-    cursor: not-allowed;
-    text-align: center
-}
-*/
-/*.shipmondo_service_point_selection .selected_service_point.no_service_point{
-    border-color: #cc1818;
-    text-align: center;
-}
-
- */
-
 .shipmondo_service_point_selection .selected_service_point.no_service_point:after {
     display: none
 }
-
-/*
-.shipmondo_service_point_selection .selected_service_point.no_service_point:hover {
-    background: none
-}
-
- */
-
-
 
 .shipmondo_service_point_selection .service_point {
     cursor: pointer;
