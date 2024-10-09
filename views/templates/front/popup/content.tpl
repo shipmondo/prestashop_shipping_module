@@ -28,8 +28,8 @@
                      data-carrier_code="{$servicePoint->carrier_code}">
                     <div class="header"><span class="name">{$servicePoint->name}</span></div>
                     <div class="location">
-                        <div class="address_info">{$servicePoint->address}, {$sp->zipcode} {$sp->city}</div>
-                        {if $sp->distance}
+                        <div class="address_info">{$servicePoint->address}, {$servicePoint->zipcode} {$servicePoint->city}</div>
+                        {if $servicePoint->distance}
                         <div class="distance">{($servicePoint->distance / 1000)|string_format:"%.2f"} km</div>
                         {/if}
                     </div>
