@@ -9,7 +9,6 @@ declare(strict_types=1);
 
 namespace Shipmondo;
 
-use Module;
 use Shipmondo\Exception\ShipmondoApiException;
 
 class ApiClient
@@ -30,7 +29,7 @@ class ApiClient
     private $baseUrl;
 
     /**
-     * @var Module
+     * @var \Module
      */
     private $module;
 
@@ -38,9 +37,9 @@ class ApiClient
      * @param string $frontendKey
      * @param \GuzzleHttp\Client $client
      * @param string $baseUrl
-     * @param Module $module
+     * @param \Module $module
      */
-    public function __construct(Module $module, string $frontendKey, \GuzzleHttp\Client $client, string $baseUrl)
+    public function __construct(\Module $module, string $frontendKey, \GuzzleHttp\Client $client, string $baseUrl)
     {
         $this->module = $module;
         $this->frontendKey = $frontendKey;
@@ -58,6 +57,7 @@ class ApiClient
 
     /**
      * @param array $query
+     *
      * @return array
      */
     public function getServicePoints($query): array
@@ -69,6 +69,7 @@ class ApiClient
      * @param string $mtethod
      * @param string $url
      * @param array $query
+     *
      * @return array
      */
     private function request($method, $url, $query = []): array

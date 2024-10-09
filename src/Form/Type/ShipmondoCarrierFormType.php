@@ -11,22 +11,19 @@ namespace Shipmondo\Form\Type;
 
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use PrestaShopBundle\Translation\TranslatorInterface;
-use Carrier;
-use Context;
+use Shipmondo\Entity\ShipmondoCarrier;
 use Shipmondo\Exception\ShipmondoApiException;
+use Shipmondo\ShipmondoCarrierHandler;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormEvents;
-use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormError;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-use Shipmondo\ShipmondoCarrierHandler;
-use Shipmondo\Entity\ShipmondoCarrier;
 
 class ShipmondoCarrierFormType extends TranslatorAwareType
 {
-
     /**
      * @var ShipmondoCarrierHandler
      */
@@ -41,7 +38,7 @@ class ShipmondoCarrierFormType extends TranslatorAwareType
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $allPsCarriers = Carrier::getCarriers(Context::getContext()->language->id, false, false, false, null, Carrier::ALL_CARRIERS);
+        $allPsCarriers = \Carrier::getCarriers(\Context::getContext()->language->id, false, false, false, null, \Carrier::ALL_CARRIERS);
         $psCarriers = [$this->trans('Create new carrier', 'Module.Shipmondo.Admin') => 0];
         foreach ($allPsCarriers as $carrier) {
             $psCarriers[$carrier['name']] = $carrier['id_carrier'];
@@ -58,17 +55,16 @@ class ShipmondoCarrierFormType extends TranslatorAwareType
             $carriers[$carrier->name] = $carrier->code;
         }
 
-
         $builder
             ->add('carrier_id', ChoiceType::class, [
-                'label' => $this->trans("Carrier", 'Admin.Global'),
+                'label' => $this->trans('Carrier', 'Admin.Global'),
                 'required' => true,
-                'choices' => $psCarriers
+                'choices' => $psCarriers,
             ])
             ->add('carrier_code', ChoiceType::class, [
-                'label' => $this->trans("Shipmondo Carrier", 'Module.Shipmondo.Admin'),
+                'label' => $this->trans('Shipmondo Carrier', 'Module.Shipmondo.Admin'),
                 'required' => true,
-                'choices' => $carriers
+                'choices' => $carriers,
             ])
         ;
 
@@ -78,9 +74,9 @@ class ShipmondoCarrierFormType extends TranslatorAwareType
 
             if ($carrier instanceof ShipmondoCarrier) {
                 $form->add('product_code', ChoiceType::class, [
-                    'label' => $this->trans("Product", 'Module.Shipmondo.Admin'),
+                    'label' => $this->trans('Product', 'Module.Shipmondo.Admin'),
                     'required' => true,
-                    'choices' => [$this->trans('Loading...', 'Module.Shipmondo.Admin') => $carrier->getProductCode()] // Actual choices will be added in the POST_SUBMIT event
+                    'choices' => [$this->trans('Loading...', 'Module.Shipmondo.Admin') => $carrier->getProductCode()], // Actual choices will be added in the POST_SUBMIT event
                 ]);
             }
         });
@@ -92,7 +88,7 @@ class ShipmondoCarrierFormType extends TranslatorAwareType
             try {
                 $products = $this->shipmondoCarrierHandler->getProducts($carrierCode);
             } catch (ShipmondoApiException $e) {
-                $error = $this->trans("An error occured when requesting Shipmondo: %apiError%", 'Module.Shipmondo.Admin', ['%apiError%' => $e->getMessage()]);
+                $error = $this->trans('An error occured when requesting Shipmondo: %apiError%', 'Module.Shipmondo.Admin', ['%apiError%' => $e->getMessage()]);
                 $form->getParent()->addError(new FormError($error));
                 $products = [];
             }
@@ -103,9 +99,9 @@ class ShipmondoCarrierFormType extends TranslatorAwareType
             }
 
             $form->getParent()->add('product_code', ChoiceType::class, [
-                'label' => $this->trans("Product", 'Module.Shipmondo.Admin'),
+                'label' => $this->trans('Product', 'Module.Shipmondo.Admin'),
                 'required' => true,
-                'choices' => $choices
+                'choices' => $choices,
             ]);
         };
 
@@ -124,7 +120,7 @@ class ShipmondoCarrierFormType extends TranslatorAwareType
                     'fields' => 'carrierId',
                     'message' => $this->trans('The selected carrier is already associated with a Shipmondo carrier.', 'Module.Shipmondo.Admin'),
                     'errorPath' => 'carrierId',
-                ])
+                ]),
             ],
         ]);
     }

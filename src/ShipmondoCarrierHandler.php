@@ -9,7 +9,6 @@ declare(strict_types=1);
 
 namespace Shipmondo;
 
-use Shipmondo\ApiClient;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 
 class ShipmondoCarrierHandler
@@ -38,7 +37,6 @@ class ShipmondoCarrierHandler
         $this->apiClient = $apiClient;
     }
 
-
     /**
      * Get available carriers from Shipmondo
      *
@@ -57,13 +55,14 @@ class ShipmondoCarrierHandler
      * Get carrier by code
      *
      * @param string $carrierCode
+     *
      * @return ?object
      */
     public function getCarrier(string $carrierCode): ?object
     {
         $carriers = self::getCarriers();
 
-        foreach($carriers as $carrier) {
+        foreach ($carriers as $carrier) {
             if ($carrier->code === $carrierCode) {
                 return $carrier;
             }
@@ -76,13 +75,14 @@ class ShipmondoCarrierHandler
      * Get products for a carrier
      *
      * @param string $carrierCode
+     *
      * @return array
      */
     public function getProducts(string $carrierCode): array
     {
         $carriers = self::getCarriers();
 
-        foreach($carriers as $carrier) {
+        foreach ($carriers as $carrier) {
             if ($carrier->code === $carrierCode) {
                 return $carrier->products;
             }
@@ -95,11 +95,13 @@ class ShipmondoCarrierHandler
      * Get carrier name. Fallback to carrier code if name is not found.
      *
      * @param string $carrierCode
+     *
      * @return string
      */
     public function getCarrierName(string $carrierCode): string
     {
         $carrier = self::getCarrier($carrierCode);
+
         return $carrier ? $carrier->name : $carrierCode;
     }
 
@@ -107,6 +109,7 @@ class ShipmondoCarrierHandler
      * Get product name.
      *
      * @param string $productCode
+     *
      * @return string
      */
     public function getProductName(string $productCode): string
@@ -116,6 +119,7 @@ class ShipmondoCarrierHandler
 
     /**
      * Fetch carriers from Shipmondo API if cache is not valid
+     *
      * @return array
      */
     private function fetchCarriers(): array

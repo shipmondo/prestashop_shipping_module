@@ -11,13 +11,12 @@ if (!defined('_PS_VERSION_')) {
     exit;
 }
 
+use Doctrine\ORM\EntityRepository;
 use Shipmondo\Entity\ShipmondoServicePoint;
 use Shipmondo\Exception\ShipmondoApiException;
-use Doctrine\ORM\EntityRepository;
 
 class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
 {
-
     public $ajax = true;
 
     public function initContent(): void
@@ -86,7 +85,6 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
             ],
         ]);
         $html = $this->module->fetch('module:shipmondo/views/templates/front/_partials/selected_service_point.tpl');
-
 
         $this->ajaxDie(json_encode(['status' => 'success', 'html' => $html]));
     }
@@ -161,7 +159,7 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
                 'carrier' => new Carrier($carrierId),
                 'service_point' => $selectedServicePoint,
                 'service_points' => $externalServicePoints,
-                'frontendType' => Configuration::get('SHIPMONDO_FRONTEND_TYPE')
+                'frontendType' => Configuration::get('SHIPMONDO_FRONTEND_TYPE'),
             ]);
 
             $html = $this->module->fetch('module:shipmondo/views/templates/front/service_points_selector.tpl');
@@ -201,14 +199,14 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
             'carrier_code' => $carrierCode,
             'zipcode' => $deliveryAddress->postcode,
             'country' => Country::getIsoById($deliveryAddress->id_country),
-            'address' => $deliveryAddress->address1
+            'address' => $deliveryAddress->address1,
         ]);
     }
 
     private function getErrorHtml(string $errorMessage): string
     {
         $this->context->smarty->assign([
-            'errorMessage' => $errorMessage
+            'errorMessage' => $errorMessage,
         ]);
 
         return $this->module->fetch('module:shipmondo/views/templates/front/_partials/error.tpl');

@@ -13,5 +13,4 @@ use Doctrine\ORM\EntityRepository;
 
 class ShipmondoCarrierRepository extends EntityRepository
 {
-    
 }

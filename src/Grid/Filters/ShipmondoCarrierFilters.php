@@ -9,8 +9,8 @@ declare(strict_types=1);
 
 namespace Shipmondo\Grid\Filters;
 
-use Shipmondo\Grid\Definition\Factory\ShipmondoCarrierGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters;
+use Shipmondo\Grid\Definition\Factory\ShipmondoCarrierGridDefinitionFactory;
 
 class ShipmondoCarrierFilters extends Filters
 {

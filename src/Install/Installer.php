@@ -9,45 +9,42 @@ declare(strict_types=1);
 
 namespace Shipmondo\Install;
 
-use Configuration;
-use Db;
-use Module;
-
 class Installer
 {
     /**
      * @var string[]
      */
-    const HOOKS = [
+    public const HOOKS = [
         'displayAdminOrderSide',
         'displayHeader',
         'displayAfterCarrier',
-        'newOrder',
+        'actionValidateOrder',
         'actionCarrierUpdate',
-        'addWebserviceResources'
+        'addWebserviceResources',
     ];
 
     /**
      * @var string[]
      */
-    const TABLES = [
+    public const TABLES = [
         'shipmondo_carrier',
-        'shipmondo_service_point'
+        'shipmondo_service_point',
     ];
 
     /**
-     * @var Module
+     * @var \Module
      */
     private $module;
 
-    public function __construct(Module $module)
+    public function __construct(\Module $module)
     {
         $this->module = $module;
     }
 
     public function install()
     {
-        $dbInstance = Db::getInstance();
+        $dbInstance = \Db::getInstance();
+
         return $this->registerHooks()
             && $this->createCarrierTable($dbInstance)
             && $this->createServicePointTable($dbInstance)
@@ -61,7 +58,7 @@ class Installer
             && $this->deleteSettings();
     }
 
-    public function createCarrierTable(Db $dbInstance)
+    public function createCarrierTable(\Db $dbInstance)
     {
         $sql = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'shipmondo_carrier` ('
             . '`id_smd_carrier` INT NOT NULL AUTO_INCREMENT PRIMARY KEY, '
@@ -73,7 +70,7 @@ class Installer
         return $dbInstance->execute($sql);
     }
 
-    public function createServicePointTable(Db $dbInstance)
+    public function createServicePointTable(\Db $dbInstance)
     {
         $sql = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'shipmondo_service_point` ('
             . 'id_smd_service_point INT AUTO_INCREMENT NOT NULL PRIMARY KEY, '
@@ -121,9 +118,9 @@ class Installer
     // If frontend type is not set, set as dropdown
     private function setDefaultFrontendType()
     {
-        $frontendType = Configuration::get('SHIPMONDO_FRONTEND_TYPE');
+        $frontendType = \Configuration::get('SHIPMONDO_FRONTEND_TYPE');
         if (empty($frontendType)) {
-            Configuration::updateValue('SHIPMONDO_FRONTEND_TYPE', 'dropdown');
+            \Configuration::updateValue('SHIPMONDO_FRONTEND_TYPE', 'dropdown');
         }
 
         return true;
@@ -133,7 +130,7 @@ class Installer
     {
         $success = true;
 
-        $dbInstance = Db::getInstance();
+        $dbInstance = \Db::getInstance();
         foreach (self::TABLES as $table) {
             $sql = 'DROP TABLE IF EXISTS `' . _DB_PREFIX_ . $table . '`';
 
@@ -147,16 +144,16 @@ class Installer
 
     private function deleteSettings()
     {
-        $keys =[
+        $keys = [
             'SHIPMONDO_FRONTEND_KEY',
             'SHIPMONDO_GOOGLE_API_KEY',
             'SHIPMONDO_FRONTEND_TYPE',
             'SHIPMONDO_AVAILABLE_CARRIERS',
-            'SHIPMONDO_AVAILABLE_CARRIERS_EXPIRATION'
+            'SHIPMONDO_AVAILABLE_CARRIERS_EXPIRATION',
         ];
 
         foreach ($keys as $key) {
-            Configuration::deleteByName($key);
+            \Configuration::deleteByName($key);
         }
 
         return true;

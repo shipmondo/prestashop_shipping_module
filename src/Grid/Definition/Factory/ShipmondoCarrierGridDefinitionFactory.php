@@ -9,21 +9,21 @@ declare(strict_types=1);
 
 namespace Shipmondo\Grid\Definition\Factory;
 
-use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
-use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
-use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\LinkColumn;
-use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
+use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\LinkColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 final class ShipmondoCarrierGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
-    const GRID_ID = 'shipmondo_carrier';
+    public const GRID_ID = 'shipmondo_carrier';
 
     /**
      * {@inheritdoc}
@@ -109,7 +109,6 @@ final class ShipmondoCarrierGridDefinitionFactory extends AbstractGridDefinition
                             ),
                     ])
             );
-        ;
     }
 
     /**

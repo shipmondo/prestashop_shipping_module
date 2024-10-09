@@ -78,11 +78,11 @@ final class ShipmondoConfigurationDataConfiguration implements DataConfiguration
         $frontendType = $configuration['frontend_type'];
         if (empty($frontendType)) {
             throw new \InvalidArgumentException($this->trans('Display type is required', 'Modules.Shipmondo.Admin'));
-        } else if (!in_array($frontendType, ['popup', 'dropdown'])) {
+        } elseif (!in_array($frontendType, ['popup', 'dropdown'])) {
             throw new \InvalidArgumentException($this->trans('Invalid display type', 'Modules.Shipmondo.Admin'));
         }
 
-        if ($frontendType === "popup" && empty($configuration['google_api_key'])) {
+        if ($frontendType === 'popup' && empty($configuration['google_api_key'])) {
             throw new \InvalidArgumentException($this->trans('Google API Key is required when using modal display type', 'Modules.Shipmondo.Admin'));
         }
 
@@ -91,7 +91,7 @@ final class ShipmondoConfigurationDataConfiguration implements DataConfiguration
 
     /**
      * Translate
-     * 
+     *
      * @return string
      */
     private function trans(string $key, string $domain, array $parameters = []): string

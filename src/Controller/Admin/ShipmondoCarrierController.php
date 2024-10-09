@@ -9,22 +9,19 @@ declare(strict_types=1);
 
 namespace Shipmondo\Controller\Admin;
 
+use Carrier;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Service\Grid\ResponseBuilder;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Shipmondo\Grid\Definition\Factory\ShipmondoCarrierGridDefinitionFactory;
-use Shipmondo\Grid\Filters\ShipmondoCarrierFilters;
 use Shipmondo\Entity\ShipmondoCarrier;
 use Shipmondo\Form\Type\ShipmondoCarrierFormType;
-use Carrier;
-use Configuration;
-use Group;
-use Zone;
+use Shipmondo\Grid\Definition\Factory\ShipmondoCarrierGridDefinitionFactory;
+use Shipmondo\Grid\Filters\ShipmondoCarrierFilters;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class ShipmondoCarrierController extends FrameworkBundleAdminController
 {
-    const TAB_CLASS_NAME = 'AdminShipmondoShipmondoCarrier';
+    public const TAB_CLASS_NAME = 'AdminShipmondoShipmondoCarrier';
 
     public function indexAction(ShipmondoCarrierFilters $filters): Response
     {
@@ -82,7 +79,7 @@ class ShipmondoCarrierController extends FrameworkBundleAdminController
         return $this->render('@Modules/shipmondo/views/templates/admin/shipmondo_carrier_form.html.twig', [
             'form' => $form->createView(),
             'layoutTitle' => $this->trans('Shipmondo Carrier', 'Modules.Shipmondo.Admin'),
-            'isEdit' => false
+            'isEdit' => false,
         ]);
     }
 
@@ -107,7 +104,7 @@ class ShipmondoCarrierController extends FrameworkBundleAdminController
         return $this->render('@Modules/shipmondo/views/templates/admin/shipmondo_carrier_form.html.twig', [
             'form' => $form->createView(),
             'layoutTitle' => $this->trans('Shipmondo Carrier', 'Modules.Shipmondo.Admin'),
-            'isEdit' => true
+            'isEdit' => true,
         ]);
     }
 
@@ -128,7 +125,7 @@ class ShipmondoCarrierController extends FrameworkBundleAdminController
 
     /**
      * Create a new carrier in PrestaShop and set relation to Shipmondo Carrier
-     * 
+     *
      * @param ShipmondoCarrier $carrier
      */
     private function createPsCarrier(ShipmondoCarrier $carrier): void
@@ -137,7 +134,7 @@ class ShipmondoCarrierController extends FrameworkBundleAdminController
         $carrierName = $carrierHandler->getCarrierName($carrier->getCarrierCode());
         $productName = $carrierHandler->getProductName($carrier->getProductCode());
 
-        $psCarrier = new Carrier();
+        $psCarrier = new \Carrier();
         $psCarrier->name = $carrierName . ' - ' . $productName;
         $psCarrier->active = false;
         $psCarrier->deleted = false;
@@ -148,14 +145,14 @@ class ShipmondoCarrierController extends FrameworkBundleAdminController
         $psCarrier->external_module_name = 'shipmondo';
         $psCarrier->need_range = true;
         $psCarrier->is_free = true;
-        $psCarrier->delay[Configuration::get('PS_LANG_DEFAULT')] = ' ';
+        $psCarrier->delay[\Configuration::get('PS_LANG_DEFAULT')] = ' ';
 
         if ($psCarrier->add()) {
-            $groups = Group::getGroups(true);
+            $groups = \Group::getGroups(true);
             $group_ids = array_column($groups, 'id_group');
             $psCarrier->setGroups($group_ids);
 
-            $zones = Zone::getZones(true);
+            $zones = \Zone::getZones(true);
             foreach ($zones as $zone) {
                 $psCarrier->addZone($zone['id_zone']);
             }

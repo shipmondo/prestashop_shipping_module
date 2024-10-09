@@ -37,7 +37,7 @@ class ShipmondoConfigurationController extends FrameworkBundleAdminController
 
         return $this->render('@Modules/shipmondo/views/templates/admin/shipmondo_configuration_form.html.twig', [
             'enableSidebar' => true,
-            'layoutTitle' => "Shipmondo",
+            'layoutTitle' => 'Shipmondo',
             'shipmondoConfigurationForm' => $textForm->createView(),
         ]);
     }

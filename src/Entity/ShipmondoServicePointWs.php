@@ -14,7 +14,7 @@ use ObjectModel;
 /**
  * Entity used to expose Shipmondo Service Points to the Webservice
  */
-class ShipmondoServicePointWs extends ObjectModel
+class ShipmondoServicePointWs extends \ObjectModel
 {
     /**
      * @var int
@@ -56,7 +56,6 @@ class ShipmondoServicePointWs extends ObjectModel
      */
     public $address2;
 
-
     /**
      * @var string
      */
@@ -90,23 +89,23 @@ class ShipmondoServicePointWs extends ObjectModel
             'zip_code' => ['type' => self::TYPE_STRING, 'validate' => 'isString'],
             'city' => ['type' => self::TYPE_STRING, 'validate' => 'isString'],
             'country_code' => ['type' => self::TYPE_STRING, 'validate' => 'isString'],
-        ]
+        ],
     ];
 
     protected $webserviceParameters = [
-      'objectNodeName' => 'shipmondo_service_point',
-      'objectsNodeName' => 'shipmondo_service_points',
-      'fields' => [
-        'id_cart' => ['xlink_resource' => 'carts'],
-        'id_order' => ['xlink_resource' => 'orders'],
-        'carrier_code' => ['required' => true],
-        'service_point_id' => ['required' => true],
-        'name' => ['required' => true],
-        'address1' => ['required' => true],
-        'address2' => [],
-        'zip_code' => ['required' => true],
-        'city' => ['required' => true],
-        'country_code' => ['required' => true],
-      ]
+        'objectNodeName' => 'shipmondo_service_point',
+        'objectsNodeName' => 'shipmondo_service_points',
+        'fields' => [
+            'id_cart' => ['xlink_resource' => 'carts'],
+            'id_order' => ['xlink_resource' => 'orders'],
+            'carrier_code' => ['required' => true],
+            'service_point_id' => ['required' => true],
+            'name' => ['required' => true],
+            'address1' => ['required' => true],
+            'address2' => [],
+            'zip_code' => ['required' => true],
+            'city' => ['required' => true],
+            'country_code' => ['required' => true],
+        ],
     ];
 }

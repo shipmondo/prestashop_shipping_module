@@ -13,6 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Table()
+ *
  * @ORM\Entity()
  */
 class ShipmondoServicePoint
@@ -21,7 +22,9 @@ class ShipmondoServicePoint
      * @var int
      *
      * @ORM\Id
+     *
      * @ORM\Column(name="id_smd_service_point", type="integer")
+     *
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
@@ -75,7 +78,6 @@ class ShipmondoServicePoint
      */
     private $address2;
 
-
     /**
      * @var string
      *
@@ -121,11 +123,13 @@ class ShipmondoServicePoint
      * Set the value of cartId
      *
      * @param int $cartId
+     *
      * @return self
      */
     public function setCartId(int $cartId): self
     {
         $this->cartId = $cartId;
+
         return $this;
     }
 
@@ -143,11 +147,13 @@ class ShipmondoServicePoint
      * Set the value of orderId
      *
      * @param int $orderId
+     *
      * @return self
      */
     public function setOrderId(int $orderId): self
     {
         $this->orderId = $orderId;
+
         return $this;
     }
 
@@ -165,11 +171,13 @@ class ShipmondoServicePoint
      * Set the value of carrierCode
      *
      * @param string $carrierCode
+     *
      * @return self
      */
     public function setCarrierCode(string $carrierCode): self
     {
         $this->carrierCode = $carrierCode;
+
         return $this;
     }
 
@@ -187,11 +195,13 @@ class ShipmondoServicePoint
      * Set the value of servicePointId
      *
      * @param string $servicePointId
+     *
      * @return self
      */
     public function setServicePointId(string $servicePointId): self
     {
         $this->servicePointId = $servicePointId;
+
         return $this;
     }
 
@@ -209,11 +219,13 @@ class ShipmondoServicePoint
      * Set the value of name
      *
      * @param string $name
+     *
      * @return self
      */
     public function setName(string $name): self
     {
         $this->name = $name;
+
         return $this;
     }
 
@@ -231,11 +243,13 @@ class ShipmondoServicePoint
      * Set the value of address1
      *
      * @param string $address1
+     *
      * @return self
      */
     public function setAddress1(string $address1): self
     {
         $this->address1 = $address1;
+
         return $this;
     }
 
@@ -253,11 +267,13 @@ class ShipmondoServicePoint
      * Set the value of address2
      *
      * @param ?string $address2
+     *
      * @return self
      */
     public function setAddress2(?string $address2): self
     {
         $this->address2 = $address2;
+
         return $this;
     }
 
@@ -275,11 +291,13 @@ class ShipmondoServicePoint
      * Set the value of zipCode
      *
      * @param string $zipCode
+     *
      * @return self
      */
     public function setZipCode(string $zipCode): self
     {
         $this->zipCode = $zipCode;
+
         return $this;
     }
 
@@ -297,11 +315,13 @@ class ShipmondoServicePoint
      * Set the value of city
      *
      * @param string $city
+     *
      * @return self
      */
     public function setCity(string $city): self
     {
         $this->city = $city;
+
         return $this;
     }
 
@@ -319,11 +339,13 @@ class ShipmondoServicePoint
      * Set the value of countryCode
      *
      * @param string $countryCode
+     *
      * @return self
      */
     public function setCountryCode(string $countryCode): self
     {
         $this->countryCode = $countryCode;
+
         return $this;
     }
 
@@ -344,7 +366,7 @@ class ShipmondoServicePoint
             'address2' => $this->getAddress2(),
             'zip_code' => $this->getZipCode(),
             'city' => $this->getCity(),
-            'country_code' => $this->getCountryCode()
+            'country_code' => $this->getCountryCode(),
         ];
     }
 }

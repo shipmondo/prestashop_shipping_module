@@ -9,9 +9,9 @@ declare(strict_types=1);
 
 namespace Shipmondo\Grid\Query;
 
-use PrestaShop\PrestaShop\Core\Grid\Query\AbstractDoctrineQueryBuilder;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
+use PrestaShop\PrestaShop\Core\Grid\Query\AbstractDoctrineQueryBuilder;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 
 final class ShipmondoCarrierQueryBuilder extends AbstractDoctrineQueryBuilder
@@ -51,7 +51,7 @@ final class ShipmondoCarrierQueryBuilder extends AbstractDoctrineQueryBuilder
             )
             ->setFirstResult($searchCriteria->getOffset())
             ->setMaxResults($searchCriteria->getLimit());
-    
+
         foreach ($searchCriteria->getFilters() as $filterName => $filterValue) {
             if ('id_smd_carrier' === $filterName) {
                 $qb->andWhere("sc.id_smd_carrier = :$filterName");
@@ -61,12 +61,12 @@ final class ShipmondoCarrierQueryBuilder extends AbstractDoctrineQueryBuilder
             }
 
             $qb->andWhere("$filterName LIKE :$filterName");
-            $qb->setParameter($filterName, '%'.$filterValue.'%');
+            $qb->setParameter($filterName, '%' . $filterValue . '%');
         }
 
         return $qb;
     }
-    
+
     // Get Count query builder that is used to get the total count of all records (products)
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria): QueryBuilder
     {
@@ -75,13 +75,13 @@ final class ShipmondoCarrierQueryBuilder extends AbstractDoctrineQueryBuilder
 
         return $qb;
     }
-    
+
     // Base query can be used for both Search and Count query builders
     private function getBaseQuery(): QueryBuilder
     {
         return $this->connection
             ->createQueryBuilder()
-            ->from($this->dbPrefix.'shipmondo_carrier', 'sc')
+            ->from($this->dbPrefix . 'shipmondo_carrier', 'sc')
             ->setParameter('context_lang_id', $this->contextLangId)
             ->setParameter('context_shop_id', $this->contextShopId)
             ->leftJoin('sc', $this->dbPrefix . 'carrier', 'c', 'sc.id_carrier = c.id_carrier')

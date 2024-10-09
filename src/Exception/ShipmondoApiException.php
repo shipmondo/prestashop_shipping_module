@@ -9,9 +9,6 @@ declare(strict_types=1);
 
 namespace Shipmondo\Exception;
 
-use Exception;
-
-class ShipmondoApiException extends Exception
+class ShipmondoApiException extends \Exception
 {
-    
 }

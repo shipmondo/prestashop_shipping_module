@@ -4,3 +4,7 @@ composer.lock
 
 # VS Code
 /.vscode
+
+# PHP CS Fixer
+.php-cs-fixer.dist.php
+.php_cs.cache
