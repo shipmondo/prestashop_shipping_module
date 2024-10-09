@@ -5,12 +5,12 @@
 *}
 
 <div class="header">
-    <span class="name">{$service_point->name}</span>
+    <span class="name">{$servicePoint->name}</span>
     <span class="rate_name">{$carrier->name}</span>
 </div>
 <div class="location">
-<div class="address_info">{$service_point->address},{if $service_point->address2} {$service_point->address2},{/if} {$service_point->zipcode} {$service_point->city}</div>
-    {if $service_point->distance}
-        <div class="distance">{($service_point->distance / 1000)|string_format:"%.2f"} km</div>
+<div class="address_info">{$servicePoint->address},{if $servicePoint->address2} {$servicePoint->address2},{/if} {$servicePoint->zipcode} {$servicePoint->city}</div>
+    {if $servicePoint->distance}
+        <div class="distance">{($servicePoint->distance / 1000)|string_format:"%.2f"} km</div>
     {/if}
 </div>

@@ -6,13 +6,13 @@
 
 <div class="selected_service_point service_point selector_type-{if $frontendType == 'popup'}modal{else}dropdown{/if}">
     <div class="header">
-    <span class="name">{$service_point->name}</span>
+    <span class="name">{$selectedServicePoint->name}</span>
         <span class="rate_name">{$carrier->name}</span>
     </div>
     <div class="location">
-    <div class="address_info">{$service_point->address},{if $service_point->address2} {$service_point->address2},{/if} {$service_point->zipcode} {$service_point->city}</div>
-        {if $service_point->distance}
-            <div class="distance">{($service_point->distance / 1000)|string_format:"%.2f"} km</div>
+    <div class="address_info">{$selectedServicePoint->address},{if $selectedServicePoint->address2} {$selectedServicePoint->address2},{/if} {$selectedServicePoint->zipcode} {$selectedServicePoint->city}</div>
+        {if $selectedServicePoint->distance}
+            <div class="distance">{($selectedServicePoint->distance / 1000)|string_format:"%.2f"} km</div>
         {/if}
     </div>
 </div>

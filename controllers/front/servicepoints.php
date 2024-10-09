@@ -73,7 +73,7 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
 
         $this->context->smarty->assign([
             'carrier' => new Carrier($cart->id_carrier),
-            'service_point' => (object) [
+            'servicePoint' => (object) [ // Imitate response from external service point API
                 'id' => $servicePoint->getServicePointId(),
                 'name' => $servicePoint->getName(),
                 'address' => $servicePoint->getAddress1(),
@@ -157,8 +157,8 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
 
             $this->context->smarty->assign([
                 'carrier' => new Carrier($carrierId),
-                'service_point' => $selectedServicePoint,
-                'service_points' => $externalServicePoints,
+                'selectedServicePoint' => $selectedServicePoint,
+                'servicePoints' => $externalServicePoints,
                 'frontendType' => Configuration::get('SHIPMONDO_FRONTEND_TYPE'),
             ]);
 

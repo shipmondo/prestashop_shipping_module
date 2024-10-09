@@ -15,22 +15,22 @@
             </div>
             <div class="service_points_map"></div>
             <div class="service_points_list">
-                {foreach $service_points as $sp}
-                <div class="service_point{if $sp->id == $service_point->id} selected{/if}"
-                     data-service_point_id="{$sp->id}"
-                     data-name="{$sp->name}"
-                     data-address1="{$sp->address}"
-                     data-city="{$sp->city}"
-                     data-zip_code="{$sp->zipcode}"
-                     data-distance="{$sp->distance}"
-                     data-longitude="{$sp->longitude}"
-                     data-latitude="{$sp->latitude}"
-                     data-carrier_code="{$sp->carrier_code}">
-                    <div class="header"><span class="name">{$sp->name}</span></div>
+                {foreach $servicePoints as $servicePoint}
+                <div class="service_point{if $servicePoint->id == $selectedServicePoint->id} selected{/if}"
+                     data-service_point_id="{$servicePoint->id}"
+                     data-name="{$servicePoint->name}"
+                     data-address1="{$servicePoint->address}"
+                     data-city="{$servicePoint->city}"
+                     data-zip_code="{$servicePoint->zipcode}"
+                     data-distance="{$servicePoint->distance}"
+                     data-longitude="{$servicePoint->longitude}"
+                     data-latitude="{$servicePoint->latitude}"
+                     data-carrier_code="{$servicePoint->carrier_code}">
+                    <div class="header"><span class="name">{$servicePoint->name}</span></div>
                     <div class="location">
-                        <div class="address_info">{$sp->address}, {$sp->zipcode} {$sp->city}</div>
+                        <div class="address_info">{$servicePoint->address}, {$sp->zipcode} {$sp->city}</div>
                         {if $sp->distance}
-                        <div class="distance">{($sp->distance / 1000)|string_format:"%.2f"} km</div>
+                        <div class="distance">{($servicePoint->distance / 1000)|string_format:"%.2f"} km</div>
                         {/if}
                     </div>
                 </div>

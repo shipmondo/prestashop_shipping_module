@@ -7,20 +7,20 @@
 <div class="shipmondo-dropdown_wrapper">
     <div class="service_points_dropdown">
         <div class="service_points_list">
-            {foreach $service_points as $sp}
-            <div class="service_point{if $sp->id == $service_point->id} selected{/if}"
-                 data-service_point_id="{$sp->id}"
-                 data-name="{$sp->name}"
-                 data-address1="{$sp->address}"
-                 data-city="{$sp->city}"
-                 data-zip_code="{$sp->zipcode}"
-                 data-distance="{$sp->distance}"
-                 data-carrier_code="{$sp->carrier_code}">
-                <div class="header"><span class="name">{$sp->name}</span></div>
+            {foreach $servicePoints as $servicePoint}
+            <div class="service_point{if $servicePoint->id == $selectedServicePoint->id} selected{/if}"
+                 data-service_point_id="{$servicePoint->id}"
+                 data-name="{$servicePoint->name}"
+                 data-address1="{$servicePoint->address}"
+                 data-city="{$servicePoint->city}"
+                 data-zip_code="{$servicePoint->zipcode}"
+                 data-distance="{$servicePoint->distance}"
+                 data-carrier_code="{$servicePoint->carrier_code}">
+                <div class="header"><span class="name">{$servicePoint->name}</span></div>
                 <div class="location">
-                    <div class="address_info">{$sp->address},{if $sp->address2} {$sp->address2},{/if} {$sp->zipcode} {$sp->city}</div>
-                    {if $sp->distance}
-                    <div class="distance">{($sp->distance / 1000)|string_format:"%.2f"} km</div>
+                    <div class="address_info">{$servicePoint->address},{if $servicePoint->address2} {$servicePoint->address2},{/if} {$servicePoint->zipcode} {$servicePoint->city}</div>
+                    {if $servicePoint->distance}
+                    <div class="distance">{($servicePoint->distance / 1000)|string_format:"%.2f"} km</div>
                     {/if}
                 </div>
             </div>
