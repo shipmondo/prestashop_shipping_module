@@ -11,9 +11,16 @@
     <p class="alert-text">
         {{'If you need help configuring the module, you can follow our'|trans({}, 'Modules.Shipmondo.Admin')}} <a href="https://help.shipmondo.com/articles/7197780" target="_blank">{{ 'PrestaShop guide'|trans({}, 'Modules.Shipmondo.Admin') }}</a>.
     </p>
-  </div>
 
-  <div class="alert alert-info" role="alert">
+    <p class="alert-text">
+      {# TODO Change URL to new Prestashop 8 guide #}
+      {{'To generate a shipping module key, go to'|trans({}, 'Modules.Shipmondo.Admin')}} <a target="_blank" href="https://app.shipmondo.com/main/app/#/setting/freight-module">Shipmondo</a>.
+    </p>
+
+    <p class="alert-text">
+      {{'To generate a Google Maps API key, go to'|trans({}, 'Modules.Shipmondo.Admin')}} <a target="_blank" href="https://developers.google.com/maps/documentation/javascript/get-api-key">Google</a>.
+    </p>
+
     <p class="alert-text">
         {{'When have configured the module, go to'|trans({}, 'Modules.Shipmondo.Admin')}} <a href="{{path('shipmondo_shipmondo_carriers_search')}}">{{ 'Shipping'|trans({}, 'Admin.Navigation.Menu') }} > Shipmondo</a> {{'to setup carriers'|trans({}, 'Modules.Shipmondo.Admin')}}.
     </p>

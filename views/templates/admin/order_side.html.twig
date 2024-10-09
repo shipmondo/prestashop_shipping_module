@@ -9,18 +9,14 @@
 		<h3 class="card-header-title">{{ 'Service Point'|trans({}, 'Modules.Shipmondo.Admin') }}</h3>
 	</div>
 	<div class="card-body">
-        <p class="mb-0">{{ service_point.getName }}</p>
-        <p class="mb-0">{{ service_point.getAddress1 }}</p>
-        {% if service_point.getAddress2 %}<p class="mb-0">{{ service_point.getAddress2 }}</p>{% endif %}
-        <p class="mb-0">{{ service_point.getZipCode }} {{ service_point.getCity }}</p>
-        <p class="mb-0">{{ service_point.getCountryCode }}</p>
-        <!--<p class="mb-0"><strong>Service Point ID</strong></p>
-        <p class="mb-0">{{ service_point.getServicePointId }}</p>
-        <p class="mb-0"><strong>Carrier</strong></p>
-        <p class="mb-0">{{ carrier_name }}</p>-->
-        <div class="text-center text-muted">
-            <small>{{ 'Powered by Shipmondo'|trans({}, 'Modules.Shipmondo.Admin') }}</small>
-        </div>
+		<p class="mb-0">{{ servicePoint.getName }}</p>
+		<p class="mb-0">{{ servicePoint.getAddress1 }}</p>
+		{% if servicePoint.getAddress2 %}<p class="mb-0">{{ servicePoint.getAddress2 }}</p>{% endif %}
+		<p class="mb-0">{{ servicePoint.getZipCode }} {{ servicePoint.getCity }}</p>
+		<p class="mb-0">{{ countryName }}</p>
+		<div class="text-center text-muted">
+			<small>Powered by Shipmondo</small>
+		</div>
 	</div>
 </div>
 

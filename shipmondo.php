@@ -16,28 +16,10 @@ if (file_exists(__DIR__ . '/vendor/autoload.php')) {
 }
 
 use Shipmondo\Controller\Admin\ShipmondoCarrierController;
+use Shipmondo\Install\Installer;
 
 class Shipmondo extends CarrierModule
 {
-    const PREFIX = 'shipmondo_';
-
-    protected $hooks = [
-        'displayAdminOrderSide',
-        'displayHeader',
-        'displayAfterCarrier',
-        'newOrder',
-        'updateCarrier',
-        'addWebserviceResources'
-    ];
-
-    protected $tables = [
-        'selected_service_points',
-        'carrier',
-        'service_point'
-    ];
-
-    private $validation_errors = [];
-
     public function __construct()
     {
         $this->name = 'shipmondo';
@@ -49,7 +31,7 @@ class Shipmondo extends CarrierModule
         parent::__construct();
         $this->ps_versions_compliancy = [
             'min' => '8.0.0',
-            'max' => '8.99.99', // TODO Limit to 8 or use _PS_VERSION_?
+            'max' => '8.99.99',
         ];
         $this->displayName = "Shipmondo";
         $this->description = $this->trans('A complete shipping solution for PrestaShop', [], 'Modules.Shipmondo.Admin');
@@ -74,19 +56,8 @@ class Shipmondo extends CarrierModule
     public function install()
     {
         if (parent::install()) {
-            foreach ($this->hooks as $hook) {
-                if (!$this->registerHook($hook)) {
-                    return false;
-                }
-            }
-
-            if (!$this->createDatabaseTables()) {
-                return false;
-            }
-
-            $this->setDefaultFrontendType();
-
-            return true;
+            $installer = new Installer($this);
+            return $installer->install();
         }
 
         return false;
@@ -95,21 +66,8 @@ class Shipmondo extends CarrierModule
     public function uninstall()
     {
         if (parent::uninstall()) {
-            foreach ($this->hooks as $hook) {
-                if (!$this->unregisterHook($hook)) {
-                    return false;
-                }
-            }
-
-            if (!$this->deleteSettings()) {
-                return false;
-            }
-
-            if (!$this->deleteDatabaseTables()) {
-                return false;
-            }
-
-            return true;
+            $installer = new Installer($this);
+            return $installer->uninstall();
         }
 
         return false;
@@ -140,8 +98,8 @@ class Shipmondo extends CarrierModule
 
         if ($servicePoint) {
             return $this->get('twig')->render('@Modules/shipmondo/views/templates/admin/order_side.html.twig', [
-                'service_point' => $servicePoint,
-                'carrier_name' => $this->get('shipmondo.carrier_handler')->getCarrierName($servicePoint->getCarrierCode())
+                'servicePoint' => $servicePoint,
+                'countryName' => Country::getNameById($this->context->language->id, Country::getByIso($servicePoint->getCountryCode())),
             ]);
         }
 
@@ -239,7 +197,7 @@ class Shipmondo extends CarrierModule
         }
     }
 
-    public function hookUpdateCarrier($params)
+    public function hookActionCarrierUpdate($params)
     {
         $oldCarrierId = (int) $params['id_carrier'];
         $newCarrierId = (int) $params['carrier']->id;
@@ -250,8 +208,7 @@ class Shipmondo extends CarrierModule
                 $smdCarrier->setCarrierId($newCarrierId);
             }
 
-            $entityManager = $this->get('doctrine.orm.entity_manager');
-            $entityManager->flush();
+            $this->get('doctrine.orm.entity_manager')->flush();
         }
     }
 
@@ -261,99 +218,8 @@ class Shipmondo extends CarrierModule
             'shipmondo_service_points' => [
                 'description' => 'Service point from Shipmondo, that is selected in checkout and order.',
                 'class' => '\Shipmondo\Entity\ShipmondoServicePointWs',
-                'forbidden_method' => ['PUT', 'POST', 'PATCH', 'DELETE']
+                'forbidden_method' => ['PUT', 'POST', 'PATCH', 'DELETE'] # Only GET is allowed
             ]
         ];
-    }
-
-    protected function createDatabaseTables()
-    {
-        $db_instance = Db::getInstance();
-        return $this->createSelectedServicePointsTable($db_instance) &&
-            $this->createCarrierTable($db_instance) &&
-            $this->createServicePointTable($db_instance);
-    }
-
-    protected function createSelectedServicePointsTable($db_instance)
-    {
-        $sql_carts = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'shipmondo_selected_service_points` ('
-            . '`id_smd_service_point` INT NOT NULL AUTO_INCREMENT PRIMARY KEY, '
-            . '`id_cart` int(10), '
-            . '`service_point` text, '
-            . '`id_carrier` int(10)'
-            . ')';
-
-        return $db_instance->execute($sql_carts);
-    }
-
-    protected function createCarrierTable($db_instance)
-    {
-        $sql = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'shipmondo_carrier` ('
-            . '`id_smd_carrier` INT NOT NULL AUTO_INCREMENT PRIMARY KEY, '
-            . '`id_carrier` INT NOT NULL, '
-            . '`carrier_code` VARCHAR(255) NOT NULL, '
-            . '`product_code` VARCHAR(255) NOT NULL'
-            . ')';
-
-        return $db_instance->execute($sql);
-    }
-
-    protected function createServicePointTable($db_instance)
-    {
-        $sql = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'shipmondo_service_point` ('
-            . 'id_smd_service_point INT AUTO_INCREMENT NOT NULL PRIMARY KEY, '
-            . 'id_cart INT, '
-            . 'id_order INT, '
-            . 'carrier_code VARCHAR(255) NOT NULL, '
-            . 'service_point_id VARCHAR(255) NOT NULL, '
-            . 'name VARCHAR(255) NOT NULL, '
-            . 'address1 VARCHAR(255) NOT NULL, '
-            . 'address2 VARCHAR(255), '
-            . 'zip_code VARCHAR(255) NOT NULL, '
-            . 'city VARCHAR(255) NOT NULL, '
-            . 'country_code VARCHAR(2) NOT NULL'
-            . ')';
-
-        return $db_instance->execute($sql);
-    }
-
-    // If frontend type is not set, set as popup
-    protected function setDefaultFrontendType()
-    {
-        $frontendType = Configuration::get('SHIPMONDO_FRONTEND_TYPE');
-        if (empty($frontendType)) {
-            Configuration::updateValue('SHIPMONDO_FRONTEND_TYPE', 'popup');
-        }
-    }
-
-    protected function deleteDatabaseTables()
-    {
-        $success = true;
-
-        $tables = [
-            'shipmondo_selected_service_points',
-            'shipmondo_carrier',
-            'shipmondo_service_point'
-        ];
-
-        $db_instance = Db::getInstance();
-        foreach ($tables as $table) {
-            $sql = 'DROP TABLE IF EXISTS `' . _DB_PREFIX_ . $table . '`';
-
-            if (!$db_instance->execute($sql)) {
-                $success = false;
-            }
-        }
-
-        return $success;
-    }
-
-    protected function deleteSettings()
-    {
-        Configuration::deleteByName('SHIPMONDO_FRONTEND_KEY');
-        Configuration::deleteByName('SHIPMONDO_GOOGLE_API_KEY');
-        Configuration::deleteByName('SHIPMONDO_FRONTEND_TYPE');
-
-        return true;
     }
 }

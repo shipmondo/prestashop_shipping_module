@@ -13,6 +13,7 @@ if (!defined('_PS_VERSION_')) {
 
 use Doctrine\ORM\EntityManager;
 use Shipmondo\Entity\ShipmondoCarrier;
+use Shipmondo\Install\Installer;
 use Carrier;
 use Configuration;
 use Shipmondo;
@@ -83,20 +84,40 @@ const LEGACY_SERVICE_POINT_MAP = [
     ]
 ];
 
+const OLD_HOOKS = [
+    'actionCarrierUpdate',
+    'newOrder',
+    'displayHeader'
+];
+
 function upgrade_module_2_0_0($module)
 {
-    return true; // TODO implement upgrade
-
     $isSuccessful = true;
-    $entityManager = $module->get('doctrine.orm.entity_manager');
 
+
+    $installer = new Installer($module);
+    $entityManager = $module->get('doctrine.orm.entity_manager');
+    $dbInstance = Db::getInstance();
+
+    // Register new hooks
+    $isSuccessful &= $installer->registerHooks();
+
+    // Create new tables
+    $installer->createCarrierTable($dbInstance);
+    $installer->createServicePointTable($dbInstance);
+
+    // Drop old table
+    Db::getInstance()->execute('DROP TABLE IF EXISTS `' . _DB_PREFIX_ . 'shipmondo_selected_service_point`');
+
+    // Migrate from radio buttons
     $frontendType = Configuration::get('SHIPMONDO_FRONTEND_TYPE');
     if($frontendType === 'radio') {
         // Radio buttons are removed as dropdown not serves the same purpose
-        Configuration::updateValue('SHIPMONDO_FRONTEND_TYPE', 'dropdown');
         $frontendType = 'dropdown';
+        Configuration::updateValue('SHIPMONDO_FRONTEND_TYPE', $frontendType);
     }
 
+    // Migrate carriers
     $migratedCarrierIds = [];
     foreach(self::LEGACY_CARRIER_MAP as $reference => $carrierDetails) {
         $configurationKey = Shipmondo::PREFIX . $reference;

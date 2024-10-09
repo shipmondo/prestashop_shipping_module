@@ -148,7 +148,7 @@ class ShipmondoCarrierController extends FrameworkBundleAdminController
         $psCarrier->external_module_name = 'shipmondo';
         $psCarrier->need_range = true;
         $psCarrier->is_free = true;
-        $psCarrier->delay[Configuration::get('PS_LANG_DEFAULT')] = '?'; # TODO what to do?
+        $psCarrier->delay[Configuration::get('PS_LANG_DEFAULT')] = ' ';
 
         if ($psCarrier->add()) {
             $groups = Group::getGroups(true);

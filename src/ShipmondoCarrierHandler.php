@@ -140,7 +140,7 @@ class ShipmondoCarrierHandler
             }
 
             $this->configuration->set('SHIPMONDO_AVAILABLE_CARRIERS', json_encode($availableCarriers));
-            $this->configuration->set('SHIPMONDO_AVAILABLE_CARRIERS_EXPIRATION', time() + 21600); // TODO Should it be 6 hours?
+            $this->configuration->set('SHIPMONDO_AVAILABLE_CARRIERS_EXPIRATION', time() + 21600); // 6 hours
 
             return $availableCarriers;
         }
