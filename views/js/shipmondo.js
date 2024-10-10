@@ -6,11 +6,7 @@
 
 jQuery(document).ready(function ($) {
     const shipmondoShippingModuleSettings = window.shipmondoModule;
-    const frontendType = shipmondoShippingModuleSettings.frontendType;
-    const servicePointsEndpoint = shipmondoShippingModuleSettings.servicePointsEndpoint;
-    const servicePointCarrierIds = shipmondoShippingModuleSettings.servicePointCarrierIds;
     const servicePointSelector = '.shipmondo_service_point_selection .selected_service_point';
-    const deliveryOptionSelector = shipmondoShippingModuleSettings.deliveryOptionSelector;
     const shipmondoBaseSelector = '.shipmondo-original';
 
     // Get parent wrapper
@@ -42,7 +38,7 @@ jQuery(document).ready(function ($) {
         data.action = "update";
 
         $.ajax({
-            url: servicePointsEndpoint, type: 'POST', data: data, dataType: 'json',
+            url: shipmondoShippingModuleSettings.servicePointsEndpoint, type: 'POST', data: data, dataType: 'json',
             success: function (response) {
                 if (response.status === "success") {
                     setShopHTML(shopElement, response.html)
@@ -50,24 +46,22 @@ jQuery(document).ready(function ($) {
                     const containerEl = $('.shipmondo-service-points-container');
                     const contentEl = containerEl.find('.shipmondo-service-points-content');
                     contentEl.html(response.html);
-                    //Alternative
-                    //getWrapper($(servicePointSelector)).html(response.html);
                 }
             }
         });
     };
 
-    $(document).on('click', deliveryOptionSelector, function () {
+    $(document).on('click', shipmondoShippingModuleSettings.deliveryOptionSelector, function () {
         const carrierID = parseInt($(this).val().replace(/\D/g, ''));
         const containerEl = $('.shipmondo-service-points-container');
         const contentEl = containerEl.find('.shipmondo-service-points-content');
 
-        if (servicePointCarrierIds.includes(carrierID)) {
+        if (shipmondoShippingModuleSettings.servicePointCarrierIds.includes(carrierID)) {
             setLoading(true)
             containerEl.show();
 
             $.ajax({
-                url: servicePointsEndpoint,
+                url: shipmondoShippingModuleSettings.servicePointsEndpoint,
                 type: 'GET',
                 dataType: 'json',
                 data: {
@@ -84,7 +78,7 @@ jQuery(document).ready(function ($) {
 
 
     // DROPDOWN
-    if (frontendType === 'dropdown') {
+    if (shipmondoShippingModuleSettings.frontendType === 'dropdown') {
         const getDropdown = function (element) {
             return getWrapper(element).find('.shipmondo-dropdown_wrapper');
         };
@@ -274,7 +268,7 @@ jQuery(document).ready(function ($) {
 
 
     const triggerCurrentRadio = function () {
-        const currentRadio = $(deliveryOptionSelector + ':checked');
+        const currentRadio = $(shipmondoShippingModuleSettings.deliveryOptionSelector + ':checked');
         if (currentRadio.val()) {
             currentRadio.trigger('click');
         }
