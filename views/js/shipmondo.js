@@ -31,6 +31,9 @@ jQuery(document).ready(function ($) {
             el.removeClass('loading');
         }
     };
+    const getServicePointsContainer = function () {
+        return $('.shipmondo-service-points-container');
+    };
 
     // Service point selected
     const ServicePointSelected = function (shopElement) {
@@ -43,9 +46,7 @@ jQuery(document).ready(function ($) {
                 if (response.status === "success") {
                     setShopHTML(shopElement, response.html)
                 } else if (response.status === "error") {
-                    const containerEl = $('.shipmondo-service-points-container');
-                    const contentEl = containerEl.find('.shipmondo-service-points-content');
-                    contentEl.html(response.html);
+                    getServicePointsContainer().find('.shipmondo-service-points-content').html(response.html);
                 }
             }
         });
@@ -53,8 +54,7 @@ jQuery(document).ready(function ($) {
 
     $(document).on('click', shipmondoShippingModuleSettings.deliveryOptionSelector, function () {
         const carrierID = parseInt($(this).val().replace(/\D/g, ''));
-        const containerEl = $('.shipmondo-service-points-container');
-        const contentEl = containerEl.find('.shipmondo-service-points-content');
+        const containerEl = getServicePointsContainer();
 
         if (shipmondoShippingModuleSettings.servicePointCarrierIds.includes(carrierID)) {
             setLoading(true)
@@ -67,6 +67,7 @@ jQuery(document).ready(function ($) {
                 data: {
                     action: 'get', carrier_id: carrierID
                 }, success: function (response) {
+                    const contentEl = containerEl.find('.shipmondo-service-points-content');
                     setLoading(false);
                     contentEl.html(response.html);
                 }
@@ -132,7 +133,7 @@ jQuery(document).ready(function ($) {
 
         const loadGoogleMaps = function () {
             // Create the script tag, set the appropriate attributes
-            var script = document.createElement('script')
+            const script = document.createElement('script')
             script.src = 'https://maps.googleapis.com/maps/api/js?key=' + shipmondoShippingModuleSettings.googleMapsApiKey + '&loading=async&callback=googleMapsInit'
             script.async = true
 
@@ -265,7 +266,6 @@ jQuery(document).ready(function ($) {
             renderMap(currentModalElement.find('.service_points_map'))
         });
     }
-
 
     const triggerCurrentRadio = function () {
         const currentRadio = $(shipmondoShippingModuleSettings.deliveryOptionSelector + ':checked');
