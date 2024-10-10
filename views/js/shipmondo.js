@@ -281,12 +281,12 @@ jQuery(document).ready(function ($) {
         }
     };
 
-    // Init on load
+    // Init on load (default checkout)
     if ($('.js-current-step').attr('id') === 'checkout-delivery-step') {
         triggerCurrentRadio();
     }
 
-    // If you edit shipping method
+    // If you edit shipping method (default checkout)
     $(document).on('click', '#checkout-delivery-step .step-title', function (e) {
         triggerCurrentRadio();
     });
