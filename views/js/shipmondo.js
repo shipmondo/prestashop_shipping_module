@@ -274,7 +274,6 @@ jQuery(document).ready(function ($) {
 
 
     const triggerCurrentRadio = function () {
-        console.log('triggerCurrentRadio');
         const currentRadio = $(deliveryOptionSelector + ':checked');
         if (currentRadio.val()) {
             currentRadio.trigger('click');
