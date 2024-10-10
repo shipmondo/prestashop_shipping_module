@@ -74,8 +74,6 @@ jQuery(document).ready(function ($) {
                     action: 'get', carrier_id: carrierID
                 }, success: function (response) {
                     setLoading(false);
-
-                    console.log('response', response);
                     contentEl.html(response.html);
                 }
             });
@@ -274,11 +272,24 @@ jQuery(document).ready(function ($) {
         });
     }
 
-    //Init click  (might not work with themes/checkouts. So custom code will be needed for those.)
-    const currentRadio = $(deliveryOptionSelector + ':checked');
-    if (currentRadio.val()) {
-        currentRadio.trigger('click');
+
+    const triggerCurrentRadio = function () {
+        console.log('triggerCurrentRadio');
+        const currentRadio = $(deliveryOptionSelector + ':checked');
+        if (currentRadio.val()) {
+            currentRadio.trigger('click');
+        }
+    };
+
+    // Init on load
+    if ($('.js-current-step').attr('id') === 'checkout-delivery-step') {
+        triggerCurrentRadio();
     }
+
+    // If you edit shipping method
+    $(document).on('click', '#checkout-delivery-step .step-title', function (e) {
+        triggerCurrentRadio();
+    });
 });
 
 
