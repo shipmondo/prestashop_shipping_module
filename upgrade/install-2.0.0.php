@@ -14,9 +14,7 @@ if (!defined('_PS_VERSION_')) {
 use Carrier;
 use Configuration;
 use Doctrine\ORM\EntityManager;
-use Shipmondo;
 use Shipmondo\Entity\ShipmondoCarrier;
-use Shipmondo\Install\Installer;
 
 const LEGACY_CARRIER_MAP = [
     'gls_service_point' => [
@@ -84,34 +82,40 @@ const LEGACY_SERVICE_POINT_MAP = [
     ],
 ];
 
-const OLD_HOOKS = [
-    'actionCarrierUpdate',
+const HOOKS_TO_REMOVE = [
     'newOrder',
-    'displayHeader',
+];
+
+const HOOKS_TO_ADD = [
+    'displayAdminOrderSide',
+    'displayAfterCarrier',
+    'actionValidateOrder',
+    'addWebserviceResources',
 ];
 
 function upgrade_module_2_0_0($module)
 {
     $isSuccessful = true;
 
-    $installer = new Installer($module);
     $entityManager = $module->get('doctrine.orm.entity_manager');
     $dbInstance = Db::getInstance();
 
-    $hooksToRemove = array_diff(OLD_HOOKS, Installer::HOOKS);
-    foreach ($hooksToRemove as $hook) {
+    // Remove old hooks
+    foreach (HOOKS_TO_REMOVE as $hook) {
         $isSuccessful &= $module->unregisterHook($hook);
     }
 
-    // Register new hooks
-    $isSuccessful &= $installer->registerHooks();
+    // Add new hooks
+    foreach (HOOKS_TO_ADD as $hook) {
+        $isSuccessful &= $module->registerHook($hook);
+    }
 
     // Create new tables
-    $installer->createCarrierTable($dbInstance);
-    $installer->createServicePointTable($dbInstance);
+    $isSuccessful &= createCarrierTable($dbInstance);
+    $isSuccessful &= createServicePointTable($dbInstance);
 
     // Drop old table
-    Db::getInstance()->execute('DROP TABLE IF EXISTS `' . _DB_PREFIX_ . 'shipmondo_selected_service_point`');
+    $isSuccessful &= $dbInstance->execute('DROP TABLE IF EXISTS `' . _DB_PREFIX_ . 'shipmondo_selected_service_point`');
 
     // Migrate from radio buttons
     $frontendType = Configuration::get('SHIPMONDO_FRONTEND_TYPE');
@@ -123,7 +127,7 @@ function upgrade_module_2_0_0($module)
 
     // Migrate carriers
     $migratedCarrierIds = [];
-    foreach (self::LEGACY_CARRIER_MAP as $reference => $carrierDetails) {
+    foreach (LEGACY_CARRIER_MAP as $reference => $carrierDetails) {
         $configurationKey = 'shipmondo_' . $reference;
         $carrierId = Configuration::get($configurationKey);
         $carrier = new Carrier($carrierId);
@@ -132,12 +136,10 @@ function upgrade_module_2_0_0($module)
         if ($isSuccessful) {
             $migratedCarrierIds[] = $carrier->id;
             Configuration::deleteByName($configurationKey);
-        } else {
-            return false;
         }
     }
 
-    foreach (self::LEGACY_SERVICE_POINT_KEYS as $key => $carrierDetails) {
+    foreach (LEGACY_SERVICE_POINT_MAP as $key => $carrierDetails) {
         $carrierId = Configuration::get($key);
         if (in_array($carrierId, $migratedCarrierIds)) {
             continue; // Already migrated
@@ -160,9 +162,38 @@ function migrateCarriers(EntityManager $entityManager, Carrier $carrier, array $
         $shipmondoCarrier->setProductCode($carrierDetails['product_code']);
         $entityManager->persist($shipmondoCarrier);
         $entityManager->flush();
-
-        return true;
-    } else {
-        return false;
     }
+
+    return true;
+}
+
+function createCarrierTable(\Db $dbInstance)
+{
+    $sql = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'shipmondo_carrier` ('
+        . '`id_smd_carrier` INT NOT NULL AUTO_INCREMENT PRIMARY KEY, '
+        . '`id_carrier` INT NOT NULL, '
+        . '`carrier_code` VARCHAR(255) NOT NULL, '
+        . '`product_code` VARCHAR(255) NOT NULL'
+        . ')';
+
+    return $dbInstance->execute($sql);
+}
+
+function createServicePointTable(\Db $dbInstance)
+{
+    $sql = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'shipmondo_service_point` ('
+        . 'id_smd_service_point INT AUTO_INCREMENT NOT NULL PRIMARY KEY, '
+        . 'id_cart INT, '
+        . 'id_order INT, '
+        . 'carrier_code VARCHAR(255) NOT NULL, '
+        . 'service_point_id VARCHAR(255) NOT NULL, '
+        . 'name VARCHAR(255) NOT NULL, '
+        . 'address1 VARCHAR(255) NOT NULL, '
+        . 'address2 VARCHAR(255), '
+        . 'zip_code VARCHAR(255) NOT NULL, '
+        . 'city VARCHAR(255) NOT NULL, '
+        . 'country_code VARCHAR(2) NOT NULL'
+        . ')';
+
+    return $dbInstance->execute($sql);
 }
