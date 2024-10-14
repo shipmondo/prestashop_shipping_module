@@ -98,6 +98,11 @@ function upgrade_module_2_0_0($module)
     $entityManager = $module->get('doctrine.orm.entity_manager');
     $dbInstance = Db::getInstance();
 
+    $hooksToRemove = array_diff(OLD_HOOKS, Installer::HOOKS);
+    foreach ($hooksToRemove as $hook) {
+        $isSuccessful &= $module->unregisterHook($hook);
+    }
+
     // Register new hooks
     $isSuccessful &= $installer->registerHooks();
 
@@ -119,7 +124,7 @@ function upgrade_module_2_0_0($module)
     // Migrate carriers
     $migratedCarrierIds = [];
     foreach (self::LEGACY_CARRIER_MAP as $reference => $carrierDetails) {
-        $configurationKey = Shipmondo::PREFIX . $reference;
+        $configurationKey = 'shipmondo_' . $reference;
         $carrierId = Configuration::get($configurationKey);
         $carrier = new Carrier($carrierId);
 

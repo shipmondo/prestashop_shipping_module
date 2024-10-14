@@ -9,12 +9,12 @@
       </trans-unit>
       <trans-unit id="0a279bb235850c3ab5fa180f80f997e2">
         <source>An error occured while fetching service points.</source>
-        <target>Der optod en fejl under hentning af udleveringssteder.</target>
+        <target>Der opstod en fejl under hentning af udleveringssteder.</target>
         <note>Line: </note>
       </trans-unit>
       <trans-unit id="64714abdaf712fa492fa269e111d3bda">
         <source>No service points found for the given address.</source>
-        <target>Der blev ikke fundet nogle udleveringssteder for den givende adresse.</target>
+        <target>Der blev ikke fundet nogle udleveringssteder for den givne adresse.</target>
         <note>Line: </note>
       </trans-unit>
       <trans-unit id="60beebfa62b1d964ac72b8cc27550d4e">

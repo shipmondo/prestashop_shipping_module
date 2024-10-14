@@ -11,21 +11,21 @@ if (!defined('_PS_VERSION_')) {
     exit;
 }
 
-function upgrade_module_1_1_2($object)
+function upgrade_module_1_1_2($module)
 {
-    $is_successful = true;
+    $isSuccessful = true;
 
-    if (!$object->isRegisteredInHook('displayFooter')) {
-        $is_successful = $is_successful && $object->registerHook('displayFooter');
+    if (!$module->isRegisteredInHook('displayFooter')) {
+        $isSuccessful = $isSuccessful && $module->registerHook('displayFooter');
     }
 
-    if ($object->isRegisteredInHook('footer')) {
-        $is_successful = $is_successful && $object->unregisterHook('footer');
+    if ($module->isRegisteredInHook('footer')) {
+        $isSuccessful = $isSuccessful && $module->unregisterHook('footer');
     }
 
-    if ($object->isRegisteredInHook('header')) {
-        $is_successful = $is_successful && $object->unregisterHook('header');
+    if ($module->isRegisteredInHook('header')) {
+        $isSuccessful = $isSuccessful && $module->unregisterHook('header');
     }
 
-    return $is_successful;
+    return $isSuccessful;
 }

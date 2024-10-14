@@ -33,12 +33,12 @@ class Shipmondo extends CarrierModule
             'min' => '8.0.0',
             'max' => '8.99.99',
         ];
-        $this->displayName = 'Shipmondo';
+        $this->displayName = $this->trans('Shipmondo Delivery Checkout', [], 'Modules.Shipmondo.Admin');
         $this->description = $this->trans('A complete shipping solution for PrestaShop', [], 'Modules.Shipmondo.Admin');
 
         $this->tabs = [
             [
-                'name' => 'Shipmondo',
+                'name' => $this->trans('Shipmondo carriers', [], 'Modules.Shipmondo.Admin'),
                 'class_name' => ShipmondoCarrierController::TAB_CLASS_NAME,
                 'route_name' => 'shipmondo_shipmondo_carriers_search',
                 'visible' => true,
@@ -189,7 +189,7 @@ class Shipmondo extends CarrierModule
                 ]);
 
             if ($servicePoint) {
-                $servicePoint->setOrderId($params['order']->id);
+                $servicePoint->setOrderId((int) $params['order']->id);
 
                 $entityManager = $this->get('doctrine.orm.entity_manager');
                 $entityManager->persist($servicePoint);

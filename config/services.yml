@@ -25,7 +25,7 @@ services:
         - '@prestashop.core.hook.dispatcher'
         - '@shipmondo.form.shipmondo_configuration_form_data_provider'
         - 'Shipmondo\Form\Type\ShipmondoConfigurationFormType'
-        - 'Shipmondo'
+        - 'ShipmondoConfiguration'
 
     shipmondo.grid.definition.factory.shipmondo_carriers:
         class: 'Shipmondo\Grid\Definition\Factory\ShipmondoCarrierGridDefinitionFactory'

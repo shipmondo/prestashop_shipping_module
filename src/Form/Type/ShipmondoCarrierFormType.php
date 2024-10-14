@@ -62,7 +62,7 @@ class ShipmondoCarrierFormType extends TranslatorAwareType
                 'choices' => $psCarriers,
             ])
             ->add('carrier_code', ChoiceType::class, [
-                'label' => $this->trans('Shipmondo Carrier', 'Modules.Shipmondo.Admin'),
+                'label' => $this->trans('Shipmondo carrier', 'Modules.Shipmondo.Admin'),
                 'required' => true,
                 'choices' => $carriers,
             ])

@@ -32,10 +32,10 @@ class ShipmondoCarrierController extends FrameworkBundleAdminController
             '@Modules/shipmondo/views/templates/admin/shipmondo_carrier_index.html.twig',
             [
                 'enableSidebar' => true,
-                'layoutTitle' => $this->trans('Shipmondo Carriers', 'Modules.Shipmondo.Admin'),
+                'layoutTitle' => $this->trans('Shipmondo carriers', 'Modules.Shipmondo.Admin'),
                 'layoutHeaderToolbarBtn' => [
                     'add' => [
-                        'desc' => $this->trans('Add Shipmondo Carrier', 'Modules.Shipmondo.Admin'),
+                        'desc' => $this->trans('Add Shipmondo carrier', 'Modules.Shipmondo.Admin'),
                         'icon' => 'add_circle_outline',
                         'href' => $this->generateUrl('shipmondo_shipmondo_carriers_create'),
                     ],
@@ -78,7 +78,7 @@ class ShipmondoCarrierController extends FrameworkBundleAdminController
 
         return $this->render('@Modules/shipmondo/views/templates/admin/shipmondo_carrier_form.html.twig', [
             'form' => $form->createView(),
-            'layoutTitle' => $this->trans('Shipmondo Carrier', 'Modules.Shipmondo.Admin'),
+            'layoutTitle' => $this->trans('Shipmondo carrier', 'Modules.Shipmondo.Admin'),
             'isEdit' => false,
         ]);
     }
@@ -103,7 +103,7 @@ class ShipmondoCarrierController extends FrameworkBundleAdminController
 
         return $this->render('@Modules/shipmondo/views/templates/admin/shipmondo_carrier_form.html.twig', [
             'form' => $form->createView(),
-            'layoutTitle' => $this->trans('Shipmondo Carrier', 'Modules.Shipmondo.Admin'),
+            'layoutTitle' => $this->trans('Shipmondo carrier', 'Modules.Shipmondo.Admin'),
             'isEdit' => true,
         ]);
     }
@@ -124,7 +124,7 @@ class ShipmondoCarrierController extends FrameworkBundleAdminController
     }
 
     /**
-     * Create a new carrier in PrestaShop and set relation to Shipmondo Carrier
+     * Create a new carrier in PrestaShop and set relation to Shipmondo carrier
      *
      * @param ShipmondoCarrier $carrier
      */

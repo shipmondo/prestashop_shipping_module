@@ -83,7 +83,7 @@ final class ShipmondoConfigurationDataConfiguration implements DataConfiguration
         }
 
         if ($frontendType === 'popup' && empty($configuration['google_api_key'])) {
-            throw new \InvalidArgumentException($this->trans('Google API Key is required when using modal display type', 'Modules.Shipmondo.Admin'));
+            throw new \InvalidArgumentException($this->trans('Google Maps API key is required when using modal display type', 'Modules.Shipmondo.Admin'));
         }
 
         return true;

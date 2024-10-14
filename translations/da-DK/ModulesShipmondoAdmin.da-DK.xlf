@@ -2,6 +2,11 @@
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
   <file original="admin1337" source-language="da-DK" target-language="da-DK" datatype="plaintext">
     <body>
+      <trans-unit id="aa43933c5467be06d83a5451c4562e15">
+        <source>Shipmondo Delivery Checkout</source>
+        <target>Shipmondo Fragtmodul</target>
+        <note>Line: </note>
+      </trans-unit>
       <trans-unit id="d65ef292d6a4029027eb64ede8f0f03b">
         <source>The selected carrier is already associated with a Shipmondo carrier.</source>
         <target>Det valgte leveringsfirma er allerede associeret med en Shipmondo transportør.</target>
@@ -43,13 +48,13 @@
         <note>Line: </note>
       </trans-unit>
       <trans-unit id="08c3d555bb3a732909aab3f7dad028ba">
-        <source>Google API Key is required when using modal display type</source>
-        <target>Google API nøgle er påkrævet når modal visningstypen bruges</target>
+        <source>Google Maps API key is required when using modal display type</source>
+        <target>Google Maps API nøgle er påkrævet, når modal visningstypen bruges</target>
         <note>Line: </note>
       </trans-unit>
       <trans-unit id="4782ff8aad5ea55dad3d2394479ddeb1">
-        <source>Shipmondo Carrier</source>
-        <target>Shipmondo Transportør</target>
+        <source>Shipmondo carrier</source>
+        <target>Shipmondo transportør</target>
         <note>Line: </note>
       </trans-unit>
       <trans-unit id="deb10517653c255364175796ace3553f">
@@ -88,13 +93,13 @@
         <note>Line: </note>
       </trans-unit>
       <trans-unit id="5bf3261f166161d301d90b57f88fc649">
-        <source>Shipmondo Carriers</source>
-        <target>Shipmondo Transportører</target>
+        <source>Shipmondo carriers</source>
+        <target>Shipmondo transportører</target>
         <note>Line: </note>
       </trans-unit>
       <trans-unit id="3d9dcb6cda93f5e41eae1fa72ace1430">
-        <source>Add Shipmondo Carrier</source>
-        <target>Tilføj Shipmondo Transportør</target>
+        <source>Add Shipmondo carrier</source>
+        <target>Tilføj Shipmondo transportør</target>
         <note>Line: </note>
       </trans-unit>
       <trans-unit id="1d6af794b2599c1407a83029a09d1ecf">
@@ -113,13 +118,13 @@
         <note>Line: </note>
       </trans-unit>
       <trans-unit id="3e436e90361099dad5e991bf2b6fa4a0">
-        <source>to configure the Shipmondo module.</source>
-        <target>for at konfigurer Shipmondo modulet.</target>
+        <source>to configure Shipmondo Delivery Checkout.</source>
+        <target>for at konfigurere Shipmondo Fragtmodul.</target>
         <note>Line: </note>
       </trans-unit>
       <trans-unit id="67b1eb90bbd26846d41feb99df503e60">
-        <source>If you need help configuring the module, you can follow our</source>
-        <target>Hvis du har brug for hjælp til at konfigurere modulet, kan du følge vores</target>
+        <source>If you need help configuring Shipmondo Delivery Checkout, you can follow our</source>
+        <target>Hvis du har brug for hjælp til at konfigurere Shipmondo Fragtmodul, kan du følge vores</target>
         <note>Line: </note>
       </trans-unit>
       <trans-unit id="fa4cc6c82e1ea2fc903fb2d71b340ac2">
@@ -138,8 +143,8 @@
         <note>Line: </note>
       </trans-unit>
       <trans-unit id="01c2d72fabca7a114780057bd418a312">
-        <source>When the module is configured, go to</source>
-        <target>Når modulet er konfigureret, gå til</target>
+        <source>When Shipmondo Delivery Checkout is configured, go to</source>
+        <target>Når Shipmondo Fragtmodul er konfigureret, gå til</target>
         <note>Line: </note>
       </trans-unit>
       <trans-unit id="735497f20cedc4fe8c13542017fb9894">

@@ -66,7 +66,7 @@ final class ShipmondoCarrierGridDefinitionFactory extends AbstractGridDefinition
             )
             ->add(
                 (new DataColumn('carrier_name'))
-                    ->setName($this->trans('Shipmondo Carrier', [], 'Modules.Shipmondo.Admin'))
+                    ->setName($this->trans('Shipmondo carrier', [], 'Modules.Shipmondo.Admin'))
                     ->setOptions([
                         'field' => 'carrier_name', // Set in decorator
                     ])

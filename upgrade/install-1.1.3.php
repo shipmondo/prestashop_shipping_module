@@ -11,13 +11,13 @@ if (!defined('_PS_VERSION_')) {
     exit;
 }
 
-function upgrade_module_1_1_3($object)
+function upgrade_module_1_1_3($module)
 {
-    $is_successful = true;
+    $isSuccessful = true;
 
-    if ($object->isRegisteredInHook('displayFooter')) {
-        $is_successful = $is_successful && $object->unregisterHook('displayFooter');
+    if ($module->isRegisteredInHook('displayFooter')) {
+        $isSuccessful = $isSuccessful && $module->unregisterHook('displayFooter');
     }
 
-    return $is_successful;
+    return $isSuccessful;
 }
