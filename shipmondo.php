@@ -99,13 +99,13 @@ class Shipmondo extends CarrierModule
     // Required for carrier modules
     public function getOrderShippingCost($params, $shippingCost)
     {
-        return $shippingCost;
+        return false;
     }
 
     // Required for carrier modules
     public function getOrderShippingCostExternal($params)
     {
-        return $this->getOrderShippingCost($params, 0);
+        return false;
     }
 
     // Declares that module uses the new translation system
