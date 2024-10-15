@@ -41,7 +41,7 @@ class ShipmondoCarrierFormType extends TranslatorAwareType
         $allPsCarriers = \Carrier::getCarriers(\Context::getContext()->language->id, false, false, false, null, \Carrier::ALL_CARRIERS);
         $psCarriers = [$this->trans('Create new carrier', 'Modules.Shipmondo.Admin') => 0];
         foreach ($allPsCarriers as $carrier) {
-            $psCarriers[$carrier['name']] = $carrier['id_carrier'];
+            $psCarriers[$carrier['name']] = (int) $carrier['id_carrier'];
         }
 
         try {

@@ -83,7 +83,7 @@ const LEGACY_SERVICE_POINT_MAP = [
 ];
 
 const HOOKS_TO_REMOVE = [
-    'newOrder',
+    'newOrder', // Deprecated alias for actionValidateOrder
 ];
 
 const HOOKS_TO_ADD = [

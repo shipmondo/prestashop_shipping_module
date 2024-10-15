@@ -6,6 +6,7 @@
  */
 
 declare(strict_types=1);
+use Shipmondo\Controller\Admin\ShipmondoConfigurationController;
 
 if (!defined('_PS_VERSION_')) {
     exit;
@@ -20,6 +21,8 @@ use Shipmondo\Install\Installer;
 
 class Shipmondo extends CarrierModule
 {
+    private const LOCALES = ['da-DK', 'en-US', 'sv-SE', 'nb-NO', 'nn-NO'];
+    
     public function __construct()
     {
         $this->name = 'shipmondo';
@@ -36,13 +39,31 @@ class Shipmondo extends CarrierModule
         $this->displayName = $this->trans('Shipmondo Delivery Checkout', [], 'Modules.Shipmondo.Admin');
         $this->description = $this->trans('A complete shipping solution for PrestaShop', [], 'Modules.Shipmondo.Admin');
 
+        $carriersNames = [];
+        $configrationNames = [];
+        foreach (self::LOCALES as $locale) {
+            $carriersNames[$locale] = $this->trans('Shipmondo carriers', [], 'Modules.Shipmondo.Admin', $locale);
+            $configrationNames[$locale] = $this->trans('Shipmondo Delivery Checkout', [], 'Modules.Shipmondo.Admin', $locale);
+        }
+
         $this->tabs = [
             [
-                'name' => $this->trans('Shipmondo carriers', [], 'Modules.Shipmondo.Admin'),
+                'name' => $carriersNames,
                 'class_name' => ShipmondoCarrierController::TAB_CLASS_NAME,
                 'route_name' => 'shipmondo_shipmondo_carriers_search',
                 'visible' => true,
                 'parent_class_name' => 'AdminParentShipping',
+                'wording' => 'Shipmondo carriers',
+                'wording_domain' => 'Modules.Shipmondo.Admin',
+            ],
+            [
+                'name' => $configrationNames,
+                'class_name' => ShipmondoConfigurationController::TAB_CLASS_NAME,
+                'route_name' => 'shipmondo_configuration',
+                'visible' => false, // Added for breadcrumbs
+                'parent_class_name' => 'AdminParentModulesSf',
+                'wording' => 'Shipmondo Delivery Checkout',
+                'wording_domain' => 'Modules.Shipmondo.Admin',
             ],
         ];
     }

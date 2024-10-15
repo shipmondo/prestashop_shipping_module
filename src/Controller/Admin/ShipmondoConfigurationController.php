@@ -15,6 +15,8 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ShipmondoConfigurationController extends FrameworkBundleAdminController
 {
+    public const TAB_CLASS_NAME = 'AdminShipmondoConfiguration';
+
     public function indexAction(Request $request): Response
     {
         $textFormDataHandler = $this->get('shipmondo.form.shipmondo_configuration_form_handler');
