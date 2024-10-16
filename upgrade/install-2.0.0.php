@@ -28,7 +28,8 @@ function upgrade_module_2_0_0($module)
         && createServicePointTable_2_0_0($dbInstance)
         && dropSelectedServicePointsTable_2_0_0($dbInstance)
         && migrateCarriers_2_0_0($dbInstance, $module)
-        && installTabs_2_0_0($tabRepository, $module);
+        && installTabs_2_0_0($tabRepository, $module)
+        && unlinkFiles_2_0_0();
 }
 
 function removeOldHooks_2_0_0($module): bool
@@ -207,6 +208,19 @@ function installTabs_2_0_0(TabRepository $tabRepository, Shipmondo $module): boo
     return true;
 }
 
+function unlinkFiles_2_0_0(): bool
+{
+    foreach (getRemovedFiles_2_0_0() as $file) {
+        $filePath = __DIR__ . '/../' . $file;
+        PrestaShopLogger::addLog('Removing file: ' . $filePath);
+        if (file_exists($filePath) && !unlink($filePath)) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
 function getTabs_2_0_0(): array
 {
     return [
@@ -311,5 +325,39 @@ function getHooksToAdd_2_0_0(): array
         'displayAfterCarrier',
         'actionValidateOrder',
         'addWebserviceResources',
+    ];
+}
+
+function getRemovedFiles_2_0_0(): array
+{
+    return [
+        'translations/da.php',
+        'views/css/module/onepagecheckoutps.css',
+        'views/css/module/supercheckout.css',
+        'views/css/module/supercheckout_pre7.css',
+        'views/css/module/thecheckout.css',
+        'views/css/theme/warehouse.css',
+        'views/img/bring.png',
+        'views/img/carrier_logos/bring.jpg',
+        'views/img/carrier_logos/dao.jpg',
+        'views/img/carrier_logos/gls.jpg',
+        'views/img/carrier_logos/postnord.jpg',
+        'views/img/dao.png',
+        'views/img/gls.png',
+        'views/img/pdk.png',
+        'views/img/shipmondo_logo.png',
+        'views/js/module/easycheckout.js',
+        'views/js/module/onepagecheckoutps.js',
+        'views/js/module/supercheckout_pre7.js',
+        'views/js/module/thecheckout.js',
+        'views/templates/front/_partials/close_button.tpl',
+        'views/templates/front/dropdown/error.tpl',
+        'views/templates/front/dropdown/selection_button.tpl',
+        'views/templates/front/popup/error.tpl',
+        'views/templates/front/popup/modal.tpl',
+        'views/templates/front/popup/selection_button.tpl',
+        'views/templates/front/radio/content.tpl',
+        'views/templates/front/radio/index.php',
+        'views/templates/front/radio/selection_button.tpl',
     ];
 }
