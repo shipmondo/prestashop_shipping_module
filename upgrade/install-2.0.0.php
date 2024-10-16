@@ -33,19 +33,18 @@ function upgrade_module_2_0_0($module)
 
 function removeOldHooks_2_0_0($module): bool
 {
-    foreach(getHooksToRemove_2_0_0() as $hook) {
+    foreach (getHooksToRemove_2_0_0() as $hook) {
         if (!$module->unregisterHook($hook)) {
             return false;
         }
     }
-    
 
     return true;
 }
 
 function addNewHooks_2_0_0($module): bool
 {
-    foreach(getHooksToAdd_2_0_0() as $hook) {
+    foreach (getHooksToAdd_2_0_0() as $hook) {
         if (!$module->registerHook($hook)) {
             return false;
         }
@@ -56,6 +55,7 @@ function addNewHooks_2_0_0($module): bool
 
 /**
  * Migrate radio buttons to dropdown as radio buttons has been removed
+ *
  * @return bool
  */
 function migrateFrontendType_2_0_0(): bool
@@ -70,8 +70,10 @@ function migrateFrontendType_2_0_0(): bool
 
 /**
  * Migrate carriers created by older versions of the module to the new format
+ *
  * @param Db $dbInstance
  * @param Shipmondo $module
+ *
  * @return bool
  */
 function migrateCarriers_2_0_0(Db $dbInstance, Shipmondo $module): bool
@@ -101,9 +103,11 @@ function migrateCarriers_2_0_0(Db $dbInstance, Shipmondo $module): bool
 
 /**
  * Migrate a single carrier to the new format
+ *
  * @param Db $dbInstance
  * @param Carrier $carrier
  * @param array $carrierDetails
+ *
  * @return bool
  */
 function migrateCarrier_2_0_0(Db $dbInstance, Carrier $carrier, array $carrierDetails): bool
@@ -155,7 +159,7 @@ function createServicePointTable_2_0_0(Db $dbInstance)
     return $dbInstance->execute($sql);
 }
 
-function dropSelectedServicePointsTable_2_0_0(\Db $dbInstance)
+function dropSelectedServicePointsTable_2_0_0(Db $dbInstance)
 {
     $sql = 'DROP TABLE IF EXISTS `' . _DB_PREFIX_ . 'shipmondo_selected_service_points`';
 
@@ -164,8 +168,10 @@ function dropSelectedServicePointsTable_2_0_0(\Db $dbInstance)
 
 /**
  * Create new tabs
+ *
  * @param TabRepository $tabRepository
  * @param Shipmondo $module
+ *
  * @return bool
  */
 function installTabs_2_0_0(TabRepository $tabRepository, Shipmondo $module): bool

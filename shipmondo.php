@@ -22,7 +22,7 @@ use Shipmondo\Install\Installer;
 class Shipmondo extends CarrierModule
 {
     private const LOCALES = ['da-DK', 'en-US', 'sv-SE', 'nb-NO', 'nn-NO'];
-    
+
     public function __construct()
     {
         $this->name = 'shipmondo';
