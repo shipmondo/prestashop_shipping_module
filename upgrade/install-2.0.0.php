@@ -212,7 +212,6 @@ function unlinkFiles_2_0_0(): bool
 {
     foreach (getRemovedFiles_2_0_0() as $file) {
         $filePath = __DIR__ . '/../' . $file;
-        PrestaShopLogger::addLog('Removing file: ' . $filePath);
         if (file_exists($filePath) && !unlink($filePath)) {
             return false;
         }
