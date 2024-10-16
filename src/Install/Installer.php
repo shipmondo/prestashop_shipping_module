@@ -41,7 +41,7 @@ class Installer
         $this->module = $module;
     }
 
-    public function install()
+    public function install(): bool
     {
         $dbInstance = \Db::getInstance();
 
@@ -51,11 +51,14 @@ class Installer
             && $this->setDefaultFrontendType();
     }
 
-    public function uninstall()
+    public function uninstall(): bool
     {
+        $dbInstance = \Db::getInstance();
+
         return $this->unregisterHooks()
-            && $this->deleteDatabaseTables()
-            && $this->deleteSettings();
+            && $this->deleteDatabaseTables($dbInstance)
+            && $this->deleteSettings()
+            && $this->softDeleteCarriers($dbInstance);
     }
 
     public function createCarrierTable(\Db $dbInstance)
@@ -89,34 +92,30 @@ class Installer
         return $dbInstance->execute($sql);
     }
 
-    private function registerHooks()
+    private function registerHooks(): bool
     {
-        $success = true;
-
         foreach (self::HOOKS as $hook) {
             if (!$this->module->registerHook($hook)) {
-                $success = false;
+                return false;
             }
         }
 
-        return $success;
+        return true;
     }
 
-    private function unregisterHooks()
+    private function unregisterHooks(): bool
     {
-        $success = true;
-
         foreach (self::HOOKS as $hook) {
             if (!$this->module->unregisterHook($hook)) {
-                $success = false;
+                return false;
             }
         }
 
-        return $success;
+        return true;
     }
 
     // If frontend type is not set, set as dropdown
-    private function setDefaultFrontendType()
+    private function setDefaultFrontendType(): bool
     {
         $frontendType = \Configuration::get('SHIPMONDO_FRONTEND_TYPE');
         if (empty($frontendType)) {
@@ -126,23 +125,20 @@ class Installer
         return true;
     }
 
-    private function deleteDatabaseTables()
+    private function deleteDatabaseTables(\Db $dbInstance): bool
     {
-        $success = true;
-
-        $dbInstance = \Db::getInstance();
         foreach (self::TABLES as $table) {
             $sql = 'DROP TABLE IF EXISTS `' . _DB_PREFIX_ . $table . '`';
 
             if (!$dbInstance->execute($sql)) {
-                $success = false;
+                return false;
             }
         }
 
-        return $success;
+        return true;
     }
 
-    private function deleteSettings()
+    private function deleteSettings(): bool
     {
         $keys = [
             'SHIPMONDO_FRONTEND_KEY',
@@ -157,5 +153,14 @@ class Installer
         }
 
         return true;
+    }
+
+    private function softDeleteCarriers(\Db $dbInstance): bool
+    {
+        return $dbInstance->update(
+            'carrier',
+            ['deleted' => 1],
+            'external_module_name = "shipmondo"'
+        );
     }
 }
