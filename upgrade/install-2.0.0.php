@@ -11,105 +11,113 @@ if (!defined('_PS_VERSION_')) {
     exit;
 }
 
-if (file_exists(__DIR__ . '/../../vendor/autoload.php')) {
-    require_once __DIR__ . '/../../vendor/autoload.php';
-}
+use PrestaShopBundle\Entity\Repository\TabRepository;
 
-use Doctrine\ORM\EntityManager;
-use Shipmondo\Entity\ShipmondoCarrier;
-
-function upgradeModule_2_0_0($module)
+function upgrade_module_2_0_0($module)
 {
-    // TODO not done
-
     /** @var Db $dbInstance */
     $dbInstance = Db::getInstance();
 
     /** @var TabRepository $tabRepository */
     $tabRepository = $module->get('prestashop.core.admin.tab.repository');
 
-    /** @var EntityManager $entityManager */
-    $entityManager = $module->get('doctrine.orm.entity_manager');
-
-    return removeOldHooks($module)
-        && addNewHooks($module)
+    return removeOldHooks_2_0_0($module)
+        && addNewHooks_2_0_0($module)
+        && migrateFrontendType_2_0_0()
         && createCarrierTable_2_0_0($dbInstance)
         && createServicePointTable_2_0_0($dbInstance)
         && dropSelectedServicePointsTable_2_0_0($dbInstance)
-        && migrateCarriers_2_0_0($entityManager, $module)
+        && migrateCarriers_2_0_0($dbInstance, $module)
         && installTabs_2_0_0($tabRepository, $module);
 }
 
-function removeOldHooks($module)
+function removeOldHooks_2_0_0($module): bool
 {
-    $isSuccessful = true;
-
     foreach(getHooksToRemove_2_0_0() as $hook) {
-        $isSuccessful = $isSuccessful && $module->unregisterHook($hook);
-        if (!$isSuccessful) {
+        if (!$module->unregisterHook($hook)) {
             return false;
         }
     }
+    
 
-    return $isSuccessful;
+    return true;
 }
 
-function addNewHooks($module)
+function addNewHooks_2_0_0($module): bool
 {
-    $isSuccessful = true;
-
     foreach(getHooksToAdd_2_0_0() as $hook) {
-        $isSuccessful = $isSuccessful && $module->registerHook($hook);
-        if (!$isSuccessful) {
+        if (!$module->registerHook($hook)) {
             return false;
         }
     }
 
-    return $isSuccessful;
+    return true;
 }
 
-function migrateCarriers_2_0_0(EntityManager $entityManager, Shipmondo $module)
+/**
+ * Migrate radio buttons to dropdown as radio buttons has been removed
+ * @return bool
+ */
+function migrateFrontendType_2_0_0(): bool
 {
-    $isSuccessful = true;
+    $frontendType = Configuration::get('SHIPMONDO_FRONTEND_TYPE');
+    if ($frontendType == 'radio') {
+        Configuration::updateValue('SHIPMONDO_FRONTEND_TYPE', 'dropdown');
+    }
+
+    return true;
+}
+
+/**
+ * Migrate carriers created by older versions of the module to the new format
+ * @param Db $dbInstance
+ * @param Shipmondo $module
+ * @return bool
+ */
+function migrateCarriers_2_0_0(Db $dbInstance, Shipmondo $module): bool
+{
+    $migratedCarrierIds = [];
 
     $legacyCarrierMap = getLegacyCarrierMap_2_0_0();
-    foreach ($legacyCarrierMap as $carrierName => $carrierDetails) {
-        $carrier = $module->getCarrierByReference($carrierName);
+    foreach ($legacyCarrierMap as $configurationKey => $carrierDetails) {
+        $carrierId = Configuration::get($configurationKey);
+        $carrier = Carrier::getCarrierByReference($carrierId);
 
-        if ($carrier) {
-            $isSuccessful = $isSuccessful && migrateCarrier_2_0_0($entityManager, $carrier, $carrierDetails);
-            if (!$isSuccessful) {
-                return false;
-            }
+        if (!$carrier || in_array($carrier->id, $migratedCarrierIds)) {
+            Configuration::deleteByName($configurationKey);
+            continue;
+        }
+
+        if (migrateCarrier_2_0_0($dbInstance, $carrier, $carrierDetails)) {
+            $migratedCarrierIds[] = $carrier->id;
+            Configuration::deleteByName($configurationKey);
+        } else {
+            return false;
         }
     }
 
-    $legacyServicePointCarriersMap = getLegacyServicePointCarrierMap_2_0_0();
-    foreach ($legacyServicePointCarriersMap as $carrierReference => $carrierDetails) {
-        $carrier = $module->getCarrierByReference($carrierReference);
-
-        if ($carrier) {
-            $isSuccessful = $isSuccessful && migrateCarrier_2_0_0($entityManager, $carrier, $carrierDetails);
-            if (!$isSuccessful) {
-                return false;
-            }
-        }
-    }
-
-    return $isSuccessful;
+    return true;
 }
 
-function migrateCarrier_2_0_0(EntityManager $entityManager, Carrier $carrier, array $carrierDetails): bool
+/**
+ * Migrate a single carrier to the new format
+ * @param Db $dbInstance
+ * @param Carrier $carrier
+ * @param array $carrierDetails
+ * @return bool
+ */
+function migrateCarrier_2_0_0(Db $dbInstance, Carrier $carrier, array $carrierDetails): bool
 {
     if ($carrier) {
-        \PrestaShopLogger::addLog('Create ShipmondoCarrier for ' . $carrier->name, 1, null, 'Shipmondo');
-        $shipmondoCarrier = new ShipmondoCarrier();
-        $shipmondoCarrier->setCarrierId($carrier->id);
-        $shipmondoCarrier->setCarrierCode($carrierDetails['carrier_code']);
-        $shipmondoCarrier->setProductCode($carrierDetails['product_code']);
-        $entityManager->persist($shipmondoCarrier);
-        $entityManager->flush();
-        \PrestaShopLogger::addLog('ShipmondoCarrier for ' . $carrier->name . ' created', 1, null, 'Shipmondo');
+        if ($carrier->deleted) {
+            return true;
+        }
+
+        $dbInstance->insert('shipmondo_carrier', [
+            'id_carrier' => $carrier->id,
+            'carrier_code' => $carrierDetails['carrier_code'],
+            'product_code' => $carrierDetails['product_code'],
+        ]);
     }
 
     return true;
@@ -117,7 +125,8 @@ function migrateCarrier_2_0_0(EntityManager $entityManager, Carrier $carrier, ar
 
 function createCarrierTable_2_0_0(Db $dbInstance)
 {
-    $sql = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'shipmondo_carrier` ('
+    $sql = 'CREATE TABLE IF NOT EXISTS `' .
+     _DB_PREFIX_ . 'shipmondo_carrier` ('
         . '`id_smd_carrier` INT NOT NULL AUTO_INCREMENT PRIMARY KEY, '
         . '`id_carrier` INT NOT NULL, '
         . '`carrier_code` VARCHAR(255) NOT NULL, '
@@ -153,6 +162,12 @@ function dropSelectedServicePointsTable_2_0_0(\Db $dbInstance)
     return $dbInstance->execute($sql);
 }
 
+/**
+ * Create new tabs
+ * @param TabRepository $tabRepository
+ * @param Shipmondo $module
+ * @return bool
+ */
 function installTabs_2_0_0(TabRepository $tabRepository, Shipmondo $module): bool
 {
     $translator = $module->getTranslator();
@@ -167,18 +182,16 @@ function installTabs_2_0_0(TabRepository $tabRepository, Shipmondo $module): boo
         $newTab = new Tab($tabId);
         $newTab->active = $tab['visible'];
         $newTab->class_name = $tab['class_name'];
-
         $newTab->route_name = $tab['route_name'];
         $newTab->id_parent = $tabRepository->findOneIdByClassName($tab['parent_class_name']);
         $newTab->wording = $tab['wording'];
         $newTab->wording_domain = $tab['wording_domain'];
-        $newTab->name = [];
+        $newTab->module = $module->name;
 
+        $newTab->name = [];
         foreach (Language::getLanguages() as $lang) {
             $newTab->name[$lang['id_lang']] = $translator->trans($tab['name'], [], 'Modules.Shipmondo.Admin', $lang['locale']);
         }
-
-        $newTab->module = $module->name;
 
         if (!$newTab->save()) {
             return false;
@@ -215,56 +228,50 @@ function getTabs_2_0_0(): array
 function getLegacyCarrierMap_2_0_0(): array
 {
     return [
-        'gls_service_point' => [
+        'shipmondo_gls_service_point' => [
             'carrier_code' => 'gls',
             'product_code' => 'service_point',
         ],
-        'gls_private' => [
+        'shipmondo_gls_private' => [
             'carrier_code' => 'gls',
             'product_code' => 'private',
         ],
-        'gls_business' => [
+        'shipmondo_gls_business' => [
             'carrier_code' => 'gls',
             'product_code' => 'business',
         ],
-        'postnord_service_point' => [
+        'shipmondo_postnord_service_point' => [
             'carrier_code' => 'pdk',
             'product_code' => 'service_point',
         ],
-        'postnord_private' => [
+        'shipmondo_postnord_private' => [
             'carrier_code' => 'pdk',
             'product_code' => 'private',
         ],
-        'postnord_business' => [
+        'shipmondo_postnord_business' => [
             'carrier_code' => 'pdk',
             'product_code' => 'business',
         ],
-        'dao_service_point' => [
+        'shipmondo_dao_service_point' => [
             'carrier_code' => 'dao',
             'product_code' => 'service_point',
         ],
-        'dao_direct' => [
+        'shipmondo_dao_direct' => [
             'carrier_code' => 'dao',
             'product_code' => 'private',
         ],
-        'bring_service_point' => [
+        'shipmondo_bring_service_point' => [
             'carrier_code' => 'bring',
             'product_code' => 'service_point',
         ],
-        'bring_private' => [
+        'shipmondo_bring_private' => [
             'carrier_code' => 'bring',
             'product_code' => 'private',
         ],
-        'bring_business' => [
+        'shipmondo_bring_business' => [
             'carrier_code' => 'bring',
             'product_code' => 'business',
         ],
-    ];
-}
-
-function getLegacyServicePointCarrierMap_2_0_0(): array
-{
-    return [
         'SHIPMONDO_GLS_CARRIER_ID' => [
             'carrier_code' => 'gls',
             'product_code' => 'service_point',
@@ -300,15 +307,3 @@ function getHooksToAdd_2_0_0(): array
         'addWebserviceResources',
     ];
 }
-
-function getLocales_2_0_0(): array
-{
-    return [
-        'da-DK',
-        'en-US',
-        'sv-SE',
-        'nb-NO',
-        'nn-NO',
-    ];
-}
-
