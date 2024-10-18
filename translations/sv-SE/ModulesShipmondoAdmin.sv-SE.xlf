@@ -144,12 +144,12 @@
       </trans-unit>
       <trans-unit id="01c2d72fabca7a114780057bd418a312">
         <source>When Shipmondo Delivery Checkout is configured, go to</source>
-        <target>When Shipmondo Delivery Checkout is configured, go to</target>
+        <target>När Shipmondo Delivery Checkout är konfigurerat, gå till</target>
         <note>Line: </note>
       </trans-unit>
       <trans-unit id="735497f20cedc4fe8c13542017fb9894">
         <source>to setup carriers</source>
-        <target>to setup carriers</target>
+        <target>för att ställa in transportföretag</target>
         <note>Line: </note>
       </trans-unit>
     </body>

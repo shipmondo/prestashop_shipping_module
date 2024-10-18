@@ -114,12 +114,12 @@
       </trans-unit>
       <trans-unit id="e43ec38a93023bde02ff70f28b925702">
         <source>Go to</source>
-        <target>Go to</target>
+        <target>Gå til</target>
         <note>Line: </note>
       </trans-unit>
       <trans-unit id="3e436e90361099dad5e991bf2b6fa4a0">
         <source>to configure Shipmondo Delivery Checkout.</source>
-        <target>to configure Shipmondo Delivery Checkout.</target>
+        <target>for å konfigurere Shipmondo Delivery Checkout.</target>
         <note>Line: </note>
       </trans-unit>
       <trans-unit id="67b1eb90bbd26846d41feb99df503e60">
@@ -144,12 +144,12 @@
       </trans-unit>
       <trans-unit id="01c2d72fabca7a114780057bd418a312">
         <source>When Shipmondo Delivery Checkout is configured, go to</source>
-        <target>When Shipmondo Delivery Checkout is configured, go to</target>
+        <target>Når Shipmondo Delivery Checkout er konfigurert, gå til</target>
         <note>Line: </note>
       </trans-unit>
       <trans-unit id="735497f20cedc4fe8c13542017fb9894">
         <source>to setup carriers</source>
-        <target>to setup carriers</target>
+        <target>or å sette opp transportører</target>
         <note>Line: </note>
       </trans-unit>
     </body>
