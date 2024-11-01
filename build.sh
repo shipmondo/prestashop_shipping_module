@@ -10,7 +10,6 @@ rm -rf .vscode
 rm -rf .php-cs-fixer.cache
 rm -rf .php-cs-fixer.dist.php
 rm -rf build.sh
-rm -rf composer.lock
 
 shopt -s extglob
 cd vendor
