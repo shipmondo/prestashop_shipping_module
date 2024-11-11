@@ -16,7 +16,7 @@ cd vendor
 rm -rf !(.htaccess)
 cd ..
 
-docker run --rm -v "$(pwd)":/app -w /app composer install --no-dev
+docker run --rm -v "$(pwd)":/app -w /app composer:latest install --no-dev
 
 cd ..
 zip -r shipmondo.zip shipmondo
