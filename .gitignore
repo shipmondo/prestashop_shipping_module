@@ -10,3 +10,6 @@
 
 # Build
 shipmondo.zip
+
+# Misc
+.DS_Store
