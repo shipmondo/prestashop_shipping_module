@@ -62,7 +62,14 @@ class ApiClient
      */
     public function getServicePoints($query): array
     {
-        return $this->request('GET', 'pickup-points.json', $query);
+        $servicePoints = $this->request('GET', 'pickup-points.json', $query);
+
+        // Overide carrier code to ensure it is the same as requested
+        foreach($servicePoints as $key => $servicePoint) {
+            $servicePoint->carrier_code = $query['carrier_code'];
+        }
+
+        return $servicePoints;
     }
 
     /**
