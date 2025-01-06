@@ -13,8 +13,8 @@ For instruction for how to install and configure Shipmondo Delivery Checkout, pl
 
 ## Requirements
 
-- PHP <= 7.2
-- PrestaShop <= 8.0.0
+- PHP >= 7.2
+- PrestaShop >= 8.0.0
 
 ## License
 
