@@ -1,0 +1,48 @@
+{#**
+ * @author    Shipmondo <support@shipmondo.com>
+ * @copyright 2024-present Shipmondo
+ * @license   https://opensource.org/license/bsd-3-clause BSD-3-Clause
+ *#}
+
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
+
+{% block content %}
+  <div class="alert alert-info" role="alert">
+    <p class="alert-text">
+        {{'If you need help configuring Shipmondo Delivery Checkout, you can follow our'|trans({}, 'Modules.Shipmondo.Admin')}} <a href="https://help.shipmondo.com/articles/10002313" target="_blank">{{ 'PrestaShop guide'|trans({}, 'Modules.Shipmondo.Admin') }}</a>.
+    </p>
+
+    <p class="alert-text">
+      {{'To generate a shipping module key, go to'|trans({}, 'Modules.Shipmondo.Admin')}} <a target="_blank" href="https://app.shipmondo.com/main/app/#/setting/freight-module">Shipmondo</a>.
+    </p>
+
+    <p class="alert-text">
+      {{'To generate a Google Maps API key, go to'|trans({}, 'Modules.Shipmondo.Admin')}} <a target="_blank" href="https://developers.google.com/maps/documentation/javascript/get-api-key">Google</a>.
+    </p>
+
+    <p class="alert-text">
+        {{'When Shipmondo Delivery Checkout is configured, go to'|trans({}, 'Modules.Shipmondo.Admin')}} <a href="{{path('shipmondo_shipmondo_carriers_search')}}">{{ 'Shipping'|trans({}, 'Admin.Navigation.Menu') }} > {{ 'Shipmondo carriers'|trans({}, 'Modules.Shipmondo.Admin') }}</a> {{'to setup carriers'|trans({}, 'Modules.Shipmondo.Admin')}}.
+    </p>
+  </div>
+
+  {{ form_start(shipmondoConfigurationForm) }}
+  <div class="card">
+    <h3 class="card-header">
+      <i class="material-icons">settings</i> {{ 'Configuration'|trans({}, 'Admin.Global') }}
+    </h3>
+    <div class="card-body">
+      
+      <div class="form-wrapper">
+        {{ form_widget(shipmondoConfigurationForm) }}
+      </div>
+    </div>
+    <div class="card-footer">
+      <div class="d-flex justify-content-end">
+        <button class="btn btn-primary float-right" id="save-button">
+          {{ 'Save'|trans({}, 'Admin.Actions') }}
+        </button>
+      </div>
+    </div>
+  </div>
+  {{ form_end(shipmondoConfigurationForm) }}
+{% endblock %}

@@ -1,0 +1,15 @@
+# composer
+/vendor
+
+# VS Code
+/.vscode
+
+# PHP CS Fixer
+.php-cs-fixer.dist.php
+.php-cs-fixer.cache
+
+# Build
+shipmondo.zip
+
+# Misc
+.DS_Store

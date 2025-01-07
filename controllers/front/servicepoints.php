@@ -1,275 +1,214 @@
 <?php
 /**
- *  @author    Shipmondo
- *  @copyright 2023 Shipmondo
- *  @license   All rights reserved
+ *  @author    Shipmondo <support@shipmondo.com>
+ *  @copyright 2024-present Shipmondo
+ *  @license   https://opensource.org/license/bsd-3-clause BSD-3-Clause
  */
+
+declare(strict_types=1);
+
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
+use Doctrine\ORM\EntityRepository;
+use Shipmondo\Entity\ShipmondoServicePoint;
+use Shipmondo\Exception\ShipmondoApiException;
+
 class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
 {
-    public function initContent()
+    public $ajax = true;
+
+    public function initContent(): void
     {
         parent::initContent();
 
-        $response = [];
-        switch (Tools::getValue('method')) {
-            case 'get_list':
-                $cart = Context::getContext()->cart;
-
-                $sql = new DbQuery();
-                $sql
-                    ->select('service_point')
-                    ->from('shipmondo_selected_service_points')
-                    ->where('id_cart = ' . (int) $cart->id);
-                $result = Db::getInstance()->getRow($sql);
-
-                $service_point_id = null;
-                if ($result) {
-                    $service_point_id = json_decode($result['service_point'])->id;
-                }
-
-                $carrier_code       = Tools::getValue('carrier_code');
-                $last_carrier_code  = Tools::getValue('last_carrier_code');
-                $last_address       = (object) Tools::getValue('last_address');
-                $frontend_key       = Configuration::get('SHIPMONDO_FRONTEND_KEY');
-
-                $delivery_address = new Address($cart->id_address_delivery);
-
-                // Check if reload of service point is needed
-                $address_changed = $this->hasAddressChanged($last_address, $delivery_address);
-                if (!$address_changed && $carrier_code == $last_carrier_code) {
-                    $response['address_changed'] = false;
-                    $response['status'] = 'success';
+        try {
+            $action = Tools::getValue('action');
+            switch ($action) {
+                case 'get':
+                    $this->getServicePoint();
                     break;
-                }
-
-                $sql = new DbQuery();
-                $sql
-                    ->select('iso_code')
-                    ->from('country')
-                    ->where('id_country = "' . pSQL($delivery_address->id_country) . '"');
-                $country_result = Db::getInstance()->getRow($sql);
-
-                $country_code = 'DK';
-                if ($country_result['iso_code']) {
-                    $country_code = $country_result['iso_code'];
-                }
-
-                $response = $this->getList($frontend_key, $carrier_code, $delivery_address->address1, $delivery_address->postcode, $country_code, $service_point_id);
-                $response['new_address'] = [
-                    'id_country' => $delivery_address->id_country,
-                    'address1' => $delivery_address->address1,
-                    'postcode' => $delivery_address->postcode,
-                ];
-                $response['address_changed'] = true;
-
-                break;
-
-            case 'save_address':
-                $cart = Context::getContext()->cart;
-
-                $carrier_code = Tools::getValue('carrier_code');
-                $service_point_id = Tools::getValue('service_point_id');
-
-                $service_point_address = [
-                    'id'            => $service_point_id,
-                    'company_name'  => Tools::getValue('company_name'),
-                    'address'       => Tools::getValue('address'),
-                    'address2'      => "ID: {$carrier_code}-{$service_point_id}",
-                    'zip_code'      => Tools::getValue('zip_code'),
-                    'city'          => Tools::getValue('city'),
-                    'carrier_code'  => $carrier_code,
-                ];
-
-                $sql = new DbQuery();
-                $sql
-                    ->select('service_point')
-                    ->from('shipmondo_selected_service_points')
-                    ->where('id_cart = ' . (int) $cart->id);
-                $result = Db::getInstance()->getRow($sql);
-
-                if (!$result) {
-                    $save_result = Db::getInstance()->insert(
-                        'shipmondo_selected_service_points',
-                        [
-                            'id_cart' => (int) $cart->id,
-                            'service_point' => pSQL(json_encode($service_point_address)),
-                            'id_carrier' => (int) $cart->id_carrier,
-                        ]
-                    );
-                } else {
-                    $save_result = Db::getInstance()->update(
-                        'shipmondo_selected_service_points',
-                        [
-                            'id_cart' => (int) $cart->id,
-                            'service_point' => pSQL(json_encode($service_point_address)),
-                            'id_carrier' => (int) $cart->id_carrier,
-                        ],
-                        'id_cart = ' . (int) $cart->id,
-                        1
-                    );
-                }
-
-                if ($save_result && $cart->update()) {
-                    $response['status'] = 'success';
-                } else {
-                    $response['status'] = 'error';
-                }
-                break;
-
-            case 'get_address':
-                $cart = Context::getContext()->cart;
-                $carrier_code = Tools::getValue('carrier_code');
-
-                $sql = new DbQuery();
-                $sql
-                    ->select('service_point')
-                    ->from('shipmondo_selected_service_points')
-                    ->where('id_cart = ' . (int) $cart->id);
-                $result = Db::getInstance()->getRow($sql);
-
-                if ($result) {
-                    $service_point = json_decode($result['service_point']);
-
-                    if ($carrier_code === $service_point->carrier_code) {
-                        $response['status'] = 'success';
-                        $response['service_point'] = $service_point;
-                        break;
-                    }
-                }
-
-                $response['status'] = 'error';
-                break;
-
-            default:
-                break;
+                case 'update':
+                    $this->updateServicePoint();
+                    break;
+                default:
+                    $this->invalidAction();
+                    break;
+            }
+        } catch (Exception $e) {
+            $errorMessage = $this->trans('An unknown error occured.', [], 'Modules.Shipmondo.Front');
+            $this->ajaxDie(json_encode(['status' => 'error', 'error' => $e->getMessage(), 'html' => $this->getErrorHtml($errorMessage)]));
         }
-
-        echo json_encode($response);
-        exit;
     }
 
-    private function getList($frontend_key, $carrier_code, $address, $zip_code, $country = 'DK', $selected_service_point_id = null)
+    private function updateServicePoint(): void
     {
-        $module = Module::getInstanceByName('shipmondo');
+        $cart = Context::getContext()->cart;
+        $repo = $this->getRepository();
 
-        $method = 'GET';
-        $url = 'https://service-points.shipmondo.com/pickup-points.json';
-        $data = [
-            'frontend_key'          => $frontend_key,
-            'request_url'           => _PS_BASE_URL_,
-            'request_version'       => _PS_VERSION_,
-            'module_version'        => $module->version,
-            'shipping_module_type'  => 'prestashop',
-            'carrier_code'          => $carrier_code,
-            'zipcode'               => $zip_code,
-            'country'               => $country,
-            'address'               => $address,
-        ];
-
-        $response = [];
-
-        if (empty($zip_code) || empty($address) || empty($frontend_key)) {
-            return [
-                'status' => 'error',
-                'error' => $module->l('Enter zipcode and address to see pickup points', 'servicepoints'),
-            ];
+        $servicePoint = $repo->findOneBy(['cartId' => $cart->id]);
+        if (!$servicePoint) {
+            $servicePoint = new ShipmondoServicePoint();
+            $servicePoint->setCartId($cart->id);
         }
 
-        $service_points = json_decode($this->callShipmondoAPI($method, $url, $data));
+        $deliveryAddress = new Address($cart->id_address_delivery);
+        $countryCode = Country::getIsoById($deliveryAddress->id_country);
+        $address2 = Tools::getValue('address2');
 
-        if (empty($service_points)) {
-            return [
-                'status' => 'error',
-                'error' => $module->l('No pickup points found. Please confirm address.', 'servicepoints'),
-            ];
-        }
+        $servicePoint
+            ->setServicePointId(Tools::getValue('service_point_id'))
+            ->setCarrierCode(Tools::getValue('carrier_code'))
+            ->setName(Tools::getValue('name'))
+            ->setAddress1(Tools::getValue('address1'))
+            ->setAddress2($address2 ? $address2 : null)
+            ->setZipCode(Tools::getValue('zip_code'))
+            ->setCity(Tools::getValue('city'))
+            ->setCountryCode($countryCode);
 
-        if (!empty($service_points->message)) {
-            if ($service_points->message === 'Invalid frontend_key') {
-                return [
-                    'status' => 'error',
-                    'error' => $module->l('Please add a valid delivery module key in back office.', 'servicepoints'),
-                ];
-            } else {
-                return [
-                    'status' => 'error',
-                    'error' => $service_points->message,
-                ];
-            }
-        }
-
-        $frontend_type = Configuration::get('SHIPMONDO_FRONTEND_TYPE');
-        if (!$frontend_type) {
-            $frontend_type = 'popup';
-        }
-
-        $response['service_points'] = $service_points;
-        $response['frontend_type'] = $frontend_type;
-        $response['status'] = 'success';
-
-        if (empty($selected_service_point_id)) {
-            $selected_service_point_id = 0;
-        }
-
-        $single = $module->l('%s pickup point found', 'servicepoints');
-        $plural = $module->l('%s pickup points found', 'servicepoints');
-        $count = count($service_points);
-        $count_text = $this->amount($single, $plural, $count);
+        $entityManager = $this->container->get('doctrine.orm.entity_manager');
+        $entityManager->persist($servicePoint);
+        $entityManager->flush();
 
         $this->context->smarty->assign([
-            'service_points' => $service_points,
-            'selected_service_point_id' => $selected_service_point_id,
-            'carrier_code' => $carrier_code,
-            'carrier_logo' => _MODULE_DIR_ . 'shipmondo/views/img/' . $carrier_code . '.png',
-            'service_points_json' => json_encode($service_points),
-            'service_points_count' => sprintf($count_text, $count),
+            'carrier' => new Carrier($cart->id_carrier),
+            'servicePoint' => (object) [ // Imitate response from external service point API
+                'id' => $servicePoint->getServicePointId(),
+                'name' => $servicePoint->getName(),
+                'address' => $servicePoint->getAddress1(),
+                'address2' => $servicePoint->getAddress2(),
+                'zipcode' => $servicePoint->getZipCode(),
+                'city' => $servicePoint->getCity(),
+                'country_code' => $servicePoint->getCountryCode(),
+                'distance' => Tools::getValue('distance'),
+            ],
         ]);
-        $response['service_points_html'] = $this->module->fetch('module:shipmondo/views/templates/front/' . Tools::strtolower($frontend_type) . '/content.tpl');
+        $html = $this->module->fetch('module:shipmondo/views/templates/front/_partials/selected_service_point.tpl');
 
-        return $response;
+        $this->ajaxDie(json_encode(['status' => 'success', 'html' => $html]));
     }
 
-    private function callShipmondoAPI($method, $url, $data = false)
+    private function getServicePoint(): void
     {
-        $curl = curl_init();
-        switch ($method) {
-            case 'POST':
-                curl_setopt($curl, CURLOPT_POST, 1);
-                if ($data) {
-                    curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
-                }
-                break;
-            default:
-                if ($data) {
-                    $url = sprintf('%s?%s', $url, http_build_query($data));
-                }
+        $cart = Context::getContext()->cart;
+        $repo = $this->getRepository();
+
+        $carrierId = Tools::getValue('carrier_id');
+        if (!$carrierId) {
+            $carrierId = $cart->id_carrier;
         }
 
-        // Optional Authentication
-        curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-        curl_setopt($curl, CURLOPT_USERPWD, 'username:password');
-        curl_setopt($curl, CURLOPT_URL, $url);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        $carrier = $this->get('shipmondo.repository.shipmondo_carrier')->findOneBy(['carrierId' => $carrierId]);
 
-        $result = curl_exec($curl);
-        curl_close($curl);
+        $html = '';
+        if ($carrier && $carrier->getProductCode() === 'service_point') {
+            $servicePoint = $repo->findOneBy(['cartId' => $cart->id]);
+            $externalServicePoints = [];
+            $selectedServicePoint = null;
 
-        return $result;
-    }
+            // Find and set the nearest service point
+            $deliveryAddress = new Address($cart->id_address_delivery);
 
-    private function amount($single, $plural, $amount)
-    {
-        if ($amount == 1) {
-            return $single;
+            if ($deliveryAddress) {
+                try {
+                    $externalServicePoints = $this->fetchExternalServicePoints($carrier->getCarrierCode(), $deliveryAddress);
+                } catch (ShipmondoApiException $e) {
+                    $errorMessage = $this->trans('An error occured while fetching service points.', [], 'Modules.Shipmondo.Front');
+                    $errorHtml = $this->getErrorHtml($errorMessage);
+                    $this->ajaxDie(json_encode(['status' => 'error', 'error' => $e->getMessage(), 'html' => $errorHtml]));
+                }
+
+                if (empty($externalServicePoints)) {
+                    $errorMessage = $this->trans('No service points found for the given address.', [], 'Modules.Shipmondo.Front');
+                    $errorHtml = $this->getErrorHtml($errorMessage);
+                    $this->ajaxDie(json_encode(['status' => 'error', 'error' => $errorMessage, 'html' => $errorHtml]));
+                }
+
+                if ($servicePoint) {
+                    foreach ($externalServicePoints as $externalServicePoint) {
+                        if ($servicePoint && $servicePoint->getServicePointId() == $externalServicePoint->id) {
+                            $selectedServicePoint = $externalServicePoint;
+                            break;
+                        }
+                    }
+                } else {
+                    $servicePoint = new ShipmondoServicePoint();
+                    $servicePoint->setCartId($cart->id);
+                }
+
+                if (!$selectedServicePoint) {
+                    $selectedServicePoint = $externalServicePoints[0];
+                }
+
+                $servicePoint->setCarrierCode($carrier->getCarrierCode());
+                $servicePoint->setServicePointId($selectedServicePoint->id);
+                $servicePoint->setName($selectedServicePoint->name);
+                $servicePoint->setAddress1($selectedServicePoint->address);
+                $servicePoint->setAddress2($selectedServicePoint->address2);
+                $servicePoint->setZipCode($selectedServicePoint->zipcode);
+                $servicePoint->setCity($selectedServicePoint->city);
+                $servicePoint->setCountryCode($selectedServicePoint->country_code);
+
+                $entityManager = $this->get('doctrine.orm.entity_manager');
+                $entityManager->persist($servicePoint);
+                $entityManager->flush();
+            }
+
+            $this->context->smarty->assign([
+                'carrier' => new Carrier($carrierId),
+                'selectedServicePoint' => $selectedServicePoint,
+                'servicePoints' => $externalServicePoints,
+                'frontendType' => Configuration::get('SHIPMONDO_FRONTEND_TYPE'),
+            ]);
+
+            $html = $this->module->fetch('module:shipmondo/views/templates/front/service_points_selector.tpl');
         }
-        return $plural;
+
+        $this->ajaxDie(json_encode(['status' => 'success', 'html' => $html]));
     }
 
-    private function hasAddressChanged($old_address, $new_address)
+    private function invalidAction(): void
     {
-        return !empty($old_address)
-            || $old_address->id_country != $new_address->id_country
-            || $old_address->postcode != $new_address->postcode
-            || $old_address->address1 != $new_address->address1;
+        $this->ajaxDie(json_encode(['status' => 'error', 'error' => 'Invalid action']));
+    }
+
+    private function getRepository(): EntityRepository
+    {
+        return $this->module->get('shipmondo.repository.shipmondo_service_point');
+    }
+
+    private function hasAddressChanged(object $oldAddress, Address $newAddress): bool
+    {
+        return !empty($oldAddress)
+            && property_exists($oldAddress, 'id_country')
+            && property_exists($oldAddress, 'postcode')
+            && property_exists($oldAddress, 'address1')
+            && ($oldAddress->id_country != $newAddress->id_country
+                || $oldAddress->postcode != $newAddress->postcode
+                || $oldAddress->address1 != $newAddress->address1);
+    }
+
+    private function fetchExternalServicePoints(string $carrierCode, Address $deliveryAddress): array
+    {
+        return $this->container->get('shipmondo.api_client')->getServicePoints([
+            'request_url' => _PS_BASE_URL_,
+            'request_version' => _PS_VERSION_,
+            'module_version' => $this->module->version,
+            'shipping_module_type' => 'prestashop',
+            'carrier_code' => $carrierCode,
+            'zipcode' => $deliveryAddress->postcode,
+            'country' => Country::getIsoById($deliveryAddress->id_country),
+            'address' => $deliveryAddress->address1,
+        ]);
+    }
+
+    private function getErrorHtml(string $errorMessage): string
+    {
+        $this->context->smarty->assign([
+            'errorMessage' => $errorMessage,
+        ]);
+
+        return $this->module->fetch('module:shipmondo/views/templates/front/_partials/error.tpl');
     }
 }
