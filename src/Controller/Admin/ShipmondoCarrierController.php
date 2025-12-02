@@ -1,5 +1,4 @@
 <?php
-
 /**
  *  @author    Shipmondo <support@shipmondo.com>
  *  @copyright 2024-present Shipmondo
@@ -11,14 +10,14 @@ declare(strict_types=1);
 namespace Shipmondo\Controller\Admin;
 
 use Carrier;
-use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
+use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Shipmondo\Entity\ShipmondoCarrier;
 use Shipmondo\Form\Type\ShipmondoCarrierFormType;
 use Shipmondo\Grid\Filters\ShipmondoCarrierFilters;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class ShipmondoCarrierController extends PrestaShopAdminController
+class ShipmondoCarrierController extends FrameworkBundleAdminController
 {
     public const TAB_CLASS_NAME = 'AdminShipmondoShipmondoCarrier';
 
@@ -39,10 +38,10 @@ class ShipmondoCarrierController extends PrestaShopAdminController
             '@Modules/shipmondo/views/templates/admin/shipmondo_carrier_index.html.twig',
             [
                 'enableSidebar' => true,
-                'layoutTitle' => $this->trans('Shipmondo carriers', [], 'Modules.Shipmondo.Admin'),
+                'layoutTitle' => $this->trans('Shipmondo carriers', 'Modules.Shipmondo.Admin'),
                 'layoutHeaderToolbarBtn' => [
                     'add' => [
-                        'desc' => $this->trans('Add Shipmondo carrier', [], 'Modules.Shipmondo.Admin'),
+                        'desc' => $this->trans('Add Shipmondo carrier', 'Modules.Shipmondo.Admin'),
                         'icon' => 'add_circle_outline',
                         'href' => $this->generateUrl('shipmondo_shipmondo_carriers_create'),
                     ],
@@ -81,7 +80,7 @@ class ShipmondoCarrierController extends PrestaShopAdminController
 
         return $this->render('@Modules/shipmondo/views/templates/admin/shipmondo_carrier_form.html.twig', [
             'form' => $form->createView(),
-            'layoutTitle' => $this->trans('Shipmondo carrier', [], 'Modules.Shipmondo.Admin'),
+            'layoutTitle' => $this->trans('Shipmondo carrier', 'Modules.Shipmondo.Admin'),
             'isEdit' => false,
         ]);
     }
@@ -105,7 +104,7 @@ class ShipmondoCarrierController extends PrestaShopAdminController
 
         return $this->render('@Modules/shipmondo/views/templates/admin/shipmondo_carrier_form.html.twig', [
             'form' => $form->createView(),
-            'layoutTitle' => $this->trans('Shipmondo carrier', [], 'Modules.Shipmondo.Admin'),
+            'layoutTitle' => $this->trans('Shipmondo carrier', 'Modules.Shipmondo.Admin'),
             'isEdit' => true,
         ]);
     }
