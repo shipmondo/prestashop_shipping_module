@@ -87,5 +87,16 @@ services:
         arguments:
             - '@shipmondo.form.shipmondo_configuration_form_handler'
 
+    Shipmondo\Controller\Admin\ShipmondoCarrierController:
+        class: 'Shipmondo\Controller\Admin\ShipmondoCarrierController'
+        autoconfigure: true
+        autowire: true
+        tags:
+            - 'controller.service_arguments'
+        arguments:
+            - '@shipmondo.grid.factory.shipmondo_carriers'
+            - '@shipmondo.carrier_handler'
+            - '@shipmondo.grid.definition.factory.shipmondo_carriers'
+
 imports:
     - { resource: common_services.yml }

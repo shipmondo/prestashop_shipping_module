@@ -11,33 +11,37 @@ declare(strict_types=1);
 namespace Shipmondo\Controller\Admin;
 
 use Carrier;
-use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use PrestaShopBundle\Service\Grid\ResponseBuilder;
+use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use Shipmondo\Entity\ShipmondoCarrier;
 use Shipmondo\Form\Type\ShipmondoCarrierFormType;
-use Shipmondo\Grid\Definition\Factory\ShipmondoCarrierGridDefinitionFactory;
 use Shipmondo\Grid\Filters\ShipmondoCarrierFilters;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-// TODO: use `PrestaShopBundle\Controller\Admin\PrestaShopAdminController` instead of `PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController`
-class ShipmondoCarrierController extends FrameworkBundleAdminController
+class ShipmondoCarrierController extends PrestaShopAdminController
 {
     public const TAB_CLASS_NAME = 'AdminShipmondoShipmondoCarrier';
 
+    public function __construct(
+        private readonly \PrestaShop\PrestaShop\Core\Grid\GridFactory $carrierGridFactory,
+        private readonly \Shipmondo\ShipmondoCarrierHandler $carrierHandler,
+        private readonly \Shipmondo\Grid\Definition\Factory\ShipmondoCarrierGridDefinitionFactory $shipmondoCarrierGridDefinitionFactory,
+        private readonly \PrestaShopBundle\Service\Grid\ResponseBuilder $responseBuilder,
+    ) {
+    }
+
     public function indexAction(ShipmondoCarrierFilters $filters): Response
     {
-        $carrierGridFactory = $this->get('shipmondo.grid.factory.shipmondo_carriers');
-        $carrierGrid = $carrierGridFactory->getGrid($filters);
+        $carrierGrid = $this->carrierGridFactory->getGrid($filters);
 
         return $this->render(
             '@Modules/shipmondo/views/templates/admin/shipmondo_carrier_index.html.twig',
             [
                 'enableSidebar' => true,
-                'layoutTitle' => $this->trans('Shipmondo carriers', 'Modules.Shipmondo.Admin'),
+                'layoutTitle' => $this->trans('Shipmondo carriers', [], 'Modules.Shipmondo.Admin'),
                 'layoutHeaderToolbarBtn' => [
                     'add' => [
-                        'desc' => $this->trans('Add Shipmondo carrier', 'Modules.Shipmondo.Admin'),
+                        'desc' => $this->trans('Add Shipmondo carrier', [], 'Modules.Shipmondo.Admin'),
                         'icon' => 'add_circle_outline',
                         'href' => $this->generateUrl('shipmondo_shipmondo_carriers_create'),
                     ],
@@ -49,14 +53,11 @@ class ShipmondoCarrierController extends FrameworkBundleAdminController
 
     public function searchAction(Request $request): Response
     {
-        /** @var ResponseBuilder $responseBuilder */
-        $responseBuilder = $this->get('prestashop.bundle.grid.response_builder');
-
-        return $responseBuilder->buildSearchResponse(
-            $this->get('shipmondo.grid.definition.factory.shipmondo_carriers'),
+        return $this->responseBuilder->buildSearchResponse(
+            $this->shipmondoCarrierGridDefinitionFactory,
             $request,
-            ShipmondoCarrierGridDefinitionFactory::GRID_ID,
-            'shipmondo_shipmondo_carriers_index'
+            \Shipmondo\Grid\Definition\Factory\ShipmondoCarrierGridDefinitionFactory::GRID_ID,
+            'shipmondo_shipmondo_carriers_index',
         );
     }
 
@@ -71,7 +72,7 @@ class ShipmondoCarrierController extends FrameworkBundleAdminController
                 $this->createPsCarrier($carrier);
             }
 
-            $em = $this->getDoctrine()->getManager();
+            $em = $this->container->get('doctrine.orm.entity_manager');
             $em->persist($carrier);
             $em->flush();
 
@@ -80,14 +81,14 @@ class ShipmondoCarrierController extends FrameworkBundleAdminController
 
         return $this->render('@Modules/shipmondo/views/templates/admin/shipmondo_carrier_form.html.twig', [
             'form' => $form->createView(),
-            'layoutTitle' => $this->trans('Shipmondo carrier', 'Modules.Shipmondo.Admin'),
+            'layoutTitle' => $this->trans('Shipmondo carrier', [], 'Modules.Shipmondo.Admin'),
             'isEdit' => false,
         ]);
     }
 
     public function editAction(Request $request, int $id): Response
     {
-        $em = $this->getDoctrine()->getManager();
+        $em = $this->container->get('doctrine.orm.entity_manager');
         $carrier = $em->getRepository(ShipmondoCarrier::class)->find($id);
 
         if (!$carrier) {
@@ -105,14 +106,14 @@ class ShipmondoCarrierController extends FrameworkBundleAdminController
 
         return $this->render('@Modules/shipmondo/views/templates/admin/shipmondo_carrier_form.html.twig', [
             'form' => $form->createView(),
-            'layoutTitle' => $this->trans('Shipmondo carrier', 'Modules.Shipmondo.Admin'),
+            'layoutTitle' => $this->trans('Shipmondo carrier', [], 'Modules.Shipmondo.Admin'),
             'isEdit' => true,
         ]);
     }
 
     public function deleteAction(int $id): Response
     {
-        $em = $this->getDoctrine()->getManager();
+        $em = $this->container->get('doctrine.orm.entity_manager');
         $carrier = $em->getRepository(ShipmondoCarrier::class)->find($id);
 
         if (!$carrier) {
@@ -132,9 +133,8 @@ class ShipmondoCarrierController extends FrameworkBundleAdminController
      */
     private function createPsCarrier(ShipmondoCarrier $carrier): void
     {
-        $carrierHandler = $this->get('shipmondo.carrier_handler');
-        $carrierName = $carrierHandler->getCarrierName($carrier->getCarrierCode());
-        $productName = $carrierHandler->getProductName($carrier->getProductCode());
+        $carrierName = $this->carrierHandler->getCarrierName($carrier->getCarrierCode());
+        $productName = $this->carrierHandler->getProductName($carrier->getProductCode());
 
         $psCarrier = new \Carrier();
         $psCarrier->name = $carrierName . ' - ' . $productName;

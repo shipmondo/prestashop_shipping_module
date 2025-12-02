@@ -10,13 +10,11 @@ declare(strict_types=1);
 
 namespace Shipmondo\Controller\Admin;
 
+use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-/**
- * @extends \PrestaShopBundle\Controller\Admin\PrestaShopAdminController
- */
-class ShipmondoConfigurationController extends \PrestaShopBundle\Controller\Admin\PrestaShopAdminController
+class ShipmondoConfigurationController extends PrestaShopAdminController
 {
     public const TAB_CLASS_NAME = 'AdminShipmondoConfiguration';
 
