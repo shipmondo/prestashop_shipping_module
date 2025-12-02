@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  @author    Shipmondo <support@shipmondo.com>
  *  @copyright 2024-present Shipmondo
@@ -73,7 +74,7 @@ class ApiClient
     }
 
     /**
-     * @param string $mtethod
+     * @param string $method
      * @param string $url
      * @param array $query
      *

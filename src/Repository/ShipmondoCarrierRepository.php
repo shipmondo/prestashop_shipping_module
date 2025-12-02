@@ -11,6 +11,9 @@ namespace Shipmondo\Repository;
 
 use Doctrine\ORM\EntityRepository;
 
+/**
+ * @extends EntityRepository
+ */
 class ShipmondoCarrierRepository extends EntityRepository
 {
 }

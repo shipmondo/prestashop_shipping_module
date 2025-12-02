@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  @author    Shipmondo <support@shipmondo.com>
  *  @copyright 2024-present Shipmondo
@@ -6,6 +7,7 @@
  */
 
 declare(strict_types=1);
+
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 if (!defined('_PS_VERSION_')) {
@@ -44,7 +46,11 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
         } catch (Exception $e) {
             $errorMessage = $this->trans('An unknown error occured.', [], 'Modules.Shipmondo.Front');
 
-            $response = new JsonResponse(['status' => 'error', 'error' => $e->getMessage(), 'html' => $this->getErrorHtml($errorMessage)]);
+            $response = new JsonResponse([
+                'status' => 'error',
+                'error' => $e->getMessage(),
+                'html' => $this->getErrorHtml($errorMessage),
+            ]);
             $response->send();
             exit;
         }
@@ -95,7 +101,6 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
         $html = $this->module->fetch('module:shipmondo/views/templates/front/_partials/selected_service_point.tpl');
 
         return new JsonResponse(['status' => 'success', 'html' => $html]);
-
     }
 
     private function getServicePoint(): JsonResponse
@@ -177,13 +182,11 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
         }
 
         return new JsonResponse(['status' => 'success', 'html' => $html]);
-
     }
 
     private function invalidAction(): JsonResponse
     {
         return new JsonResponse(['status' => 'error', 'error' => 'Invalid action']);
-
     }
 
     private function getRepository(): EntityRepository
