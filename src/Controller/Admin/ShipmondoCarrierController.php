@@ -25,8 +25,8 @@ class ShipmondoCarrierController extends FrameworkBundleAdminController
         private readonly \PrestaShop\PrestaShop\Core\Grid\GridFactory $carrierGridFactory,
         private readonly \Shipmondo\ShipmondoCarrierHandler $carrierHandler,
         private readonly \Shipmondo\Grid\Definition\Factory\ShipmondoCarrierGridDefinitionFactory $shipmondoCarrierGridDefinitionFactory,
-        private readonly \Doctrine\ORM\EntityManagerInterface $entityManager,
         private readonly \PrestaShopBundle\Service\Grid\ResponseBuilder $responseBuilder,
+        private readonly \Doctrine\ORM\EntityManagerInterface $entityManager,
     ) {
     }
 

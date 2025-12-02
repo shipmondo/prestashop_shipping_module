@@ -80,8 +80,7 @@ services:
 
     Shipmondo\Controller\Admin\ShipmondoConfigurationController:
         class: 'Shipmondo\Controller\Admin\ShipmondoConfigurationController'
-        autoconfigure: true
-        autowire: true
+        parent: 'PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController'
         tags:
             - 'controller.service_arguments'
         arguments:
@@ -89,14 +88,15 @@ services:
 
     Shipmondo\Controller\Admin\ShipmondoCarrierController:
         class: 'Shipmondo\Controller\Admin\ShipmondoCarrierController'
-        autoconfigure: true
-        autowire: true
+        parent: 'PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController'
         tags:
             - 'controller.service_arguments'
         arguments:
             - '@shipmondo.grid.factory.shipmondo_carriers'
             - '@shipmondo.carrier_handler'
             - '@shipmondo.grid.definition.factory.shipmondo_carriers'
+            - '@prestashop.bundle.grid.response_builder'
+            - '@doctrine.orm.entity_manager'
 
 imports:
     - { resource: common_services.yml }
