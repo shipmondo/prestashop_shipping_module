@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  @author    Shipmondo <support@shipmondo.com>
  *  @copyright 2024-present Shipmondo
@@ -9,17 +10,24 @@ declare(strict_types=1);
 
 namespace Shipmondo\Controller\Admin;
 
-use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class ShipmondoConfigurationController extends FrameworkBundleAdminController
+/**
+ * @extends \PrestaShopBundle\Controller\Admin\PrestaShopAdminController
+ */
+class ShipmondoConfigurationController extends \PrestaShopBundle\Controller\Admin\PrestaShopAdminController
 {
     public const TAB_CLASS_NAME = 'AdminShipmondoConfiguration';
 
+    public function __construct(
+        private readonly \PrestaShop\PrestaShop\Core\Form\Handler $shipmondoConfigurationFormHandler,
+    ) {
+    }
+
     public function indexAction(Request $request): Response
     {
-        $textFormDataHandler = $this->get('shipmondo.form.shipmondo_configuration_form_handler');
+        $textFormDataHandler = $this->shipmondoConfigurationFormHandler;
 
         $textForm = $textFormDataHandler->getForm();
         $textForm->handleRequest($request);
@@ -29,17 +37,17 @@ class ShipmondoConfigurationController extends FrameworkBundleAdminController
             $errors = $textFormDataHandler->save($textForm->getData());
 
             if (empty($errors)) {
-                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful update.', [], 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('shipmondo_configuration');
             }
 
-            $this->flashErrors($errors);
+            $this->addFlashErrors($errors);
         }
 
         return $this->render('@Modules/shipmondo/views/templates/admin/shipmondo_configuration_form.html.twig', [
             'enableSidebar' => true,
-            'layoutTitle' => $this->trans('Shipmondo Delivery Checkout', 'Modules.Shipmondo.Admin'),
+            'layoutTitle' => $this->trans('Shipmondo Delivery Checkout', [], 'Modules.Shipmondo.Admin'),
             'shipmondoConfigurationForm' => $textForm->createView(),
         ]);
     }

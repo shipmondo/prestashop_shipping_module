@@ -78,5 +78,14 @@ services:
             - '@prestashop.adapter.legacy.configuration'
             - '@shipmondo.api_client'
 
+    Shipmondo\Controller\Admin\ShipmondoConfigurationController:
+        class: 'Shipmondo\Controller\Admin\ShipmondoConfigurationController'
+        autoconfigure: true
+        autowire: true
+        tags:
+            - 'controller.service_arguments'
+        arguments:
+            - '@shipmondo.form.shipmondo_configuration_form_handler'
+
 imports:
     - { resource: common_services.yml }

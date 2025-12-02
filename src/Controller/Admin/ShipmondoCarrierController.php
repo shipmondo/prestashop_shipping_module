@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  @author    Shipmondo <support@shipmondo.com>
  *  @copyright 2024-present Shipmondo
@@ -19,6 +20,7 @@ use Shipmondo\Grid\Filters\ShipmondoCarrierFilters;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+// TODO: use `PrestaShopBundle\Controller\Admin\PrestaShopAdminController` instead of `PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController`
 class ShipmondoCarrierController extends FrameworkBundleAdminController
 {
     public const TAB_CLASS_NAME = 'AdminShipmondoShipmondoCarrier';
