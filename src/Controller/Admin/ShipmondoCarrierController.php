@@ -26,6 +26,7 @@ class ShipmondoCarrierController extends PrestaShopAdminController
         private readonly \PrestaShop\PrestaShop\Core\Grid\GridFactory $carrierGridFactory,
         private readonly \Shipmondo\ShipmondoCarrierHandler $carrierHandler,
         private readonly \Shipmondo\Grid\Definition\Factory\ShipmondoCarrierGridDefinitionFactory $shipmondoCarrierGridDefinitionFactory,
+        private readonly \Doctrine\ORM\EntityManagerInterface $entityManager,
         private readonly \PrestaShopBundle\Service\Grid\ResponseBuilder $responseBuilder,
     ) {
     }
@@ -72,9 +73,8 @@ class ShipmondoCarrierController extends PrestaShopAdminController
                 $this->createPsCarrier($carrier);
             }
 
-            $em = $this->container->get('doctrine.orm.entity_manager');
-            $em->persist($carrier);
-            $em->flush();
+            $this->entityManager->persist($carrier);
+            $this->entityManager->flush();
 
             return $this->redirectToRoute('shipmondo_shipmondo_carriers_index');
         }
@@ -88,8 +88,7 @@ class ShipmondoCarrierController extends PrestaShopAdminController
 
     public function editAction(Request $request, int $id): Response
     {
-        $em = $this->container->get('doctrine.orm.entity_manager');
-        $carrier = $em->getRepository(ShipmondoCarrier::class)->find($id);
+        $carrier = $this->entityManager->getRepository(ShipmondoCarrier::class)->find($id);
 
         if (!$carrier) {
             throw $this->createNotFoundException('The carrier does not exist');
@@ -99,7 +98,7 @@ class ShipmondoCarrierController extends PrestaShopAdminController
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $em->flush();
+            $this->entityManager->flush();
 
             return $this->redirectToRoute('shipmondo_shipmondo_carriers_index');
         }
@@ -113,15 +112,14 @@ class ShipmondoCarrierController extends PrestaShopAdminController
 
     public function deleteAction(int $id): Response
     {
-        $em = $this->container->get('doctrine.orm.entity_manager');
-        $carrier = $em->getRepository(ShipmondoCarrier::class)->find($id);
+        $carrier = $this->entityManager->getRepository(ShipmondoCarrier::class)->find($id);
 
         if (!$carrier) {
             throw $this->createNotFoundException('The carrier does not exist');
         }
 
-        $em->remove($carrier);
-        $em->flush();
+        $this->entityManager->remove($carrier);
+        $this->entityManager->flush();
 
         return $this->redirectToRoute('shipmondo_shipmondo_carriers_index');
     }
