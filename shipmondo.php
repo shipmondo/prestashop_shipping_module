@@ -34,7 +34,7 @@ class Shipmondo extends CarrierModule
         parent::__construct();
         $this->ps_versions_compliancy = [
             'min' => '8.0.0',
-            'max' => '8.99.99',
+            'max' => '9.999.999',
         ];
         $this->displayName = $this->trans('Shipmondo Delivery Checkout', [], 'Modules.Shipmondo.Admin');
         $this->description = $this->trans('A complete shipping solution for PrestaShop', [], 'Modules.Shipmondo.Admin');

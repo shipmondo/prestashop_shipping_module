@@ -19,7 +19,7 @@ class ApiClient
     private $frontendKey;
 
     /**
-     * @var \GuzzleHttp\Client
+     * @var \Symfony\Contracts\HttpClient\HttpClientInterface
      */
     private $client;
 
@@ -35,15 +35,15 @@ class ApiClient
 
     /**
      * @param string $frontendKey
-     * @param \GuzzleHttp\Client $client
+     * @param \Symfony\Component\HttpClient\HttpClient $client
      * @param string $baseUrl
      * @param \Module $module
      */
-    public function __construct(\Module $module, string $frontendKey, \GuzzleHttp\Client $client, string $baseUrl)
+    public function __construct(\Module $module, string $frontendKey, \Symfony\Component\HttpClient\HttpClient $client, string $baseUrl)
     {
         $this->module = $module;
         $this->frontendKey = $frontendKey;
-        $this->client = $client;
+        $this->client = $client->create();
         $this->baseUrl = $baseUrl;
     }
 
@@ -65,7 +65,7 @@ class ApiClient
         $servicePoints = $this->request('GET', 'pickup-points.json', $query);
 
         // Overide carrier code to ensure it is the same as requested
-        foreach($servicePoints as $key => $servicePoint) {
+        foreach ($servicePoints as $key => $servicePoint) {
             $servicePoint->carrier_code = $query['carrier_code'];
         }
 
@@ -73,7 +73,7 @@ class ApiClient
     }
 
     /**
-     * @param string $mtethod
+     * @param string $method
      * @param string $url
      * @param array $query
      *
@@ -82,6 +82,7 @@ class ApiClient
     private function request($method, $url, $query = []): array
     {
         $fullUrl = $this->baseUrl . $url;
+
         try {
             $response = $this->client->request($method, $fullUrl, [
                 'headers' => [
@@ -89,15 +90,20 @@ class ApiClient
                 ],
                 'query' => array_merge($query, ['frontend_key' => $this->frontendKey]),
             ]);
-        } catch (\GuzzleHttp\Exception\GuzzleException $e) {
-            $error_message = $response_body = $e->getResponse()->getBody()->getContents();
+
+            $response_body = $response->getContent();
+
+            return json_decode($response_body);
+        } catch (\Symfony\Contracts\HttpClient\Exception\HttpExceptionInterface $e) {
+            $error_message = $response_body = $e->getResponse()->getContent();
+
             $response_body = json_decode($response_body);
+
             if (isset($response_body->message)) {
                 $error_message = $response_body->message;
             }
+
             throw new ShipmondoApiException($error_message);
         }
-
-        return json_decode($response->getBody()->getContents());
     }
 }

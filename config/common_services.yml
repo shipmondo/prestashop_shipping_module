@@ -13,8 +13,8 @@ services:
         arguments:
             - Shipmondo\Entity\ShipmondoServicePoint
 
-    shipmondo.guzzle.client:
-        class: 'GuzzleHttp\Client'
+    shipmondo.http.client:
+        class: 'Symfony\Component\HttpClient\HttpClient'
 
     shipmondo.module:
         class: 'Module'
@@ -34,5 +34,5 @@ services:
         arguments:
             - '@shipmondo.module'
             - '@shipmondo.configuration.frontend_key'
-            - '@shipmondo.guzzle.client'
+            - '@shipmondo.http.client'
             - 'https://service-points.shipmondo.com/'

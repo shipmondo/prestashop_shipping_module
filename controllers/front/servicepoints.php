@@ -7,6 +7,8 @@
 
 declare(strict_types=1);
 
+use Symfony\Component\HttpFoundation\JsonResponse;
+
 if (!defined('_PS_VERSION_')) {
     exit;
 }
@@ -25,24 +27,35 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
 
         try {
             $action = Tools::getValue('action');
+
             switch ($action) {
                 case 'get':
-                    $this->getServicePoint();
-                    break;
+                    $response = $this->getServicePoint();
+                    $response->send();
+                    exit;
                 case 'update':
-                    $this->updateServicePoint();
-                    break;
+                    $response = $this->updateServicePoint();
+                    $response->send();
+                    exit;
                 default:
-                    $this->invalidAction();
-                    break;
+                    $response = $this->invalidAction();
+                    $response->send();
+                    exit;
             }
         } catch (Exception $e) {
             $errorMessage = $this->trans('An unknown error occured.', [], 'Modules.Shipmondo.Front');
-            $this->ajaxDie(json_encode(['status' => 'error', 'error' => $e->getMessage(), 'html' => $this->getErrorHtml($errorMessage)]));
+
+            $response = new JsonResponse([
+                'status' => 'error',
+                'error' => $e->getMessage(),
+                'html' => $this->getErrorHtml($errorMessage),
+            ]);
+            $response->send();
+            exit;
         }
     }
 
-    private function updateServicePoint(): void
+    private function updateServicePoint(): JsonResponse
     {
         $cart = Context::getContext()->cart;
         $repo = $this->getRepository();
@@ -86,10 +99,10 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
         ]);
         $html = $this->module->fetch('module:shipmondo/views/templates/front/_partials/selected_service_point.tpl');
 
-        $this->ajaxDie(json_encode(['status' => 'success', 'html' => $html]));
+        return new JsonResponse(['status' => 'success', 'html' => $html]);
     }
 
-    private function getServicePoint(): void
+    private function getServicePoint(): JsonResponse
     {
         $cart = Context::getContext()->cart;
         $repo = $this->getRepository();
@@ -116,13 +129,15 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
                 } catch (ShipmondoApiException $e) {
                     $errorMessage = $this->trans('An error occured while fetching service points.', [], 'Modules.Shipmondo.Front');
                     $errorHtml = $this->getErrorHtml($errorMessage);
-                    $this->ajaxDie(json_encode(['status' => 'error', 'error' => $e->getMessage(), 'html' => $errorHtml]));
+
+                    return new JsonResponse(['status' => 'error', 'error' => $e->getMessage(), 'html' => $errorHtml]);
                 }
 
                 if (empty($externalServicePoints)) {
                     $errorMessage = $this->trans('No service points found for the given address.', [], 'Modules.Shipmondo.Front');
                     $errorHtml = $this->getErrorHtml($errorMessage);
-                    $this->ajaxDie(json_encode(['status' => 'error', 'error' => $errorMessage, 'html' => $errorHtml]));
+
+                    return new JsonResponse(['status' => 'error', 'error' => $errorMessage, 'html' => $errorHtml]);
                 }
 
                 if ($servicePoint) {
@@ -165,12 +180,12 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
             $html = $this->module->fetch('module:shipmondo/views/templates/front/service_points_selector.tpl');
         }
 
-        $this->ajaxDie(json_encode(['status' => 'success', 'html' => $html]));
+        return new JsonResponse(['status' => 'success', 'html' => $html]);
     }
 
-    private function invalidAction(): void
+    private function invalidAction(): JsonResponse
     {
-        $this->ajaxDie(json_encode(['status' => 'error', 'error' => 'Invalid action']));
+        return new JsonResponse(['status' => 'error', 'error' => 'Invalid action']);
     }
 
     private function getRepository(): EntityRepository

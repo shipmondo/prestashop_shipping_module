@@ -78,5 +78,25 @@ services:
             - '@prestashop.adapter.legacy.configuration'
             - '@shipmondo.api_client'
 
+    Shipmondo\Controller\Admin\ShipmondoConfigurationController:
+        class: 'Shipmondo\Controller\Admin\ShipmondoConfigurationController'
+        parent: 'PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController'
+        tags:
+            - 'controller.service_arguments'
+        arguments:
+            - '@shipmondo.form.shipmondo_configuration_form_handler'
+
+    Shipmondo\Controller\Admin\ShipmondoCarrierController:
+        class: 'Shipmondo\Controller\Admin\ShipmondoCarrierController'
+        parent: 'PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController'
+        tags:
+            - 'controller.service_arguments'
+        arguments:
+            - '@shipmondo.grid.factory.shipmondo_carriers'
+            - '@shipmondo.carrier_handler'
+            - '@shipmondo.grid.definition.factory.shipmondo_carriers'
+            - '@prestashop.bundle.grid.response_builder'
+            - '@doctrine.orm.entity_manager'
+
 imports:
     - { resource: common_services.yml }

@@ -43,13 +43,16 @@ final class ShipmondoCarrierQueryBuilder extends AbstractDoctrineQueryBuilder
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria): QueryBuilder
     {
         $qb = $this->getBaseQuery();
+
+        $offset = $searchCriteria->getOffset();
+
         $qb->select('sc.id_smd_carrier, sc.id_carrier, sc.carrier_code, sc.product_code')
             ->addSelect('c.name AS ps_carrier_name')
             ->orderBy(
                 $searchCriteria->getOrderBy(),
                 $searchCriteria->getOrderWay()
             )
-            ->setFirstResult($searchCriteria->getOffset())
+            ->setFirstResult($offset === null ? 0 : $offset)
             ->setMaxResults($searchCriteria->getLimit());
 
         foreach ($searchCriteria->getFilters() as $filterName => $filterValue) {
