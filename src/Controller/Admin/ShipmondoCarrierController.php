@@ -21,13 +21,43 @@ class ShipmondoCarrierController extends FrameworkBundleAdminController
 {
     public const TAB_CLASS_NAME = 'AdminShipmondoShipmondoCarrier';
 
+    /**
+     * @var \PrestaShop\PrestaShop\Core\Grid\GridFactory
+     */
+    private $carrierGridFactory;
+
+    /**
+     * @var \Shipmondo\ShipmondoCarrierHandler
+     */
+    private $carrierHandler;
+
+    /**
+     * @var \Shipmondo\Grid\Definition\Factory\ShipmondoCarrierGridDefinitionFactory
+     */
+    private $shipmondoCarrierGridDefinitionFactory;
+
+    /**
+     * @var \PrestaShopBundle\Service\Grid\ResponseBuilder
+     */
+    private $responseBuilder;
+
+    /**
+     * @var \Doctrine\ORM\EntityManagerInterface
+     */
+    private $entityManager;
+
     public function __construct(
-        private readonly \PrestaShop\PrestaShop\Core\Grid\GridFactory $carrierGridFactory,
-        private readonly \Shipmondo\ShipmondoCarrierHandler $carrierHandler,
-        private readonly \Shipmondo\Grid\Definition\Factory\ShipmondoCarrierGridDefinitionFactory $shipmondoCarrierGridDefinitionFactory,
-        private readonly \PrestaShopBundle\Service\Grid\ResponseBuilder $responseBuilder,
-        private readonly \Doctrine\ORM\EntityManagerInterface $entityManager,
+        \PrestaShop\PrestaShop\Core\Grid\GridFactory $carrierGridFactory,
+        \Shipmondo\ShipmondoCarrierHandler $carrierHandler,
+        \Shipmondo\Grid\Definition\Factory\ShipmondoCarrierGridDefinitionFactory $shipmondoCarrierGridDefinitionFactory,
+        \PrestaShopBundle\Service\Grid\ResponseBuilder $responseBuilder,
+        \Doctrine\ORM\EntityManagerInterface $entityManager
     ) {
+        $this->carrierGridFactory = $carrierGridFactory;
+        $this->carrierHandler = $carrierHandler;
+        $this->shipmondoCarrierGridDefinitionFactory = $shipmondoCarrierGridDefinitionFactory;
+        $this->responseBuilder = $responseBuilder;
+        $this->entityManager = $entityManager;
     }
 
     public function indexAction(ShipmondoCarrierFilters $filters): Response
@@ -57,7 +87,7 @@ class ShipmondoCarrierController extends FrameworkBundleAdminController
             $this->shipmondoCarrierGridDefinitionFactory,
             $request,
             \Shipmondo\Grid\Definition\Factory\ShipmondoCarrierGridDefinitionFactory::GRID_ID,
-            'shipmondo_shipmondo_carriers_index',
+            'shipmondo_shipmondo_carriers_index'
         );
     }
 

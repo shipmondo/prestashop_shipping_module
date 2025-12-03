@@ -17,9 +17,14 @@ class ShipmondoConfigurationController extends FrameworkBundleAdminController
 {
     public const TAB_CLASS_NAME = 'AdminShipmondoConfiguration';
 
-    public function __construct(
-        private readonly \PrestaShop\PrestaShop\Core\Form\Handler $shipmondoConfigurationFormHandler,
-    ) {
+    /**
+     * @var \PrestaShop\PrestaShop\Core\Form\Handler
+     */
+    private $shipmondoConfigurationFormHandler;
+
+    public function __construct(\PrestaShop\PrestaShop\Core\Form\Handler $shipmondoConfigurationFormHandler)
+    {
+        $this->shipmondoConfigurationFormHandler = $shipmondoConfigurationFormHandler;
     }
 
     public function indexAction(Request $request): Response
