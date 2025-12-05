@@ -8,8 +8,8 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        node-version: ["20"]
-        php-version: ["8.1"]
+        node-version: ['20']
+        php-version: ['8.1']
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v5

@@ -5,7 +5,7 @@
 The **Shipmondo Delivery Checkout** module integrates Shipmondo's delivery options into your PrestaShop store.
 This allows you to offer a wide range of carrier to your customers, incl. selecting service points in checkout.
 
-[Click here](https://shipmondo.com/) for more information about Shipmondo. 
+[Click here](https://shipmondo.com/) for more information about Shipmondo.
 
 ## Installation
 
