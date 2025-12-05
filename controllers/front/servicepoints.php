@@ -19,6 +19,9 @@ use Shipmondo\Exception\ShipmondoApiException;
 
 class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
 {
+    /**
+     * @var bool
+     */
     public $ajax = true;
 
     public function initContent(): void
@@ -191,17 +194,6 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
     private function getRepository(): EntityRepository
     {
         return $this->module->get('shipmondo.repository.shipmondo_service_point');
-    }
-
-    private function hasAddressChanged(object $oldAddress, Address $newAddress): bool
-    {
-        return !empty($oldAddress)
-            && property_exists($oldAddress, 'id_country')
-            && property_exists($oldAddress, 'postcode')
-            && property_exists($oldAddress, 'address1')
-            && ($oldAddress->id_country != $newAddress->id_country
-                || $oldAddress->postcode != $newAddress->postcode
-                || $oldAddress->address1 != $newAddress->address1);
     }
 
     private function fetchExternalServicePoints(string $carrierCode, Address $deliveryAddress): array

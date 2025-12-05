@@ -1,0 +1,40 @@
+allow-unsupported-php-version = true
+php-version = "7.2.0"
+
+[analyzer]
+allow-possibly-undefined-array-keys = true
+analyze-dead-code = false
+check-missing-type-hints = false
+check-throws = false
+find-unused-definitions = true
+find-unused-expressions = false
+memoize-properties = true
+no-boolean-literal-comparison = false
+perform-heuristic-checks = true
+register-super-globals = true
+strict-list-index-checks = false
+
+[formatter]
+end-of-line = "lf"
+null-type-hint = "question"
+print-width = 120
+tab-width = 4
+use-tabs = false
+
+[linter]
+integrations = ["doctrine", "symfony"]
+
+[linter.rules]
+ambiguous-function-call = { enabled = false }
+cyclomatic-complexity = { enabled = false }
+excessive-parameter-list = { enabled = false }
+halstead = { enabled = false }
+kan-defect = { enabled = false }
+literal-named-argument = { enabled = false }
+too-many-properties = { enabled = false }
+
+[source]
+workspace = "."
+paths = ["src/", "views/", "controllers/"]
+includes = ["vendor"]
+excludes = []

@@ -131,7 +131,7 @@ function migrateCarrier_2_0_0(Db $dbInstance, Carrier $carrier, array $carrierDe
 function createCarrierTable_2_0_0(Db $dbInstance)
 {
     $sql = 'CREATE TABLE IF NOT EXISTS `' .
-     _DB_PREFIX_ . 'shipmondo_carrier` ('
+        _DB_PREFIX_ . 'shipmondo_carrier` ('
         . '`id_smd_carrier` INT NOT NULL AUTO_INCREMENT PRIMARY KEY, '
         . '`id_carrier` INT NOT NULL, '
         . '`carrier_code` VARCHAR(255) NOT NULL, '
