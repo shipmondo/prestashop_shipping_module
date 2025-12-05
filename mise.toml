@@ -1,0 +1,7 @@
+[tasks.precommit]
+run = [
+  "./build.sh",
+  "composer install",
+  "./vendor/bin/autoindex",
+  "./vendor/bin/php-cs-fixer fix",
+]

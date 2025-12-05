@@ -1,0 +1,27 @@
+---
+name: Test and lint code
+on:
+  push:
+  workflow_dispatch:
+jobs:
+  test:
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        node-version: ["20"]
+        php-version: ["7.2"]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v6
+        with:
+          node-version: ${{ matrix.node-version }}
+      - uses: setup-php/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          tools: composer
+      - name: Install PHP dependencies
+        run: composer install
+      - name: Check PHP for lint errors
+        run: ./vendor/bin/php-cs-fixer check
+        continue-on-error: true
