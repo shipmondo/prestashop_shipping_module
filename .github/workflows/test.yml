@@ -9,7 +9,7 @@ jobs:
       matrix:
         os: [ubuntu-latest]
         node-version: ["20"]
-        php-version: ["8.1"]
+        php-version: ["7.2", "7.3", "7.4", "8.0", "8.1", "8.2", "8.3", "8.4"]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v5
@@ -21,7 +21,8 @@ jobs:
           php-version: ${{ matrix.php-version }}
           tools: composer
       - name: Install PHP dependencies
-        run: composer install
+        # We only have dependencies for testing so lockfile does not matter
+        run: composer update && composer install
       - name: Check PHP for lint errors
         run: ./vendor/bin/php-cs-fixer check
         continue-on-error: true
