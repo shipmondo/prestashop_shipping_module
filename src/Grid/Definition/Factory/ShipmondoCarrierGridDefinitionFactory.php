@@ -85,27 +85,27 @@ final class ShipmondoCarrierGridDefinitionFactory extends AbstractGridDefinition
                         'actions' => (new RowActionCollection())
                             ->add(
                                 (new LinkRowAction('edit'))
-                                ->setIcon('edit')
-                                ->setOptions([
-                                    'route' => 'shipmondo_shipmondo_carriers_edit',
-                                    'route_param_name' => 'id',
-                                    'route_param_field' => 'id_smd_carrier',
-                                ])
+                                    ->setIcon('edit')
+                                    ->setOptions([
+                                        'route' => 'shipmondo_shipmondo_carriers_edit',
+                                        'route_param_name' => 'id',
+                                        'route_param_field' => 'id_smd_carrier',
+                                    ])
                             )
                             ->add(
                                 (new LinkRowAction('delete'))
-                                ->setName($this->trans('Delete', [], 'Admin.Actions'))
-                                ->setIcon('delete')
-                                ->setOptions([
-                                    'route' => 'shipmondo_shipmondo_carriers_delete',
-                                    'route_param_name' => 'id',
-                                    'route_param_field' => 'id_smd_carrier',
-                                    'confirm_message' => $this->trans(
-                                        'Delete selected item?',
-                                        [],
-                                        'Admin.Notifications.Warning'
-                                    ),
-                                ])
+                                    ->setName($this->trans('Delete', [], 'Admin.Actions'))
+                                    ->setIcon('delete')
+                                    ->setOptions([
+                                        'route' => 'shipmondo_shipmondo_carriers_delete',
+                                        'route_param_name' => 'id',
+                                        'route_param_field' => 'id_smd_carrier',
+                                        'confirm_message' => $this->trans(
+                                            'Delete selected item?',
+                                            [],
+                                            'Admin.Notifications.Warning'
+                                        ),
+                                    ])
                             ),
                     ])
             );
