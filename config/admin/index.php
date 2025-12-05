@@ -1,10 +1,5 @@
 <?php
 
-/**
- *  @author    Shipmondo <support@shipmondo.com>
- *  @copyright 2024-present Shipmondo
- *  @license   https://opensource.org/license/bsd-3-clause BSD-3-Clause
- */
 header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
 header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
 

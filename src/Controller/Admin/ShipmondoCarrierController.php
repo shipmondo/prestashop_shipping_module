@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  @author    Shipmondo <support@shipmondo.com>
  *  @copyright 2024-present Shipmondo
@@ -51,7 +52,7 @@ class ShipmondoCarrierController extends FrameworkBundleAdminController
         \Shipmondo\ShipmondoCarrierHandler $carrierHandler,
         \Shipmondo\Grid\Definition\Factory\ShipmondoCarrierGridDefinitionFactory $shipmondoCarrierGridDefinitionFactory,
         \PrestaShopBundle\Service\Grid\ResponseBuilder $responseBuilder,
-        \Doctrine\ORM\EntityManagerInterface $entityManager
+        \Doctrine\ORM\EntityManagerInterface $entityManager,
     ) {
         $this->carrierGridFactory = $carrierGridFactory;
         $this->carrierHandler = $carrierHandler;
