@@ -1,2 +1,7 @@
 [tasks.precommit]
-run = ["./build.sh", "composer install", "./vendor/bin/php-cs-fixer fix"]
+run = [
+  "./build.sh",
+  "npx prettier --write .",
+  "composer install",
+  "./vendor/bin/php-cs-fixer fix",
+]
