@@ -9,7 +9,7 @@ jobs:
       matrix:
         os: [ubuntu-latest]
         node-version: ["20"]
-        php-version: ["7.2"]
+        php-version: ["8.1"]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v5
