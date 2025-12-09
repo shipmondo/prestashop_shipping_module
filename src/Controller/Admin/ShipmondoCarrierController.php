@@ -14,7 +14,9 @@ use Carrier;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Shipmondo\Entity\ShipmondoCarrier;
 use Shipmondo\Form\Type\ShipmondoCarrierFormType;
+use Shipmondo\Grid\Definition\Factory\ShipmondoCarrierGridDefinitionFactory;
 use Shipmondo\Grid\Filters\ShipmondoCarrierFilters;
+use Shipmondo\ShipmondoCarrierHandler;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -28,12 +30,12 @@ class ShipmondoCarrierController extends FrameworkBundleAdminController
     private $carrierGridFactory;
 
     /**
-     * @var \Shipmondo\ShipmondoCarrierHandler
+     * @var ShipmondoCarrierHandler
      */
     private $carrierHandler;
 
     /**
-     * @var \Shipmondo\Grid\Definition\Factory\ShipmondoCarrierGridDefinitionFactory
+     * @var ShipmondoCarrierGridDefinitionFactory
      */
     private $shipmondoCarrierGridDefinitionFactory;
 
@@ -47,13 +49,8 @@ class ShipmondoCarrierController extends FrameworkBundleAdminController
      */
     private $entityManager;
 
-    public function __construct(
-        \PrestaShop\PrestaShop\Core\Grid\GridFactory $carrierGridFactory,
-        \Shipmondo\ShipmondoCarrierHandler $carrierHandler,
-        \Shipmondo\Grid\Definition\Factory\ShipmondoCarrierGridDefinitionFactory $shipmondoCarrierGridDefinitionFactory,
-        \PrestaShopBundle\Service\Grid\ResponseBuilder $responseBuilder,
-        \Doctrine\ORM\EntityManagerInterface $entityManager,
-    ) {
+    public function __construct(\PrestaShop\PrestaShop\Core\Grid\GridFactory $carrierGridFactory, ShipmondoCarrierHandler $carrierHandler, ShipmondoCarrierGridDefinitionFactory $shipmondoCarrierGridDefinitionFactory, \PrestaShopBundle\Service\Grid\ResponseBuilder $responseBuilder, \Doctrine\ORM\EntityManagerInterface $entityManager)
+    {
         $this->carrierGridFactory = $carrierGridFactory;
         $this->carrierHandler = $carrierHandler;
         $this->shipmondoCarrierGridDefinitionFactory = $shipmondoCarrierGridDefinitionFactory;
@@ -87,7 +84,7 @@ class ShipmondoCarrierController extends FrameworkBundleAdminController
         return $this->responseBuilder->buildSearchResponse(
             $this->shipmondoCarrierGridDefinitionFactory,
             $request,
-            \Shipmondo\Grid\Definition\Factory\ShipmondoCarrierGridDefinitionFactory::GRID_ID,
+            ShipmondoCarrierGridDefinitionFactory::GRID_ID,
             'shipmondo_shipmondo_carriers_index'
         );
     }

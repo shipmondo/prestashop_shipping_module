@@ -19,6 +19,7 @@ end-of-line = "lf"
 null-type-hint = "question"
 print-width = 120
 tab-width = 4
+trailing-comma = false
 use-tabs = false
 
 [linter]

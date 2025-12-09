@@ -7,6 +7,7 @@
  */
 
 declare(strict_types=1);
+
 use Shipmondo\Controller\Admin\ShipmondoConfigurationController;
 
 if (!defined('_PS_VERSION_')) {
@@ -235,7 +236,7 @@ class Shipmondo extends CarrierModule
         }
     }
 
-    public function hookAddWebserviceResources($params)
+    public function hookAddWebserviceResources($params): array
     {
         return [
             'shipmondo_service_points' => [

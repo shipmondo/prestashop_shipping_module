@@ -29,9 +29,6 @@ class ShipmondoCarrierHandler
      */
     private $carriers;
 
-    /**
-     * @param ApiClient $apiClient
-     */
     public function __construct(ConfigurationInterface $configuration, ApiClient $apiClient)
     {
         $this->configuration = $configuration;
@@ -40,8 +37,6 @@ class ShipmondoCarrierHandler
 
     /**
      * Get available carriers from Shipmondo
-     *
-     * @return array
      */
     public function getCarriers(): array
     {
@@ -54,10 +49,6 @@ class ShipmondoCarrierHandler
 
     /**
      * Get carrier by code
-     *
-     * @param string $carrierCode
-     *
-     * @return ?object
      */
     public function getCarrier(string $carrierCode): ?object
     {
@@ -74,10 +65,6 @@ class ShipmondoCarrierHandler
 
     /**
      * Get products for a carrier
-     *
-     * @param string $carrierCode
-     *
-     * @return array
      */
     public function getProducts(string $carrierCode): array
     {
@@ -94,10 +81,6 @@ class ShipmondoCarrierHandler
 
     /**
      * Get carrier name. Fallback to carrier code if name is not found.
-     *
-     * @param string $carrierCode
-     *
-     * @return string
      */
     public function getCarrierName(string $carrierCode): string
     {
@@ -108,10 +91,6 @@ class ShipmondoCarrierHandler
 
     /**
      * Get product name.
-     *
-     * @param string $productCode
-     *
-     * @return string
      */
     public function getProductName(string $productCode): string
     {
@@ -120,8 +99,6 @@ class ShipmondoCarrierHandler
 
     /**
      * Fetch carriers from Shipmondo API if cache is not valid
-     *
-     * @return array
      */
     private function fetchCarriers(): array
     {

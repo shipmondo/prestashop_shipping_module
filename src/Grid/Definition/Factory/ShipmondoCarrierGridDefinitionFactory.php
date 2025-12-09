@@ -138,7 +138,6 @@ final class ShipmondoCarrierGridDefinitionFactory extends AbstractGridDefinition
                         'redirect_route' => 'shipmondo_shipmondo_carriers_index',
                     ])
                     ->setAssociatedColumn('actions')
-            )
-        ;
+            );
     }
 }
