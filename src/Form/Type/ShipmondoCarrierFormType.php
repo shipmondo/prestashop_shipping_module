@@ -66,8 +66,7 @@ class ShipmondoCarrierFormType extends TranslatorAwareType
                 'label' => $this->trans('Shipmondo carrier', 'Modules.Shipmondo.Admin'),
                 'required' => true,
                 'choices' => $carriers,
-            ])
-        ;
+            ]);
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
             $carrier = $event->getData();

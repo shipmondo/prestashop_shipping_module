@@ -7,6 +7,9 @@
 # PHP CS Fixer
 .php-cs-fixer.cache
 
+# phpactor 
+.phpactor.json
+
 # Build
 shipmondo.zip
 

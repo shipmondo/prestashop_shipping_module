@@ -36,7 +36,6 @@ class ShipmondoConfigurationFormType extends TranslatorAwareType
                 'label' => $this->trans('Google Maps API key', 'Modules.Shipmondo.Admin'),
                 'help' => $this->trans('Only used when displaying service points in modal.', 'Modules.Shipmondo.Admin'),
                 'required' => false,
-            ])
-        ;
+            ]);
     }
 }
