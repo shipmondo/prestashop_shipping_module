@@ -88,7 +88,6 @@ final class ShipmondoCarrierQueryBuilder extends AbstractDoctrineQueryBuilder
             ->from($this->dbPrefix . 'shipmondo_carrier', 'sc')
             ->setParameter('context_lang_id', $this->contextLangId)
             ->setParameter('context_shop_id', $this->contextShopId)
-            ->leftJoin('sc', $this->dbPrefix . 'carrier', 'c', 'sc.id_carrier = c.id_carrier')
-        ;
+            ->leftJoin('sc', $this->dbPrefix . 'carrier', 'c', 'sc.id_carrier = c.id_carrier');
     }
 }
