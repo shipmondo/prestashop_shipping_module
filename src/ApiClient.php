@@ -103,7 +103,13 @@ class ApiClient
                 'headers' => [
                     'User-Agent' => 'Shipmondo Prestashop Module v' . $this->module->version,
                 ],
-                'query' => array_merge($query, ['frontend_key' => $this->frontendKey]),
+                'query' => array_merge($query, [
+                    'request_url' => _PS_BASE_URL_,
+                    'request_version' => _PS_VERSION_,
+                    'module_version' => $this->module->version,
+                    'shipping_module_type' => 'prestashop',
+                    'frontend_key' => $this->frontendKey,
+                ]),
             ]);
 
             $response_body = $response->getContent();
