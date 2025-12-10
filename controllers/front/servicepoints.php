@@ -14,7 +14,6 @@ if (!defined('_PS_VERSION_')) {
     exit;
 }
 
-use Doctrine\ORM\EntityRepository;
 use Shipmondo\Entity\ShipmondoServicePoint;
 use Shipmondo\Exception\ShipmondoApiException;
 
@@ -62,9 +61,10 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
     private function updateServicePoint(): JsonResponse
     {
         $cart = Context::getContext()->cart;
-        $repo = $this->getRepository();
+        $repo = $this->getServicePointRepository();
 
         $servicePoint = $repo->findOneBy(['cartId' => $cart->id]);
+
         if (!$servicePoint) {
             $servicePoint = new ShipmondoServicePoint();
             $servicePoint->setCartId($cart->id);
@@ -109,16 +109,17 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
     private function getServicePoint(): JsonResponse
     {
         $cart = Context::getContext()->cart;
-        $repo = $this->getRepository();
+        $repo = $this->getServicePointRepository();
 
         $carrierId = Tools::getValue('carrier_id');
         if (!$carrierId) {
             $carrierId = $cart->id_carrier;
         }
 
-        $carrier = $this->get('shipmondo.repository.shipmondo_carrier')->findOneBy(['carrierId' => $carrierId]);
+        $carrier = $this->getCarrierRepository()->findOneBy(['carrierId' => $carrierId]);
 
         $html = '';
+
         if ($carrier && $carrier->getProductCode() === 'service_point') {
             $servicePoint = $repo->findOneBy(['cartId' => $cart->id]);
             $externalServicePoints = [];
@@ -129,7 +130,11 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
 
             if ($deliveryAddress) {
                 try {
-                    $externalServicePoints = $this->fetchExternalServicePoints($carrier->getCarrierCode(), $deliveryAddress);
+                    $externalServicePoints = $this->fetchExternalServicePoints(
+                        $carrier->getCarrierProductCode(),
+                        $carrier->getServicePointTypes(),
+                        $deliveryAddress
+                    );
                 } catch (ShipmondoApiException $e) {
                     $errorMessage = $this->trans('An error occured while fetching service points.', [], 'Modules.Shipmondo.Front');
                     $errorHtml = $this->getErrorHtml($errorMessage);
@@ -192,23 +197,59 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
         return new JsonResponse(['status' => 'error', 'error' => 'Invalid action']);
     }
 
-    private function getRepository(): EntityRepository
+    private function getCarrierRepository()
     {
-        return $this->module->get('shipmondo.repository.shipmondo_service_point');
+        /**
+         * @var Shipmondo\Repository\ShipmondoCarrierRepository<Shipmondo\Entity\ShipmondoCarrier>
+         */
+        $repo = $this->get('shipmondo.repository.shipmondo_carrier');
+
+        return $repo;
     }
 
-    private function fetchExternalServicePoints(string $carrierCode, Address $deliveryAddress): array
+    private function getServicePointRepository()
     {
-        return $this->container->get('shipmondo.api_client')->getServicePoints([
-            'request_url' => _PS_BASE_URL_,
-            'request_version' => _PS_VERSION_,
-            'module_version' => $this->module->version,
-            'shipping_module_type' => 'prestashop',
-            'carrier_code' => $carrierCode,
-            'zipcode' => $deliveryAddress->postcode,
-            'country' => Country::getIsoById($deliveryAddress->id_country),
-            'address' => $deliveryAddress->address1,
-        ]);
+        /**
+         * @var Shipmondo\Repository\ShipmondoServicePointRepository<ShipmondoServicePoint>
+         */
+        $repo = $this->module->get('shipmondo.repository.shipmondo_service_point');
+
+        return $repo;
+    }
+
+    private function getApiClient()
+    {
+        /**
+         * @var Shipmondo\ApiClient
+         */
+        $client = $this->container->get('shipmondo.api_client');
+
+        return $client;
+    }
+
+    private function fetchExternalServicePoints(string $carrierProductCode, ?array $servicePointTypes, Address $deliveryAddress): array
+    {
+        $countryCode = Country::getIsoById($deliveryAddress->id_country);
+
+        if (is_bool($countryCode)) {
+            // NOTE: should this raise instead?
+            $countryCode = '';
+        }
+
+        $zipcode = $deliveryAddress->postcode;
+
+        $city = $deliveryAddress->city;
+
+        $address = $deliveryAddress->address1;
+
+        return $this->getApiClient()->getServicePoints(
+            $carrierProductCode,
+            $servicePointTypes,
+            $countryCode,
+            $zipcode,
+            $city,
+            $address
+        );
     }
 
     private function getErrorHtml(string $errorMessage): string

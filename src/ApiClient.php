@@ -29,6 +29,10 @@ class ApiClient
      */
     private $module;
 
+    private const LEGACY_SP_API_URI = 'https://service-points.shipmondo.com/';
+
+    private const API_V3_URI = 'https://app.shipmondo.com/api/public/v3/';
+
     public function __construct(\Module $module, string $frontendKey, \Symfony\Component\HttpClient\HttpClient $client)
     {
         $this->module = $module;
@@ -38,14 +42,14 @@ class ApiClient
 
     public function getCarriers(): array
     {
-        return $this->request('GET', 'https://service-points.shipmondo.com/carriers.json');
+        return $this->request('GET', self::LEGACY_SP_API_URI . 'carriers.json');
     }
 
     public function getCarrierProducts(string $carrierCode, bool $ownAgreementOnly = false): array
     {
         $query = ['carrier_code' => $carrierCode, 'own_agreement_only' => $ownAgreementOnly];
 
-        return $this->request('GET', 'https://app.shipmondo.com/api/public/v3/shipping_modules/products', $query);
+        return $this->request('GET', self::API_V3_URI . 'shipping_modules/products', $query);
     }
 
     public function getCarrierProductServicePointTypes(string $productCode, ?string $countryCode): array
@@ -56,44 +60,25 @@ class ApiClient
             $query['country'] = $countryCode;
         }
 
-        return $this->request('GET', 'https://app.shipmondo.com/api/public/v3/service_point/service_point_types', $query);
+        return $this->request('GET', self::API_V3_URI . 'service_point/service_point_types', $query);
     }
 
-    public function getServicePoints(array $query): array
-    {
-        $servicePoints = $this->request('GET', 'https://service-points.shipmondo.com/pickup-points.json', $query);
-
-        // Overide carrier code to ensure it is the same as requested
-        foreach ($servicePoints as $key => $servicePoint) {
-            $servicePoint->carrier_code = $query['carrier_code'];
-        }
-
-        return $servicePoints;
-    }
-
-    // TODO: rename when we remove the legacy code
-    public function getServicePointsUsingProductCode(string $product_code, array $service_point_types, string $country_code, string $zipcode, ?string $city, ?string $address, int $quantity = 10): array
+    public function getServicePoints(string $productCode, ?array $servicePointTypes, string $countryCode, string $zipcode, ?string $city, ?string $address, int $quantity = 10): array
     {
         $query = [
             'quantity' => $quantity,
-            'product_code' => $product_code,
-            'country_code' => rawurlencode(trim($country_code)),
-            'zipcode' => rawurlencode(trim($zipcode)),
+            'product_code' => $productCode,
+            'country_code' => trim($countryCode),
+            'zipcode' => trim($zipcode),
+            'city' => trim($city ?? ''),
+            'address' => trim($address ?? ''),
         ];
 
-        if (is_array($service_point_types) && count($service_point_types) > 0) {
-            $query['service_point_types[]'] = implode('&service_point_types[]=', $service_point_types);
+        if (is_array($servicePointTypes) && count($servicePointTypes) > 0) {
+            $query['service_point_types[]'] = $servicePointTypes;
         }
 
-        if (is_string($city)) {
-            $query['city'] = rawurlencode(trim($city));
-        }
-
-        if (is_string($address)) {
-            $query['address'] = rawurlencode(trim($address));
-        }
-
-        return $this->request('GET', 'https://app.shipmondo.com/api/public/v3/service_point/service_points', $query);
+        return $this->request('GET', self::API_V3_URI . 'service_point/service_points', $query);
     }
 
     private function request(string $method, string $url, array $query = []): array
@@ -112,9 +97,7 @@ class ApiClient
                 ]),
             ]);
 
-            $response_body = $response->getContent();
-
-            return json_decode($response_body);
+            return $response->toArray();
         } catch (\Symfony\Contracts\HttpClient\Exception\HttpExceptionInterface $e) {
             $error_message = $response_body = $e->getResponse()->getContent();
 
