@@ -68,7 +68,9 @@ class Installer
             . '`id_smd_carrier` INT NOT NULL AUTO_INCREMENT PRIMARY KEY, '
             . '`id_carrier` INT NOT NULL, '
             . '`carrier_code` VARCHAR(255) NOT NULL, '
-            . '`product_code` VARCHAR(255) NOT NULL'
+            . '`product_code` VARCHAR(255) NOT NULL,'
+            . '`carrier_product_code` TEXT,'
+            . '`service_point_types` TEXT'
             . ')';
 
         return $dbInstance->execute($sql);
