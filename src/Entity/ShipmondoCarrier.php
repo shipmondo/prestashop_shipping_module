@@ -52,6 +52,20 @@ class ShipmondoCarrier
     private $productCode;
 
     /**
+     * @var string|null
+     *
+     * @ORM\Column(name="carrier_product_code", type="string", length=255)
+     */
+    private $carrierProductCode;
+
+    /**
+     * @var array|null
+     *
+     * @ORM\Column(name="service_point_types", type="simple_array")
+     */
+    private $servicePointTypes;
+
+    /**
      * Get the value of id
      *
      * @return int
@@ -133,6 +147,52 @@ class ShipmondoCarrier
         return $this;
     }
 
+    public function getCarrierProductCode(): ?string
+    {
+        return $this->carrierProductCode;
+    }
+
+    public function setCarrierProductCode(?string $carrierProductCode): self
+    {
+        $this->carrierProductCode = $carrierProductCode;
+
+        return $this;
+    }
+
+    public function getServicePointTypes(): ?array
+    {
+        return $this->servicePointTypes;
+    }
+
+    public function setServicePointTypes(?array $servicePointTypes): self
+    {
+        if (is_array($servicePointTypes)) {
+            $uniqueServicePointTypes = [];
+
+            foreach ($servicePointTypes as $servicePointType) {
+                if ($servicePointType === null) {
+                    continue;
+                }
+
+                if (!is_string($servicPointType)) {
+                    throw new \InvalidArgumentException('Service point types must be an array of strings');
+                }
+
+                if (!in_array($servicePointType, $uniqueServicePointTypes, true)) {
+                    array_push($uniqueServicePointTypes, $servicePointType);
+                }
+            }
+
+            sort($uniqueServicePointTypes);
+
+            $this->servicePointTypes = $uniqueServicePointTypes;
+        } else {
+            $this->servicePointTypes = $servicePointTypes;
+        }
+
+        return $this;
+    }
+
     /**
      * Convert the entity to an array
      *
@@ -145,6 +205,7 @@ class ShipmondoCarrier
             'id_carrier' => $this->getCarrierId(),
             'carrier_code' => $this->getCarrierCode(),
             'product_code' => $this->getProductCode(),
+            'service_point_types' => $this->getServicePointTypes(),
         ];
     }
 }
