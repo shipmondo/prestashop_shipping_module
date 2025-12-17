@@ -236,11 +236,11 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
             $countryCode = '';
         }
 
-        $zipcode = $deliveryAddress->postcode;
+        $zipcode = $deliveryAddress->postcode ?? '';
 
-        $city = $deliveryAddress->city;
+        $city = $deliveryAddress->city ?? '';
 
-        $address = $deliveryAddress->address1;
+        $address = $deliveryAddress->address1 ?? '';
 
         return $this->getApiClient()->getServicePoints(
             $carrierProductCode,

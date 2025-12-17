@@ -47,15 +47,15 @@ class ShipmondoCarrierController extends FrameworkBundleAdminController
     /**
      * @var \Doctrine\ORM\EntityManagerInterface
      */
-    private $entityManager;
+    private $entityManagerInterface;
 
-    public function __construct(\PrestaShop\PrestaShop\Core\Grid\GridFactory $carrierGridFactory, ShipmondoCarrierHandler $carrierHandler, ShipmondoCarrierGridDefinitionFactory $shipmondoCarrierGridDefinitionFactory, \PrestaShopBundle\Service\Grid\ResponseBuilder $responseBuilder, \Doctrine\ORM\EntityManagerInterface $entityManager)
+    public function __construct(\PrestaShop\PrestaShop\Core\Grid\GridFactory $carrierGridFactory, ShipmondoCarrierHandler $carrierHandler, ShipmondoCarrierGridDefinitionFactory $shipmondoCarrierGridDefinitionFactory, \PrestaShopBundle\Service\Grid\ResponseBuilder $responseBuilder, \Doctrine\ORM\EntityManagerInterface $entityManagerInterface)
     {
         $this->carrierGridFactory = $carrierGridFactory;
         $this->carrierHandler = $carrierHandler;
         $this->shipmondoCarrierGridDefinitionFactory = $shipmondoCarrierGridDefinitionFactory;
         $this->responseBuilder = $responseBuilder;
-        $this->entityManager = $entityManager;
+        $this->entityManagerInterface = $entityManagerInterface;
     }
 
     public function indexAction(ShipmondoCarrierFilters $filters): Response
@@ -95,13 +95,16 @@ class ShipmondoCarrierController extends FrameworkBundleAdminController
         $form = $this->createForm(ShipmondoCarrierFormType::class, $carrier, ['action' => $this->generateUrl('shipmondo_shipmondo_carriers_create')]);
 
         $form->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid()) {
+            $carrier->setDefaultServicePointFields();
+
             if ($carrier->getCarrierId() == 0) {
                 $this->createPsCarrier($carrier);
             }
 
-            $this->entityManager->persist($carrier);
-            $this->entityManager->flush();
+            $this->entityManagerInterface->persist($carrier);
+            $this->entityManagerInterface->flush();
 
             return $this->redirectToRoute('shipmondo_shipmondo_carriers_index');
         }
@@ -115,7 +118,7 @@ class ShipmondoCarrierController extends FrameworkBundleAdminController
 
     public function editAction(Request $request, int $id): Response
     {
-        $carrier = $this->entityManager->getRepository(ShipmondoCarrier::class)->find($id);
+        $carrier = $this->entityManagerInterface->getRepository(ShipmondoCarrier::class)->find($id);
 
         if (!$carrier) {
             throw $this->createNotFoundException('The carrier does not exist');
@@ -124,8 +127,11 @@ class ShipmondoCarrierController extends FrameworkBundleAdminController
         $form = $this->createForm(ShipmondoCarrierFormType::class, $carrier, ['action' => $this->generateUrl('shipmondo_shipmondo_carriers_edit', ['id' => $id])]);
 
         $form->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->entityManager->flush();
+            $carrier->setDefaultServicePointFields();
+
+            $this->entityManagerInterface->flush();
 
             return $this->redirectToRoute('shipmondo_shipmondo_carriers_index');
         }
@@ -139,14 +145,14 @@ class ShipmondoCarrierController extends FrameworkBundleAdminController
 
     public function deleteAction(int $id): Response
     {
-        $carrier = $this->entityManager->getRepository(ShipmondoCarrier::class)->find($id);
+        $carrier = $this->entityManagerInterface->getRepository(ShipmondoCarrier::class)->find($id);
 
         if (!$carrier) {
             throw $this->createNotFoundException('The carrier does not exist');
         }
 
-        $this->entityManager->remove($carrier);
-        $this->entityManager->flush();
+        $this->entityManagerInterface->remove($carrier);
+        $this->entityManagerInterface->flush();
 
         return $this->redirectToRoute('shipmondo_shipmondo_carriers_index');
     }

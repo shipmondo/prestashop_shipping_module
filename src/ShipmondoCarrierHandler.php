@@ -97,6 +97,11 @@ class ShipmondoCarrierHandler
         return ucwords(str_replace('_', ' ', $productCode));
     }
 
+    public function getCarrierProducts(string $carrierCode): array
+    {
+        return $this->apiClient->getCarrierProducts($carrierCode);
+    }
+
     /**
      * Fetch carriers from Shipmondo API if cache is not valid
      */
@@ -104,12 +109,21 @@ class ShipmondoCarrierHandler
     {
         $availableCarriers = $this->configuration->get('SHIPMONDO_AVAILABLE_CARRIERS');
         $expirationTime = $this->configuration->get('SHIPMONDO_AVAILABLE_CARRIERS_EXPIRATION');
+
         if (!$availableCarriers || !$expirationTime || $expirationTime < time()) {
             $availableCarriers = $this->apiClient->getCarriers();
 
             // Change boolean values to array of products to prepare for the future
             foreach ($availableCarriers as $availableCarrier) {
                 $products = [];
+
+                // TODO: get dynamically
+                $availableCarrier->products = [
+                    'private' => true,
+                    'business' => true,
+                    'service_point' => true,
+                ];
+
                 foreach ($availableCarrier->products as $productCode => $hasProduct) {
                     if ($hasProduct) {
                         $product = new \stdClass();

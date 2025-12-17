@@ -29,7 +29,7 @@
 	{{ form_end(form) }}
 {% endblock %}
 
-{% block javascripts %} 
+{% block javascripts %}
     {{ parent() }}
 
     <script>
@@ -37,18 +37,20 @@
         const psCarrierSelect = form.find('#shipmondo_carrier_form_carrier_id');
         const carriersSelect = form.find('#shipmondo_carrier_form_carrier_code');
         const productsSelect = form.find('#shipmondo_carrier_form_product_code');
+        const carrierProductsSelect = form.find('#shipmondo_carrier_form_carrier_product_code');
+        const servicePointTypesSelect = form.find('#shipmondo_carrier_form_service_point_types');
 
         {% if isEdit %}
             psCarrierSelect.attr('disabled', true);
             psCarrierSelect.parent().append('<input type="hidden" name="shipmondo_carrier_form[carrier_id]" value="' + psCarrierSelect.val() + '" />');
         {% endif %}
 
-        carriersSelect.on('change', function(event) {
+        function rerenderForm() {
             productsSelect.attr('disabled', true);
 
             var selected = productsSelect.val();
             var url = form.attr('action');
-            var requestBody = carriersSelect.serialize() + '&' + productsSelect.serialize();
+            const requestBody = carriersSelect.serialize() + '&' + productsSelect.serialize() + '&' + form.find('#shipmondo_carrier_form_carrier_product_code').serialize() + '&' + form.find('#shipmondo_carrier_form_service_point_types').serialize();
             var method = form.attr('method');
             $.ajax({
                 url: url,
@@ -69,7 +71,10 @@
                     productsSelect.attr('disabled', false);
                 }
             });
-        });
+        }
+
+        carriersSelect.on('change', rerenderForm);
+        productsSelect.on('change', rerenderForm);
 
         carriersSelect.trigger('change');
     </script>

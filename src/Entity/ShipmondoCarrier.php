@@ -159,9 +159,15 @@ class ShipmondoCarrier
         return $this;
     }
 
-    public function getServicePointTypes(): ?array
+    public function getServicePointTypes()
     {
-        return $this->servicePointTypes;
+        $value = $this->servicePointTypes;
+
+        if ($value === null) {
+            return [];
+        }
+
+        return $value;
     }
 
     public function setServicePointTypes(?array $servicePointTypes): self
@@ -205,7 +211,24 @@ class ShipmondoCarrier
             'id_carrier' => $this->getCarrierId(),
             'carrier_code' => $this->getCarrierCode(),
             'product_code' => $this->getProductCode(),
+            'carrier_product_code' => $this->getCarrierProductCode(),
             'service_point_types' => $this->getServicePointTypes(),
         ];
+    }
+
+    public function setDefaultServicePointFields(): void
+    {
+        if ($this->getProductCode() === 'service_point') {
+            if ($this->getCarrierProductCode() === null) {
+                $this->setServicePointTypes(null);
+            } elseif ($this->getServicePointTypes() === null) {
+                $this->setServicePointTypes([]);
+            }
+
+            return;
+        }
+
+        $this->setCarrierProductCode(null);
+        $this->setServicePointTypes(null);
     }
 }

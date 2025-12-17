@@ -29,8 +29,6 @@ class ApiClient
      */
     private $module;
 
-    private const LEGACY_SP_API_URI = 'https://service-points.shipmondo.com/';
-
     private const API_V3_URI = 'https://app.shipmondo.com/api/public/v3/';
 
     public function __construct(\Module $module, string $frontendKey, \Symfony\Component\HttpClient\HttpClient $client)
@@ -40,14 +38,20 @@ class ApiClient
         $this->client = $client->create();
     }
 
-    public function getCarriers(): array
+    public function getCarriers(?string $receiverCountryCode = null): array
     {
-        return $this->request('GET', self::LEGACY_SP_API_URI . 'carriers.json');
+        $query = [];
+
+        if (is_string($receiverCountryCode)) {
+            $query['receiver_country_code'] = $receiverCountryCode;
+        }
+
+        return $this->request('GET', self::API_V3_URI . 'shipping_modules/carriers', $query);
     }
 
-    public function getCarrierProducts(string $carrierCode, bool $ownAgreementOnly = false): array
+    public function getCarrierProducts(string $carrierCode): array
     {
-        $query = ['carrier_code' => $carrierCode, 'own_agreement_only' => $ownAgreementOnly];
+        $query = ['carrier_code' => $carrierCode];
 
         return $this->request('GET', self::API_V3_URI . 'shipping_modules/products', $query);
     }
@@ -63,15 +67,15 @@ class ApiClient
         return $this->request('GET', self::API_V3_URI . 'service_point/service_point_types', $query);
     }
 
-    public function getServicePoints(string $productCode, ?array $servicePointTypes, string $countryCode, string $zipcode, ?string $city, ?string $address, int $quantity = 10): array
+    public function getServicePoints(string $productCode, ?array $servicePointTypes, string $countryCode, string $zipcode, string $city, string $address): array
     {
         $query = [
-            'quantity' => $quantity,
+            'quantity' => 10,
             'product_code' => $productCode,
             'country_code' => trim($countryCode),
             'zipcode' => trim($zipcode),
-            'city' => trim($city ?? ''),
-            'address' => trim($address ?? ''),
+            'city' => trim($city),
+            'address' => trim($address),
         ];
 
         if (is_array($servicePointTypes) && count($servicePointTypes) > 0) {
@@ -97,9 +101,11 @@ class ApiClient
                 ]),
             ]);
 
-            return $response->toArray();
+            $response_body = $response->getContent();
+
+            return json_decode($response_body);
         } catch (\Symfony\Contracts\HttpClient\Exception\HttpExceptionInterface $e) {
-            $error_message = $response_body = $e->getResponse()->getContent();
+            $error_message = $response_body = $e->getResponse()->getContent(false);
 
             $response_body = json_decode($response_body);
 
