@@ -172,7 +172,7 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
                 $servicePoint->setAddress2($selectedServicePoint->address2);
                 $servicePoint->setZipCode($selectedServicePoint->zipcode);
                 $servicePoint->setCity($selectedServicePoint->city);
-                $servicePoint->setCountryCode($selectedServicePoint->country_code);
+                $servicePoint->setCountryCode($selectedServicePoint->country);
 
                 $entityManager = $this->get('doctrine.orm.entity_manager');
                 $entityManager->persist($servicePoint);

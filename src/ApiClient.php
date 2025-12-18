@@ -45,34 +45,32 @@ class ApiClient
 
     public function getCarrierProducts(string $carrierCode): array
     {
-        $query = ['carrier_code' => $carrierCode];
-
-        return $this->request('GET', self::API_V3_URI . 'shipping_modules/products', $query);
+        return $this->request('GET', self::API_V3_URI . 'shipping_modules/products', ['carrier_code' => $carrierCode]);
     }
 
     public function getCarrierProductServicePointTypes(string $productCode): array
     {
-        $query = ['product_code' => $productCode];
-
-        return $this->request('GET', self::API_V3_URI . 'service_point/service_point_types', $query);
+        return $this->request('GET', self::API_V3_URI . 'service_point/service_point_types', [
+            'product_code' => $productCode,
+        ]);
     }
 
     public function getServicePoints(string $productCode, ?array $servicePointTypes, string $countryCode, string $zipcode, string $city, string $address): array
     {
-        $query = [
+        $url = self::API_V3_URI . 'service_point/service_points';
+
+        if (is_array($servicePointTypes) && count($servicePointTypes) > 0) {
+            $url .= '?service_point_types[]=' . implode('&service_point_types[]=', $servicePointTypes);
+        }
+
+        return $this->request('GET', $url, [
             'quantity' => 10,
             'product_code' => $productCode,
             'country_code' => trim($countryCode),
             'zipcode' => trim($zipcode),
             'city' => trim($city),
             'address' => trim($address),
-        ];
-
-        if (is_array($servicePointTypes) && count($servicePointTypes) > 0) {
-            $query['service_point_types[]'] = $servicePointTypes;
-        }
-
-        return $this->request('GET', self::API_V3_URI . 'service_point/service_points', $query);
+        ]);
     }
 
     private function request(string $method, string $url, array $query = []): array

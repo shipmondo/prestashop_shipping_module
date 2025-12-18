@@ -104,7 +104,7 @@ class ShipmondoCarrierFormType extends TranslatorAwareType
 
                         $form->add('service_point_types', ChoiceType::class, [
                             'label' => $this->trans('Filter Service Point Types', 'Modules.Shipmondo.Admin'),
-                            'required' => true,
+                            'required' => false,
                             'multiple' => true,
                             'choices' => $servicePointChoices,
                         ]);
