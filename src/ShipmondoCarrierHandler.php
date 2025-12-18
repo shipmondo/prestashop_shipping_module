@@ -29,10 +29,17 @@ class ShipmondoCarrierHandler
      */
     private $carriers;
 
+    /**
+     * @var array
+     */
+    private $carrierProductCache;
+
     public function __construct(ConfigurationInterface $configuration, ApiClient $apiClient)
     {
         $this->configuration = $configuration;
         $this->apiClient = $apiClient;
+
+        $this->carrierProductCache = [];
     }
 
     /**
@@ -99,7 +106,42 @@ class ShipmondoCarrierHandler
 
     public function getCarrierProducts(string $carrierCode): array
     {
-        return $this->apiClient->getCarrierProducts($carrierCode);
+        if (isset($this->carrierProductCache[$carrierCode])) {
+            $cached = $this->carrierProductCache[$carrierCode];
+
+            if (is_array($cached) && isset($cached['value']) && isset($cached['exp']) && (int) $cached['exp'] > time()) {
+                $value = $cached['value'];
+
+                if (is_array($value)) {
+                    return $value;
+                }
+            }
+        }
+
+        $value = $this->apiClient->getCarrierProducts($carrierCode);
+
+        $this->carrierProductCache[$carrierCode] = ['exp' => time() + 1800,  'value' => $value];
+
+        return $value;
+    }
+
+    private function carrierHasServicePointProducts(string $carrierCode): bool
+    {
+        try {
+            $carrierProducts = self::getCarrierProducts($carrierCode);
+
+            if (is_array($carrierProducts)) {
+                foreach ($carrierProducts as $carrierProduct) {
+                    if (isset($carrierProduct->service_point_product) && $carrierProduct->service_point_product === true) {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        } catch (ShipmondoApiException $e) {
+            return false;
+        }
     }
 
     /**
@@ -117,11 +159,10 @@ class ShipmondoCarrierHandler
             foreach ($availableCarriers as $availableCarrier) {
                 $products = [];
 
-                // TODO: get dynamically
                 $availableCarrier->products = [
                     'private' => true,
                     'business' => true,
-                    'service_point' => true,
+                    'service_point' => self::carrierHasServicePointProducts($availableCarrier->code),
                 ];
 
                 foreach ($availableCarrier->products as $productCode => $hasProduct) {

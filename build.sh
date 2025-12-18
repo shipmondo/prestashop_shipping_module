@@ -1,6 +1,7 @@
 #!/bin/bash
 
 rm shipmondo.zip
+rm -rf shipmondo/
 
 cp -rf . shipmondo
 
