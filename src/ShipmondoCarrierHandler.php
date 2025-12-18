@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace Shipmondo;
 
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use Shipmondo\Exception\ShipmondoApiException;
 
 class ShipmondoCarrierHandler
 {
@@ -34,12 +35,18 @@ class ShipmondoCarrierHandler
      */
     private $carrierProductCache;
 
+    /**
+     * @var array
+     */
+    private $servicePointTypeCache;
+
     public function __construct(ConfigurationInterface $configuration, ApiClient $apiClient)
     {
         $this->configuration = $configuration;
         $this->apiClient = $apiClient;
 
         $this->carrierProductCache = [];
+        $this->servicePointTypeCache = [];
     }
 
     /**
@@ -109,7 +116,7 @@ class ShipmondoCarrierHandler
         if (isset($this->carrierProductCache[$carrierCode])) {
             $cached = $this->carrierProductCache[$carrierCode];
 
-            if (is_array($cached) && isset($cached['value']) && isset($cached['exp']) && (int) $cached['exp'] > time()) {
+            if (is_array($cached) && isset($cached['value'], $cached['exp']) && (int) $cached['exp'] > time()) {
                 $value = $cached['value'];
 
                 if (is_array($value)) {
@@ -120,7 +127,7 @@ class ShipmondoCarrierHandler
 
         $value = $this->apiClient->getCarrierProducts($carrierCode);
 
-        $this->carrierProductCache[$carrierCode] = ['exp' => time() + 1800,  'value' => $value];
+        $this->carrierProductCache[$carrierCode] = ['exp' => time() + 1800, 'value' => $value];
 
         return $value;
     }
@@ -130,11 +137,16 @@ class ShipmondoCarrierHandler
         try {
             $carrierProducts = self::getCarrierProducts($carrierCode);
 
-            if (is_array($carrierProducts)) {
-                foreach ($carrierProducts as $carrierProduct) {
-                    if (isset($carrierProduct->service_point_product) && $carrierProduct->service_point_product === true) {
-                        return true;
-                    }
+            if (!is_array($carrierProducts)) {
+                return false;
+            }
+
+            foreach ($carrierProducts as $carrierProduct) {
+                if (
+                    isset($carrierProduct->service_point_product)
+                    && $carrierProduct->service_point_product === true
+                ) {
+                    return true;
                 }
             }
 
@@ -183,5 +195,26 @@ class ShipmondoCarrierHandler
         }
 
         return json_decode($availableCarriers);
+    }
+
+    public function getServicePointTypes(string $productCode): array
+    {
+        if (isset($this->servicePointTypeCache[$productCode])) {
+            $cached = $this->servicePointTypeCache[$productCode];
+
+            if (is_array($cached) && isset($cached['value'], $cached['exp']) && (int) $cached['exp'] > time()) {
+                $value = $cached['value'];
+
+                if (is_array($value)) {
+                    return $value;
+                }
+            }
+        }
+
+        $value = $this->apiClient->getCarrierProductServicePointTypes($productCode);
+
+        $this->servicePointTypeCache[$productCode] = ['exp' => time() + 1800, 'value' => $value];
+
+        return $value;
     }
 }

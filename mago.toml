@@ -28,10 +28,15 @@ integrations = ["doctrine", "symfony"]
 [linter.rules]
 ambiguous-function-call = { enabled = false }
 cyclomatic-complexity = { enabled = false }
+excessive-nesting = { enabled = false }
 excessive-parameter-list = { enabled = false }
+final-controller = { enabled = false }
 halstead = { enabled = false }
 kan-defect = { enabled = false }
 literal-named-argument = { enabled = false }
+no-else-clause = { enabled = false }
+no-literal-password = { enabled = false }
+prefer-early-continue = { enabled = false }
 too-many-properties = { enabled = false }
 
 [source]

@@ -7,11 +7,14 @@ cp -rf . shipmondo
 
 cd shipmondo
 rm -rf .git
+rm -rf .github/ 
 rm -rf .vscode
+rm -rf .phpactor.json
 rm -rf .php-cs-fixer.cache
 rm -rf .php-cs-fixer.dist.php
 rm -rf .DS_Store
 rm -rf build.sh
+rm -rf jsconfig.json 
 
 shopt -s extglob
 cd vendor

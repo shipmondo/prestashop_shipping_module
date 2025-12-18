@@ -180,7 +180,7 @@ class ShipmondoCarrier
                     continue;
                 }
 
-                if (!is_string($servicPointType)) {
+                if (!is_string($servicePointType)) {
                     throw new \InvalidArgumentException('Service point types must be an array of strings');
                 }
 

@@ -10,7 +10,6 @@ declare(strict_types=1);
 
 namespace Shipmondo\Form\Type;
 
-use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use PrestaShopBundle\Translation\TranslatorInterface;
 use Shipmondo\Entity\ShipmondoCarrier;
@@ -31,17 +30,11 @@ class ShipmondoCarrierFormType extends TranslatorAwareType
      */
     private $shipmondoCarrierHandler;
 
-    /**
-     * @var \Psr\Log\LoggerInterface
-     */
-    private $logger;
-
-    public function __construct(TranslatorInterface $translator, array $locales, ShipmondoCarrierHandler $shipmondoCarrierHandler, \Psr\Log\LoggerInterface $logger)
+    public function __construct(TranslatorInterface $translator, array $locales, ShipmondoCarrierHandler $shipmondoCarrierHandler)
     {
         parent::__construct($translator, $locales);
 
         $this->shipmondoCarrierHandler = $shipmondoCarrierHandler;
-        $this->logger = $logger;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -99,17 +92,20 @@ class ShipmondoCarrierFormType extends TranslatorAwareType
                     if ($carrier->getCarrierProductCode() !== null) {
                         $servicePointChoices = [];
 
-                        $servicePointTypes = $carrier->getServicePointTypes();
-
-                        if (is_array($servicePointTypes)) {
-                            foreach ($servicePointTypes as $servicePointType) {
-                                $servicePointChoices[$servicePointType] = true;
-                            }
+                        try {
+                            $servicePointChoices = self::extractServicePointTypeChoices($this->shipmondoCarrierHandler->getServicePointTypes($carrier->getCarrierProductCode()));
+                        } catch (ShipmondoApiException $e) {
+                            $form->getParent()->addError(new FormError($this->trans(
+                                'An error occured when requesting Shipmondo: %apiError%',
+                                'Modules.Shipmondo.Admin',
+                                ['%apiError%' => $e->getMessage()]
+                            )));
                         }
 
-                        $form->add('service_point_types', SwitchType::class, [
+                        $form->add('service_point_types', ChoiceType::class, [
                             'label' => $this->trans('Filter Service Point Types', 'Modules.Shipmondo.Admin'),
                             'required' => true,
+                            'multiple' => true,
                             'choices' => $servicePointChoices,
                         ]);
                     }
@@ -121,18 +117,12 @@ class ShipmondoCarrierFormType extends TranslatorAwareType
             $carrierCode = (string) $event->getData();
             $form = $event->getForm();
 
-            $this->logger->error('carrierCode: ', [
-                'carrierCode' => $carrierCode,
-                'form' => $form,
-                'data' => $event->getData(),
-            ]);
-
+            $products = [];
             try {
                 $products = $this->shipmondoCarrierHandler->getProducts($carrierCode);
             } catch (ShipmondoApiException $e) {
                 $error = $this->trans('An error occured when requesting Shipmondo: %apiError%', 'Modules.Shipmondo.Admin', ['%apiError%' => $e->getMessage()]);
                 $form->getParent()->addError(new FormError($error));
-                $products = [];
             }
 
             $choices = [];
@@ -154,12 +144,11 @@ class ShipmondoCarrierFormType extends TranslatorAwareType
                         $carrierCode
                     ));
                 } catch (ShipmondoApiException $e) {
-                    $error = $this->trans(
+                    $form->getParent()->addError(new FormError($this->trans(
                         'An error occured when requesting Shipmondo: %apiError%',
                         'Modules.Shipmondo.Admin',
                         ['%apiError%' => $e->getMessage()]
-                    );
-                    $form->getParent()->addError(new FormError($error));
+                    )));
                 }
 
                 $form->getParent()->add('carrier_product_code', ChoiceType::class, [
@@ -192,16 +181,27 @@ class ShipmondoCarrierFormType extends TranslatorAwareType
 
     private static function extractCarrierProductChoices(array $carrierProducts): array
     {
-        $output = [];
+        $choices = [];
 
         foreach ($carrierProducts as $product) {
             if (!isset($product->service_point_product) || $product->service_point_product !== true) {
                 continue;
             }
 
-            $output[$product->name] = $product->product_code;
+            $choices[$product->name] = $product->product_code;
         }
 
-        return $output;
+        return $choices;
+    }
+
+    private static function extractServicePointTypeChoices(array $servicePointTypes): array
+    {
+        $choices = [];
+
+        foreach ($servicePointTypes as $servicePointType) {
+            $choices[$servicePointType->name] = $servicePointType->code;
+        }
+
+        return $choices;
     }
 }

@@ -38,15 +38,9 @@ class ApiClient
         $this->client = $client->create();
     }
 
-    public function getCarriers(?string $receiverCountryCode = null): array
+    public function getCarriers(): array
     {
-        $query = [];
-
-        if (is_string($receiverCountryCode)) {
-            $query['receiver_country_code'] = $receiverCountryCode;
-        }
-
-        return $this->request('GET', self::API_V3_URI . 'shipping_modules/carriers', $query);
+        return $this->request('GET', self::API_V3_URI . 'shipping_modules/carriers');
     }
 
     public function getCarrierProducts(string $carrierCode): array
@@ -56,13 +50,9 @@ class ApiClient
         return $this->request('GET', self::API_V3_URI . 'shipping_modules/products', $query);
     }
 
-    public function getCarrierProductServicePointTypes(string $productCode, ?string $countryCode): array
+    public function getCarrierProductServicePointTypes(string $productCode): array
     {
         $query = ['product_code' => $productCode];
-
-        if ($countryCode !== null) {
-            $query['country'] = $countryCode;
-        }
 
         return $this->request('GET', self::API_V3_URI . 'service_point/service_point_types', $query);
     }
@@ -105,7 +95,8 @@ class ApiClient
 
             return json_decode($response_body);
         } catch (\Symfony\Contracts\HttpClient\Exception\HttpExceptionInterface $e) {
-            $error_message = $response_body = $e->getResponse()->getContent(false);
+            $response_body = $e->getResponse()->getContent(false);
+            $error_message = $response_body;
 
             $response_body = json_decode($response_body);
 
