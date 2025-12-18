@@ -60,10 +60,25 @@ final class ShipmondoCarrierGridDataFactoryDecorator implements GridDataFactoryI
     private function applyModifications(RecordCollectionInterface $carriers): RecordCollection
     {
         $modifiedCarriers = [];
+
         try {
             $availableCarriers = $this->shipmondoCarrierHandler->getCarriers();
 
             foreach ($carriers as $carrier) {
+                if (isset($carrier['carrier_code']) && isset($carrier['carrier_product_code'])) {
+                    $carrierProducts = $this->shipmondoCarrierHandler->getCarrierProducts($carrier['carrier_code']);
+
+                    foreach ($carrierProducts as $carrierProduct) {
+                        if ($carrier['carrier_product_code'] === $carrierProduct->product_code) {
+                            $carrier['carrier_product_name'] = $carrierProduct->name;
+                            break;
+                        }
+                    }
+                }
+
+                // TODO: translate service point type names
+                $carrier['service_point_type_names'] = $carrier['service_point_types'];
+
                 foreach ($availableCarriers as $availableCarrier) {
                     if ($carrier['carrier_code'] === $availableCarrier->code) {
                         $carrier['carrier_name'] = $availableCarrier->name;
@@ -86,6 +101,8 @@ final class ShipmondoCarrierGridDataFactoryDecorator implements GridDataFactoryI
             foreach ($carriers as $carrier) {
                 $carrier['carrier_name'] = $carrier['carrier_code'];
                 $carrier['product_name'] = $carrier['product_code'];
+                $carrier['carrier_product_name'] = isset($carrier['carrier_product_code']) ? $carrier['carrier_product_code'] : null;
+                $carrier['service_point_type_names'] = isset($carrier['service_point_types']) ? $carrier['service_point_types'] : null;
                 $modifiedCarriers[] = $carrier;
             }
         }

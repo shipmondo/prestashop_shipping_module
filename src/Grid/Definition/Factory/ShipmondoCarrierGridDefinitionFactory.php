@@ -147,9 +147,9 @@ final class ShipmondoCarrierGridDefinitionFactory extends AbstractGridDefinition
     {
         $carrerProductCodeColumn = new DataColumn('carrier_product_code');
 
-        $carrerProductCodeColumn->setName($this->trans('Carrier product code', [], 'Modules.Shipmondo.Admin'));
+        $carrerProductCodeColumn->setName($this->trans('Carrier product', [], 'Modules.Shipmondo.Admin'));
         $carrerProductCodeColumn->setOptions([
-            'field' => 'carrier_product_code',
+            'field' => 'carrier_product_name',
         ]);
 
         return $carrerProductCodeColumn;
@@ -161,7 +161,7 @@ final class ShipmondoCarrierGridDefinitionFactory extends AbstractGridDefinition
 
         $servicePointTypesColumn->setName($this->trans('Service point types', [], 'Modules.Shipmondo.Admin'));
         $servicePointTypesColumn->setOptions([
-            'field' => 'service_point_types',
+            'field' => 'service_point_type_names',
         ]);
 
         return $servicePointTypesColumn;
