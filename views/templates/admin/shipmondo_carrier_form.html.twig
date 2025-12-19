@@ -8,32 +8,32 @@
 {% form_theme form '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
 
 {% block content %}
-	{{ form_start(form) }}
-	<div class="card">
-		<h3 class="card-header">
-			<i class="material-icons">settings</i> {{ 'Shipmondo carrier'|trans({}, 'Modules.Shipmondo.Admin') }}
-		</h3>
+    {{ form_start(form) }}
+    <div class="card">
+        <h3 class="card-header">
+            <i class="material-icons">settings</i> {{ 'Shipmondo carrier'|trans({}, 'Modules.Shipmondo.Admin') }}
+        </h3>
 
-		<div class="card-body">
-			<div class="form-wrapper">
-				{{ form_widget(form) }}
-			</div>
-		</div>
+        <div class="card-body">
+            <div class="form-wrapper">
+                {{ form_widget(form) }}
+            </div>
+        </div>
 
-		<div class="card-footer">
-			<div class="d-flex justify-content-end">
-				<button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
-			</div>
-		</div>
-	</div>
-	{{ form_end(form) }}
+        <div class="card-footer">
+            <div class="d-flex justify-content-end">
+                <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+            </div>
+        </div>
+    </div>
+    {{ form_end(form) }}
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
 
     <script>
-        const form = $("form[name=shipmondo_carrier_form]");
+        const form = $('form[name=shipmondo_carrier_form]');
         const psCarrierSelect = form.find('#shipmondo_carrier_form_carrier_id');
         const carriersSelect = form.find('#shipmondo_carrier_form_carrier_code');
         const productsSelect = form.find('#shipmondo_carrier_form_product_code');
@@ -46,35 +46,95 @@
         {% endif %}
 
         function rerenderForm() {
-            productsSelect.attr('disabled', true);
+            const selectedProductType = productsSelect.val();
 
-            var selected = productsSelect.val();
-            var url = form.attr('action');
-            const requestBody = carriersSelect.serialize() + '&' + productsSelect.serialize() + '&' + form.find('#shipmondo_carrier_form_carrier_product_code').serialize() + '&' + form.find('#shipmondo_carrier_form_service_point_types').serialize();
-            var method = form.attr('method');
+            if (selectedProductType === 'service_point') {
+                carrierProductsSelect.parent().parent().show();
+                servicePointTypesSelect.parent().parent().show();
+            } else {
+                carrierProductsSelect.parent().parent().hide();
+                servicePointTypesSelect.parent().parent().hide();
+            }
+
+            const selectedCarrierProduct = carrierProductsSelect.val();
+            const selectedServicePointTypes = servicePointTypesSelect.val();
+
+            const requestBody =
+                carriersSelect.serialize() +
+                '&' +
+                productsSelect.serialize() +
+                '&' +
+                carrierProductsSelect.serialize() +
+                '&' +
+                servicePointTypesSelect.serialize();
+
+            productsSelect.attr('disabled', true);
+            carrierProductsSelect.attr('disabled', true);
+            servicePointTypesSelect.attr('disabled', true);
+
             $.ajax({
-                url: url,
-                method: method,
+                url: form.attr('action'),
+                method: form.attr('method'),
                 data: requestBody,
-                success: function(response) {
-                    var html = $(response).find('#shipmondo_carrier_form_product_code').html();
-                    productsSelect.html(html);
-                    var values = productsSelect.find('option').map(function() {
+                success: function (response) {
+                    productsSelect.html($(response).find('#shipmondo_carrier_form_product_code').html());
+                    const newProductCodeValues = productsSelect.find('option').map(function () {
                         return $(this).val();
                     }).get();
 
                     // Select the previously selected value if it still exists
-                    if ($.inArray(selected, values) !== -1) {
-                        productsSelect.val(selected);
+                    if ($.inArray(selectedProductType, newProductCodeValues) !== -1) {
+                        productsSelect.val(selectedProductType);
                     }
 
                     productsSelect.attr('disabled', false);
+                    carrierProductsSelect.attr('disabled', false);
+                    servicePointTypesSelect.attr('disabled', false);
+
+                    carrierProductsSelect.html($(response).find('#shipmondo_carrier_form_carrier_product_code').html());
+
+                    servicePointTypesSelect.html(
+                        $(response).find('#shipmondo_carrier_form_service_point_types').html()
+                    );
+
+                    if (productsSelect.val() === 'service_point') {
+                        const carrierProductOptions = carrierProductsSelect
+                            .find('option')
+                            .map(function () {
+                                return $(this).val();
+                            })
+                            .get();
+
+                        // Select the previously selected value if it still exists
+                        if ($.inArray(selectedCarrierProduct, carrierProductOptions) !== -1) {
+                            carrierProductsSelect.val(selectedCarrierProduct);
+                        }
+
+                        const servicePointTypeOptions = servicePointTypesSelect
+                            .find('option')
+                            .map(function () {
+                                return $(this).val();
+                            })
+                            .get();
+
+                        const foundServicePointTypes = selectedServicePointTypes.filter((s) =>
+                            servicePointTypeOptions.includes(s)
+                        );
+                        servicePointTypesSelect.val(foundServicePointTypes);
+
+                        carrierProductsSelect.parent().parent().show();
+                        servicePointTypesSelect.parent().parent().show();
+                    } else {
+                        carrierProductsSelect.parent().parent().hide();
+                        servicePointTypesSelect.parent().parent().hide();
+                    }
                 }
             });
         }
 
         carriersSelect.on('change', rerenderForm);
         productsSelect.on('change', rerenderForm);
+        carrierProductsSelect.on('change', rerenderForm);
 
         carriersSelect.trigger('change');
     </script>

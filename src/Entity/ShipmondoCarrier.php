@@ -154,12 +154,16 @@ class ShipmondoCarrier
 
     public function setCarrierProductCode(?string $carrierProductCode): self
     {
-        $this->carrierProductCode = $carrierProductCode;
+        if ($carrierProductCode === '') {
+            $this->carrierProductCode = null;
+        } else {
+            $this->carrierProductCode = $carrierProductCode;
+        }
 
         return $this;
     }
 
-    public function getServicePointTypes()
+    public function getServicePointTypes(): array
     {
         $value = $this->servicePointTypes;
 
@@ -219,7 +223,10 @@ class ShipmondoCarrier
     public function setDefaultServicePointFields(): void
     {
         if ($this->getProductCode() === 'service_point') {
-            if ($this->getCarrierProductCode() === null) {
+            $carrierProductCode = $this->getCarrierProductCode();
+
+            if ($carrierProductCode === null || $carrierProductCode === '') {
+                $this->setCarrierProductCode(null);
                 $this->setServicePointTypes(null);
             } elseif ($this->getServicePointTypes() === null) {
                 $this->setServicePointTypes([]);

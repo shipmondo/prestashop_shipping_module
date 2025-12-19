@@ -136,13 +136,37 @@ class ShipmondoCarrierFormType extends TranslatorAwareType
                 'choices' => $choices,
             ]);
 
-            if ($form->getParent()->get('product_code')->getData() === 'service_point' && $carrierCode !== '') {
+            if ($form->getParent()->get('product_code')->getData() === 'service_point') {
                 $carrierProductChoices = [];
+
+                $currentCarrierProductCode = null;
+                $found = false;
 
                 try {
                     $carrierProductChoices = self::extractCarrierProductChoices($this->shipmondoCarrierHandler->getCarrierProducts(
-                        $carrierCode
+                        $form->getParent()->get('carrier_code')->getData()
                     ));
+
+                    if ($form->getParent()->has('carrier_product_code')) {
+                        $currentCarrierProductCode = $form->getParent()->get('carrier_product_code')->getData() ?? null;
+
+                        $fallback = null;
+
+                        foreach ($carrierProductChoices as $code) {
+                            if ($currentCarrierProductCode === $code) {
+                                $found = true;
+                                break;
+                            }
+
+                            if ($fallback === null) {
+                                $fallback = $code;
+                            }
+                        }
+
+                        if (!$found) {
+                            $currentCarrierProductCode = $fallback;
+                        }
+                    }
                 } catch (ShipmondoApiException $e) {
                     $form->getParent()->addError(new FormError($this->trans(
                         'An error occured when requesting Shipmondo: %apiError%',
@@ -156,6 +180,46 @@ class ShipmondoCarrierFormType extends TranslatorAwareType
                     'required' => true,
                     'choices' => $carrierProductChoices,
                 ]);
+
+                if (!$found) {
+                    $form->getParent()->get('carrier_product_code')->setData($currentCarrierProductCode);
+                }
+
+                $servicePointTypeChoices = [];
+
+                try {
+                    $servicePointTypeChoices = self::extractServicePointTypeChoices($this->shipmondoCarrierHandler->getServicePointTypes(
+                        $form->getParent()->get('carrier_product_code')->getData()
+                    ));
+                } catch (ShipmondoApiException $e) {
+                    $form->getParent()->addError(new FormError($this->trans(
+                        'An error occured when requesting Shipmondo: %apiError%',
+                        'Modules.Shipmondo.Admin',
+                        ['%apiError%' => $e->getMessage()]
+                    )));
+                }
+
+                if (count($servicePointTypeChoices) > 0) {
+                    $form->getParent()->add('service_point_types', ChoiceType::class, [
+                        'label' => $this->trans('Filter Service Point Types', 'Modules.Shipmondo.Admin'),
+                        'required' => false,
+                        'multiple' => true,
+                        'choices' => $servicePointTypeChoices,
+                    ]);
+                } elseif ($form->getParent()->has('service_point_types')) {
+                    $form->getParent()->get('service_point_types')->setData(null);
+                    $form->getParent()->remove('service_point_types');
+                }
+            } else {
+                if ($form->getParent()->has('carrier_product_code')) {
+                    $form->getParent()->get('carrier_product_code')->setData(null);
+                    $form->getParent()->remove('carrier_product_code');
+                }
+
+                if ($form->getParent()->has('service_point_types')) {
+                    $form->getParent()->get('service_point_types')->setData(null);
+                    $form->getParent()->remove('service_point_types');
+                }
             }
         };
 
