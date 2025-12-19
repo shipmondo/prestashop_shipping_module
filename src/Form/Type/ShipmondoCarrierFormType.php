@@ -83,6 +83,7 @@ class ShipmondoCarrierFormType extends TranslatorAwareType
                 if ($carrier->getProductCode() === 'service_point') {
                     $form->add('carrier_product_code', ChoiceType::class, [
                         'label' => $this->trans('Carrier Product', 'Modules.Shipmondo.Admin'),
+                        'invalid_message' => '',
                         'required' => true,
                         'choices' => [
                             $this->trans('Loading...', 'Modules.Shipmondo.Admin') => $carrier->getCarrierProductCode(),
@@ -104,9 +105,11 @@ class ShipmondoCarrierFormType extends TranslatorAwareType
 
                         $form->add('service_point_types', ChoiceType::class, [
                             'label' => $this->trans('Filter Service Point Types', 'Modules.Shipmondo.Admin'),
-                            'required' => false,
-                            'multiple' => true,
                             'choices' => $servicePointChoices,
+                            'expanded' => true,
+                            'invalid_message' => '',
+                            'multiple' => true,
+                            'required' => false,
                         ]);
                     }
                 }
@@ -175,15 +178,16 @@ class ShipmondoCarrierFormType extends TranslatorAwareType
                     )));
                 }
 
-                $form->getParent()->add('carrier_product_code', ChoiceType::class, [
-                    'label' => $this->trans('Carrier Product', 'Modules.Shipmondo.Admin'),
-                    'required' => true,
-                    'choices' => $carrierProductChoices,
-                ]);
-
-                if (!$found) {
+                if (!$found && $form->getParent()->has('carrier_product_code')) {
                     $form->getParent()->get('carrier_product_code')->setData($currentCarrierProductCode);
                 }
+
+                $form->getParent()->add('carrier_product_code', ChoiceType::class, [
+                    'label' => $this->trans('Carrier Product', 'Modules.Shipmondo.Admin'),
+                    'choices' => $carrierProductChoices,
+                    'invalid_message' => '',
+                    'required' => true,
+                ]);
 
                 $servicePointTypeChoices = [];
 
@@ -202,9 +206,11 @@ class ShipmondoCarrierFormType extends TranslatorAwareType
                 if (count($servicePointTypeChoices) > 0) {
                     $form->getParent()->add('service_point_types', ChoiceType::class, [
                         'label' => $this->trans('Filter Service Point Types', 'Modules.Shipmondo.Admin'),
-                        'required' => false,
-                        'multiple' => true,
                         'choices' => $servicePointTypeChoices,
+                        'expanded' => true,
+                        'invalid_message' => '',
+                        'multiple' => true,
+                        'required' => false,
                     ]);
                 } elseif ($form->getParent()->has('service_point_types')) {
                     $form->getParent()->get('service_point_types')->setData(null);
