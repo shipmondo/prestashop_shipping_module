@@ -41,6 +41,7 @@ class ShipmondoCarrierFormType extends TranslatorAwareType
     {
         $allPsCarriers = \Carrier::getCarriers(\Context::getContext()->language->id, false, false, false, null, \Carrier::ALL_CARRIERS);
         $psCarriers = [$this->trans('Create new carrier', 'Modules.Shipmondo.Admin') => 0];
+
         foreach ($allPsCarriers as $carrier) {
             $psCarriers[$carrier['name']] = (int) $carrier['id_carrier'];
         }
@@ -66,8 +67,7 @@ class ShipmondoCarrierFormType extends TranslatorAwareType
                 'label' => $this->trans('Shipmondo carrier', 'Modules.Shipmondo.Admin'),
                 'required' => true,
                 'choices' => $carriers,
-            ])
-        ;
+            ]);
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
             $carrier = $event->getData();
@@ -79,6 +79,39 @@ class ShipmondoCarrierFormType extends TranslatorAwareType
                     'required' => true,
                     'choices' => [$this->trans('Loading...', 'Modules.Shipmondo.Admin') => $carrier->getProductCode()], // Actual choices will be added in the POST_SUBMIT event
                 ]);
+
+                if ($carrier->getProductCode() === 'service_point') {
+                    $form->add('carrier_product_code', ChoiceType::class, [
+                        'label' => $this->trans('Carrier Product', 'Modules.Shipmondo.Admin'),
+                        'invalid_message' => '',
+                        'required' => true,
+                        'choices' => [
+                            $this->trans('Loading...', 'Modules.Shipmondo.Admin') => $carrier->getCarrierProductCode(),
+                        ],
+                    ]);
+
+                    if ($carrier->getCarrierProductCode() !== null) {
+                        $servicePointChoices = [];
+
+                        try {
+                            $servicePointChoices = self::extractServicePointTypeChoices($this->shipmondoCarrierHandler->getServicePointTypes($carrier->getCarrierProductCode()));
+                        } catch (ShipmondoApiException $e) {
+                            $form->getParent()->addError(new FormError($this->trans(
+                                'An error occured when requesting Shipmondo: %apiError%',
+                                'Modules.Shipmondo.Admin',
+                                ['%apiError%' => $e->getMessage()]
+                            )));
+                        }
+
+                        $form->add('service_point_types', ChoiceType::class, [
+                            'label' => $this->trans('Filter Service Point Types', 'Modules.Shipmondo.Admin'),
+                            'choices' => $servicePointChoices,
+                            'invalid_message' => '',
+                            'multiple' => true,
+                            'required' => false,
+                        ]);
+                    }
+                }
             }
         });
 
@@ -86,12 +119,12 @@ class ShipmondoCarrierFormType extends TranslatorAwareType
             $carrierCode = (string) $event->getData();
             $form = $event->getForm();
 
+            $products = [];
             try {
                 $products = $this->shipmondoCarrierHandler->getProducts($carrierCode);
             } catch (ShipmondoApiException $e) {
                 $error = $this->trans('An error occured when requesting Shipmondo: %apiError%', 'Modules.Shipmondo.Admin', ['%apiError%' => $e->getMessage()]);
                 $form->getParent()->addError(new FormError($error));
-                $products = [];
             }
 
             $choices = [];
@@ -104,6 +137,98 @@ class ShipmondoCarrierFormType extends TranslatorAwareType
                 'required' => true,
                 'choices' => $choices,
             ]);
+
+            if ($form->getParent()->get('product_code')->getData() === 'service_point') {
+                $carrierProductChoices = [];
+
+                $currentCarrierProductCode = null;
+                $found = false;
+
+                try {
+                    $carrierProductChoices = self::extractCarrierProductChoices($this->shipmondoCarrierHandler->getCarrierProducts(
+                        $form->getParent()->get('carrier_code')->getData()
+                    ));
+
+                    if ($form->getParent()->has('carrier_product_code')) {
+                        $currentCarrierProductCode = $form->getParent()->get('carrier_product_code')->getData() ?? null;
+
+                        $fallback = null;
+
+                        foreach ($carrierProductChoices as $code) {
+                            if ($currentCarrierProductCode === $code) {
+                                $found = true;
+                                break;
+                            }
+
+                            if ($fallback === null) {
+                                $fallback = $code;
+                            }
+                        }
+
+                        if (!$found) {
+                            $currentCarrierProductCode = $fallback;
+                        }
+                    }
+                } catch (ShipmondoApiException $e) {
+                    $form->getParent()->addError(new FormError($this->trans(
+                        'An error occured when requesting Shipmondo: %apiError%',
+                        'Modules.Shipmondo.Admin',
+                        ['%apiError%' => $e->getMessage()]
+                    )));
+                }
+
+                if (!$found && $form->getParent()->has('carrier_product_code')) {
+                    $form->getParent()->get('carrier_product_code')->setData($currentCarrierProductCode);
+                }
+
+                $form->getParent()->add('carrier_product_code', ChoiceType::class, [
+                    'label' => $this->trans('Carrier Product', 'Modules.Shipmondo.Admin'),
+                    'choices' => $carrierProductChoices,
+                    'invalid_message' => '',
+                    'required' => true,
+                ]);
+
+                $servicePointTypeChoices = [];
+
+                try {
+                    $servicePointTypeChoices = self::extractServicePointTypeChoices($this->shipmondoCarrierHandler->getServicePointTypes(
+                        $currentCarrierProductCode
+                    ));
+                } catch (ShipmondoApiException $e) {
+                    $form->getParent()->addError(new FormError($this->trans(
+                        'An error occured when requesting Shipmondo: %apiError%',
+                        'Modules.Shipmondo.Admin',
+                        ['%apiError%' => $e->getMessage()]
+                    )));
+                }
+
+                if (count($servicePointTypeChoices) > 0) {
+                    $form->getParent()->add('service_point_types', ChoiceType::class, [
+                        'label' => $this->trans('Filter Service Point Types', 'Modules.Shipmondo.Admin'),
+                        'choices' => $servicePointTypeChoices,
+                        'invalid_message' => '',
+                        'multiple' => true,
+                        'required' => false,
+                    ]);
+
+                    if (!$found) {
+                        $form->getParent()->get('service_point_types')->setData([]);
+                    }
+                } elseif ($form->getParent()->has('service_point_types')) {
+                    $form->getParent()->get('service_point_types')->setData([]);
+                    $form->getParent()->remove('service_point_types');
+                }
+            } else {
+                if ($form->getParent()->has('carrier_product_code')) {
+                    $form->getParent()->get('carrier_product_code')->setData(null);
+                    $form->getParent()->remove('carrier_product_code');
+                }
+
+                if ($form->getParent()->has('service_point_types')) {
+                    $form->getParent()->get('service_point_types')->setData([]);
+                    $form->getParent()->remove('service_point_types');
+                }
+            }
         };
 
         $builder->get('carrier_code')->addEventListener(FormEvents::POST_SET_DATA, $handleFormEvent);
@@ -124,5 +249,31 @@ class ShipmondoCarrierFormType extends TranslatorAwareType
                 ]),
             ],
         ]);
+    }
+
+    private static function extractCarrierProductChoices(array $carrierProducts): array
+    {
+        $choices = [];
+
+        foreach ($carrierProducts as $product) {
+            if (!isset($product->service_point_product) || $product->service_point_product !== true) {
+                continue;
+            }
+
+            $choices[$product->name] = $product->product_code;
+        }
+
+        return $choices;
+    }
+
+    private static function extractServicePointTypeChoices(array $servicePointTypes): array
+    {
+        $choices = [];
+
+        foreach ($servicePointTypes as $servicePointType) {
+            $choices[$servicePointType->name] = $servicePointType->code;
+        }
+
+        return $choices;
     }
 }

@@ -35,4 +35,3 @@ services:
       - '@shipmondo.module'
       - '@shipmondo.configuration.frontend_key'
       - '@shipmondo.http.client'
-      - 'https://service-points.shipmondo.com/'
