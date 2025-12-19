@@ -106,7 +106,6 @@ class ShipmondoCarrierFormType extends TranslatorAwareType
                         $form->add('service_point_types', ChoiceType::class, [
                             'label' => $this->trans('Filter Service Point Types', 'Modules.Shipmondo.Admin'),
                             'choices' => $servicePointChoices,
-                            'expanded' => true,
                             'invalid_message' => '',
                             'multiple' => true,
                             'required' => false,
@@ -193,7 +192,7 @@ class ShipmondoCarrierFormType extends TranslatorAwareType
 
                 try {
                     $servicePointTypeChoices = self::extractServicePointTypeChoices($this->shipmondoCarrierHandler->getServicePointTypes(
-                        $form->getParent()->get('carrier_product_code')->getData()
+                        $currentCarrierProductCode
                     ));
                 } catch (ShipmondoApiException $e) {
                     $form->getParent()->addError(new FormError($this->trans(
@@ -207,13 +206,16 @@ class ShipmondoCarrierFormType extends TranslatorAwareType
                     $form->getParent()->add('service_point_types', ChoiceType::class, [
                         'label' => $this->trans('Filter Service Point Types', 'Modules.Shipmondo.Admin'),
                         'choices' => $servicePointTypeChoices,
-                        'expanded' => true,
                         'invalid_message' => '',
                         'multiple' => true,
                         'required' => false,
                     ]);
+
+                    if (!$found) {
+                        $form->getParent()->get('service_point_types')->setData([]);
+                    }
                 } elseif ($form->getParent()->has('service_point_types')) {
-                    $form->getParent()->get('service_point_types')->setData(null);
+                    $form->getParent()->get('service_point_types')->setData([]);
                     $form->getParent()->remove('service_point_types');
                 }
             } else {
@@ -223,7 +225,7 @@ class ShipmondoCarrierFormType extends TranslatorAwareType
                 }
 
                 if ($form->getParent()->has('service_point_types')) {
-                    $form->getParent()->get('service_point_types')->setData(null);
+                    $form->getParent()->get('service_point_types')->setData([]);
                     $form->getParent()->remove('service_point_types');
                 }
             }
