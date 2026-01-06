@@ -1,6 +1,9 @@
 # composer
 /vendor
 
+# npm
+node_modules
+
 # VS Code
 /.vscode
 
