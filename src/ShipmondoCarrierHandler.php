@@ -137,10 +137,6 @@ class ShipmondoCarrierHandler
         try {
             $carrierProducts = self::getCarrierProducts($carrierCode);
 
-            if (!is_array($carrierProducts)) {
-                return false;
-            }
-
             foreach ($carrierProducts as $carrierProduct) {
                 if (
                     isset($carrierProduct->service_point_product)

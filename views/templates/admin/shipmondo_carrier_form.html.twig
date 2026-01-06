@@ -37,8 +37,8 @@
         const psCarrierSelect = form.find('#shipmondo_carrier_form_carrier_id');
         const carriersSelect = form.find('#shipmondo_carrier_form_carrier_code');
         const productsSelect = form.find('#shipmondo_carrier_form_product_code');
-        const carrierProductsSelect = form.find('#shipmondo_carrier_form_carrier_product_code');
-        const servicePointTypesSelect = form.find('#shipmondo_carrier_form_service_point_types');
+        let carrierProductsSelect = form.find('#shipmondo_carrier_form_carrier_product_code');
+        let servicePointTypesSelect = form.find('#shipmondo_carrier_form_service_point_types');
 
         {% if isEdit %}
             psCarrierSelect.attr('disabled', true);
@@ -46,6 +46,10 @@
         {% endif %}
 
         function rerenderForm() {
+            carrierProductsSelect = carrierProductsSelect ?? form.find('#shipmondo_carrier_form_carrier_product_code');
+            servicePointTypesSelect =
+                servicePointTypesSelect ?? form.find('#shipmondo_carrier_form_service_point_types');
+
             const selectedProductType = productsSelect.val();
 
             if (selectedProductType === 'service_point') {
@@ -59,15 +63,17 @@
             const selectedCarrierProduct = carrierProductsSelect.val();
             const selectedServicePointTypes = servicePointTypesSelect.val();
 
-            const requestBody =
-                carriersSelect.serialize() +
-                '&' +
-                productsSelect.serialize() +
-                '&' +
-                carrierProductsSelect.serialize() +
-                '&' +
-                servicePointTypesSelect.serialize();
+            let requestBody = carriersSelect.serialize() + '&' + productsSelect.serialize();
 
+            if (carrierProductsSelect && carrierProductsSelect.serialize()) {
+                requestBody += `&${carrierProductsSelect.serialize()}`;
+            }
+
+            if (servicePointTypesSelect && servicePointTypesSelect.serialize()) {
+                requestBody += `&${servicePointTypesSelect.serialize()}`;
+            }
+
+            carriersSelect.attr('disabled', true);
             productsSelect.attr('disabled', true);
             carrierProductsSelect.attr('disabled', true);
             servicePointTypesSelect.attr('disabled', true);
@@ -87,6 +93,7 @@
                         productsSelect.val(selectedProductType);
                     }
 
+                    carriersSelect.attr('disabled', false);
                     productsSelect.attr('disabled', false);
                     carrierProductsSelect.attr('disabled', false);
                     servicePointTypesSelect.attr('disabled', false);
@@ -117,7 +124,7 @@
                             })
                             .get();
 
-                        const foundServicePointTypes = selectedServicePointTypes.filter((s) =>
+                        const foundServicePointTypes = (selectedServicePointTypes ?? []).filter((s) =>
                             servicePointTypeOptions.includes(s)
                         );
                         servicePointTypesSelect.val(foundServicePointTypes);
@@ -128,7 +135,7 @@
                         carrierProductsSelect.parent().parent().hide();
                         servicePointTypesSelect.parent().parent().hide();
                     }
-                }
+                },
             });
         }
 

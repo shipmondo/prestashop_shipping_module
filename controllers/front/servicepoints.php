@@ -8,14 +8,13 @@
 
 declare(strict_types=1);
 
-use Symfony\Component\HttpFoundation\JsonResponse;
-
 if (!defined('_PS_VERSION_')) {
     exit;
 }
 
 use Shipmondo\Entity\ShipmondoServicePoint;
 use Shipmondo\Exception\ShipmondoApiException;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
 {
