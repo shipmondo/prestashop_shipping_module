@@ -1,0 +1,17 @@
+parameters:
+  level: 6
+  paths:
+    - shipmondo.php
+    - config
+    - controllers
+    - src
+    - translations
+    - upgrade
+    - views
+  scanDirectories:
+    - vendor/stancer/php-stubs-prestashop/stubs
+  tips:
+    treatPhpDocTypesAsCertain: false
+  ignoreErrors:
+    -
+      identifier: missingType.iterableValue

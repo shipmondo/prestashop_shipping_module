@@ -6,3 +6,6 @@ run = [
   "composer install",
   "./vendor/bin/php-cs-fixer fix",
 ]
+
+[tasks.phpstan]
+run = ["./vendor/bin/phpstan --memory-limit=-1"]

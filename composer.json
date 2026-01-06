@@ -1,7 +1,7 @@
 {
   "name": "shipmondo/prestashop_shipping_module",
   "description": "A complete shipping solution for PrestaShop",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "homepage": "https://shipmondo.com",
   "license": "BSD-3-Clause",
   "authors": [
@@ -23,7 +23,9 @@
   },
   "type": "prestashop-module",
   "require-dev": {
+    "friendsofphp/php-cs-fixer": "^3.91",
+    "phpstan/phpstan": "^2.1",
     "prestashop/php-dev-tools": "^5.0",
-    "friendsofphp/php-cs-fixer": "^3.91"
+    "stancer/php-stubs-prestashop": "^8.2"
   }
 }
