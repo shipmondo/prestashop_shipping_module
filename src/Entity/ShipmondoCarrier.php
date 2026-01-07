@@ -228,7 +228,7 @@ class ShipmondoCarrier
             if ($carrierProductCode === null || $carrierProductCode === '') {
                 $this->setCarrierProductCode(null);
                 $this->setServicePointTypes(null);
-            } elseif ($this->getServicePointTypes() === null) {
+            } elseif ($this->servicePointTypes === null) {
                 $this->setServicePointTypes([]);
             }
 
