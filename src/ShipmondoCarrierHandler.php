@@ -138,10 +138,7 @@ class ShipmondoCarrierHandler
             $carrierProducts = self::getCarrierProducts($carrierCode);
 
             foreach ($carrierProducts as $carrierProduct) {
-                if (
-                    isset($carrierProduct->service_point_product)
-                    && $carrierProduct->service_point_product === true
-                ) {
+                if (isset($carrierProduct->service_point_product) && $carrierProduct->service_point_product === true) {
                     return true;
                 }
             }
@@ -212,5 +209,111 @@ class ShipmondoCarrierHandler
         $this->servicePointTypeCache[$productCode] = ['exp' => time() + 1800, 'value' => $value];
 
         return $value;
+    }
+
+    public function getCarrierFormValues(?string $carrierCode, ?string $productCode, ?string $carrierProductCode, ?array $servicePointTypes): array
+    {
+        if (!$carrierCode) {
+            $productCode = null;
+        }
+
+        if (!$productCode) {
+            $productCode = null;
+        }
+
+        if (!$carrierProductCode) {
+            $carrierProductCode = null;
+        }
+
+        if (!$servicePointTypes) {
+            $servicePointTypes = null;
+        }
+
+        $carrierChoices = [];
+
+        $allCarriers = $this->getCarriers();
+        foreach ($allCarriers as $carrier) {
+            if (!$carrierCode) {
+                $carrierCode = $carrier->code;
+            }
+
+            $carrierChoices[$carrier->name] = $carrier->code;
+        }
+
+        $productCodeChoices = [];
+
+        $allProductTypes = is_string($carrierCode) ? $this->getProducts($carrierCode) : [];
+        foreach ($allProductTypes as $product) {
+            if (!$productCode) {
+                $productCode = $product->code;
+            }
+
+            $productCodeChoices[$product->name] = $product->code;
+        }
+
+        $isServicePointDelivery = $productCode === 'service_point';
+
+        $allCarrierProducts = $isServicePointDelivery ? $this->getCarrierProducts($carrierCode) : [];
+
+        $applicableCarrierProductChoices = [];
+
+        $validCarrierProductCode = false;
+        foreach ($allCarrierProducts as $product) {
+            if (!isset($product->service_point_product) || $product->service_point_product !== true) {
+                continue;
+            }
+
+            if (!$carrierProductCode) {
+                $carrierProductCode = $product->product_code;
+                $validCarrierProductCode = true;
+            }
+
+            $applicableCarrierProductChoices[$product->name] = $product->product_code;
+
+            if ($carrierProductCode === $product->product_code) {
+                $validCarrierProductCode = true;
+            }
+        }
+
+        if (!$validCarrierProductCode) {
+            $carrierProductCode = null;
+
+            foreach ($allCarrierProducts as $product) {
+                if (!isset($product->service_point_product) || $product->service_point_product !== true) {
+                    continue;
+                }
+
+                $carrierProductCode = $product->product_code;
+                break;
+            }
+        }
+
+        if (!is_array($servicePointTypes) && is_string($carrierProductCode)) {
+            $servicePointTypes = [];
+        }
+
+        $servicePointTypesChoices = [];
+
+        $allServicePointTypes = $isServicePointDelivery && is_string($carrierProductCode)
+            ? $this->getServicePointTypes($carrierProductCode)
+            : [];
+        foreach ($allServicePointTypes as $servicePointType) {
+            $servicePointTypesChoices[$servicePointType->name] = $servicePointType->code;
+        }
+
+        return [
+            'choices' => [
+                'carrier_code' => $carrierChoices,
+                'product_code' => $productCodeChoices,
+                'carrier_product_code' => $applicableCarrierProductChoices,
+                'service_point_types' => $servicePointTypesChoices,
+            ],
+            'default' => [
+                'carrier_code' => $carrierCode,
+                'product_code' => $productCode,
+                'carrier_product_code' => $carrierProductCode,
+                'service_point_types' => $servicePointTypes,
+            ],
+        ];
     }
 }

@@ -34,9 +34,11 @@ final-controller = { enabled = false }
 halstead = { enabled = false }
 kan-defect = { enabled = false }
 literal-named-argument = { enabled = false }
+no-boolean-flag-parameter = { enabled = false }
 no-else-clause = { enabled = false }
 no-literal-password = { enabled = false }
 prefer-early-continue = { enabled = false }
+too-many-methods = { enabled = false }
 too-many-properties = { enabled = false }
 
 [source]
