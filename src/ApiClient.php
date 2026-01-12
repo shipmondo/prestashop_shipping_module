@@ -89,6 +89,7 @@ class ApiClient
                     'module_version' => $this->module->version,
                     'shipping_module_type' => 'prestashop',
                     'frontend_key' => $this->frontendKey,
+                    'php_version' => PHP_VERSION ?? '',
                 ]),
             ]);
 
