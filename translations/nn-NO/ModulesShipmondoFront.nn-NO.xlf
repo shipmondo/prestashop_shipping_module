@@ -18,12 +18,12 @@
         <note>Line: </note>
       </trans-unit>
       <trans-unit id="60beebfa62b1d964ac72b8cc27550d4e">
-        <source>Choose pickup point</source>
+        <source>Choose service point</source>
         <target>Vel utleveringsstad</target>
         <note>Line: </note>
       </trans-unit>
       <trans-unit id="ee5c5839980b47f1893220655a3de0fb">
-        <source>Pickup point</source>
+        <source>Service point</source>
         <target>Utleveringsstad</target>
         <note>Line: </note>
       </trans-unit>

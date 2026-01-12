@@ -5,7 +5,7 @@
 *}
 
 <div class="shipmondo-service-points-container">
-    <h3 class="service_point_title">{l s='Pickup point' d='Modules.Shipmondo.Front'}</h3>
+    <h3 class="service_point_title">{l s='Service point' d='Modules.Shipmondo.Front'}</h3>
     <div class="shipmondo-original">
         <div class="shipmondo_service_point_selection selector_type-{if $frontendType == 'popup'}modal{else}dropdown{/if}">
             <div class="shipmondo-loading">{l s='Loading...' d='Modules.Shipmondo.Front'}</div>
