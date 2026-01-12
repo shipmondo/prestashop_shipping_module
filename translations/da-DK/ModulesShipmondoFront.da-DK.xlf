@@ -1,30 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="ModulesShipmondoFront.xlf" source-language="da-DK" target-language="da-DK" datatype="plaintext">
+  <file original="admin1337" source-language="da-DK" target-language="da-DK" datatype="plaintext">
     <body>
-      <trans-unit id="0a279bb235850c3ab5fa180f80f997e2">
-        <source>An error occured while fetching service points.</source>
-        <target>Der opstod en fejl under hentning af udleveringssteder.</target>
-      </trans-unit>
       <trans-unit id="6b04f1ca27c03847586332d90a5752df">
         <source>An unknown error occured.</source>
         <target>Der opstod en ukendt fejl.</target>
+        <note>Line: </note>
       </trans-unit>
-      <trans-unit id="d80f21cbdd38d9c765d8460a1887f2ab">
-        <source>Choose service point</source>
-        <target>Vælg udleveringssted</target>
-      </trans-unit>
-      <trans-unit id="8524de963f07201e5c086830d370797f">
-        <source>Loading...</source>
-        <target>Indlæser...</target>
+      <trans-unit id="0a279bb235850c3ab5fa180f80f997e2">
+        <source>An error occured while fetching service points.</source>
+        <target>Der opstod en fejl under hentning af udleveringssteder.</target>
+        <note>Line: </note>
       </trans-unit>
       <trans-unit id="64714abdaf712fa492fa269e111d3bda">
         <source>No service points found for the given address.</source>
         <target>Der blev ikke fundet nogle udleveringssteder for den givne adresse.</target>
+        <note>Line: </note>
       </trans-unit>
-      <trans-unit id="f1365a7b47028ceb29727a1de5363aa8">
+      <trans-unit id="60beebfa62b1d964ac72b8cc27550d4e">
+        <source>Choose service point</source>
+        <target>Vælg udleveringssted</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="ee5c5839980b47f1893220655a3de0fb">
         <source>Service point</source>
         <target>Udleveringssted</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="8524de963f07201e5c086830d370797f">
+        <source>Loading...</source>
+        <target>Indlæser...</target>
+        <note>Line: </note>
       </trans-unit>
     </body>
   </file>

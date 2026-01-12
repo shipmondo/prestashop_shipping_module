@@ -89,7 +89,18 @@ class ShipmondoCarrierFormType extends TranslatorAwareType
         ]);
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (PreSetDataEvent $event) {
-            $this->handlePreSetDataEvent($event);
+            $carrier = $event->getData();
+            $form = $event->getForm();
+
+            if ($carrier instanceof ShipmondoCarrier) {
+                $this->updateFormValues(
+                    $form,
+                    $carrier->getCarrierCode(),
+                    $carrier->getProductCode(),
+                    $carrier->getCarrierProductCode(),
+                    $carrier->getServicePointTypes()
+                );
+            }
         });
 
         $builder->addEventListener(FormEvents::PRE_SUBMIT, function (PreSubmitEvent $event) {
@@ -175,22 +186,6 @@ class ShipmondoCarrierFormType extends TranslatorAwareType
                 ]),
             ],
         ]);
-    }
-
-    private function handlePreSetDataEvent(PreSetDataEvent $event): void
-    {
-        $carrier = $event->getData();
-        $form = $event->getForm();
-
-        if ($carrier instanceof ShipmondoCarrier) {
-            $this->updateFormValues(
-                $form,
-                $carrier->getCarrierCode(),
-                $carrier->getProductCode(),
-                $carrier->getCarrierProductCode(),
-                $carrier->getServicePointTypes()
-            );
-        }
     }
 
     private function updateFormValues(FormInterface $form, ?string $carrierCode, ?string $productCode, ?string $carrierProductCode, ?array $servicePointTypes): void

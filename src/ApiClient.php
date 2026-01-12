@@ -97,10 +97,9 @@ class ApiClient
 
             return json_decode($response_body);
         } catch (\Symfony\Contracts\HttpClient\Exception\HttpExceptionInterface $e) {
-            $response_body = $e->getResponse()->getContent(false);
-            $error_message = $response_body;
+            $error_message = $e->getResponse()->getContent(false);
 
-            $response_body = json_decode($response_body);
+            $response_body = json_decode($error_message);
 
             if (isset($response_body->message)) {
                 $error_message = $response_body->message;
