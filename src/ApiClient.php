@@ -73,6 +73,9 @@ class ApiClient
         ]);
     }
 
+    /**
+     * @throws ShipmondoApiException
+     */
     private function request(string $method, string $url, array $query = []): array
     {
         try {

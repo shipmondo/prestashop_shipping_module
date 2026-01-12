@@ -62,7 +62,7 @@ class Installer
             && $this->softDeleteCarriers($dbInstance);
     }
 
-    public function createCarrierTable(\Db $dbInstance)
+    public function createCarrierTable(\Db $dbInstance): bool
     {
         $sql = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'shipmondo_carrier` ('
             . '`id_smd_carrier` INT NOT NULL AUTO_INCREMENT PRIMARY KEY, '
@@ -76,7 +76,7 @@ class Installer
         return $dbInstance->execute($sql);
     }
 
-    public function createServicePointTable(\Db $dbInstance)
+    public function createServicePointTable(\Db $dbInstance): bool
     {
         $sql = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'shipmondo_service_point` ('
             . 'id_smd_service_point INT AUTO_INCREMENT NOT NULL PRIMARY KEY, '
