@@ -23,7 +23,7 @@
   },
   "type": "prestashop-module",
   "require-dev": {
-    "friendsofphp/php-cs-fixer": "^3.91",
+    "friendsofphp/php-cs-fixer": "^3.92",
     "phpstan/phpstan": "^2.1",
     "prestashop/php-dev-tools": "^5.0",
     "stancer/php-stubs-prestashop": "^8.2"
