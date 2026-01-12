@@ -98,8 +98,8 @@ class ShipmondoCarrierFormType extends TranslatorAwareType
 
             $carrierCode = $data['carrier_code'];
             $productCode = $data['product_code'];
-            $carrierProductCode = $data['carrier_product_code'];
-            $servicePointTypes = $data['service_point_types'];
+            $carrierProductCode = $data['carrier_product_code'] ?? null;
+            $servicePointTypes = $data['service_point_types'] ?? null;
 
             $this->updateFormValues($form, $carrierCode, $productCode, $carrierProductCode, $servicePointTypes);
         });
