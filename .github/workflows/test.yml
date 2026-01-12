@@ -5,14 +5,14 @@ on:
   workflow_dispatch:
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
-  cancel-in-progress: true
+  cancel-in-progress: false
 jobs:
   test:
     strategy:
       matrix:
         os: [ubuntu-latest]
         node-version: ['20']
-        php-version: ['7.2', '7.3', '7.4', '8.0', '8.1', '8.2', '8.3', '8.4']
+        php-version: ['8.1', '8.2', '8.3', '8.4', '8.5']
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v5
@@ -23,11 +23,10 @@ jobs:
         with:
           php-version: ${{ matrix.php-version }}
           tools: composer
-      # We do not actually care about the package version, since we do not rely on any of them during production.
+      # We do not actually care about the package version since we do not rely on any of them during production.
       - name: Update lockfile
         run: composer update
       - name: Install PHP dependencies
         run: composer install
       - name: Check PHP for lint errors
         run: ./vendor/bin/php-cs-fixer check
-        continue-on-error: true
