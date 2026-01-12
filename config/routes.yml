@@ -45,3 +45,11 @@ shipmondo_shipmondo_carriers_delete:
     _controller: 'Shipmondo\Controller\Admin\ShipmondoCarrierController::deleteAction'
     _legacy_controller: 'AdminShipmondoShipmondoCarrier'
     _legacy_link: 'AdminShipmondoShipmondoCarrier:delete'
+
+shipmondo_shipmondo_carriers_get_carrier_form_fields:
+  path: /shipmondo/shipmondo_carrier_fields
+  methods: [POST]
+  defaults:
+    _controller: 'Shipmondo\Controller\Admin\ShipmondoCarrierController::getCarrierFormFields'
+    _legacy_controller: 'AdminShipmondoShipmondoCarrier'
+    _legacy_link: 'AdminShipmondoShipmondoCarrier:getCarrierFormFields'

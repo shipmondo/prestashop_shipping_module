@@ -17,6 +17,7 @@ use Shipmondo\Form\Type\ShipmondoCarrierFormType;
 use Shipmondo\Grid\Definition\Factory\ShipmondoCarrierGridDefinitionFactory;
 use Shipmondo\Grid\Filters\ShipmondoCarrierFilters;
 use Shipmondo\ShipmondoCarrierHandler;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -113,6 +114,7 @@ class ShipmondoCarrierController extends FrameworkBundleAdminController
             'form' => $form->createView(),
             'layoutTitle' => $this->trans('Shipmondo carrier', 'Modules.Shipmondo.Admin'),
             'isEdit' => false,
+            'fetchDataAction' => $this->generateUrl('shipmondo_shipmondo_carriers_get_carrier_form_fields'),
         ]);
     }
 
@@ -140,6 +142,7 @@ class ShipmondoCarrierController extends FrameworkBundleAdminController
             'form' => $form->createView(),
             'layoutTitle' => $this->trans('Shipmondo carrier', 'Modules.Shipmondo.Admin'),
             'isEdit' => true,
+            'fetchDataAction' => $this->generateUrl('shipmondo_shipmondo_carriers_get_carrier_form_fields'),
         ]);
     }
 
@@ -192,5 +195,21 @@ class ShipmondoCarrierController extends FrameworkBundleAdminController
 
             $carrier->setCarrierId($psCarrier->id);
         }
+    }
+
+    public function getCarrierFormFields(Request $request): JsonResponse
+    {
+        $body = $request->getContent();
+
+        $input = json_decode($body, true);
+
+        $formValues = $this->carrierHandler->getCarrierFormValues(
+            $input['carrier_code'] ?? null,
+            $input['product_code'] ?? null,
+            $input['carrier_product_code'] ?? null,
+            $input['service_point_types'] ?? null
+        );
+
+        return $this->json($formValues);
     }
 }

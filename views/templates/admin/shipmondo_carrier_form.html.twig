@@ -37,22 +37,86 @@
         const psCarrierSelect = form.find('#shipmondo_carrier_form_carrier_id');
         const carriersSelect = form.find('#shipmondo_carrier_form_carrier_code');
         const productsSelect = form.find('#shipmondo_carrier_form_product_code');
-        let carrierProductsSelect = form.find('#shipmondo_carrier_form_carrier_product_code');
-        let servicePointTypesSelect = form.find('#shipmondo_carrier_form_service_point_types');
+        const carrierProductsSelect = form.find('#shipmondo_carrier_form_carrier_product_code');
+        const servicePointTypesSelect = form.find('#shipmondo_carrier_form_service_point_types');
 
         {% if isEdit %}
             psCarrierSelect.attr('disabled', true);
             psCarrierSelect.parent().append('<input type="hidden" name="shipmondo_carrier_form[carrier_id]" value="' + psCarrierSelect.val() + '" />');
         {% endif %}
 
-        function rerenderForm() {
-            carrierProductsSelect = carrierProductsSelect ?? form.find('#shipmondo_carrier_form_carrier_product_code');
-            servicePointTypesSelect =
-                servicePointTypesSelect ?? form.find('#shipmondo_carrier_form_service_point_types');
+        const fetchDataActionPath = '{{ fetchDataAction }}';
 
-            const selectedProductType = productsSelect.val();
+        async function fetchCarrierFields() {
+            const carrierCode = carriersSelect.val() || null;
+            const productCode = productsSelect.val() || null;
 
-            if (selectedProductType === 'service_point') {
+            const isServicePointDelivery = productCode === 'service_point';
+
+            const carrierProductCode = isServicePointDelivery ? carrierProductsSelect.val() || null : null;
+            const servicePointTypes =
+                isServicePointDelivery && carrierProductCode ? servicePointTypesSelect.val() || null : null;
+
+            return fetch(fetchDataActionPath, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    carrier_code: carrierCode,
+                    product_code: productCode,
+                    carrier_product_code: carrierProductCode,
+                    service_point_types: servicePointTypes,
+                }),
+            }).then((res) => res.json());
+        }
+
+        function updateProductCodeOptions(choices, value) {
+            productsSelect.empty();
+
+            for (const [text, value] of Object.entries(choices)) {
+                productsSelect.append($('<option></option>').attr('value', value).text(text));
+            }
+
+            productsSelect.val(value ?? null);
+        }
+
+        function updateCarrierProductCodeOptions(choices, value) {
+            carrierProductsSelect.empty();
+
+            if (productsSelect.val() === 'service_point') {
+                carrierProductsSelect.parent().parent().show();
+            } else {
+                carrierProductsSelect.parent().parent().hide();
+                return;
+            }
+
+            for (const [text, value] of Object.entries(choices)) {
+                carrierProductsSelect.append($('<option></option>').attr('value', value).text(text));
+            }
+
+            carrierProductsSelect.val(value ?? null);
+        }
+
+        function updateServicePointTypeOptions(choices, value) {
+            servicePointTypesSelect.empty();
+
+            if (productsSelect.val() === 'service_point') {
+                servicePointTypesSelect.parent().parent().show();
+            } else {
+                servicePointTypesSelect.parent().parent().hide();
+                return;
+            }
+
+            for (const [text, value] of Object.entries(choices)) {
+                servicePointTypesSelect.append($('<option></option>').attr('value', value).text(text));
+            }
+
+            servicePointTypesSelect.val(value ?? null);
+        }
+
+        async function rerenderForm() {
+            const isServicePointDelivery = productsSelect.val() === 'service_point';
+
+            if (isServicePointDelivery) {
                 carrierProductsSelect.parent().parent().show();
                 servicePointTypesSelect.parent().parent().show();
             } else {
@@ -60,83 +124,32 @@
                 servicePointTypesSelect.parent().parent().hide();
             }
 
-            const selectedCarrierProduct = carrierProductsSelect.val();
-            const selectedServicePointTypes = servicePointTypesSelect.val();
-
-            let requestBody = carriersSelect.serialize() + '&' + productsSelect.serialize();
-
-            if (carrierProductsSelect && carrierProductsSelect.serialize()) {
-                requestBody += `&${carrierProductsSelect.serialize()}`;
-            }
-
-            if (servicePointTypesSelect && servicePointTypesSelect.serialize()) {
-                requestBody += `&${servicePointTypesSelect.serialize()}`;
-            }
-
             carriersSelect.attr('disabled', true);
             productsSelect.attr('disabled', true);
             carrierProductsSelect.attr('disabled', true);
             servicePointTypesSelect.attr('disabled', true);
 
-            $.ajax({
-                url: form.attr('action'),
-                method: form.attr('method'),
-                data: requestBody,
-                success: function (response) {
-                    productsSelect.html($(response).find('#shipmondo_carrier_form_product_code').html());
-                    const newProductCodeValues = productsSelect.find('option').map(function () {
-                        return $(this).val();
-                    }).get();
-
-                    // Select the previously selected value if it still exists
-                    if ($.inArray(selectedProductType, newProductCodeValues) !== -1) {
-                        productsSelect.val(selectedProductType);
-                    }
-
-                    carriersSelect.attr('disabled', false);
-                    productsSelect.attr('disabled', false);
-                    carrierProductsSelect.attr('disabled', false);
-                    servicePointTypesSelect.attr('disabled', false);
-
-                    carrierProductsSelect.html($(response).find('#shipmondo_carrier_form_carrier_product_code').html());
-
-                    servicePointTypesSelect.html(
-                        $(response).find('#shipmondo_carrier_form_service_point_types').html()
+            await fetchCarrierFields()
+                .then((data) => {
+                    updateProductCodeOptions(data?.choices?.product_code, data?.default?.product_code);
+                    updateCarrierProductCodeOptions(
+                        data?.choices?.carrier_product_code,
+                        data?.default?.carrier_product_code,
                     );
+                    updateServicePointTypeOptions(
+                        data?.choices?.service_point_types,
+                        data?.default?.service_point_types,
+                    );
+                })
+                .catch((error) => {
+                    console.error(error);
+                    return null;
+                });
 
-                    if (productsSelect.val() === 'service_point') {
-                        const carrierProductOptions = carrierProductsSelect
-                            .find('option')
-                            .map(function () {
-                                return $(this).val();
-                            })
-                            .get();
-
-                        // Select the previously selected value if it still exists
-                        if ($.inArray(selectedCarrierProduct, carrierProductOptions) !== -1) {
-                            carrierProductsSelect.val(selectedCarrierProduct);
-                        }
-
-                        const servicePointTypeOptions = servicePointTypesSelect
-                            .find('option')
-                            .map(function () {
-                                return $(this).val();
-                            })
-                            .get();
-
-                        const foundServicePointTypes = (selectedServicePointTypes ?? []).filter((s) =>
-                            servicePointTypeOptions.includes(s)
-                        );
-                        servicePointTypesSelect.val(foundServicePointTypes);
-
-                        carrierProductsSelect.parent().parent().show();
-                        servicePointTypesSelect.parent().parent().show();
-                    } else {
-                        carrierProductsSelect.parent().parent().hide();
-                        servicePointTypesSelect.parent().parent().hide();
-                    }
-                },
-            });
+            carriersSelect.attr('disabled', false);
+            productsSelect.attr('disabled', false);
+            carrierProductsSelect.attr('disabled', false);
+            servicePointTypesSelect.attr('disabled', false);
         }
 
         carriersSelect.on('change', rerenderForm);

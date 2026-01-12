@@ -16,14 +16,11 @@ use Shipmondo\Entity\ShipmondoCarrier;
 use Shipmondo\Exception\ShipmondoApiException;
 use Shipmondo\ShipmondoCarrierHandler;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-use Symfony\Component\Form\Event\PostSetDataEvent;
-use Symfony\Component\Form\Event\PostSubmitEvent;
 use Symfony\Component\Form\Event\PreSetDataEvent;
 use Symfony\Component\Form\Event\PreSubmitEvent;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormError;
-use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -65,9 +62,9 @@ class ShipmondoCarrierFormType extends TranslatorAwareType
         }
 
         $builder->add('carrier_code', ChoiceType::class, [
+            'choices' => $defaultFormValues['choices']['carrier_code'] ?? [],
             'label' => $this->trans('Shipmondo carrier', 'Modules.Shipmondo.Admin'),
             'required' => true,
-            'choices' => $defaultFormValues['choices']['carrier_code'] ?? [],
         ]);
 
         $builder->add('product_code', ChoiceType::class, [
@@ -91,50 +88,27 @@ class ShipmondoCarrierFormType extends TranslatorAwareType
             'required' => false,
         ]);
 
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (PreSetDataEvent $event) {
             $this->handlePreSetDataEvent($event);
-        });
-
-        $builder->addEventListener(FormEvents::POST_SET_DATA, function (PostSetDataEvent $event) {
-            $form = $event->getForm();
-
-            $this->rerenderForm($form);
         });
 
         $builder->addEventListener(FormEvents::PRE_SUBMIT, function (PreSubmitEvent $event) {
             $form = $event->getForm();
+            $data = $event->getData();
 
-            $this->rerenderForm($form);
-        });
+            $carrierCode = $data['carrier_code'];
+            $productCode = $data['product_code'];
+            $carrierProductCode = $data['carrier_product_code'];
+            $servicePointTypes = $data['service_point_types'];
 
-        $builder->addEventListener(FormEvents::POST_SUBMIT, function (PostSubmitEvent $event) {
-            $form = $event->getForm();
-
-            $this->rerenderForm($form);
+            $this->updateFormValues($form, $carrierCode, $productCode, $carrierProductCode, $servicePointTypes);
         });
 
         $builder->setAction($options['action']);
     }
 
-    private function rerenderForm(FormInterface $form): void
-    {
-        $carrierCode = $form->has('carrier_code') ? $form->get('carrier_code')->getData() : null;
-
-        $productCode = $form->has('product_code') ? $form->get('product_code')->getData() : null;
-
-        $carrierProductCode = $form->has('carrier_product_code') ? $form->get('carrier_product_code')->getData() : null;
-
-        $servicePointTypes = $form->has('service_point_types') ? $form->get('service_point_types')->getData() : null;
-
-        $this->updateFormValues($form, $carrierCode, $productCode, $carrierProductCode, $servicePointTypes);
-    }
-
     private function setCarrierCodeFormField(FormInterface $form, array $choices, ?string $value): void
     {
-        if ($form->isSubmitted()) {
-            return;
-        }
-
         $form->add('carrier_code', ChoiceType::class, [
             'choices' => $choices,
             'label' => $this->trans('Shipmondo carrier', 'Modules.Shipmondo.Admin'),
@@ -146,10 +120,6 @@ class ShipmondoCarrierFormType extends TranslatorAwareType
 
     private function setProductCodeFormField(FormInterface $form, array $choices, ?string $value): void
     {
-        if ($form->isSubmitted()) {
-            return;
-        }
-
         $form->add('product_code', ChoiceType::class, [
             'choices' => $choices,
             'label' => $this->trans('Product', 'Modules.Shipmondo.Admin'),
@@ -161,10 +131,6 @@ class ShipmondoCarrierFormType extends TranslatorAwareType
 
     private function setCarrierProductCodeFormField(FormInterface $form, array $choices, ?string $value, bool $required = false): void
     {
-        if ($form->isSubmitted()) {
-            return;
-        }
-
         $form->add('carrier_product_code', ChoiceType::class, [
             'choices' => $choices,
             'invalid_message' => '',
@@ -177,10 +143,6 @@ class ShipmondoCarrierFormType extends TranslatorAwareType
 
     private function setServicePointTypesFormField(FormInterface $form, array $choices, ?array $value): void
     {
-        if ($form->isSubmitted()) {
-            return;
-        }
-
         $form->add('service_point_types', ChoiceType::class, [
             'choices' => $choices,
             'invalid_message' => '',
@@ -194,10 +156,6 @@ class ShipmondoCarrierFormType extends TranslatorAwareType
 
     private function handleApiError(FormInterface $form, ShipmondoApiException $error): void
     {
-        if ($form->isSubmitted()) {
-            return;
-        }
-
         $form->addError(new FormError($this->trans(
             'An error occured when requesting Shipmondo: %apiError%',
             'Modules.Shipmondo.Admin',
@@ -249,8 +207,6 @@ class ShipmondoCarrierFormType extends TranslatorAwareType
         } catch (ShipmondoApiException $e) {
             $this->handleApiError($form, $e);
         }
-
-        $form->addError(new FormError('t ' . time() . ' : ' . json_encode($formValues)));
 
         $this->setCarrierCodeFormField(
             $form,
