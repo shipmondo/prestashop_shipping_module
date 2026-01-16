@@ -30,23 +30,10 @@ class ShipmondoCarrierHandler
      */
     private $carriers;
 
-    /**
-     * @var array
-     */
-    private $carrierProductCache;
-
-    /**
-     * @var array
-     */
-    private $servicePointTypeCache;
-
     public function __construct(ConfigurationInterface $configuration, ApiClient $apiClient)
     {
         $this->configuration = $configuration;
         $this->apiClient = $apiClient;
-
-        $this->carrierProductCache = [];
-        $this->servicePointTypeCache = [];
     }
 
     /**
@@ -113,21 +100,23 @@ class ShipmondoCarrierHandler
 
     public function getCarrierProducts(string $carrierCode): array
     {
-        if (isset($this->carrierProductCache[$carrierCode])) {
-            $cached = $this->carrierProductCache[$carrierCode];
+        $cacheKey = 'SHIPMONDO_CARRIER_PRODUCTS_CACHE_' . $carrierCode;
+        $expirationTimeCacheKey = $cacheKey . '_EXPIRATION';
 
-            if (is_array($cached) && isset($cached['value'], $cached['exp']) && (int) $cached['exp'] > time()) {
-                $value = $cached['value'];
+        $expirationTime = (int) $this->configuration->get($expirationTimeCacheKey);
 
-                if (is_array($value)) {
-                    return $value;
-                }
+        if ($expirationTime && $expirationTime > time()) {
+            $carrierProducts = $this->configuration->get($cacheKey);
+
+            if ($carrierProducts) {
+                return json_decode($carrierProducts, false);
             }
         }
 
         $value = $this->apiClient->getCarrierProducts($carrierCode);
 
-        $this->carrierProductCache[$carrierCode] = ['exp' => time() + 1800, 'value' => $value];
+        $this->configuration->set($cacheKey, json_encode($value));
+        $this->configuration->set($expirationTimeCacheKey, time() + 900);
 
         return $value;
     }
@@ -155,7 +144,7 @@ class ShipmondoCarrierHandler
     private function fetchCarriers(): array
     {
         $availableCarriers = $this->configuration->get('SHIPMONDO_AVAILABLE_CARRIERS');
-        $expirationTime = $this->configuration->get('SHIPMONDO_AVAILABLE_CARRIERS_EXPIRATION');
+        $expirationTime = (int) $this->configuration->get('SHIPMONDO_AVAILABLE_CARRIERS_EXPIRATION');
 
         if (!$availableCarriers || !$expirationTime || $expirationTime < time()) {
             $availableCarriers = $this->apiClient->getCarriers();
@@ -192,21 +181,23 @@ class ShipmondoCarrierHandler
 
     public function getServicePointTypes(string $productCode): array
     {
-        if (isset($this->servicePointTypeCache[$productCode])) {
-            $cached = $this->servicePointTypeCache[$productCode];
+        $cacheKey = 'SHIPMONDO_SERVICE_POINT_TYPES_CACHE_' . $productCode;
+        $expirationTimeCacheKey = $cacheKey . '_EXPIRATION';
 
-            if (is_array($cached) && isset($cached['value'], $cached['exp']) && (int) $cached['exp'] > time()) {
-                $value = $cached['value'];
+        $expirationTime = (int) $this->configuration->get($expirationTimeCacheKey);
 
-                if (is_array($value)) {
-                    return $value;
-                }
+        if ($expirationTime && $expirationTime > time()) {
+            $servicePointTypes = $this->configuration->get($cacheKey);
+
+            if ($servicePointTypes) {
+                return json_decode($servicePointTypes, false);
             }
         }
 
         $value = $this->apiClient->getCarrierProductServicePointTypes($productCode);
 
-        $this->servicePointTypeCache[$productCode] = ['exp' => time() + 1800, 'value' => $value];
+        $this->configuration->set($cacheKey, json_encode($value));
+        $this->configuration->set($expirationTimeCacheKey, time() + 900);
 
         return $value;
     }
