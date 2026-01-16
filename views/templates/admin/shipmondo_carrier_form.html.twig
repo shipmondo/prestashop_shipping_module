@@ -9,6 +9,7 @@
 
 {% block content %}
     {{ form_start(form) }}
+
     <div class="card">
         <h3 class="card-header">
             <i class="material-icons">settings</i> {{ 'Shipmondo carrier'|trans({}, 'Modules.Shipmondo.Admin') }}
@@ -17,6 +18,16 @@
         <div class="card-body">
             <div class="form-wrapper">
                 {{ form_widget(form) }}
+
+                <div id="shipmondo_receiver_country" style="display: none !important" class="form-group row select-widget">
+                    <p class="form-control-label">
+                        {{ 'The selected carrier product supports the following countries:'|trans({}, 'Modules.Shipmondo.Admin') }}
+                    </p>
+
+                    <div class="col-sm input-container">
+                        <ul id="shipmondo_receiver_country_list" class="list-group list-group-flush"></ul>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -26,6 +37,7 @@
             </div>
         </div>
     </div>
+
     {{ form_end(form) }}
 {% endblock %}
 
@@ -39,6 +51,8 @@
         const productsSelect = form.find('#shipmondo_carrier_form_product_code');
         const carrierProductsSelect = form.find('#shipmondo_carrier_form_carrier_product_code');
         const servicePointTypesSelect = form.find('#shipmondo_carrier_form_service_point_types');
+        const infoBox = document.querySelector('#shipmondo_receiver_country');
+        const infoBoxList = document.querySelector('#shipmondo_receiver_country_list');
 
         {% if isEdit %}
             psCarrierSelect.attr('disabled', true);
@@ -47,6 +61,9 @@
 
         const fetchDataActionPath = '{{ fetchDataAction }}';
 
+        /**
+         * @returns {void}
+         */
         async function fetchCarrierFields() {
             const carrierCode = carriersSelect.val() || null;
             const productCode = productsSelect.val() || null;
@@ -57,62 +74,146 @@
             const servicePointTypes =
                 isServicePointDelivery && carrierProductCode ? servicePointTypesSelect.val() || null : null;
 
+            const input = {
+                carrier_code: carrierCode,
+                product_code: productCode,
+                carrier_product_code: carrierProductCode,
+                service_point_types: servicePointTypes,
+            };
+
             return fetch(fetchDataActionPath, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    carrier_code: carrierCode,
-                    product_code: productCode,
-                    carrier_product_code: carrierProductCode,
-                    service_point_types: servicePointTypes,
-                }),
-            }).then((res) => res.json());
+                body: JSON.stringify(input),
+            }).then((res) => {
+                if (res.status >= 400) {
+                    throw new Error(`Error fetching carrier fields: ${res.statusText}`);
+                }
+
+                return res.json();
+            });
         }
 
+        /**
+         * @param {Record<string, string> | null} choices
+         * @param {string | null} value
+         * @returns {void}
+         */
         function updateProductCodeOptions(choices, value) {
             productsSelect.empty();
 
-            for (const [text, value] of Object.entries(choices)) {
-                productsSelect.append($('<option></option>').attr('value', value).text(text));
+            if (choices) {
+                for (const [text, value] of Object.entries(choices)) {
+                    productsSelect.append($('<option></option>').attr('value', value).text(text));
+                }
             }
 
             productsSelect.val(value ?? null);
         }
 
+        /**
+         * @param {Record<string, string> | null} choices
+         * @param {string | null} value
+         * @returns {void}
+         */
         function updateCarrierProductCodeOptions(choices, value) {
             carrierProductsSelect.empty();
 
-            if (productsSelect.val() === 'service_point') {
+            const entries = choices && typeof choices === 'object' ? Object.entries(choices) : null;
+
+            if (productsSelect.val() === 'service_point' && entries && entries.length) {
                 carrierProductsSelect.parent().parent().show();
             } else {
+                carrierProductsSelect.val(null);
                 carrierProductsSelect.parent().parent().hide();
                 return;
             }
 
-            for (const [text, value] of Object.entries(choices)) {
+            for (const [text, value] of entries) {
                 carrierProductsSelect.append($('<option></option>').attr('value', value).text(text));
             }
 
             carrierProductsSelect.val(value ?? null);
         }
 
+        /**
+         * @param {Record<string, string> | null} choices
+         * @param {string[] | null} value
+         * @returns {void}
+         */
         function updateServicePointTypeOptions(choices, value) {
             servicePointTypesSelect.empty();
 
-            if (productsSelect.val() === 'service_point') {
+            const entries = choices && typeof choices === 'object' ? Object.entries(choices) : null;
+
+            if (productsSelect.val() === 'service_point' && entries && entries.length) {
                 servicePointTypesSelect.parent().parent().show();
             } else {
+                servicePointTypesSelect.val(null);
                 servicePointTypesSelect.parent().parent().hide();
                 return;
             }
 
-            for (const [text, value] of Object.entries(choices)) {
+            for (const [text, value] of entries) {
                 servicePointTypesSelect.append($('<option></option>').attr('value', value).text(text));
             }
 
             servicePointTypesSelect.val(value ?? null);
         }
 
+        /**
+         * Converts iso country codes to flag emojis
+         * Code taken from https://github.com/thekelvinliu/country-code-emoji/blob/main/src/index.js
+         *
+         * @param {string} countryCode
+         * @returns {string}
+         */
+        function countryCodeEmoji(countryCode) {
+            const OFFSET = 127397;
+
+            const codePoints = [...countryCode.toUpperCase()].map((c) => c.codePointAt() + OFFSET);
+
+            return String.fromCodePoint(...codePoints);
+        }
+
+        /**
+         * @param {Array<string> | null} receiverCountries
+         * @returns {void}
+         */
+        function renderReceiverCountryInfoBox(receiverCountries) {
+            if (
+                !infoBox ||
+                !infoBoxList ||
+                !receiverCountries ||
+                !Array.isArray(receiverCountries) ||
+                !receiverCountries.length
+            ) {
+                if (infoBox) {
+                    infoBox.style = 'display: none !important;';
+                }
+                return;
+            }
+
+            receiverCountries.sort();
+
+            infoBoxList.innerHTML = '';
+
+            for (const receiverCountryCode of receiverCountries) {
+                const countryElement = document.createElement('li');
+
+                countryElement.appendChild(
+                    document.createTextNode(`${countryCodeEmoji(receiverCountryCode)} ${receiverCountryCode}`),
+                );
+
+                infoBoxList.appendChild(countryElement);
+            }
+
+            infoBox.style = '';
+        }
+
+        /**
+         * @returns {Promise<void>}
+         */
         async function rerenderForm() {
             const isServicePointDelivery = productsSelect.val() === 'service_point';
 
@@ -122,6 +223,7 @@
             } else {
                 carrierProductsSelect.parent().parent().hide();
                 servicePointTypesSelect.parent().parent().hide();
+                renderReceiverCountryInfoBox(null);
             }
 
             carriersSelect.attr('disabled', true);
@@ -129,22 +231,24 @@
             carrierProductsSelect.attr('disabled', true);
             servicePointTypesSelect.attr('disabled', true);
 
-            await fetchCarrierFields()
-                .then((data) => {
-                    updateProductCodeOptions(data?.choices?.product_code, data?.default?.product_code);
-                    updateCarrierProductCodeOptions(
-                        data?.choices?.carrier_product_code,
-                        data?.default?.carrier_product_code,
-                    );
-                    updateServicePointTypeOptions(
-                        data?.choices?.service_point_types,
-                        data?.default?.service_point_types,
-                    );
-                })
-                .catch((error) => {
-                    console.error(error);
-                    return null;
-                });
+            const data = await fetchCarrierFields().catch((error) => {
+                console.error(error);
+                return null;
+            });
+
+            updateProductCodeOptions(data?.choices?.product_code ?? null, data?.default?.product_code ?? null);
+
+            updateCarrierProductCodeOptions(
+                data?.choices?.carrier_product_code ?? null,
+                data?.default?.carrier_product_code ?? null,
+            );
+
+            updateServicePointTypeOptions(
+                data?.choices?.service_point_types ?? null,
+                data?.default?.service_point_types ?? null,
+            );
+
+            renderReceiverCountryInfoBox(data?.receiver_countries ?? null);
 
             carriersSelect.attr('disabled', false);
             productsSelect.attr('disabled', false);

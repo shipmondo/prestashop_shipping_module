@@ -243,12 +243,22 @@ class ShipmondoCarrierHandler
         $productCodeChoices = [];
 
         $allProductTypes = is_string($carrierCode) ? $this->getProducts($carrierCode) : [];
+        $validProductCode = false;
         foreach ($allProductTypes as $product) {
             if (!$productCode) {
                 $productCode = $product->code;
             }
 
             $productCodeChoices[$product->name] = $product->code;
+
+            if ($productCode === $product->code) {
+                $validProductCode = true;
+            }
+        }
+
+        if (!$validProductCode) {
+            $productCode = 'private';
+            $servicePointTypes = null;
         }
 
         $isServicePointDelivery = $productCode === 'service_point';
@@ -258,6 +268,7 @@ class ShipmondoCarrierHandler
         $applicableCarrierProductChoices = [];
 
         $validCarrierProductCode = false;
+        $receiverCountries = null;
         foreach ($allCarrierProducts as $product) {
             if (!isset($product->service_point_product) || $product->service_point_product !== true) {
                 continue;
@@ -272,6 +283,7 @@ class ShipmondoCarrierHandler
 
             if ($carrierProductCode === $product->product_code) {
                 $validCarrierProductCode = true;
+                $receiverCountries = $product->receiver_countries ?? null;
             }
         }
 
@@ -284,6 +296,7 @@ class ShipmondoCarrierHandler
                 }
 
                 $carrierProductCode = $product->product_code;
+                $receiverCountries = $product->receiver_countries ?? null;
                 break;
             }
         }
@@ -314,6 +327,7 @@ class ShipmondoCarrierHandler
                 'carrier_product_code' => $carrierProductCode,
                 'service_point_types' => $servicePointTypes,
             ],
+            'receiver_countries' => $receiverCountries,
         ];
     }
 }
