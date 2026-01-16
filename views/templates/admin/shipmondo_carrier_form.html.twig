@@ -54,6 +54,8 @@
         const infoBox = document.querySelector('#shipmondo_receiver_country');
         const infoBoxList = document.querySelector('#shipmondo_receiver_country_list');
 
+        const SHIPMONDO_CARRIER_FIELDS_CACHE = new Map();
+
         {% if isEdit %}
             psCarrierSelect.attr('disabled', true);
             psCarrierSelect.parent().append('<input type="hidden" name="shipmondo_carrier_form[carrier_id]" value="' + psCarrierSelect.val() + '" />');
@@ -62,9 +64,9 @@
         const fetchDataActionPath = '{{ fetchDataAction }}';
 
         /**
-         * @returns {void}
+         * @returns {Promise<{ choices: { carrier_code: Record<string, string> | null; product_code: Record<string, string> | null; carrier_product_code: Record<string, string> | null; service_point_types: Record<string, string> | null; }; default: { carrier_code: string; product_code: string; carrier_product_code: string | null; service_point_types: string[] | null;}; receiver_countries: string[] | null }>}
          */
-        async function fetchCarrierFields() {
+        async function getCarrierFields() {
             const carrierCode = carriersSelect.val() || null;
             const productCode = productsSelect.val() || null;
 
@@ -81,16 +83,30 @@
                 service_point_types: servicePointTypes,
             };
 
+            const inputJson = JSON.stringify(input);
+
+            const cachedValue = SHIPMONDO_CARRIER_FIELDS_CACHE.get(inputJson);
+
+            if (cachedValue) {
+                return cachedValue;
+            }
+
             return fetch(fetchDataActionPath, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(input),
-            }).then((res) => {
+                body: inputJson,
+            }).then(async (res) => {
                 if (res.status >= 400) {
                     throw new Error(`Error fetching carrier fields: ${res.statusText}`);
                 }
 
-                return res.json();
+                const responseBody = await res.json();
+
+                if (responseBody) {
+                    SHIPMONDO_CARRIER_FIELDS_CACHE.set(inputJson, responseBody);
+                }
+
+                return responseBody;
             });
         }
 
@@ -231,7 +247,7 @@
             carrierProductsSelect.attr('disabled', true);
             servicePointTypesSelect.attr('disabled', true);
 
-            const data = await fetchCarrierFields().catch((error) => {
+            const data = await getCarrierFields().catch((error) => {
                 console.error(error);
                 return null;
             });
