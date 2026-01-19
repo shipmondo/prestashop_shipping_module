@@ -54,12 +54,7 @@ class ShipmondoCarrierFormType extends TranslatorAwareType
             'choices' => $psCarriers,
         ]);
 
-        $defaultFormValues = [];
-        try {
-            $defaultFormValues = $this->shipmondoCarrierHandler->getCarrierFormValues(null, null, null, null);
-        } catch (\Exception $e) {
-            // TODO: show an error?
-        }
+        $defaultFormValues = $this->shipmondoCarrierHandler->getCarrierFormValues(null, null, null, null);
 
         $builder->add('carrier_code', ChoiceType::class, [
             'choices' => $defaultFormValues['choices']['carrier_code'] ?? [],
