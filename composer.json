@@ -10,6 +10,12 @@
       "email": "support@shipmondo.com"
     }
   ],
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/shipmondo/prestashop_shipping_module"
+    }
+  ],
   "require": {
     "php": ">=7.2"
   },

@@ -1,36 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="admin1337" source-language="da-DK" target-language="da-DK" datatype="plaintext">
+  <file original="ModulesShipmondoFront.xlf" source-language="sv-SE" target-language="sv-SE" datatype="plaintext">
     <body>
-      <trans-unit id="6b04f1ca27c03847586332d90a5752df">
-        <source>An unknown error occured.</source>
-        <target>Ett okänt fel uppstod.</target>
-        <note>Line: </note>
-      </trans-unit>
       <trans-unit id="0a279bb235850c3ab5fa180f80f997e2">
         <source>An error occured while fetching service points.</source>
         <target>Ett fel uppstod när utlämningsställen skulle hämtas.</target>
-        <note>Line: </note>
       </trans-unit>
-      <trans-unit id="64714abdaf712fa492fa269e111d3bda">
-        <source>No service points found for the given address.</source>
-        <target>Inga utlämningsställen hittades för den angivna adressen.</target>
-        <note>Line: </note>
+      <trans-unit id="6b04f1ca27c03847586332d90a5752df">
+        <source>An unknown error occured.</source>
+        <target>Ett okänt fel uppstod.</target>
       </trans-unit>
-      <trans-unit id="60beebfa62b1d964ac72b8cc27550d4e">
+      <trans-unit id="d80f21cbdd38d9c765d8460a1887f2ab">
         <source>Choose service point</source>
         <target>Välj utlämningsställe</target>
-        <note>Line: </note>
-      </trans-unit>
-      <trans-unit id="ee5c5839980b47f1893220655a3de0fb">
-        <source>Service point</source>
-        <target>Utlämningsställe</target>
-        <note>Line: </note>
       </trans-unit>
       <trans-unit id="8524de963f07201e5c086830d370797f">
         <source>Loading...</source>
         <target>Laddar...</target>
-        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="64714abdaf712fa492fa269e111d3bda">
+        <source>No service points found for the given address.</source>
+        <target>Inga utlämningsställen hittades för den angivna adressen.</target>
+      </trans-unit>
+      <trans-unit id="f1365a7b47028ceb29727a1de5363aa8">
+        <source>Service point</source>
+        <target>Utlämningsställe</target>
       </trans-unit>
     </body>
   </file>
