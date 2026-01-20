@@ -3,9 +3,6 @@ name: Test and lint code
 on:
   push:
   workflow_dispatch:
-concurrency:
-  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
-  cancel-in-progress: false
 jobs:
   test:
     strategy:
