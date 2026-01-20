@@ -35,5 +35,23 @@ function addServicePointTypesColumn_3_0_0(Db $dbInstance): bool
 
 function addNewColumnsToCarrierTable_3_0_0(Db $dbInstance): bool
 {
-    return addCarrierProductCodeColumn_3_0_0($dbInstance) && addServicePointTypesColumn_3_0_0($dbInstance);
+    $carrierProductColumnExists = false;
+
+    $servicePointTypeColumnExists = false;
+
+    $sql = 'SHOW COLUMNS FROM `' . _DB_PREFIX_ . 'shipmondo_carrier`;';
+
+    $result = $dbInstance->executeS($sql);
+
+    foreach ($result as $column) {
+        $field = $column['Field'];
+
+        if ($field === 'carrier_product_code') {
+            $carrierProductColumnExists = true;
+        } elseif ($field === 'service_point_types') {
+            $servicePointTypeColumnExists = true;
+        }
+    }
+
+    return ($carrierProductColumnExists || addCarrierProductCodeColumn_3_0_0($dbInstance)) && ($servicePointTypeColumnExists || addServicePointTypesColumn_3_0_0($dbInstance));
 }
