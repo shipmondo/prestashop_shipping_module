@@ -16,6 +16,6 @@
   "homepage": "https://github.com/shipmondo/prestashop_shipping_module#readme",
   "devDependencies": {
     "@types/google.maps": "^3.58.1",
-    "prettier": "^3.7.4"
+    "prettier": "^3.8.1"
   }
 }
