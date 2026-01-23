@@ -1,156 +1,138 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="admin1337" source-language="da-DK" target-language="da-DK" datatype="plaintext">
+  <file original="ModulesShipmondoAdmin.xlf" source-language="da-DK" target-language="da-DK" datatype="plaintext">
     <body>
-      <trans-unit id="aa43933c5467be06d83a5451c4562e15">
-        <source>Shipmondo Delivery Checkout</source>
-        <target>Shipmondo Fragtmodul</target>
-        <note>Line: </note>
+      <trans-unit id="9497c6fc2a0d6734f7f937a39df51b81">
+        <source>A complete shipping solution for PrestaShop</source>
+        <target>En komplet fragtløsning til PrestaShop</target>
       </trans-unit>
-      <trans-unit id="d65ef292d6a4029027eb64ede8f0f03b">
-        <source>The selected carrier is already associated with a Shipmondo carrier.</source>
-        <target>Det valgte leveringsfirma er allerede associeret med en Shipmondo transportør.</target>
-        <note>Line: </note>
+      <trans-unit id="c042eb6430e7b0d3581bba4f27353122">
+        <source>Add Shipmondo carrier</source>
+        <target>Tilføj Shipmondo transportør</target>
       </trans-unit>
       <trans-unit id="47f966d7d69b2b11194c43a45f20d88f">
         <source>An error occured when requesting Shipmondo: %apiError%</source>
         <target>Der opstod en fejl under forspørgsel til Shipmondo: %apiError%</target>
-        <note>Line: </note>
       </trans-unit>
-      <trans-unit id="8524de963f07201e5c086830d370797f">
-        <source>Loading...</source>
-        <target>Indlæser...</target>
-        <note>Line: </note>
-      </trans-unit>
-      <trans-unit id="1b0669d6297ee4c697c303af2521d437">
-        <source>Create new carrier</source>
-        <target>Opret nyt leveringsfirma</target>
-        <note>Line: </note>
-      </trans-unit>
-      <trans-unit id="9497c6fc2a0d6734f7f937a39df51b81">
-        <source>A complete shipping solution for PrestaShop</source>
-        <target>En komplet fragtløsning til PrestaShop</target>
-        <note>Line: </note>
-      </trans-unit>
-      <trans-unit id="a9ac8677b01b61ae6cda0b7c8f11420a">
-        <source>Shipping module key is required</source>
-        <target>Fragtmodul nøgle er påkrævet</target>
-        <note>Line: </note>
-      </trans-unit>
-      <trans-unit id="0b1e80689d04bdc34027111bb904b6eb">
-        <source>Display type is required</source>
-        <target>Visningstype er påkrævet</target>
-        <note>Line: </note>
-      </trans-unit>
-      <trans-unit id="d554b1ab220e21c9129aa4873f6cfe0a">
-        <source>Invalid display type</source>
-        <target>Ugyldig visningstype</target>
-        <note>Line: </note>
-      </trans-unit>
-      <trans-unit id="08c3d555bb3a732909aab3f7dad028ba">
-        <source>Google Maps API key is required when using modal display type</source>
-        <target>Google Maps API nøgle er påkrævet, når modal visningstypen bruges</target>
-        <note>Line: </note>
-      </trans-unit>
-      <trans-unit id="4782ff8aad5ea55dad3d2394479ddeb1">
-        <source>Shipmondo carrier</source>
-        <target>Shipmondo transportør</target>
-        <note>Line: </note>
-      </trans-unit>
-      <trans-unit id="deb10517653c255364175796ace3553f">
-        <source>Product</source>
-        <target>Produkt</target>
-        <note>Line: </note>
-      </trans-unit>
-      <trans-unit id="4be5baa0e9fb45a94e0d67f61d4eb76d">
-        <source>Shipping module key</source>
-        <target>Fragtmodul nøgle</target>
-        <note>Line: </note>
-      </trans-unit>
-      <trans-unit id="cf8491d976ab62966c1b5ef4753d39e8">
-        <source>Show service points in</source>
-        <target>Vis udleveringssteder i</target>
-        <note>Line: </note>
-      </trans-unit>
-      <trans-unit id="c59d6df802c32f037c2a15ff75faec17">
-        <source>Modal</source>
-        <target>Modal</target>
-        <note>Line: </note>
-      </trans-unit>
-      <trans-unit id="7498c445a737312f3678aa1494e01a38">
-        <source>Dropdown</source>
-        <target>Dropdown</target>
-        <note>Line: </note>
-      </trans-unit>
-      <trans-unit id="5e06d5ebfb655b97d9bfb613c80bbf3f">
-        <source>Google Maps API key</source>
-        <target>Google Maps API nøgle</target>
-        <note>Line: </note>
-      </trans-unit>
-      <trans-unit id="87dfc78624ec22b98b474b7dda88ef84">
-        <source>Only used when displaying service points in modal.</source>
-        <target>Bruges kun når udleveringsteder vises i modal.</target>
-        <note>Line: </note>
-      </trans-unit>
-      <trans-unit id="5bf3261f166161d301d90b57f88fc649">
-        <source>Shipmondo carriers</source>
-        <target>Shipmondo transportører</target>
-        <note>Line: </note>
-      </trans-unit>
-      <trans-unit id="3d9dcb6cda93f5e41eae1fa72ace1430">
-        <source>Add Shipmondo carrier</source>
-        <target>Tilføj Shipmondo transportør</target>
-        <note>Line: </note>
+      <trans-unit id="bbf7df00de00c0039b9e31a77f4972f9">
+        <source>Carrier product</source>
+        <target>Transportør Produkt</target>
       </trans-unit>
       <trans-unit id="1d6af794b2599c1407a83029a09d1ecf">
         <source>Carriers</source>
         <target>Transportører</target>
-        <note>Line: </note>
       </trans-unit>
-      <trans-unit id="55c7a7a5379952e2fad08ddbba0f389d">
-        <source>Service Point</source>
-        <target>Udleveringssted</target>
-        <note>Line: </note>
+      <trans-unit id="1b0669d6297ee4c697c303af2521d437">
+        <source>Create new carrier</source>
+        <target>Opret nyt leveringsfirma</target>
+      </trans-unit>
+      <trans-unit id="0b1e80689d04bdc34027111bb904b6eb">
+        <source>Display type is required</source>
+        <target>Visningstype er påkrævet</target>
+      </trans-unit>
+      <trans-unit id="7498c445a737312f3678aa1494e01a38">
+        <source>Dropdown</source>
+        <target>Dropdown</target>
+      </trans-unit>
+      <trans-unit id="3a18b41bc74987cd52efe54dafb6b719">
+        <source>Filter service point types</source>
+        <target>Filtrer service point typer</target>
       </trans-unit>
       <trans-unit id="e43ec38a93023bde02ff70f28b925702">
         <source>Go to</source>
         <target>Gå til</target>
-        <note>Line: </note>
       </trans-unit>
-      <trans-unit id="3e436e90361099dad5e991bf2b6fa4a0">
-        <source>to configure Shipmondo Delivery Checkout.</source>
-        <target>for at konfigurere Shipmondo Fragtmodul.</target>
-        <note>Line: </note>
+      <trans-unit id="5e06d5ebfb655b97d9bfb613c80bbf3f">
+        <source>Google Maps API key</source>
+        <target>Google Maps API nøgle</target>
       </trans-unit>
-      <trans-unit id="67b1eb90bbd26846d41feb99df503e60">
+      <trans-unit id="b9725734035b3d5d97f0b29c552f39fa">
+        <source>Google Maps API key is required when using modal display type</source>
+        <target>Google Maps API nøgle er påkrævet, når modal visningstypen bruges</target>
+      </trans-unit>
+      <trans-unit id="abe9159ed45292a8b2b9d4e378ac1a4c">
         <source>If you need help configuring Shipmondo Delivery Checkout, you can follow our</source>
         <target>Hvis du har brug for hjælp til at konfigurere Shipmondo Fragtmodul, kan du følge vores</target>
-        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="d554b1ab220e21c9129aa4873f6cfe0a">
+        <source>Invalid display type</source>
+        <target>Ugyldig visningstype</target>
+      </trans-unit>
+      <trans-unit id="c59d6df802c32f037c2a15ff75faec17">
+        <source>Modal</source>
+        <target>Modal</target>
+      </trans-unit>
+      <trans-unit id="87dfc78624ec22b98b474b7dda88ef84">
+        <source>Only used when displaying service points in modal.</source>
+        <target>Bruges kun når udleveringsteder vises i modal.</target>
       </trans-unit>
       <trans-unit id="fa4cc6c82e1ea2fc903fb2d71b340ac2">
         <source>PrestaShop guide</source>
         <target>PrestaShop guide</target>
-        <note>Line: </note>
       </trans-unit>
-      <trans-unit id="a939764bb51bbe3c386eb6ca6bbaa0a2">
-        <source>To generate a shipping module key, go to</source>
-        <target>For at generere en fragtmodul nøgle, gå til</target>
-        <note>Line: </note>
+      <trans-unit id="deb10517653c255364175796ace3553f">
+        <source>Product</source>
+        <target>Produkt</target>
+      </trans-unit>
+      <trans-unit id="55c7a7a5379952e2fad08ddbba0f389d">
+        <source>Service Point</source>
+        <target>Udleveringssted</target>
+      </trans-unit>
+      <trans-unit id="debed269b2b0b1532af32cee80cb88f1">
+        <source>Service point types</source>
+        <target>Udleveringssteds-typer</target>
+      </trans-unit>
+      <trans-unit id="aa43933c5467be06d83a5451c4562e15">
+        <source>Shipmondo Delivery Checkout</source>
+        <target>Shipmondo Fragtmodul</target>
+      </trans-unit>
+      <trans-unit id="cafec51e266c68c6bc547556a347d43a">
+        <source>Shipmondo carrier</source>
+        <target>Shipmondo transportør</target>
+      </trans-unit>
+      <trans-unit id="969c94d277a6c2abbd0d688cc51c5a04">
+        <source>Shipmondo carriers</source>
+        <target>Shipmondo transportører</target>
+      </trans-unit>
+      <trans-unit id="4be5baa0e9fb45a94e0d67f61d4eb76d">
+        <source>Shipping module key</source>
+        <target>Fragtmodul nøgle</target>
+      </trans-unit>
+      <trans-unit id="a9ac8677b01b61ae6cda0b7c8f11420a">
+        <source>Shipping module key is required</source>
+        <target>Fragtmodul nøgle er påkrævet</target>
+      </trans-unit>
+      <trans-unit id="cf8491d976ab62966c1b5ef4753d39e8">
+        <source>Show service points in</source>
+        <target>Vis udleveringssteder i</target>
+      </trans-unit>
+      <trans-unit id="d65ef292d6a4029027eb64ede8f0f03b">
+        <source>The selected carrier is already associated with a Shipmondo carrier.</source>
+        <target>Det valgte leveringsfirma er allerede associeret med en Shipmondo transportør.</target>
+      </trans-unit>
+      <trans-unit id="5a037d5ed83197b24af004125822b17c">
+        <source>The selected carrier product supports the following countries:</source>
+        <target>Det valgte transportør produkt understøtter følgende lande:</target>
       </trans-unit>
       <trans-unit id="25cc3a3497793cc5bdc700a2eb22b7b6">
         <source>To generate a Google Maps API key, go to</source>
         <target>For at generere en Google Maps API nøgle, gå til</target>
-        <note>Line: </note>
       </trans-unit>
-      <trans-unit id="01c2d72fabca7a114780057bd418a312">
+      <trans-unit id="a939764bb51bbe3c386eb6ca6bbaa0a2">
+        <source>To generate a shipping module key, go to</source>
+        <target>For at generere en fragtmodul nøgle, gå til</target>
+      </trans-unit>
+      <trans-unit id="895887bb0b01ee501f25edd71d76e35b">
         <source>When Shipmondo Delivery Checkout is configured, go to</source>
         <target>Når Shipmondo Fragtmodul er konfigureret, gå til</target>
-        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="cad6375c409b3e7620a0438cc3d1f2e5">
+        <source>to configure Shipmondo Delivery Checkout.</source>
+        <target>for at konfigurere Shipmondo Fragtmodul.</target>
       </trans-unit>
       <trans-unit id="735497f20cedc4fe8c13542017fb9894">
         <source>to setup carriers</source>
         <target>for at opsætte transportører</target>
-        <note>Line: </note>
       </trans-unit>
     </body>
   </file>

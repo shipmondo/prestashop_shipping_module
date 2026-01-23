@@ -1,0 +1,21 @@
+{
+  "name": "shipmondo-for-prestashop",
+  "description": "",
+  "private": "true",
+  "scripts": {
+    "format": "prettier --write --cache ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shipmondo/prestashop_shipping_module.git"
+  },
+  "keywords": [],
+  "bugs": {
+    "url": "https://github.com/shipmondo/prestashop_shipping_module/issues"
+  },
+  "homepage": "https://github.com/shipmondo/prestashop_shipping_module#readme",
+  "devDependencies": {
+    "@types/google.maps": "^3.58.1",
+    "prettier": "^3.7.4"
+  }
+}

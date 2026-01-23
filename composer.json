@@ -1,13 +1,19 @@
 {
   "name": "shipmondo/prestashop_shipping_module",
   "description": "A complete shipping solution for PrestaShop",
-  "version": "2.1.0",
+  "version": "3.0.0",
   "homepage": "https://shipmondo.com",
   "license": "BSD-3-Clause",
   "authors": [
     {
       "name": "Shipmondo",
       "email": "support@shipmondo.com"
+    }
+  ],
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/shipmondo/prestashop_shipping_module"
     }
   ],
   "require": {
@@ -23,7 +29,9 @@
   },
   "type": "prestashop-module",
   "require-dev": {
+    "friendsofphp/php-cs-fixer": "^3.92",
+    "phpstan/phpstan": "^2.1",
     "prestashop/php-dev-tools": "^5.0",
-    "friendsofphp/php-cs-fixer": "^3.91"
+    "stancer/php-stubs-prestashop": "^8.2"
   }
 }

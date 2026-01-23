@@ -1,14 +1,22 @@
 # composer
 /vendor
 
+# npm
+node_modules
+
 # VS Code
 /.vscode
 
 # PHP CS Fixer
 .php-cs-fixer.cache
 
+# phpactor
+.phpactor.json
+
 # Build
+shipmondo
 shipmondo.zip
 
 # Misc
 .DS_Store
+connect-to-db.sh

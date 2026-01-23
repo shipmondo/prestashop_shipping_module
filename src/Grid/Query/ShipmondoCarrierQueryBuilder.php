@@ -47,7 +47,10 @@ final class ShipmondoCarrierQueryBuilder extends AbstractDoctrineQueryBuilder
 
         $offset = $searchCriteria->getOffset();
 
-        $qb->select('sc.id_smd_carrier, sc.id_carrier, sc.carrier_code, sc.product_code')
+        $qb
+            ->select(
+                'sc.id_smd_carrier, sc.id_carrier, sc.carrier_code, sc.product_code, sc.carrier_product_code, sc.service_point_types'
+            )
             ->addSelect('c.name AS ps_carrier_name')
             ->orderBy(
                 $searchCriteria->getOrderBy(),
@@ -88,7 +91,6 @@ final class ShipmondoCarrierQueryBuilder extends AbstractDoctrineQueryBuilder
             ->from($this->dbPrefix . 'shipmondo_carrier', 'sc')
             ->setParameter('context_lang_id', $this->contextLangId)
             ->setParameter('context_shop_id', $this->contextShopId)
-            ->leftJoin('sc', $this->dbPrefix . 'carrier', 'c', 'sc.id_carrier = c.id_carrier')
-        ;
+            ->leftJoin('sc', $this->dbPrefix . 'carrier', 'c', 'sc.id_carrier = c.id_carrier');
     }
 }

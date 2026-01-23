@@ -1,7 +1,11 @@
 [tasks.precommit]
 run = [
   "./build.sh",
-  "npx prettier --write .",
+  "npm run format",
+  "npm install",
   "composer install",
   "./vendor/bin/php-cs-fixer fix",
 ]
+
+[tasks.phpstan]
+run = ["./vendor/bin/phpstan --memory-limit=-1"]

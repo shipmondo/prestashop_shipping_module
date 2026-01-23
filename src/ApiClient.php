@@ -25,80 +25,81 @@ class ApiClient
     private $client;
 
     /**
-     * @var string
-     */
-    private $baseUrl;
-
-    /**
      * @var \Module
      */
     private $module;
 
-    /**
-     * @param string $frontendKey
-     * @param \Symfony\Component\HttpClient\HttpClient $client
-     * @param string $baseUrl
-     * @param \Module $module
-     */
-    public function __construct(\Module $module, string $frontendKey, \Symfony\Component\HttpClient\HttpClient $client, string $baseUrl)
+    private const API_V3_URI = 'https://app.shipmondo.com/api/public/v3/';
+
+    public function __construct(\Module $module, string $frontendKey, \Symfony\Component\HttpClient\HttpClient $client)
     {
         $this->module = $module;
         $this->frontendKey = $frontendKey;
         $this->client = $client->create();
-        $this->baseUrl = $baseUrl;
     }
 
-    /**
-     * @return array
-     */
     public function getCarriers(): array
     {
-        return $this->request('GET', 'carriers.json');
+        return $this->request('GET', self::API_V3_URI . 'shipping_modules/carriers');
     }
 
-    /**
-     * @param array $query
-     *
-     * @return array
-     */
-    public function getServicePoints($query): array
+    public function getCarrierProducts(string $carrierCode): array
     {
-        $servicePoints = $this->request('GET', 'pickup-points.json', $query);
+        return $this->request('GET', self::API_V3_URI . 'shipping_modules/products', ['carrier_code' => $carrierCode]);
+    }
 
-        // Overide carrier code to ensure it is the same as requested
-        foreach ($servicePoints as $key => $servicePoint) {
-            $servicePoint->carrier_code = $query['carrier_code'];
+    public function getCarrierProductServicePointTypes(string $productCode): array
+    {
+        return $this->request('GET', self::API_V3_URI . 'service_point/service_point_types', [
+            'product_code' => $productCode,
+        ]);
+    }
+
+    public function getServicePoints(string $productCode, ?array $servicePointTypes, string $countryCode, string $zipcode, string $city, string $address): array
+    {
+        $url = self::API_V3_URI . 'service_point/service_points';
+
+        if (is_array($servicePointTypes) && count($servicePointTypes) > 0) {
+            $url .= '?service_point_types[]=' . implode('&service_point_types[]=', $servicePointTypes);
         }
 
-        return $servicePoints;
+        return $this->request('GET', $url, [
+            'quantity' => 10,
+            'product_code' => $productCode,
+            'country_code' => trim($countryCode),
+            'zipcode' => trim($zipcode),
+            'city' => trim($city),
+            'address' => trim($address),
+        ]);
     }
 
     /**
-     * @param string $method
-     * @param string $url
-     * @param array $query
-     *
-     * @return array
+     * @throws ShipmondoApiException
      */
-    private function request($method, $url, $query = []): array
+    private function request(string $method, string $url, array $query = []): array
     {
-        $fullUrl = $this->baseUrl . $url;
-
         try {
-            $response = $this->client->request($method, $fullUrl, [
+            $response = $this->client->request($method, $url, [
                 'headers' => [
                     'User-Agent' => 'Shipmondo Prestashop Module v' . $this->module->version,
                 ],
-                'query' => array_merge($query, ['frontend_key' => $this->frontendKey]),
+                'query' => array_merge($query, [
+                    'request_url' => _PS_BASE_URL_,
+                    'request_version' => _PS_VERSION_,
+                    'module_version' => $this->module->version,
+                    'shipping_module_type' => 'prestashop',
+                    'frontend_key' => $this->frontendKey,
+                    'php_version' => PHP_VERSION ?? '',
+                ]),
             ]);
 
             $response_body = $response->getContent();
 
             return json_decode($response_body);
         } catch (\Symfony\Contracts\HttpClient\Exception\HttpExceptionInterface $e) {
-            $error_message = $response_body = $e->getResponse()->getContent();
+            $error_message = $e->getResponse()->getContent(false);
 
-            $response_body = json_decode($response_body);
+            $response_body = json_decode($error_message);
 
             if (isset($response_body->message)) {
                 $error_message = $response_body->message;

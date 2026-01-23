@@ -1,75 +1,280 @@
-{#**
+{# **
  * @author    Shipmondo <support@shipmondo.com>
  * @copyright 2024-present Shipmondo
  * @license   https://opensource.org/license/bsd-3-clause BSD-3-Clause
- *#}
+ * #}
 
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 {% form_theme form '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
 
 {% block content %}
-	{{ form_start(form) }}
-	<div class="card">
-		<h3 class="card-header">
-			<i class="material-icons">settings</i> {{ 'Shipmondo carrier'|trans({}, 'Modules.Shipmondo.Admin') }}
-		</h3>
+    {{ form_start(form) }}
 
-		<div class="card-body">
-			<div class="form-wrapper">
-				{{ form_widget(form) }}
-			</div>
-		</div>
+    <div class="card">
+        <h3 class="card-header">
+            <i class="material-icons">settings</i> {{ 'Shipmondo carrier'|trans({}, 'Modules.Shipmondo.Admin') }}
+        </h3>
 
-		<div class="card-footer">
-			<div class="d-flex justify-content-end">
-				<button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
-			</div>
-		</div>
-	</div>
-	{{ form_end(form) }}
+        <div class="card-body">
+            <div class="form-wrapper">
+                {{ form_widget(form) }}
+
+                <div id="shipmondo_receiver_country" style="display: none !important" class="form-group row select-widget">
+                    <p class="form-control-label">
+                        {{ 'The selected carrier product supports the following countries:'|trans({}, 'Modules.Shipmondo.Admin') }}
+                    </p>
+
+                    <div class="col-sm input-container">
+                        <ul id="shipmondo_receiver_country_list"></ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-footer">
+            <div class="d-flex justify-content-end">
+                <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+            </div>
+        </div>
+    </div>
+
+    {{ form_end(form) }}
 {% endblock %}
 
-{% block javascripts %} 
+{% block javascripts %}
     {{ parent() }}
 
     <script>
-        const form = $("form[name=shipmondo_carrier_form]");
+        const form = $('form[name=shipmondo_carrier_form]');
         const psCarrierSelect = form.find('#shipmondo_carrier_form_carrier_id');
         const carriersSelect = form.find('#shipmondo_carrier_form_carrier_code');
         const productsSelect = form.find('#shipmondo_carrier_form_product_code');
+        const carrierProductsSelect = form.find('#shipmondo_carrier_form_carrier_product_code');
+        const servicePointTypesSelect = form.find('#shipmondo_carrier_form_service_point_types');
+        const infoBox = document.querySelector('#shipmondo_receiver_country');
+        const infoBoxList = document.querySelector('#shipmondo_receiver_country_list');
+
+        const SHIPMONDO_CARRIER_FIELDS_CACHE = new Map();
 
         {% if isEdit %}
             psCarrierSelect.attr('disabled', true);
             psCarrierSelect.parent().append('<input type="hidden" name="shipmondo_carrier_form[carrier_id]" value="' + psCarrierSelect.val() + '" />');
         {% endif %}
 
-        carriersSelect.on('change', function(event) {
-            productsSelect.attr('disabled', true);
+        const fetchDataActionPath = '{{ fetchDataAction }}';
 
-            var selected = productsSelect.val();
-            var url = form.attr('action');
-            var requestBody = carriersSelect.serialize() + '&' + productsSelect.serialize();
-            var method = form.attr('method');
-            $.ajax({
-                url: url,
-                method: method,
-                data: requestBody,
-                success: function(response) {
-                    var html = $(response).find('#shipmondo_carrier_form_product_code').html();
-                    productsSelect.html(html);
-                    var values = productsSelect.find('option').map(function() {
-                        return $(this).val();
-                    }).get();
+        /**
+         * @returns {Promise<{ choices: { carrier_code: Record<string, string> | null; product_code: Record<string, string> | null; carrier_product_code: Record<string, string> | null; service_point_types: Record<string, string> | null; }; default: { carrier_code: string; product_code: string; carrier_product_code: string | null; service_point_types: string[] | null;}; receiver_countries: string[] | null }>}
+         */
+        async function getCarrierFields() {
+            const carrierCode = carriersSelect.val() || null;
+            const productCode = productsSelect.val() || null;
 
-                    // Select the previously selected value if it still exists
-                    if ($.inArray(selected, values) !== -1) {
-                        productsSelect.val(selected);
-                    }
+            const isServicePointDelivery = productCode === 'service_point';
 
-                    productsSelect.attr('disabled', false);
+            const carrierProductCode = isServicePointDelivery ? carrierProductsSelect.val() || null : null;
+            const servicePointTypes =
+                isServicePointDelivery && carrierProductCode ? servicePointTypesSelect.val() || null : null;
+
+            const input = {
+                carrier_code: carrierCode,
+                product_code: productCode,
+                carrier_product_code: carrierProductCode,
+                service_point_types: servicePointTypes,
+            };
+
+            const inputJson = JSON.stringify(input);
+
+            const cachedValue = SHIPMONDO_CARRIER_FIELDS_CACHE.get(inputJson);
+
+            if (cachedValue) {
+                return cachedValue;
+            }
+
+            return fetch(fetchDataActionPath, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: inputJson,
+            }).then(async (res) => {
+                if (res.status >= 400) {
+                    throw new Error(`Error fetching carrier fields: ${res.statusText}`);
                 }
+
+                const responseBody = await res.json();
+
+                if (responseBody) {
+                    SHIPMONDO_CARRIER_FIELDS_CACHE.set(inputJson, responseBody);
+                }
+
+                return responseBody;
             });
-        });
+        }
+
+        /**
+         * @param {Record<string, string> | null} choices
+         * @param {string | null} value
+         * @returns {void}
+         */
+        function updateProductCodeOptions(choices, value) {
+            productsSelect.empty();
+
+            if (choices) {
+                for (const [text, value] of Object.entries(choices)) {
+                    productsSelect.append($('<option></option>').attr('value', value).text(text));
+                }
+            }
+
+            productsSelect.val(value ?? null);
+        }
+
+        /**
+         * @param {Record<string, string> | null} choices
+         * @param {string | null} value
+         * @returns {void}
+         */
+        function updateCarrierProductCodeOptions(choices, value) {
+            carrierProductsSelect.empty();
+
+            const entries = choices && typeof choices === 'object' ? Object.entries(choices) : null;
+
+            if (productsSelect.val() === 'service_point' && entries && entries.length) {
+                carrierProductsSelect.parent().parent().show();
+            } else {
+                carrierProductsSelect.val(null);
+                carrierProductsSelect.parent().parent().hide();
+                return;
+            }
+
+            for (const [text, value] of entries) {
+                carrierProductsSelect.append($('<option></option>').attr('value', value).text(text));
+            }
+
+            carrierProductsSelect.val(value ?? null);
+        }
+
+        /**
+         * @param {Record<string, string> | null} choices
+         * @param {string[] | null} value
+         * @returns {void}
+         */
+        function updateServicePointTypeOptions(choices, value) {
+            servicePointTypesSelect.empty();
+
+            const entries = choices && typeof choices === 'object' ? Object.entries(choices) : null;
+
+            if (productsSelect.val() === 'service_point' && entries && entries.length) {
+                servicePointTypesSelect.parent().parent().show();
+            } else {
+                servicePointTypesSelect.val(null);
+                servicePointTypesSelect.parent().parent().hide();
+                return;
+            }
+
+            for (const [text, value] of entries) {
+                servicePointTypesSelect.append($('<option></option>').attr('value', value).text(text));
+            }
+
+            servicePointTypesSelect.val(value ?? null);
+        }
+
+        /**
+         * Converts iso country codes to flag emojis
+         * Code taken from https://github.com/thekelvinliu/country-code-emoji/blob/main/src/index.js
+         *
+         * @param {string} countryCode
+         * @returns {string}
+         */
+        function countryCodeEmoji(countryCode) {
+            const OFFSET = 127397;
+
+            const codePoints = [...countryCode.toUpperCase()].map((c) => c.codePointAt() + OFFSET);
+
+            return String.fromCodePoint(...codePoints);
+        }
+
+        /**
+         * @param {Array<string> | null} receiverCountries
+         * @returns {void}
+         */
+        function renderReceiverCountryInfoBox(receiverCountries) {
+            if (
+                !infoBox ||
+                !infoBoxList ||
+                !receiverCountries ||
+                !Array.isArray(receiverCountries) ||
+                !receiverCountries.length
+            ) {
+                if (infoBox) {
+                    infoBox.style = 'display: none !important;';
+                }
+                return;
+            }
+
+            receiverCountries.sort();
+
+            infoBoxList.innerHTML = '';
+
+            for (const receiverCountryCode of receiverCountries) {
+                const countryElement = document.createElement('li');
+
+                countryElement.appendChild(
+                    document.createTextNode(`${countryCodeEmoji(receiverCountryCode)} ${receiverCountryCode}`),
+                );
+
+                infoBoxList.appendChild(countryElement);
+            }
+
+            infoBox.style = '';
+        }
+
+        /**
+         * @returns {Promise<void>}
+         */
+        async function rerenderForm() {
+            const isServicePointDelivery = productsSelect.val() === 'service_point';
+
+            if (isServicePointDelivery) {
+                carrierProductsSelect.parent().parent().show();
+                servicePointTypesSelect.parent().parent().show();
+            } else {
+                carrierProductsSelect.parent().parent().hide();
+                servicePointTypesSelect.parent().parent().hide();
+                renderReceiverCountryInfoBox(null);
+            }
+
+            carriersSelect.attr('disabled', true);
+            productsSelect.attr('disabled', true);
+            carrierProductsSelect.attr('disabled', true);
+            servicePointTypesSelect.attr('disabled', true);
+
+            const data = await getCarrierFields().catch((error) => {
+                console.error(error);
+                return null;
+            });
+
+            updateProductCodeOptions(data?.choices?.product_code ?? null, data?.default?.product_code ?? null);
+
+            updateCarrierProductCodeOptions(
+                data?.choices?.carrier_product_code ?? null,
+                data?.default?.carrier_product_code ?? null,
+            );
+
+            updateServicePointTypeOptions(
+                data?.choices?.service_point_types ?? null,
+                data?.default?.service_point_types ?? null,
+            );
+
+            renderReceiverCountryInfoBox(data?.receiver_countries ?? null);
+
+            carriersSelect.attr('disabled', false);
+            productsSelect.attr('disabled', false);
+            carrierProductsSelect.attr('disabled', false);
+            servicePointTypesSelect.attr('disabled', false);
+        }
+
+        carriersSelect.on('change', rerenderForm);
+        productsSelect.on('change', rerenderForm);
+        carrierProductsSelect.on('change', rerenderForm);
 
         carriersSelect.trigger('change');
     </script>

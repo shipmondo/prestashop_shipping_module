@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace Shipmondo;
 
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use Shipmondo\Exception\ShipmondoApiException;
 
 class ShipmondoCarrierHandler
 {
@@ -29,9 +30,6 @@ class ShipmondoCarrierHandler
      */
     private $carriers;
 
-    /**
-     * @param ApiClient $apiClient
-     */
     public function __construct(ConfigurationInterface $configuration, ApiClient $apiClient)
     {
         $this->configuration = $configuration;
@@ -40,8 +38,6 @@ class ShipmondoCarrierHandler
 
     /**
      * Get available carriers from Shipmondo
-     *
-     * @return array
      */
     public function getCarriers(): array
     {
@@ -54,10 +50,6 @@ class ShipmondoCarrierHandler
 
     /**
      * Get carrier by code
-     *
-     * @param string $carrierCode
-     *
-     * @return ?object
      */
     public function getCarrier(string $carrierCode): ?object
     {
@@ -74,10 +66,6 @@ class ShipmondoCarrierHandler
 
     /**
      * Get products for a carrier
-     *
-     * @param string $carrierCode
-     *
-     * @return array
      */
     public function getProducts(string $carrierCode): array
     {
@@ -94,10 +82,6 @@ class ShipmondoCarrierHandler
 
     /**
      * Get carrier name. Fallback to carrier code if name is not found.
-     *
-     * @param string $carrierCode
-     *
-     * @return string
      */
     public function getCarrierName(string $carrierCode): string
     {
@@ -108,31 +92,73 @@ class ShipmondoCarrierHandler
 
     /**
      * Get product name.
-     *
-     * @param string $productCode
-     *
-     * @return string
      */
     public function getProductName(string $productCode): string
     {
         return ucwords(str_replace('_', ' ', $productCode));
     }
 
+    public function getCarrierProducts(string $carrierCode): array
+    {
+        $cacheKey = 'SHIPMONDO_CARRIER_PRODUCTS_CACHE_' . $carrierCode;
+        $expirationTimeCacheKey = $cacheKey . '_EXPIRATION';
+
+        $expirationTime = (int) $this->configuration->get($expirationTimeCacheKey);
+
+        if ($expirationTime && $expirationTime > time()) {
+            $carrierProducts = $this->configuration->get($cacheKey);
+
+            if ($carrierProducts) {
+                return json_decode($carrierProducts, false);
+            }
+        }
+
+        $value = $this->apiClient->getCarrierProducts($carrierCode);
+
+        $this->configuration->set($cacheKey, json_encode($value));
+        $this->configuration->set($expirationTimeCacheKey, time() + 900);
+
+        return $value;
+    }
+
+    private function carrierHasServicePointProducts(string $carrierCode): bool
+    {
+        try {
+            $carrierProducts = self::getCarrierProducts($carrierCode);
+
+            foreach ($carrierProducts as $carrierProduct) {
+                if (isset($carrierProduct->service_point_product) && $carrierProduct->service_point_product === true) {
+                    return true;
+                }
+            }
+
+            return false;
+        } catch (ShipmondoApiException $e) {
+            return false;
+        }
+    }
+
     /**
      * Fetch carriers from Shipmondo API if cache is not valid
-     *
-     * @return array
      */
     private function fetchCarriers(): array
     {
         $availableCarriers = $this->configuration->get('SHIPMONDO_AVAILABLE_CARRIERS');
-        $expirationTime = $this->configuration->get('SHIPMONDO_AVAILABLE_CARRIERS_EXPIRATION');
+        $expirationTime = (int) $this->configuration->get('SHIPMONDO_AVAILABLE_CARRIERS_EXPIRATION');
+
         if (!$availableCarriers || !$expirationTime || $expirationTime < time()) {
             $availableCarriers = $this->apiClient->getCarriers();
 
             // Change boolean values to array of products to prepare for the future
             foreach ($availableCarriers as $availableCarrier) {
                 $products = [];
+
+                $availableCarrier->products = [
+                    'private' => true,
+                    'business' => true,
+                    'service_point' => self::carrierHasServicePointProducts($availableCarrier->code),
+                ];
+
                 foreach ($availableCarrier->products as $productCode => $hasProduct) {
                     if ($hasProduct) {
                         $product = new \stdClass();
@@ -151,5 +177,148 @@ class ShipmondoCarrierHandler
         }
 
         return json_decode($availableCarriers);
+    }
+
+    public function getServicePointTypes(string $productCode): array
+    {
+        $cacheKey = 'SHIPMONDO_SERVICE_POINT_TYPES_CACHE_' . $productCode;
+        $expirationTimeCacheKey = $cacheKey . '_EXPIRATION';
+
+        $expirationTime = (int) $this->configuration->get($expirationTimeCacheKey);
+
+        if ($expirationTime && $expirationTime > time()) {
+            $servicePointTypes = $this->configuration->get($cacheKey);
+
+            if ($servicePointTypes) {
+                return json_decode($servicePointTypes, false);
+            }
+        }
+
+        $value = $this->apiClient->getCarrierProductServicePointTypes($productCode);
+
+        $this->configuration->set($cacheKey, json_encode($value));
+        $this->configuration->set($expirationTimeCacheKey, time() + 900);
+
+        return $value;
+    }
+
+    public function getCarrierFormValues(?string $carrierCode, ?string $productCode, ?string $carrierProductCode, ?array $servicePointTypes): array
+    {
+        if (!$carrierCode) {
+            $productCode = null;
+        }
+
+        if (!$productCode) {
+            $productCode = null;
+        }
+
+        if (!$carrierProductCode) {
+            $carrierProductCode = null;
+        }
+
+        if (!$servicePointTypes) {
+            $servicePointTypes = null;
+        }
+
+        $carrierChoices = [];
+
+        $allCarriers = $this->getCarriers();
+        foreach ($allCarriers as $carrier) {
+            if (!$carrierCode) {
+                $carrierCode = $carrier->code;
+            }
+
+            $carrierChoices[$carrier->name] = $carrier->code;
+        }
+
+        $productCodeChoices = [];
+
+        $allProductTypes = is_string($carrierCode) ? $this->getProducts($carrierCode) : [];
+        $validProductCode = false;
+        foreach ($allProductTypes as $product) {
+            if (!$productCode) {
+                $productCode = $product->code;
+            }
+
+            $productCodeChoices[$product->name] = $product->code;
+
+            if ($productCode === $product->code) {
+                $validProductCode = true;
+            }
+        }
+
+        if (!$validProductCode) {
+            $productCode = 'private';
+            $servicePointTypes = null;
+        }
+
+        $isServicePointDelivery = $productCode === 'service_point';
+
+        $allCarrierProducts = $isServicePointDelivery ? $this->getCarrierProducts($carrierCode) : [];
+
+        $applicableCarrierProductChoices = [];
+
+        $validCarrierProductCode = false;
+        $receiverCountries = null;
+        foreach ($allCarrierProducts as $product) {
+            if (!isset($product->service_point_product) || $product->service_point_product !== true) {
+                continue;
+            }
+
+            if (!$carrierProductCode) {
+                $carrierProductCode = $product->product_code;
+                $validCarrierProductCode = true;
+            }
+
+            $applicableCarrierProductChoices[$product->name] = $product->product_code;
+
+            if ($carrierProductCode === $product->product_code) {
+                $validCarrierProductCode = true;
+                $receiverCountries = $product->receiver_countries ?? null;
+            }
+        }
+
+        if (!$validCarrierProductCode) {
+            $carrierProductCode = null;
+
+            foreach ($allCarrierProducts as $product) {
+                if (!isset($product->service_point_product) || $product->service_point_product !== true) {
+                    continue;
+                }
+
+                $carrierProductCode = $product->product_code;
+                $receiverCountries = $product->receiver_countries ?? null;
+                break;
+            }
+        }
+
+        if (!is_array($servicePointTypes) && is_string($carrierProductCode)) {
+            $servicePointTypes = [];
+        }
+
+        $servicePointTypesChoices = [];
+
+        $allServicePointTypes = $isServicePointDelivery && is_string($carrierProductCode)
+            ? $this->getServicePointTypes($carrierProductCode)
+            : [];
+        foreach ($allServicePointTypes as $servicePointType) {
+            $servicePointTypesChoices[$servicePointType->name] = $servicePointType->code;
+        }
+
+        return [
+            'choices' => [
+                'carrier_code' => $carrierChoices,
+                'product_code' => $productCodeChoices,
+                'carrier_product_code' => $applicableCarrierProductChoices,
+                'service_point_types' => $servicePointTypesChoices,
+            ],
+            'default' => [
+                'carrier_code' => $carrierCode,
+                'product_code' => $productCode,
+                'carrier_product_code' => $carrierProductCode,
+                'service_point_types' => $servicePointTypes,
+            ],
+            'receiver_countries' => $receiverCountries,
+        ];
     }
 }

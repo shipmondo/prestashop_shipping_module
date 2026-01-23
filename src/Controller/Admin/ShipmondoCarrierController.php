@@ -15,6 +15,7 @@ use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Shipmondo\Entity\ShipmondoCarrier;
 use Shipmondo\Form\Type\ShipmondoCarrierFormType;
 use Shipmondo\Grid\Filters\ShipmondoCarrierFilters;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -47,13 +48,8 @@ class ShipmondoCarrierController extends FrameworkBundleAdminController
      */
     private $entityManager;
 
-    public function __construct(
-        \PrestaShop\PrestaShop\Core\Grid\GridFactory $carrierGridFactory,
-        \Shipmondo\ShipmondoCarrierHandler $carrierHandler,
-        \Shipmondo\Grid\Definition\Factory\ShipmondoCarrierGridDefinitionFactory $shipmondoCarrierGridDefinitionFactory,
-        \PrestaShopBundle\Service\Grid\ResponseBuilder $responseBuilder,
-        \Doctrine\ORM\EntityManagerInterface $entityManager,
-    ) {
+    public function __construct(\PrestaShop\PrestaShop\Core\Grid\GridFactory $carrierGridFactory, \Shipmondo\ShipmondoCarrierHandler $carrierHandler, \Shipmondo\Grid\Definition\Factory\ShipmondoCarrierGridDefinitionFactory $shipmondoCarrierGridDefinitionFactory, \PrestaShopBundle\Service\Grid\ResponseBuilder $responseBuilder, \Doctrine\ORM\EntityManagerInterface $entityManager)
+    {
         $this->carrierGridFactory = $carrierGridFactory;
         $this->carrierHandler = $carrierHandler;
         $this->shipmondoCarrierGridDefinitionFactory = $shipmondoCarrierGridDefinitionFactory;
@@ -98,7 +94,10 @@ class ShipmondoCarrierController extends FrameworkBundleAdminController
         $form = $this->createForm(ShipmondoCarrierFormType::class, $carrier, ['action' => $this->generateUrl('shipmondo_shipmondo_carriers_create')]);
 
         $form->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid()) {
+            $carrier->setDefaultServicePointFields();
+
             if ($carrier->getCarrierId() == 0) {
                 $this->createPsCarrier($carrier);
             }
@@ -113,6 +112,7 @@ class ShipmondoCarrierController extends FrameworkBundleAdminController
             'form' => $form->createView(),
             'layoutTitle' => $this->trans('Shipmondo carrier', 'Modules.Shipmondo.Admin'),
             'isEdit' => false,
+            'fetchDataAction' => $this->generateUrl('shipmondo_shipmondo_carriers_get_carrier_form_fields'),
         ]);
     }
 
@@ -127,7 +127,10 @@ class ShipmondoCarrierController extends FrameworkBundleAdminController
         $form = $this->createForm(ShipmondoCarrierFormType::class, $carrier, ['action' => $this->generateUrl('shipmondo_shipmondo_carriers_edit', ['id' => $id])]);
 
         $form->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid()) {
+            $carrier->setDefaultServicePointFields();
+
             $this->entityManager->flush();
 
             return $this->redirectToRoute('shipmondo_shipmondo_carriers_index');
@@ -137,6 +140,7 @@ class ShipmondoCarrierController extends FrameworkBundleAdminController
             'form' => $form->createView(),
             'layoutTitle' => $this->trans('Shipmondo carrier', 'Modules.Shipmondo.Admin'),
             'isEdit' => true,
+            'fetchDataAction' => $this->generateUrl('shipmondo_shipmondo_carriers_get_carrier_form_fields'),
         ]);
     }
 
@@ -189,5 +193,21 @@ class ShipmondoCarrierController extends FrameworkBundleAdminController
 
             $carrier->setCarrierId($psCarrier->id);
         }
+    }
+
+    public function getCarrierFormFields(Request $request): JsonResponse
+    {
+        $body = $request->getContent();
+
+        $input = json_decode($body, true);
+
+        $formValues = $this->carrierHandler->getCarrierFormValues(
+            $input['carrier_code'] ?? null,
+            $input['product_code'] ?? null,
+            $input['carrier_product_code'] ?? null,
+            $input['service_point_types'] ?? null
+        );
+
+        return $this->json($formValues);
     }
 }

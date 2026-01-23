@@ -79,6 +79,8 @@ final class ShipmondoCarrierGridDefinitionFactory extends AbstractGridDefinition
                         'field' => 'product_name', // Set in decorator
                     ])
             )
+            ->add($this->getCarrerProductCodeColumn())
+            ->add($this->getServicePointTypesColumn())
             ->add(
                 (new ActionColumn('actions'))
                     ->setName($this->trans('Actions', [], 'Admin.Actions'))
@@ -138,7 +140,30 @@ final class ShipmondoCarrierGridDefinitionFactory extends AbstractGridDefinition
                         'redirect_route' => 'shipmondo_shipmondo_carriers_index',
                     ])
                     ->setAssociatedColumn('actions')
-            )
-        ;
+            );
+    }
+
+    private function getCarrerProductCodeColumn(): DataColumn
+    {
+        $carrerProductCodeColumn = new DataColumn('carrier_product_code');
+
+        $carrerProductCodeColumn->setName($this->trans('Carrier product', [], 'Modules.Shipmondo.Admin'));
+        $carrerProductCodeColumn->setOptions([
+            'field' => 'carrier_product_name',
+        ]);
+
+        return $carrerProductCodeColumn;
+    }
+
+    private function getServicePointTypesColumn(): DataColumn
+    {
+        $servicePointTypesColumn = new DataColumn('service_point_types');
+
+        $servicePointTypesColumn->setName($this->trans('Service point types', [], 'Modules.Shipmondo.Admin'));
+        $servicePointTypesColumn->setOptions([
+            'field' => 'service_point_type_names',
+        ]);
+
+        return $servicePointTypesColumn;
     }
 }
