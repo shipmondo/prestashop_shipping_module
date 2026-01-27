@@ -11,7 +11,9 @@
             <div class="shipmondo-loading">{l s='Loading...' d='Modules.Shipmondo.Front'}</div>
             <div class="shipmondo-service-points-content"></div>
             <div class="powered_by_shipmondo">
-                <p>Powered by Shipmondo</p>
+                <p>
+                    {l s='Powered by Shipmondo' d='Modules.Shipmondo.Front'}
+                </p>
             </div>
         </div>
     </div>
