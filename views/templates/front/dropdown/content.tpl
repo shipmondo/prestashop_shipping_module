@@ -28,7 +28,9 @@
         </div>
         <div class="shipmondo-modal_footer">
             <div class="powered_by_shipmondo">
-                <p>Powered by Shipmondo</p>
+                <p>
+                    {l s='Powered by Shipmondo' d='Modules.Shipmondo.Front'}
+                </p>
             </div>
         </div>
     </div>

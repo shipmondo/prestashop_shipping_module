@@ -22,6 +22,10 @@
         <source>No service points found for the given address.</source>
         <target>Der blev ikke fundet nogle udleveringssteder for den givne adresse.</target>
       </trans-unit>
+      <trans-unit id="d495d63bdc3d1dc1b2bac7c5e0d1adf9">
+        <source>Powered by Shipmondo</source>
+        <target>Drevet av Shipmondo</target>
+      </trans-unit>
       <trans-unit id="f1365a7b47028ceb29727a1de5363aa8">
         <source>Service point</source>
         <target>Utleveringssted</target>

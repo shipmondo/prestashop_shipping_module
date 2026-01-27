@@ -79,7 +79,9 @@ final class ShipmondoConfigurationDataConfiguration implements DataConfiguration
         $frontendType = $configuration['frontend_type'];
         if (empty($frontendType)) {
             throw new \InvalidArgumentException($this->trans('Display type is required', 'Modules.Shipmondo.Admin'));
-        } elseif (!in_array($frontendType, ['popup', 'dropdown'])) {
+        }
+
+        if (!in_array($frontendType, ['popup', 'dropdown'])) {
             throw new \InvalidArgumentException($this->trans('Invalid display type', 'Modules.Shipmondo.Admin'));
         }
 

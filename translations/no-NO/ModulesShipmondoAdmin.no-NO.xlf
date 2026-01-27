@@ -66,6 +66,10 @@
         <source>Only used when displaying service points in modal.</source>
         <target>Brukes kun når utleveringssteder vises i modal.</target>
       </trans-unit>
+      <trans-unit id="d495d63bdc3d1dc1b2bac7c5e0d1adf9">
+        <source>Powered by Shipmondo</source>
+        <target>Drevet av Shipmondo</target>
+      </trans-unit>
       <trans-unit id="fa4cc6c82e1ea2fc903fb2d71b340ac2">
         <source>PrestaShop guide</source>
         <target>PrestaShop guide</target>

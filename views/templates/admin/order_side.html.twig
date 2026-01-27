@@ -1,21 +1,22 @@
-{#**
+{# **
  * @author    Shipmondo <support@shipmondo.com>
  * @copyright 2024-present Shipmondo
  * @license   https://opensource.org/license/bsd-3-clause BSD-3-Clause
- *#}
+ * #}
 
 <div class="card">
-	<div class="card-header">
-		<h3 class="card-header-title">{{ 'Service Point'|trans({}, 'Modules.Shipmondo.Admin') }}</h3>
-	</div>
-	<div class="card-body">
-		<p class="mb-0">{{ servicePoint.getName }}</p>
-		<p class="mb-0">{{ servicePoint.getAddress1 }}</p>
-		{% if servicePoint.getAddress2 %}<p class="mb-0">{{ servicePoint.getAddress2 }}</p>{% endif %}
-		<p class="mb-0">{{ servicePoint.getZipCode }} {{ servicePoint.getCity }}</p>
-		<p class="mb-0">{{ countryName }}</p>
-		<div class="text-center text-muted">
-			<small>Powered by Shipmondo</small>
-		</div>
-	</div>
+    <div class="card-header">
+        <h3 class="card-header-title">{{ 'Service Point'|trans({}, 'Modules.Shipmondo.Admin') }}</h3>
+    </div>
+
+    <div class="card-body">
+        <p class="mb-0">{{ servicePoint.getName }}</p>
+        <p class="mb-0">{{ servicePoint.getAddress1 }}</p>
+        {% if servicePoint.getAddress2 %}<p class="mb-0">{{ servicePoint.getAddress2 }}</p>{% endif %}
+        <p class="mb-0">{{ servicePoint.getZipCode }} {{ servicePoint.getCity }}</p>
+        <p class="mb-0">{{ countryName }}</p>
+        <div class="text-center text-muted">
+            <small>{{ 'Powered by Shipmondo'|trans({}, 'Modules.Shipmondo.Admin') }}</small>
+        </div>
+    </div>
 </div>
