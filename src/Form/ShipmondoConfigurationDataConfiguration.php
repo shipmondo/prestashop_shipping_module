@@ -73,7 +73,7 @@ final class ShipmondoConfigurationDataConfiguration implements DataConfiguration
     public function validateConfiguration(array $configuration): bool
     {
         if (empty($configuration['frontend_key'])) {
-            throw new \InvalidArgumentException($this->trans('Shipping module key is required', 'Modules.Shipmondo.Admin'));
+            throw new \InvalidArgumentException($this->trans('Delivery Checkout key is required', 'Modules.Shipmondo.Admin'));
         }
 
         $frontendType = $configuration['frontend_type'];

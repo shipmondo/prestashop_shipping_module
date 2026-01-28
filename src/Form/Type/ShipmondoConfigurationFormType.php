@@ -21,7 +21,7 @@ class ShipmondoConfigurationFormType extends TranslatorAwareType
     {
         $builder
             ->add('frontend_key', TextType::class, [
-                'label' => $this->trans('Shipping module key', 'Modules.Shipmondo.Admin'),
+                'label' => $this->trans('Delivery Checkout key', 'Modules.Shipmondo.Admin'),
                 'required' => true,
             ])
             ->add('frontend_type', ChoiceType::class, [

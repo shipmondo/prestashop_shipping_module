@@ -26,6 +26,14 @@
         <source>Create new carrier</source>
         <target>Skapa nytt leverantör</target>
       </trans-unit>
+      <trans-unit id="be944520eb8afd98806acc062f8aefe4">
+        <source>Delivery Checkout key</source>
+        <target>Fraktmodulnyckel</target>
+      </trans-unit>
+      <trans-unit id="99bdedd77e5af6ecf28adb132f143973">
+        <source>Delivery Checkout key is required</source>
+        <target>Fraktmodulnyckel krävs</target>
+      </trans-unit>
       <trans-unit id="0b1e80689d04bdc34027111bb904b6eb">
         <source>Display type is required</source>
         <target>Visningstyp krävs</target>
@@ -98,14 +106,6 @@
         <source>Shipmondo carriers</source>
         <target>Shipmondo transportföretag</target>
       </trans-unit>
-      <trans-unit id="4be5baa0e9fb45a94e0d67f61d4eb76d">
-        <source>Shipping module key</source>
-        <target>Fraktmodulnyckel</target>
-      </trans-unit>
-      <trans-unit id="a9ac8677b01b61ae6cda0b7c8f11420a">
-        <source>Shipping module key is required</source>
-        <target>Fraktmodulnyckel krävs</target>
-      </trans-unit>
       <trans-unit id="cf8491d976ab62966c1b5ef4753d39e8">
         <source>Show service points in</source>
         <target>Visa utlämningsställen i</target>
@@ -118,13 +118,13 @@
         <source>The selected carrier product supports the following countries:</source>
         <target>Den valda transportprodukten stöds i följande länder:</target>
       </trans-unit>
+      <trans-unit id="d72e54738e166eec4ede202954520267">
+        <source>To generate a Delivery Checkout key, go to</source>
+        <target>För att generera en fraktmodulnyckel, gå till</target>
+      </trans-unit>
       <trans-unit id="25cc3a3497793cc5bdc700a2eb22b7b6">
         <source>To generate a Google Maps API key, go to</source>
         <target>För att generera en Google Maps API-nyckel, gå till</target>
-      </trans-unit>
-      <trans-unit id="a939764bb51bbe3c386eb6ca6bbaa0a2">
-        <source>To generate a shipping module key, go to</source>
-        <target>För att generera en fraktmodulnyckel, gå till</target>
       </trans-unit>
       <trans-unit id="895887bb0b01ee501f25edd71d76e35b">
         <source>When Shipmondo Delivery Checkout is configured, go to</source>

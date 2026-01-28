@@ -26,6 +26,14 @@
         <source>Create new carrier</source>
         <target>Opret nyt leveringsfirma</target>
       </trans-unit>
+      <trans-unit id="be944520eb8afd98806acc062f8aefe4">
+        <source>Delivery Checkout key</source>
+        <target>Delivery Checkout nøgle</target>
+      </trans-unit>
+      <trans-unit id="99bdedd77e5af6ecf28adb132f143973">
+        <source>Delivery Checkout key is required</source>
+        <target>Delivery Checkout nøgle er påkrævet</target>
+      </trans-unit>
       <trans-unit id="0b1e80689d04bdc34027111bb904b6eb">
         <source>Display type is required</source>
         <target>Visningstype er påkrævet</target>
@@ -52,7 +60,7 @@
       </trans-unit>
       <trans-unit id="abe9159ed45292a8b2b9d4e378ac1a4c">
         <source>If you need help configuring Shipmondo Delivery Checkout, you can follow our</source>
-        <target>Hvis du har brug for hjælp til at konfigurere Shipmondo Fragtmodul, kan du følge vores</target>
+        <target>Hvis du har brug for hjælp til at konfigurere Shipmondo Delivery Checkout, kan du følge vores</target>
       </trans-unit>
       <trans-unit id="d554b1ab220e21c9129aa4873f6cfe0a">
         <source>Invalid display type</source>
@@ -88,7 +96,7 @@
       </trans-unit>
       <trans-unit id="aa43933c5467be06d83a5451c4562e15">
         <source>Shipmondo Delivery Checkout</source>
-        <target>Shipmondo Fragtmodul</target>
+        <target>Shipmondo Delivery Checkout</target>
       </trans-unit>
       <trans-unit id="cafec51e266c68c6bc547556a347d43a">
         <source>Shipmondo carrier</source>
@@ -97,14 +105,6 @@
       <trans-unit id="969c94d277a6c2abbd0d688cc51c5a04">
         <source>Shipmondo carriers</source>
         <target>Shipmondo transportører</target>
-      </trans-unit>
-      <trans-unit id="4be5baa0e9fb45a94e0d67f61d4eb76d">
-        <source>Shipping module key</source>
-        <target>Fragtmodul nøgle</target>
-      </trans-unit>
-      <trans-unit id="a9ac8677b01b61ae6cda0b7c8f11420a">
-        <source>Shipping module key is required</source>
-        <target>Fragtmodul nøgle er påkrævet</target>
       </trans-unit>
       <trans-unit id="cf8491d976ab62966c1b5ef4753d39e8">
         <source>Show service points in</source>
@@ -118,21 +118,21 @@
         <source>The selected carrier product supports the following countries:</source>
         <target>Det valgte transportør produkt understøtter følgende lande:</target>
       </trans-unit>
+      <trans-unit id="d72e54738e166eec4ede202954520267">
+        <source>To generate a Delivery Checkout key, go to</source>
+        <target>For at generere en Delivery Checkout nøgle, gå til</target>
+      </trans-unit>
       <trans-unit id="25cc3a3497793cc5bdc700a2eb22b7b6">
         <source>To generate a Google Maps API key, go to</source>
         <target>For at generere en Google Maps API nøgle, gå til</target>
       </trans-unit>
-      <trans-unit id="a939764bb51bbe3c386eb6ca6bbaa0a2">
-        <source>To generate a shipping module key, go to</source>
-        <target>For at generere en fragtmodul nøgle, gå til</target>
-      </trans-unit>
       <trans-unit id="895887bb0b01ee501f25edd71d76e35b">
         <source>When Shipmondo Delivery Checkout is configured, go to</source>
-        <target>Når Shipmondo Fragtmodul er konfigureret, gå til</target>
+        <target>Når Shipmondo Delivery Checkout er konfigureret, gå til</target>
       </trans-unit>
       <trans-unit id="cad6375c409b3e7620a0438cc3d1f2e5">
         <source>to configure Shipmondo Delivery Checkout.</source>
-        <target>for at konfigurere Shipmondo Fragtmodul.</target>
+        <target>for at konfigurere Shipmondo Delivery Checkout.</target>
       </trans-unit>
       <trans-unit id="735497f20cedc4fe8c13542017fb9894">
         <source>to setup carriers</source>
