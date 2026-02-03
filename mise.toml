@@ -1,9 +1,9 @@
 [tasks.precommit]
 run = [
   "./build.sh",
-  "npm run format",
   "npm install",
   "composer install",
+  "npm run format",
   "./vendor/bin/php-cs-fixer fix",
 ]
 
