@@ -45,7 +45,7 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
                     exit;
             }
         } catch (Exception $e) {
-            $errorMessage = $this->trans('An unknown error occured.', [], 'Modules.Shipmondo.Front');
+            $errorMessage = $this->trans('An unknown error occurred.', [], 'Modules.Shipmondo.Front');
 
             $response = new JsonResponse([
                 'status' => 'error',
@@ -135,7 +135,7 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
                         $deliveryAddress
                     );
                 } catch (ShipmondoApiException $e) {
-                    $errorMessage = $this->trans('An error occured while fetching service points.', [], 'Modules.Shipmondo.Front');
+                    $errorMessage = $this->trans('An error occurred while fetching service points.', [], 'Modules.Shipmondo.Front');
                     $errorHtml = $this->getErrorHtml($errorMessage);
 
                     return new JsonResponse(['status' => 'error', 'error' => $e->getMessage(), 'html' => $errorHtml]);

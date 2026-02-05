@@ -10,8 +10,8 @@
         <source>Add Shipmondo carrier</source>
         <target>Lägg till Shipmondo transportföretag</target>
       </trans-unit>
-      <trans-unit id="47f966d7d69b2b11194c43a45f20d88f">
-        <source>An error occured when requesting Shipmondo: %apiError%</source>
+      <trans-unit id="60f9de63f07a69988f9065924663218c">
+        <source>An error occurred when requesting Shipmondo: %apiError%</source>
         <target>Ett fel uppstod under förfrågan till Shipmondo: %apiError%</target>
       </trans-unit>
       <trans-unit id="bbf7df00de00c0039b9e31a77f4972f9">

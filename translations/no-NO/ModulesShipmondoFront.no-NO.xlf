@@ -2,12 +2,12 @@
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
   <file original="ModulesShipmondoFront.xlf" source-language="no-NO" target-language="no-NO" datatype="plaintext">
     <body>
-      <trans-unit id="0a279bb235850c3ab5fa180f80f997e2">
-        <source>An error occured while fetching service points.</source>
+      <trans-unit id="029cf6e641c4b48949aefdcfc4a8c943">
+        <source>An error occurred while fetching service points.</source>
         <target>Det oppstod en feil under henting av utleveringssteder.</target>
       </trans-unit>
-      <trans-unit id="6b04f1ca27c03847586332d90a5752df">
-        <source>An unknown error occured.</source>
+      <trans-unit id="854d74abf6cb48f8e4d47b09ab1fc7c1">
+        <source>An unknown error occurred.</source>
         <target>Det oppstod en ukjent feil.</target>
       </trans-unit>
       <trans-unit id="d80f21cbdd38d9c765d8460a1887f2ab">
@@ -20,7 +20,7 @@
       </trans-unit>
       <trans-unit id="64714abdaf712fa492fa269e111d3bda">
         <source>No service points found for the given address.</source>
-        <target>Der blev ikke fundet nogle udleveringssteder for den givne adresse.</target>
+        <target>Det ble ikke funnet noen utleveringssteder for den angitte adressen.</target>
       </trans-unit>
       <trans-unit id="d495d63bdc3d1dc1b2bac7c5e0d1adf9">
         <source>Powered by Shipmondo</source>
