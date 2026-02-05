@@ -8,15 +8,15 @@
       </trans-unit>
       <trans-unit id="c042eb6430e7b0d3581bba4f27353122">
         <source>Add Shipmondo carrier</source>
-        <target>Legg til Shipmondo transportør</target>
+        <target>Legg til Shipmondo-transportør</target>
       </trans-unit>
-      <trans-unit id="47f966d7d69b2b11194c43a45f20d88f">
-        <source>An error occured when requesting Shipmondo: %apiError%</source>
+      <trans-unit id="60f9de63f07a69988f9065924663218c">
+        <source>An error occurred when requesting Shipmondo: %apiError%</source>
         <target>Det oppstod en feil under forespørsel til Shipmondo: %apiError%</target>
       </trans-unit>
       <trans-unit id="bbf7df00de00c0039b9e31a77f4972f9">
         <source>Carrier product</source>
-        <target>Transportør produkt</target>
+        <target>Transportørprodukt</target>
       </trans-unit>
       <trans-unit id="1d6af794b2599c1407a83029a09d1ecf">
         <source>Carriers</source>
@@ -40,11 +40,11 @@
       </trans-unit>
       <trans-unit id="7498c445a737312f3678aa1494e01a38">
         <source>Dropdown</source>
-        <target>Dropdown</target>
+        <target>Nedtrekksmeny</target>
       </trans-unit>
       <trans-unit id="3a18b41bc74987cd52efe54dafb6b719">
         <source>Filter service point types</source>
-        <target>Filtrer utleveringssted-typer</target>
+        <target>Filtrer utleveringsstedtyper</target>
       </trans-unit>
       <trans-unit id="e43ec38a93023bde02ff70f28b925702">
         <source>Go to</source>
@@ -92,7 +92,7 @@
       </trans-unit>
       <trans-unit id="debed269b2b0b1532af32cee80cb88f1">
         <source>Service point types</source>
-        <target>Utleveringssted-typer</target>
+        <target>Utleveringsstedtyper</target>
       </trans-unit>
       <trans-unit id="aa43933c5467be06d83a5451c4562e15">
         <source>Shipmondo Delivery Checkout</source>
@@ -100,11 +100,11 @@
       </trans-unit>
       <trans-unit id="cafec51e266c68c6bc547556a347d43a">
         <source>Shipmondo carrier</source>
-        <target>Shipmondo transportør</target>
+        <target>Shipmondo-transportør</target>
       </trans-unit>
       <trans-unit id="969c94d277a6c2abbd0d688cc51c5a04">
         <source>Shipmondo carriers</source>
-        <target>Shipmondo transportører</target>
+        <target>Shipmondo-transportører</target>
       </trans-unit>
       <trans-unit id="cf8491d976ab62966c1b5ef4753d39e8">
         <source>Show service points in</source>
@@ -116,7 +116,7 @@
       </trans-unit>
       <trans-unit id="5a037d5ed83197b24af004125822b17c">
         <source>The selected carrier product supports the following countries:</source>
-        <target>Det valgte transportør produktet støtter følgende land:</target>
+        <target>Det valgte transportørproduktet støtter følgende land:</target>
       </trans-unit>
       <trans-unit id="d72e54738e166eec4ede202954520267">
         <source>To generate a Delivery Checkout key, go to</source>
@@ -136,7 +136,7 @@
       </trans-unit>
       <trans-unit id="735497f20cedc4fe8c13542017fb9894">
         <source>to setup carriers</source>
-        <target>or å sette opp transportører</target>
+        <target>for å sette opp transportører</target>
       </trans-unit>
     </body>
   </file>

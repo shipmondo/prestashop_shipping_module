@@ -163,7 +163,7 @@ class ShipmondoCarrierFormType extends TranslatorAwareType
     private function handleApiError(FormInterface $form, ShipmondoApiException $error): void
     {
         $form->addError(new FormError($this->trans(
-            'An error occured when requesting Shipmondo: %apiError%',
+            'An error occurred when requesting Shipmondo: %apiError%',
             'Modules.Shipmondo.Admin',
             ['%apiError%' => $error->getMessage()]
         )));

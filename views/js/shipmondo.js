@@ -114,7 +114,7 @@ jQuery(document).ready(function ($) {
       toggleDropdown($(this));
     });
 
-    // Hide dropdown when clicked outsite of it
+    // Hide dropdown when clicked outside of it
     $(document).on('click', function (e) {
       const dropdown = $(shipmondoBaseSelector + ' .shipmondo-dropdown_wrapper.visible');
 
@@ -279,7 +279,7 @@ jQuery(document).ready(function ($) {
       closeModal(getModal($(e.target)));
     });
 
-    // Hide modal when clicking outsite modal content
+    // Hide modal when clicking outside modal content
     $(document).on('click', shipmondoBaseSelector + ' .shipmondo-modal', function (e) {
       if (typeof e.target !== 'undefined' && $(e.target).hasClass('shipmondo-modal')) {
         closeModal(getModal($(e.target)));

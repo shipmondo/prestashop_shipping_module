@@ -42,10 +42,10 @@ class Shipmondo extends CarrierModule
         $this->description = $this->trans('A complete shipping solution for PrestaShop', [], 'Modules.Shipmondo.Admin');
 
         $carriersNames = [];
-        $configrationNames = [];
+        $configurationNames = [];
         foreach (self::LOCALES as $locale) {
             $carriersNames[$locale] = $this->trans('Shipmondo carriers', [], 'Modules.Shipmondo.Admin', $locale);
-            $configrationNames[$locale] = $this->trans('Shipmondo Delivery Checkout', [], 'Modules.Shipmondo.Admin', $locale);
+            $configurationNames[$locale] = $this->trans('Shipmondo Delivery Checkout', [], 'Modules.Shipmondo.Admin', $locale);
         }
 
         $this->tabs = [
@@ -59,7 +59,7 @@ class Shipmondo extends CarrierModule
                 'wording_domain' => 'Modules.Shipmondo.Admin',
             ],
             [
-                'name' => $configrationNames,
+                'name' => $configurationNames,
                 'class_name' => ShipmondoConfigurationController::TAB_CLASS_NAME,
                 'route_name' => 'shipmondo_configuration',
                 'visible' => false, // Added for breadcrumbs
