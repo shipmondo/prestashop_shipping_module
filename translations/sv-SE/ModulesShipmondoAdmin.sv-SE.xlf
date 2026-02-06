@@ -8,11 +8,11 @@
       </trans-unit>
       <trans-unit id="c042eb6430e7b0d3581bba4f27353122">
         <source>Add Shipmondo carrier</source>
-        <target>Lägg till Shipmondo transportföretag</target>
+        <target>Lägg till Shipmondo-transportföretag</target>
       </trans-unit>
       <trans-unit id="60f9de63f07a69988f9065924663218c">
         <source>An error occurred when requesting Shipmondo: %apiError%</source>
-        <target>Ett fel uppstod under förfrågan till Shipmondo: %apiError%</target>
+        <target>Ett fel uppstod vid begäran till Shipmondo: %apiError%</target>
       </trans-unit>
       <trans-unit id="bbf7df00de00c0039b9e31a77f4972f9">
         <source>Carrier product</source>
@@ -24,15 +24,15 @@
       </trans-unit>
       <trans-unit id="1b0669d6297ee4c697c303af2521d437">
         <source>Create new carrier</source>
-        <target>Skapa nytt leverantör</target>
+        <target>Lägg till nytt transportföretag</target>
       </trans-unit>
       <trans-unit id="be944520eb8afd98806acc062f8aefe4">
         <source>Delivery Checkout key</source>
-        <target>Fraktmodulnyckel</target>
+        <target>Delivery Checkout-nyckel</target>
       </trans-unit>
       <trans-unit id="99bdedd77e5af6ecf28adb132f143973">
         <source>Delivery Checkout key is required</source>
-        <target>Fraktmodulnyckel krävs</target>
+        <target>Delivery Checkout-nyckel krävs</target>
       </trans-unit>
       <trans-unit id="0b1e80689d04bdc34027111bb904b6eb">
         <source>Display type is required</source>
@@ -44,7 +44,7 @@
       </trans-unit>
       <trans-unit id="3a18b41bc74987cd52efe54dafb6b719">
         <source>Filter service point types</source>
-        <target>Filtrera typer av serviceställen</target>
+        <target>Filtrera typer av utlämningsställen</target>
       </trans-unit>
       <trans-unit id="e43ec38a93023bde02ff70f28b925702">
         <source>Go to</source>
@@ -56,7 +56,7 @@
       </trans-unit>
       <trans-unit id="b9725734035b3d5d97f0b29c552f39fa">
         <source>Google Maps API key is required when using modal display type</source>
-        <target>Google Maps API-nyckel krävs när modal-visningstyp används</target>
+        <target>Google Maps API-nyckel krävs när visningstypen dialogruta används</target>
       </trans-unit>
       <trans-unit id="abe9159ed45292a8b2b9d4e378ac1a4c">
         <source>If you need help configuring Shipmondo Delivery Checkout, you can follow our</source>
@@ -68,11 +68,11 @@
       </trans-unit>
       <trans-unit id="c59d6df802c32f037c2a15ff75faec17">
         <source>Modal</source>
-        <target>Modal</target>
+        <target>Dialogruta</target>
       </trans-unit>
       <trans-unit id="87dfc78624ec22b98b474b7dda88ef84">
         <source>Only used when displaying service points in modal.</source>
-        <target>Används endast när utlämningsställen visas i modalruta.</target>
+        <target>Används endast när utlämningsställen visas i dialogrutor.</target>
       </trans-unit>
       <trans-unit id="d495d63bdc3d1dc1b2bac7c5e0d1adf9">
         <source>Powered by Shipmondo</source>
@@ -92,7 +92,7 @@
       </trans-unit>
       <trans-unit id="debed269b2b0b1532af32cee80cb88f1">
         <source>Service point types</source>
-        <target>Typer av serviceställen</target>
+        <target>Typer av utlämningsställen</target>
       </trans-unit>
       <trans-unit id="aa43933c5467be06d83a5451c4562e15">
         <source>Shipmondo Delivery Checkout</source>
@@ -100,11 +100,11 @@
       </trans-unit>
       <trans-unit id="cafec51e266c68c6bc547556a347d43a">
         <source>Shipmondo carrier</source>
-        <target>Shipmondo transportföretag</target>
+        <target>Shipmondo-transportföretag</target>
       </trans-unit>
       <trans-unit id="969c94d277a6c2abbd0d688cc51c5a04">
         <source>Shipmondo carriers</source>
-        <target>Shipmondo transportföretag</target>
+        <target>Shipmondo-transportföretag</target>
       </trans-unit>
       <trans-unit id="cf8491d976ab62966c1b5ef4753d39e8">
         <source>Show service points in</source>
@@ -112,7 +112,7 @@
       </trans-unit>
       <trans-unit id="d65ef292d6a4029027eb64ede8f0f03b">
         <source>The selected carrier is already associated with a Shipmondo carrier.</source>
-        <target>Det valda leverantör är redan kopplat till ett Shipmondo transportföretag.</target>
+        <target>Det valda transportföretaget är redan kopplat till ett Shipmondo-transportföretag.</target>
       </trans-unit>
       <trans-unit id="5a037d5ed83197b24af004125822b17c">
         <source>The selected carrier product supports the following countries:</source>
@@ -120,7 +120,7 @@
       </trans-unit>
       <trans-unit id="d72e54738e166eec4ede202954520267">
         <source>To generate a Delivery Checkout key, go to</source>
-        <target>För att generera en fraktmodulnyckel, gå till</target>
+        <target>För att generera en Delivery Checkout-nyckel, gå till</target>
       </trans-unit>
       <trans-unit id="25cc3a3497793cc5bdc700a2eb22b7b6">
         <source>To generate a Google Maps API key, go to</source>
