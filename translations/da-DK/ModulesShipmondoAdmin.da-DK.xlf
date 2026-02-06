@@ -12,7 +12,7 @@
       </trans-unit>
       <trans-unit id="60f9de63f07a69988f9065924663218c">
         <source>An error occurred when requesting Shipmondo: %apiError%</source>
-        <target>Der opstod en fejl under forspørgsel til Shipmondo: %apiError%</target>
+        <target>Der opstod en fejl under forespørgslen til Shipmondo: %apiError%</target>
       </trans-unit>
       <trans-unit id="bbf7df00de00c0039b9e31a77f4972f9">
         <source>Carrier product</source>
@@ -28,11 +28,11 @@
       </trans-unit>
       <trans-unit id="be944520eb8afd98806acc062f8aefe4">
         <source>Delivery Checkout key</source>
-        <target>Delivery Checkout nøgle</target>
+        <target>Delivery Checkout-nøgle</target>
       </trans-unit>
       <trans-unit id="99bdedd77e5af6ecf28adb132f143973">
         <source>Delivery Checkout key is required</source>
-        <target>Delivery Checkout nøgle er påkrævet</target>
+        <target>Delivery Checkout-nøgle er påkrævet</target>
       </trans-unit>
       <trans-unit id="0b1e80689d04bdc34027111bb904b6eb">
         <source>Display type is required</source>
@@ -52,15 +52,15 @@
       </trans-unit>
       <trans-unit id="5e06d5ebfb655b97d9bfb613c80bbf3f">
         <source>Google Maps API key</source>
-        <target>Google Maps API nøgle</target>
+        <target>Google Maps API-nøgle</target>
       </trans-unit>
       <trans-unit id="b9725734035b3d5d97f0b29c552f39fa">
         <source>Google Maps API key is required when using modal display type</source>
-        <target>Google Maps API nøgle er påkrævet, når modal visningstypen bruges</target>
+        <target>Google Maps API-nøgle er påkrævet, når modalvisningstypen bruges</target>
       </trans-unit>
       <trans-unit id="abe9159ed45292a8b2b9d4e378ac1a4c">
         <source>If you need help configuring Shipmondo Delivery Checkout, you can follow our</source>
-        <target>Hvis du har brug for hjælp til at konfigurere Shipmondo Delivery Checkout, kan du følge vores</target>
+        <target>Hvis I har brug for hjælp til at konfigurere Shipmondo Delivery Checkout, kan I følge vores</target>
       </trans-unit>
       <trans-unit id="d554b1ab220e21c9129aa4873f6cfe0a">
         <source>Invalid display type</source>
@@ -72,7 +72,7 @@
       </trans-unit>
       <trans-unit id="87dfc78624ec22b98b474b7dda88ef84">
         <source>Only used when displaying service points in modal.</source>
-        <target>Bruges kun når udleveringsteder vises i modal.</target>
+        <target>Bruges kun når udleveringssteder vises i modal.</target>
       </trans-unit>
       <trans-unit id="d495d63bdc3d1dc1b2bac7c5e0d1adf9">
         <source>Powered by Shipmondo</source>
@@ -92,7 +92,7 @@
       </trans-unit>
       <trans-unit id="debed269b2b0b1532af32cee80cb88f1">
         <source>Service point types</source>
-        <target>Udleveringssteds-typer</target>
+        <target>Udleveringsstedstyper</target>
       </trans-unit>
       <trans-unit id="aa43933c5467be06d83a5451c4562e15">
         <source>Shipmondo Delivery Checkout</source>
@@ -116,15 +116,15 @@
       </trans-unit>
       <trans-unit id="5a037d5ed83197b24af004125822b17c">
         <source>The selected carrier product supports the following countries:</source>
-        <target>Det valgte transportør produkt understøtter følgende lande:</target>
+        <target>Det valgte transportørprodukt understøtter følgende lande:</target>
       </trans-unit>
       <trans-unit id="d72e54738e166eec4ede202954520267">
         <source>To generate a Delivery Checkout key, go to</source>
-        <target>For at generere en Delivery Checkout nøgle, gå til</target>
+        <target>For at generere en Delivery Checkout-nøgle, gå til</target>
       </trans-unit>
       <trans-unit id="25cc3a3497793cc5bdc700a2eb22b7b6">
         <source>To generate a Google Maps API key, go to</source>
-        <target>For at generere en Google Maps API nøgle, gå til</target>
+        <target>For at generere en Google Maps API-nøgle, gå til</target>
       </trans-unit>
       <trans-unit id="895887bb0b01ee501f25edd71d76e35b">
         <source>When Shipmondo Delivery Checkout is configured, go to</source>
