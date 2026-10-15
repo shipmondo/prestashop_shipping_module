@@ -13,7 +13,6 @@ namespace Shipmondo\Tests\Unit;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Shipmondo\ApiClient;
-use Shipmondo\Exception\ShipmondoApiException;
 use Shipmondo\ShipmondoCarrierHandler;
 use Shipmondo\Tests\Support\InMemoryConfiguration;
 
@@ -47,9 +46,9 @@ final class ShipmondoCarrierHandlerTest extends TestCase
             (object) ['code' => 'gls', 'name' => 'GLS'],
             (object) ['code' => 'dhl', 'name' => 'DHL'],
         ]);
-        $this->apiClient->method('getCarrierProducts')->willReturnMap([
-            ['gls', [self::servicePointProduct('GLS_PSS', 'GLS Parcel Shop')]],
-            ['dhl', [(object) ['product_code' => 'DHL_HOME', 'name' => 'DHL Home', 'service_point_product' => false]]],
+        $this->apiClient->method('getCarrierProductsForCarriers')->willReturn([
+            'gls' => [self::servicePointProduct('GLS_PSS', 'GLS Parcel Shop')],
+            'dhl' => [(object) ['product_code' => 'DHL_HOME', 'name' => 'DHL Home', 'service_point_product' => false]],
         ]);
 
         $carriers = $this->handler->getCarriers();
@@ -62,17 +61,67 @@ final class ShipmondoCarrierHandlerTest extends TestCase
     public function testGetCarriersTreatsFailingProductLookupAsNoServicePoint(): void
     {
         $this->apiClient->method('getCarriers')->willReturn([(object) ['code' => 'gls', 'name' => 'GLS']]);
-        $this->apiClient->method('getCarrierProducts')->willThrowException(new ShipmondoApiException('Unavailable'));
+        // Carriers whose product request fails are left out of the result.
+        $this->apiClient->method('getCarrierProductsForCarriers')->willReturn([]);
 
         $carriers = $this->handler->getCarriers();
 
         self::assertSame(['private', 'business'], self::productCodes($carriers[0]));
     }
 
+    public function testGetCarriersFetchesProductsForAllCarriersInOneBatch(): void
+    {
+        $this->apiClient->method('getCarriers')->willReturn([
+            (object) ['code' => 'gls', 'name' => 'GLS'],
+            (object) ['code' => 'dhl', 'name' => 'DHL'],
+            (object) ['code' => 'pdk', 'name' => 'PostNord'],
+        ]);
+        $this->apiClient->expects(self::never())->method('getCarrierProducts');
+        $this->apiClient->expects(self::once())
+            ->method('getCarrierProductsForCarriers')
+            ->with(['gls', 'dhl', 'pdk'])
+            ->willReturn([]);
+
+        $this->handler->getCarriers();
+    }
+
+    public function testGetCarriersOnlyFetchesProductsThatAreNotCached(): void
+    {
+        $this->configuration->set('SHIPMONDO_CARRIER_PRODUCTS_CACHE_gls', json_encode([self::servicePointProduct('GLS_PSS', 'GLS Parcel Shop')]));
+        $this->configuration->set('SHIPMONDO_CARRIER_PRODUCTS_CACHE_gls_EXPIRATION', time() + 60);
+
+        $this->apiClient->method('getCarriers')->willReturn([
+            (object) ['code' => 'gls', 'name' => 'GLS'],
+            (object) ['code' => 'dhl', 'name' => 'DHL'],
+        ]);
+        $this->apiClient->expects(self::once())
+            ->method('getCarrierProductsForCarriers')
+            ->with(['dhl'])
+            ->willReturn(['dhl' => [self::servicePointProduct('DHL_SP', 'DHL Service Point')]]);
+
+        $carriers = $this->handler->getCarriers();
+
+        self::assertSame(['private', 'business', 'service_point'], self::productCodes($carriers[0]));
+        self::assertSame(['private', 'business', 'service_point'], self::productCodes($carriers[1]));
+        self::assertSame('DHL_SP', json_decode($this->configuration->get('SHIPMONDO_CARRIER_PRODUCTS_CACHE_dhl'))[0]->product_code);
+        self::assertGreaterThan(time(), (int) $this->configuration->get('SHIPMONDO_CARRIER_PRODUCTS_CACHE_dhl_EXPIRATION'));
+    }
+
+    public function testGetCarriersSkipsProductRequestsWhenAllAreCached(): void
+    {
+        $this->configuration->set('SHIPMONDO_CARRIER_PRODUCTS_CACHE_gls', json_encode([]));
+        $this->configuration->set('SHIPMONDO_CARRIER_PRODUCTS_CACHE_gls_EXPIRATION', time() + 60);
+
+        $this->apiClient->method('getCarriers')->willReturn([(object) ['code' => 'gls', 'name' => 'GLS']]);
+        $this->apiClient->expects(self::never())->method('getCarrierProductsForCarriers');
+
+        self::assertSame(['private', 'business'], self::productCodes($this->handler->getCarriers()[0]));
+    }
+
     public function testGetCarriersCachesResultInConfiguration(): void
     {
         $this->apiClient->expects(self::once())->method('getCarriers')->willReturn([(object) ['code' => 'gls', 'name' => 'GLS']]);
-        $this->apiClient->method('getCarrierProducts')->willReturn([]);
+        $this->apiClient->method('getCarrierProductsForCarriers')->willReturn([]);
 
         $this->handler->getCarriers();
 
@@ -91,7 +140,7 @@ final class ShipmondoCarrierHandlerTest extends TestCase
         $this->configuration->set('SHIPMONDO_AVAILABLE_CARRIERS_EXPIRATION', time() - 1);
 
         $this->apiClient->expects(self::once())->method('getCarriers')->willReturn([(object) ['code' => 'gls', 'name' => 'GLS']]);
-        $this->apiClient->method('getCarrierProducts')->willReturn([]);
+        $this->apiClient->method('getCarrierProductsForCarriers')->willReturn([]);
 
         self::assertSame('gls', $this->handler->getCarriers()[0]->code);
     }

@@ -11,7 +11,6 @@ declare(strict_types=1);
 namespace Shipmondo;
 
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
-use Shipmondo\Exception\ShipmondoApiException;
 
 class ShipmondoCarrierHandler
 {
@@ -100,42 +99,87 @@ class ShipmondoCarrierHandler
 
     public function getCarrierProducts(string $carrierCode): array
     {
-        $cacheKey = 'SHIPMONDO_CARRIER_PRODUCTS_CACHE_' . $carrierCode;
-        $expirationTimeCacheKey = $cacheKey . '_EXPIRATION';
+        $carrierProducts = $this->getCachedCarrierProducts($carrierCode);
 
-        $expirationTime = (int) $this->configuration->get($expirationTimeCacheKey);
-
-        if ($expirationTime && $expirationTime > time()) {
-            $carrierProducts = $this->configuration->get($cacheKey);
-
-            if ($carrierProducts) {
-                return json_decode($carrierProducts, false);
-            }
+        if ($carrierProducts !== null) {
+            return $carrierProducts;
         }
 
         $value = $this->apiClient->getCarrierProducts($carrierCode);
 
-        $this->configuration->set($cacheKey, json_encode($value));
-        $this->configuration->set($expirationTimeCacheKey, time() + 900);
+        $this->cacheCarrierProducts($carrierCode, $value);
 
         return $value;
     }
 
-    private function carrierHasServicePointProducts(string $carrierCode): bool
+    /**
+     * Get products for several carriers, fetching the ones that aren't cached in a single concurrent batch.
+     * Carriers whose products can't be fetched are left out of the result.
+     *
+     * @param string[] $carrierCodes
+     *
+     * @return array<string, array> Products keyed by carrier code
+     */
+    private function getCarrierProductsForCarriers(array $carrierCodes): array
     {
-        try {
-            $carrierProducts = self::getCarrierProducts($carrierCode);
+        $carrierProducts = [];
+        $uncachedCarrierCodes = [];
 
-            foreach ($carrierProducts as $carrierProduct) {
-                if (isset($carrierProduct->service_point_product) && $carrierProduct->service_point_product === true) {
-                    return true;
-                }
+        foreach ($carrierCodes as $carrierCode) {
+            $cachedCarrierProducts = $this->getCachedCarrierProducts($carrierCode);
+
+            if ($cachedCarrierProducts !== null) {
+                $carrierProducts[$carrierCode] = $cachedCarrierProducts;
+            } else {
+                $uncachedCarrierCodes[] = $carrierCode;
             }
-
-            return false;
-        } catch (ShipmondoApiException $e) {
-            return false;
         }
+
+        if (!$uncachedCarrierCodes) {
+            return $carrierProducts;
+        }
+
+        foreach ($this->apiClient->getCarrierProductsForCarriers($uncachedCarrierCodes) as $carrierCode => $value) {
+            $this->cacheCarrierProducts((string) $carrierCode, $value);
+
+            $carrierProducts[$carrierCode] = $value;
+        }
+
+        return $carrierProducts;
+    }
+
+    private function getCachedCarrierProducts(string $carrierCode): ?array
+    {
+        $cacheKey = 'SHIPMONDO_CARRIER_PRODUCTS_CACHE_' . $carrierCode;
+
+        $expirationTime = (int) $this->configuration->get($cacheKey . '_EXPIRATION');
+
+        if (!$expirationTime || $expirationTime <= time()) {
+            return null;
+        }
+
+        $carrierProducts = $this->configuration->get($cacheKey);
+
+        return $carrierProducts ? json_decode($carrierProducts, false) : null;
+    }
+
+    private function cacheCarrierProducts(string $carrierCode, array $carrierProducts): void
+    {
+        $cacheKey = 'SHIPMONDO_CARRIER_PRODUCTS_CACHE_' . $carrierCode;
+
+        $this->configuration->set($cacheKey, json_encode($carrierProducts));
+        $this->configuration->set($cacheKey . '_EXPIRATION', time() + 900);
+    }
+
+    private static function hasServicePointProducts(array $carrierProducts): bool
+    {
+        foreach ($carrierProducts as $carrierProduct) {
+            if (isset($carrierProduct->service_point_product) && $carrierProduct->service_point_product === true) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -149,6 +193,10 @@ class ShipmondoCarrierHandler
         if (!$availableCarriers || !$expirationTime || $expirationTime < time()) {
             $availableCarriers = $this->apiClient->getCarriers();
 
+            $carrierProducts = $this->getCarrierProductsForCarriers(array_map(function ($availableCarrier) {
+                return $availableCarrier->code;
+            }, $availableCarriers));
+
             // Change boolean values to array of products to prepare for the future
             foreach ($availableCarriers as $availableCarrier) {
                 $products = [];
@@ -156,7 +204,7 @@ class ShipmondoCarrierHandler
                 $availableCarrier->products = [
                     'private' => true,
                     'business' => true,
-                    'service_point' => self::carrierHasServicePointProducts($availableCarrier->code),
+                    'service_point' => self::hasServicePointProducts($carrierProducts[$availableCarrier->code] ?? []),
                 ];
 
                 foreach ($availableCarrier->products as $productCode => $hasProduct) {

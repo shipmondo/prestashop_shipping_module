@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace Shipmondo;
 
 use Shipmondo\Exception\ShipmondoApiException;
+use Symfony\Contracts\HttpClient\ResponseInterface;
 
 class ApiClient
 {
@@ -74,6 +75,35 @@ class ApiClient
         return $this->request('GET', $this->baseUri . 'shipping_modules/products', ['carrier_code' => $carrierCode]);
     }
 
+    /**
+     * Get products for several carriers. The requests run concurrently.
+     * Carriers whose request fails are left out of the result.
+     *
+     * @param string[] $carrierCodes
+     *
+     * @return array<string, array> Products keyed by carrier code
+     */
+    public function getCarrierProductsForCarriers(array $carrierCodes): array
+    {
+        $responses = [];
+
+        foreach ($carrierCodes as $carrierCode) {
+            $responses[$carrierCode] = $this->sendRequest('GET', $this->baseUri . 'shipping_modules/products', ['carrier_code' => $carrierCode]);
+        }
+
+        $carrierProducts = [];
+
+        foreach ($responses as $carrierCode => $response) {
+            try {
+                $carrierProducts[$carrierCode] = $this->decodeResponse($response);
+            } catch (ShipmondoApiException $e) {
+                continue;
+            }
+        }
+
+        return $carrierProducts;
+    }
+
     public function getCarrierProductServicePointTypes(string $productCode): array
     {
         return $this->request('GET', $this->baseUri . 'service_point/service_point_types', [
@@ -104,21 +134,35 @@ class ApiClient
      */
     private function request(string $method, string $url, array $query = []): array
     {
-        try {
-            $response = $this->client->request($method, $url, [
-                'headers' => [
-                    'User-Agent' => 'Shipmondo Prestashop Module v' . $this->module->version,
-                ],
-                'query' => array_merge($query, [
-                    'request_url' => _PS_BASE_URL_,
-                    'request_version' => _PS_VERSION_,
-                    'module_version' => $this->module->version,
-                    'shipping_module_type' => 'prestashop',
-                    'frontend_key' => $this->frontendKey,
-                    'php_version' => PHP_VERSION ?? '',
-                ]),
-            ]);
+        return $this->decodeResponse($this->sendRequest($method, $url, $query));
+    }
 
+    /**
+     * Start a request. The response is lazy, so several requests can run concurrently before their content is read.
+     */
+    private function sendRequest(string $method, string $url, array $query = []): ResponseInterface
+    {
+        return $this->client->request($method, $url, [
+            'headers' => [
+                'User-Agent' => 'Shipmondo Prestashop Module v' . $this->module->version,
+            ],
+            'query' => array_merge($query, [
+                'request_url' => _PS_BASE_URL_,
+                'request_version' => _PS_VERSION_,
+                'module_version' => $this->module->version,
+                'shipping_module_type' => 'prestashop',
+                'frontend_key' => $this->frontendKey,
+                'php_version' => PHP_VERSION ?? '',
+            ]),
+        ]);
+    }
+
+    /**
+     * @throws ShipmondoApiException
+     */
+    private function decodeResponse(ResponseInterface $response): array
+    {
+        try {
             $response_body = $response->getContent();
 
             return json_decode($response_body);
