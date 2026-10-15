@@ -16,6 +16,9 @@ rm -rf .DS_Store
 rm -rf build.sh
 rm -rf jsconfig.json
 rm -rf node_modules
+rm -rf tests
+rm -rf phpunit.xml.dist
+rm -rf .phpunit.cache
 
 shopt -s extglob
 cd vendor
