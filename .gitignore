@@ -10,6 +10,9 @@ node_modules
 # PHP CS Fixer
 .php-cs-fixer.cache
 
+# PHPUnit
+.phpunit.cache
+
 # phpactor
 .phpactor.json
 
