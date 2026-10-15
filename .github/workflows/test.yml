@@ -29,3 +29,20 @@ jobs:
         run: ./vendor/bin/php-cs-fixer check
       - name: Run unit tests
         run: ./vendor/bin/phpunit
+  php72-compatibility:
+    # PrestaShop 8 supports PHP 7.2, but the dev tooling needs PHP 8.1+, so only lint the files we ship.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.2'
+          tools: none
+      - name: Lint shipped PHP files on PHP 7.2
+        run: |
+          php -v
+          status=0
+          while IFS= read -r -d '' file; do
+            php -l "$file" > /dev/null || status=1
+          done < <(git ls-files -z '*.php' ':!:tests/**')
+          exit $status
