@@ -64,6 +64,16 @@ class ApiClient
         return rtrim(trim($override), '/') . '/';
     }
 
+    public function getBaseUri(): string
+    {
+        return $this->baseUri;
+    }
+
+    public function getFrontendKey(): string
+    {
+        return $this->frontendKey;
+    }
+
     public function getCarriers(): array
     {
         return $this->request('GET', $this->baseUri . 'shipping_modules/carriers');

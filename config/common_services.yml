@@ -35,3 +35,16 @@ services:
       - '@shipmondo.module'
       - '@shipmondo.configuration.frontend_key'
       - '@shipmondo.http.client'
+
+  shipmondo.cache.service_points:
+    class: 'Shipmondo\Cache\FileCache'
+    factory: ['Shipmondo\Cache\FileCache', 'createInPrestaShopCacheDir']
+    arguments:
+      - 'service_points'
+
+  shipmondo.service_point_provider:
+    class: 'Shipmondo\ServicePointProvider'
+    public: true
+    arguments:
+      - '@shipmondo.api_client'
+      - '@shipmondo.cache.service_points'

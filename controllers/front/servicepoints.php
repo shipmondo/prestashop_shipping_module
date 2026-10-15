@@ -216,14 +216,14 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
         return $repo;
     }
 
-    private function getApiClient()
+    private function getServicePointProvider()
     {
         /**
-         * @var Shipmondo\ApiClient
+         * @var Shipmondo\ServicePointProvider
          */
-        $client = $this->container->get('shipmondo.api_client');
+        $provider = $this->container->get('shipmondo.service_point_provider');
 
-        return $client;
+        return $provider;
     }
 
     private function fetchExternalServicePoints(string $carrierProductCode, ?array $servicePointTypes, Address $deliveryAddress): array
@@ -241,7 +241,7 @@ class ShipmondoServicepointsModuleFrontController extends ModuleFrontController
 
         $address = $deliveryAddress->address1 ?? '';
 
-        return $this->getApiClient()->getServicePoints(
+        return $this->getServicePointProvider()->getServicePoints(
             $carrierProductCode,
             $servicePointTypes,
             $countryCode,
