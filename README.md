@@ -16,6 +16,22 @@ For instruction for how to install and configure Shipmondo Delivery Checkout, pl
 - PHP >= 7.2
 - PrestaShop >= 8.0.0
 
+## Development
+
+### Overriding the Shipmondo API URL
+
+By default the module talks to `https://app.shipmondo.com/api/public/v3/`. Shops never need to change this.
+
+For testing, e.g. against a mock server in end-to-end tests, set the `SHIPMONDO_API_URL` environment variable to another base URL:
+
+```sh
+SHIPMONDO_API_URL=http://shipmondo-mock:8080/api/public/v3/
+```
+
+The variable must be visible to PHP through `getenv()`. With PHP-FPM, environment variables are cleared by default, so either set `clear_env = no` or add `env[SHIPMONDO_API_URL] = ...` to the pool configuration.
+
+API responses are cached in the PrestaShop configuration table, so clear the `SHIPMONDO_*_CACHE*` and `SHIPMONDO_AVAILABLE_CARRIERS*` values after switching URL.
+
 ## License
 
 This module is licensed under the [BSD 3-Clause License](LICENSE).
