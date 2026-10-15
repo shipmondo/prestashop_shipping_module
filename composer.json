@@ -24,6 +24,14 @@
       "Shipmondo\\": "src/"
     }
   },
+  "autoload-dev": {
+    "psr-4": {
+      "Shipmondo\\Tests\\": "tests/"
+    }
+  },
+  "scripts": {
+    "test": "phpunit"
+  },
   "config": {
     "prepend-autoloader": false
   },
@@ -32,6 +40,7 @@
     "friendsofphp/php-cs-fixer": "^3.93",
     "phpstan/phpstan": "^2.1",
     "prestashop/php-dev-tools": "^5.0",
-    "stancer/php-stubs-prestashop": "^8.2"
+    "stancer/php-stubs-prestashop": "^8.2",
+    "phpunit/phpunit": "^10.5"
   }
 }
