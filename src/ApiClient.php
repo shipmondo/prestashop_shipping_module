@@ -29,35 +29,61 @@ class ApiClient
      */
     private $module;
 
+    /**
+     * @var string
+     */
+    private $baseUri;
+
     private const API_V3_URI = 'https://app.shipmondo.com/api/public/v3/';
+
+    /**
+     * Environment variable that overrides the API base URL, e.g. to point at a mock server in end-to-end tests.
+     * Shops do not set it, so they always use API_V3_URI.
+     */
+    public const API_URL_ENV_VAR = 'SHIPMONDO_API_URL';
 
     public function __construct(\Module $module, string $frontendKey, \Symfony\Component\HttpClient\HttpClient $client)
     {
         $this->module = $module;
         $this->frontendKey = $frontendKey;
         $this->client = $client->create();
+        $this->baseUri = self::resolveBaseUri();
+    }
+
+    /**
+     * Get the API base URL, always ending with a slash.
+     */
+    public static function resolveBaseUri(): string
+    {
+        $override = getenv(self::API_URL_ENV_VAR);
+
+        if (!is_string($override) || trim($override) === '') {
+            return self::API_V3_URI;
+        }
+
+        return rtrim(trim($override), '/') . '/';
     }
 
     public function getCarriers(): array
     {
-        return $this->request('GET', self::API_V3_URI . 'shipping_modules/carriers');
+        return $this->request('GET', $this->baseUri . 'shipping_modules/carriers');
     }
 
     public function getCarrierProducts(string $carrierCode): array
     {
-        return $this->request('GET', self::API_V3_URI . 'shipping_modules/products', ['carrier_code' => $carrierCode]);
+        return $this->request('GET', $this->baseUri . 'shipping_modules/products', ['carrier_code' => $carrierCode]);
     }
 
     public function getCarrierProductServicePointTypes(string $productCode): array
     {
-        return $this->request('GET', self::API_V3_URI . 'service_point/service_point_types', [
+        return $this->request('GET', $this->baseUri . 'service_point/service_point_types', [
             'product_code' => $productCode,
         ]);
     }
 
     public function getServicePoints(string $productCode, ?array $servicePointTypes, string $countryCode, string $zipcode, string $city, string $address): array
     {
-        $url = self::API_V3_URI . 'service_point/service_points';
+        $url = $this->baseUri . 'service_point/service_points';
 
         if (is_array($servicePointTypes) && count($servicePointTypes) > 0) {
             $url .= '?service_point_types[]=' . implode('&service_point_types[]=', $servicePointTypes);
