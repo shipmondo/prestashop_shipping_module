@@ -2894,16 +2894,16 @@
         },
         {
             "name": "stancer/php-stubs-prestashop",
-            "version": "v8.2.2",
+            "version": "v8.2.4",
             "source": {
                 "type": "git",
                 "url": "https://gitlab.com/wearestancer/library/php-stubs-prestashop.git",
-                "reference": "d5855508c4517fc230e8c070bd2ba0f4eb2a3713"
+                "reference": "e6f6b0d2bd34259a298f1aa318d980ff49e541c5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://gitlab.com/api/v4/projects/wearestancer%2Flibrary%2Fphp-stubs-prestashop/repository/archive.zip?sha=d5855508c4517fc230e8c070bd2ba0f4eb2a3713",
-                "reference": "d5855508c4517fc230e8c070bd2ba0f4eb2a3713",
+                "url": "https://gitlab.com/api/v4/projects/wearestancer%2Flibrary%2Fphp-stubs-prestashop/repository/archive.zip?sha=e6f6b0d2bd34259a298f1aa318d980ff49e541c5",
+                "reference": "e6f6b0d2bd34259a298f1aa318d980ff49e541c5",
                 "shasum": ""
             },
             "type": "library",
@@ -2915,9 +2915,9 @@
             "homepage": "https://gitlab.com/wearestancer/library/php-stubs-prestashop",
             "support": {
                 "issues": "https://gitlab.com/wearestancer/library/php-stubs-prestashop/-/issues",
-                "source": "https://gitlab.com/wearestancer/library/php-stubs-prestashop/-/tree/v8.2.2"
+                "source": "https://gitlab.com/wearestancer/library/php-stubs-prestashop/-/tree/v8.2.4"
             },
-            "time": "2025-07-31T16:21:57+00:00"
+            "time": "2026-03-05T17:11:55+00:00"
         },
         {
             "name": "symfony/console",
